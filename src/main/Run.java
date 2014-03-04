@@ -17,6 +17,10 @@ public class Run {
      */
     public static void main(String[] args) {
         System.out.println("dev");
+        boolean b = false;
+        if(b){
+            System.out.println("true");
+        }
     }
     
 }
