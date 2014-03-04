@@ -4,13 +4,13 @@
  * and open the template in the editor.
  */
 
-package jenseits_von_theben;
+package main;
 
 /**
  *
  * @author maxime
  */
-public class Main {
+public class Run {
 
     /**
      * @param args the command line arguments
