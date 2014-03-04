@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package jenseits_von_theben;
+package main;
 
 /**
  *
@@ -16,7 +16,8 @@ public class Run {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic heredsf
+        // TODO code application logic here
+        
     }
     
 }
