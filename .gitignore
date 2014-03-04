@@ -22,6 +22,7 @@ nbactions.xml
 nb-configuration.xml
 build.xml
 manifest.xml
+manifest.mf
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
