@@ -1,3 +1,7 @@
+# Maven #
+############
+pom.xml
+
 # Packages #
 ############
 # it's better to unpack these files and commit the raw source
@@ -11,6 +15,20 @@
 *.tar
 *.zip
 
+### Eclipse ###
+*.pydevproject
+.metadata
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+target
+local.properties
+.settings/
+.loadpath
 
 ### NetBeans ###
 nbproject
