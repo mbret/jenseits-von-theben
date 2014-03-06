@@ -1,4 +1,4 @@
-package com.miage.jenseits.von.theben;
+package com.miage.main;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
