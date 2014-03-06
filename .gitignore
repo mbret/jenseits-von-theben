@@ -1,6 +1,7 @@
 # Maven    #
 ############
 pom.xml
+target
 
 # Packages #
 ############
@@ -25,7 +26,6 @@ tmp/
 *.bak
 *.swp
 *~.nib
-target
 local.properties
 .settings/
 .loadpath
