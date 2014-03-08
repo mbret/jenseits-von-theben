@@ -6,95 +6,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import tokens.PointToken;
-import cards.Card;
+import tokens.Token;
 
 public class Player {
 	
 	private String name;
+	private int points;
 	
-	private Map<String, PlayerKnowledges> specialKnowledges; 
-	private List<PointToken> tokens;
-	private List<Card> cards;
+	private Map<String, Integer> tokens; 
 	
-	private int generalKnowledgePoints;
+	private Map<String, Integer> competences;
 	
 	
 	public Player(String name){
 		this.name = name;
-		
-		this.specialKnowledges = new HashMap<String, PlayerKnowledges>();
-		this.tokens = new ArrayList<PointToken>();
-		this.cards = new ArrayList<Card>();
-		this.generalKnowledgePoints = 0;
+		this.points = 0;
+		this.tokens = new HashMap<String, Integer>();
+		this.competences = new HashMap<String, Integer>();
 	}
 
-
-	
-
-
-	public int getGeneralKnowledgePoints() {
-		return generalKnowledgePoints;
-	}
-
-
-	public void setGeneralKnowledgePoints(int generalKnowledgePoints) {
-		this.generalKnowledgePoints = generalKnowledgePoints;
-	}
 
 
 	public String getName() {
 		return name;
 	}
-
-
 	
-
-
-	public Map<String, PlayerKnowledges> getSpecialKnowledges() {
-		return specialKnowledges;
-	}
-
-
-	public List<PointToken> getTokens() {
-		return tokens;
-	}
-
-
-	public List<Card> getCards() {
-		return cards;
-	}
-	
-	/**
-	 * return the number of specific knowledge points of the specified color
-	 * @param color Color of the concerned area
-	 * @return the number of specific knowledge points
-	 */
-	public int getSpecificKnowledge(String color){
-		
-		int points = 0;
-		
-		if(this.specialKnowledges.containsKey(color))
-			points = this.getSpecialKnowledges().get(color).getSpecificKnowledge();
-		
-		return points;
-		
-	}
-	
-	/**
-	 * return the number of ethnological knowledge points of the specified color
-	 * @param color Color of the concerned area
-	 * @return the number of ethnological knowledge points
-	 */
-	public int getEthnologicalKnowledge(String color){
-		
-		int points = 0;
-		
-		if(this.specialKnowledges.containsKey(color))
-			points = this.getSpecialKnowledges().get(color).getEthnologicalKnowledge();
-		
+	public int getPoints(){
 		return points;
 	}
+
+	
+
 	
 	
 

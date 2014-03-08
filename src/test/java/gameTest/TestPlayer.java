@@ -32,7 +32,6 @@ public class TestPlayer {
 		playerKnowledges.setEthnologicalKnowledge(2);
 		
 		player = new Player("Test");
-		player.getSpecialKnowledges().put("red", playerKnowledges);
 		
 		
 	}
@@ -41,27 +40,8 @@ public class TestPlayer {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	/**
-	 * Test of the method getSpecificKnowledge()
-	 */
-	public void testGetSpecificKnowledge() {
-		
-		assertEquals(3, player.getSpecificKnowledge("red"));
-		assertEquals(0, player.getSpecificKnowledge("blue"));
-		
-	}
 	
-	@Test
-	/**
-	 * Test of the method getEthnologicalKnowledge()
-	 */
-	public void testGetEthnologicalKnowledge() {
-		
-		assertEquals(2, player.getEthnologicalKnowledge("red"));
-		assertEquals(0, player.getEthnologicalKnowledge("blue"));
-		
-	}
+	
 	
 	
 

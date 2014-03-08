@@ -1,7 +1,7 @@
 package game;
 
 
-import interfaces.Underplayable;
+
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +23,6 @@ public class Board {
 	
 	private Card four[];
 	
-	private List<? extends Underplayable> underplayDeck;
 	
 	public Board(){
 		this.piecesStack = new PiecesStack();

@@ -2,7 +2,8 @@ package cards;
 import java.util.ArrayList;
 import java.util.List;
 
-import tokens.PointToken;
+
+import tokens.Token;
 import areas.Area;
 
 
@@ -10,28 +11,23 @@ public class ExpoCard extends Card {
 	
 	private boolean bigExpo;
 	private int value;
-	private List<PointToken> tokens;
+	private List<Token> tokens;
 	
-	public ExpoCard(Area area, boolean bigExpo) {
+	public ExpoCard(String name, Area area,int cost,  boolean bigExpo) {
 		
-		super(area);
+		super(name, area, cost);
 		this.bigExpo = bigExpo;
-		this.tokens = new ArrayList<PointToken>();
-		
-		if(bigExpo){
-			this.setCost(4);
-			this.value = 5;
-		}
-		else{
-			this.setCost(3);
-			this.value = 4;
-		}
-		
+		this.tokens = new ArrayList<Token>();
+				
 		
 	}
 	
 	public int getValue(){
 		return value;
+	}
+	
+	public boolean getBigExpo(){
+		return bigExpo;
 	}
 	
 	
