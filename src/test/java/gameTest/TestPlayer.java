@@ -14,7 +14,7 @@ import org.junit.Test;
 public class TestPlayer {
 	
 	private Player player;
-	PlayerKnowledges playerK;
+	PlayerKnowledges playerKnowledges;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -27,12 +27,12 @@ public class TestPlayer {
 	@Before
 	public void setUp() throws Exception {
 		
-		playerK = new PlayerKnowledges();
-		playerK.setSpecificKnowledge(3);
-		playerK.setEthnologicalKnowledge(2);
+		playerKnowledges = new PlayerKnowledges();
+		playerKnowledges.setSpecificKnowledge(3);
+		playerKnowledges.setEthnologicalKnowledge(2);
 		
 		player = new Player("Test");
-		player.getSpecialKnowledges().put("red", playerK);
+		player.getSpecialKnowledges().put("red", playerKnowledges);
 		
 		
 	}
@@ -42,6 +42,9 @@ public class TestPlayer {
 	}
 
 	@Test
+	/**
+	 * Test of the method getSpecificKnowledge()
+	 */
 	public void testGetSpecificKnowledge() {
 		
 		assertEquals(3, player.getSpecificKnowledge("red"));
@@ -50,6 +53,9 @@ public class TestPlayer {
 	}
 	
 	@Test
+	/**
+	 * Test of the method getEthnologicalKnowledge()
+	 */
 	public void testGetEthnologicalKnowledge() {
 		
 		assertEquals(2, player.getEthnologicalKnowledge("red"));

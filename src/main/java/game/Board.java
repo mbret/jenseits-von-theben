@@ -1,6 +1,12 @@
 package game;
 
 
+import interfaces.Underplayable;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import cards.Card;
 import areas.Area;
 import areas.ExcavationArea;
 import areas.TouristicArea;
@@ -12,12 +18,48 @@ public class Board {
 	private Piece currentPiece;
 	private int distances[][];
 	
+	private Deck deck;
+	private Deck thirdDeck;
+	
+	private Card four[];
+	
+	private List<? extends Underplayable> underplayDeck;
+	
 	public Board(){
 		this.piecesStack = new PiecesStack();
 		this.areas = new Area[12];
+		this.deck = new Deck();
+		this.thirdDeck = new Deck();
+		this.four = new Card[4];
 		
 	}
 	
+	
+	
+	public Piece getCurrentPiece() {
+		return currentPiece;
+	}
+
+
+
+	public void setCurrentPiece(Piece currentPiece) {
+		this.currentPiece = currentPiece;
+	}
+
+
+
+	public PiecesStack getPiecesStack() {
+		return piecesStack;
+	}
+
+
+
+	public Area[] getAreas() {
+		return areas;
+	}
+
+
+
 	/**
 	 * Initialization of areas
 	 */
@@ -62,6 +104,26 @@ public class Board {
 				{4,3,4,4,3,3,4,2,1,1,0,1},	// palestine	
 				{4,3,2,3,3,2,3,1,2,2,1,0},	// mesopotamie
 				};
+		
+	}
+	
+	/**
+	 * Return the distance between 2 areas
+	 * @param area1 first area
+	 * @param area2 second area
+	 * @return the distance between area1 & area2
+	 */
+	public int distance(Area area1, Area area2){
+		
+		return(this.distances[area1.getNum()][area2.getNum()]);
+		
+	}
+	
+	
+	public void initializationDecks(){
+		
+		
+		
 		
 	}
 	

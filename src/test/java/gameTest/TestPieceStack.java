@@ -15,8 +15,8 @@ import org.junit.Test;
 
 public class TestPieceStack {
 	
-	private PiecesStack ps;
-	private Piece p1, p2, p3, p4;
+	private PiecesStack pieceStack;
+	private Piece piece1, piece2, piece3, piece4;
 	
 
 	@BeforeClass
@@ -29,22 +29,22 @@ public class TestPieceStack {
 
 	@Before
 	public void setUp() throws Exception {
-		ps = new PiecesStack();
+		pieceStack = new PiecesStack();
 		
 		Calendar c1 = new GregorianCalendar(1900, 11, 31);
 		Calendar c2 = new GregorianCalendar(1901, 3, 20);
 		Calendar c3 = new GregorianCalendar(1901, 2, 27);
 		Calendar c4 = new GregorianCalendar(1900, 11, 31);
 		
-		p1 = new Piece("red");
-		p2 = new Piece("blue");
-		p3 = new Piece("green");
-		p4 = new Piece("yellow");
+		piece1 = new Piece("red");
+		piece2 = new Piece("blue");
+		piece3 = new Piece("green");
+		piece4 = new Piece("yellow");
 		
-		p1.setTimeState(c1);
-		p2.setTimeState(c2);
-		p3.setTimeState(c3);
-		p4.setTimeState(c4);
+		piece1.setTimeState(c1);
+		piece2.setTimeState(c2);
+		piece3.setTimeState(c3);
+		piece4.setTimeState(c4);
 		
 		
 		
@@ -55,31 +55,37 @@ public class TestPieceStack {
 	}
 
 	@Test
+	/**
+	 * Test of the method addPiece()
+	 */
 	public void testAddPiece() {
 		
-		ps.addPiece(p1);
-		assertEquals("red ", ps.toString());
-		ps.addPiece(p2);
-		assertEquals("red blue ", ps.toString());
-		ps.addPiece(p3);
-		assertEquals("red green blue ", ps.toString());
-		ps.addPiece(p4);
-		assertEquals("yellow red green blue ", ps.toString());
+		pieceStack.addPiece(piece1);
+		assertEquals("red ", pieceStack.toString());
+		pieceStack.addPiece(piece2);
+		assertEquals("red blue ", pieceStack.toString());
+		pieceStack.addPiece(piece3);
+		assertEquals("red green blue ", pieceStack.toString());
+		pieceStack.addPiece(piece4);
+		assertEquals("yellow red green blue ", pieceStack.toString());
 		
 	}
 	
 	@Test
+	/**
+	 * Test of the method getFirst()
+	 */
 	public void testGetFirst(){
 		
-		ps.addPiece(p1);
-		ps.addPiece(p2);
-		ps.addPiece(p3);
-		ps.addPiece(p4);
+		pieceStack.addPiece(piece1);
+		pieceStack.addPiece(piece2);
+		pieceStack.addPiece(piece3);
+		pieceStack.addPiece(piece4);
 		
-		assertEquals("yellow", ps.getFirstPiece().getColor());
-		assertEquals("red", ps.getFirstPiece().getColor());
-		assertEquals("green", ps.getFirstPiece().getColor());
-		assertEquals("blue", ps.getFirstPiece().getColor());
+		assertEquals("yellow", pieceStack.getFirstPiece().getColor());
+		assertEquals("red", pieceStack.getFirstPiece().getColor());
+		assertEquals("green", pieceStack.getFirstPiece().getColor());
+		assertEquals("blue", pieceStack.getFirstPiece().getColor());
 		
 	}
 
