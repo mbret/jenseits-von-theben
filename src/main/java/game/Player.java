@@ -14,8 +14,8 @@ public class Player {
 	private int points;
 	
 	private Map<String, Integer> tokens; 
-	
 	private Map<String, Integer> competences;
+	private PlayerKnowledges playerKnowledges;
 	
 	
 	public Player(String name){
@@ -23,6 +23,7 @@ public class Player {
 		this.points = 0;
 		this.tokens = new HashMap<String, Integer>();
 		this.competences = new HashMap<String, Integer>();
+		this.playerKnowledges = new PlayerKnowledges();
 	}
 
 

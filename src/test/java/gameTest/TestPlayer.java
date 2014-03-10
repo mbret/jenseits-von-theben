@@ -27,10 +27,6 @@ public class TestPlayer {
 	@Before
 	public void setUp() throws Exception {
 		
-		playerKnowledges = new PlayerKnowledges();
-		playerKnowledges.setSpecificKnowledge(3);
-		playerKnowledges.setEthnologicalKnowledge(2);
-		
 		player = new Player("Test");
 		
 		
