@@ -123,6 +123,230 @@ public class Board {
 
     }
 	
+	private Card four[];
+	
+	
+	public Board(int nbPlayers){
+		
+		this.nbPlayers = nbPlayers;
+		this.piecesStack = new PiecesStack();
+		this.areas = new Area[12];
+		this.chrono = new Chrono();
+		this.chrono.initializationValues();
+		this.deck = new Deck();
+		this.sideDeck = new Deck();
+		this.four = new Card[4];
+		
+	}
+	
+	
+	
+	public Piece getCurrentPiece() {
+		return currentPiece;
+	}
+
+
+
+	public void setCurrentPiece(Piece currentPiece) {
+		this.currentPiece = currentPiece;
+	}
+
+
+
+	public PiecesStack getPiecesStack() {
+		return piecesStack;
+	}
+
+
+
+	public Area[] getAreas() {
+		return areas;
+	}
+	
+	public Deck getDeck(){
+		
+		return this.deck;
+	}
+	
+	public Deck getSideDeck(){
+		return this.sideDeck;
+	}
+	
+	/**
+	 * Print the content of the deck
+	 * @param deck Deck to print
+	 * @return the content of the deck
+	 */
+	public String printDeck(Deck deck){
+		
+		return deck.toString();
+		
+	}
+
+
+
+	/**
+	 * Initialization of areas
+	 */
+	public void initAreas(){
+		
+		TouristicArea londres = new TouristicArea(0,"Londres");
+		TouristicArea paris = new TouristicArea(1,"Paris");
+		TouristicArea berlin = new TouristicArea(2,"Berlin");
+		TouristicArea rome = new TouristicArea(3,"Rome");
+		TouristicArea vienne = new TouristicArea(4,"Vienne");
+		TouristicArea varsovie = new TouristicArea(5,"Varsovie");
+		TouristicArea moscou = new TouristicArea(6,"Moscou");
+		
+		ExcavationArea grece = new ExcavationArea(7,"Grece","Orange");
+		ExcavationArea crete = new ExcavationArea(8,"Crete","Violet");
+		ExcavationArea egypte = new ExcavationArea(9,"Egypte","Jaune");
+		ExcavationArea palestine = new ExcavationArea(10,"Palestine","Vert");
+		ExcavationArea mesopotamie = new ExcavationArea(11,"Mesopotamie","Bleu");
+		
+		
+		/*
+		 * Empty tokens
+		 */
+		for(int i = 0; i < 16; i++){
+			
+			grece.addToken(new Token("Empty", "Orange", 0));
+			crete.addToken(new Token("Empty", "Purple", 0));
+			egypte.addToken(new Token("Empty", "Yellow", 0));
+			palestine.addToken(new Token("Empty", "Green", 0));
+			mesopotamie.addToken(new Token("Empty", "Blue", 0));
+		}
+		
+		/*
+		 * Tokens Grece
+		 */
+		grece.addToken(new Token("Points", "Orange", 1));
+		grece.addToken(new Token("Points", "Orange", 1));
+		grece.addToken(new Token("Points", "Orange", 1));
+		grece.addToken(new Token("Points", "Orange", 1));
+		grece.addToken(new Token("Points", "Orange", 2));
+		grece.addToken(new Token("Points", "Orange", 2));
+		grece.addToken(new Token("Points", "Orange", 2));
+		grece.addToken(new Token("Points", "Orange", 3));
+		grece.addToken(new Token("Points", "Orange", 3));
+		grece.addToken(new Token("Points", "Orange", 4));
+		grece.addToken(new Token("Points", "Orange", 5));
+		grece.addToken(new Token("Points", "Orange", 5));
+		grece.addToken(new Token("Points", "Orange", 6));
+		grece.addToken(new Token("GeneralKnowledge", "All", 1));
+		grece.addToken(new Token("SpecificKnowledge", "Purple", 1));
+		
+		
+		/*
+		 * Tokens Crete
+		 */
+		crete.addToken(new Token("Points", "Purple", 1));
+		crete.addToken(new Token("Points", "Purple", 1));
+		crete.addToken(new Token("Points", "Purple", 1));
+		crete.addToken(new Token("Points", "Purple", 2));
+		crete.addToken(new Token("Points", "Purple", 2));
+		crete.addToken(new Token("Points", "Purple", 3));
+		crete.addToken(new Token("Points", "Purple", 3));
+		crete.addToken(new Token("Points", "Purple", 3));
+		crete.addToken(new Token("Points", "Purple", 3));
+		crete.addToken(new Token("Points", "Purple", 4));
+		crete.addToken(new Token("Points", "Purple", 4));
+		crete.addToken(new Token("Points", "Purple", 4));
+		crete.addToken(new Token("Points", "Purple", 5));
+		crete.addToken(new Token("GeneralKnowledge", "All", 1));
+		crete.addToken(new Token("SpecificKnowledge", "Orange", 1));
+		
+		
+		/*
+		 * Tokens Egypte
+		 */
+		egypte.addToken(new Token("Points", "Yellow", 1));
+		egypte.addToken(new Token("Points", "Yellow", 1));
+		egypte.addToken(new Token("Points", "Yellow", 1));
+		egypte.addToken(new Token("Points", "Yellow", 1));
+		egypte.addToken(new Token("Points", "Yellow", 2));
+		egypte.addToken(new Token("Points", "Yellow", 2));
+		egypte.addToken(new Token("Points", "Yellow", 3));
+		egypte.addToken(new Token("Points", "Yellow", 3));
+		egypte.addToken(new Token("Points", "Yellow", 3));
+		egypte.addToken(new Token("Points", "Yellow", 4));
+		egypte.addToken(new Token("Points", "Yellow", 4));
+		egypte.addToken(new Token("Points", "Yellow", 5));
+		egypte.addToken(new Token("Points", "Yellow", 6));
+		egypte.addToken(new Token("GeneralKnowledge", "All", 1));
+		egypte.addToken(new Token("SpecificKnowledge", "Blue", 1));
+		
+		
+		/*
+		 * Tokens Palestine
+		 */
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 2));
+		palestine.addToken(new Token("Points", "Green", 2));
+		palestine.addToken(new Token("Points", "Green", 2));
+		palestine.addToken(new Token("Points", "Green", 3));
+		palestine.addToken(new Token("Points", "Green", 4));
+		palestine.addToken(new Token("Points", "Green", 5));
+		palestine.addToken(new Token("Points", "Green", 6));
+		palestine.addToken(new Token("Points", "Green", 7));
+		palestine.addToken(new Token("GeneralKnowledge", "All", 1));
+		palestine.addToken(new Token("SpecificKnowledge", "Yellow", 1));
+		
+		
+		/*
+		 * Tokens Mesopotamie
+		 */
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 3));
+		mesopotamie.addToken(new Token("Points", "Blue", 3));
+		mesopotamie.addToken(new Token("Points", "Blue", 3));
+		mesopotamie.addToken(new Token("Points", "Blue", 4));
+		mesopotamie.addToken(new Token("Points", "Blue", 4));
+		mesopotamie.addToken(new Token("Points", "Blue", 4));
+		mesopotamie.addToken(new Token("Points", "Blue", 5));
+		mesopotamie.addToken(new Token("Points", "Blue", 5));
+		mesopotamie.addToken(new Token("GeneralKnowledge", "All", 1));
+		mesopotamie.addToken(new Token("SpecificKnowledge", "Green", 1));
+		
+		
+		
+		
+		
+		
+		areas[0] = londres; areas[1] = paris; areas[2] = berlin; areas[3] = rome; areas[4] = vienne; areas[5] = varsovie;
+		areas[6] = moscou; areas[7] = grece; areas[8] = crete; areas[9] = egypte; areas[10] = palestine; areas[11] = mesopotamie;
+		
+	}
+	
+	/**
+	 *  Initialization of the distances
+	 */
+	public void initDistances(){
+		
+		this.distances = new int[][]{
+				{0,1,1,2,2,2,3,3,3,4,4,4},	// londres -> 0
+				{1,0,1,1,1,2,3,2,2,3,3,3},	// paris -> 1
+				{1,1,0,2,2,1,2,2,3,3,4,4},	// berlin -> 2
+				{2,1,2,0,1,2,3,1,1,2,2,2},	// rome -> 3
+				{2,1,1,2,0,1,2,2,2,3,3,3},  // vienne -> 4
+				{2,2,2,1,1,0,1,1,2,3,3,2},	// varsovie -> 5
+				{3,3,3,2,2,1,0,2,3,4,4,3},	// moscou -> 6
+				{3,2,1,2,2,1,2,0,1,2,2,1},	// grece -> 7
+				{3,2,1,3,2,2,3,1,0,1,1,2},	// crete -> 8
+				{4,3,2,4,3,3,4,2,1,0,1,2},	// egypte -> 9
+				{4,3,4,4,3,3,4,2,1,1,0,1},	// palestine -> 10	
+				{4,3,2,3,3,2,3,1,2,2,1,0},	// mesopotamie -> 11
+				};
+		
+	}
 	
 	/**
 	 * Return the distance between 2 areas
@@ -137,10 +361,85 @@ public class Board {
 	}
 	
 	
-    /**
-     * Initialization of decks depending on the number of players
-     */
-    public void initializationDecks(){
+	/**
+	 * Initialization of decks depending on the number of players
+	 */
+	public void initializationDecks(){
+		
+		Deck firstDeck = new Deck();
+		
+	
+		/*
+		 * Creation of cards
+		 */
+		
+		
+		/*
+		 * GameCard
+		 */
+		
+		// Excavation authorization
+		firstDeck.addCard(new GameCard("ExcavationAuthorization", new TouristicArea(0, "Londres"), 3));
+		firstDeck.addCard(new GameCard("ExcavationAuthorization", new TouristicArea(6, "Moscou"), 3));
+		
+		// Zeppelin
+		firstDeck.addCard(new GameCard("Zeppelin", new TouristicArea(2, "Rome"), 1));
+		firstDeck.addCard(new GameCard("Zeppelin", new TouristicArea(4, "Vienne"), 1));
+		
+		// Car
+		firstDeck.addCard(new GameCard("Car", new TouristicArea(6, "Moscou"), 1));
+		firstDeck.addCard(new GameCard("Car", new TouristicArea(2, "Rome"), 1));
+		
+		// Congress
+		firstDeck.addCard(new GameCard("Congress", new TouristicArea(0, "London"), 2));
+		firstDeck.addCard(new GameCard("Congress", new TouristicArea(1, "Paris"), 2));
+		firstDeck.addCard(new GameCard("Congress", new TouristicArea(1, "Paris"), 2));
+		firstDeck.addCard(new GameCard("Congress", new TouristicArea(3, "Berlin"), 2));
+		firstDeck.addCard(new GameCard("Congress", new TouristicArea(3, "Berlin"), 2));
+		firstDeck.addCard(new GameCard("Congress", new TouristicArea(4, "Vienne"), 2));
+		firstDeck.addCard(new GameCard("Congress", new TouristicArea(4, "Vienne"), 2));
+		firstDeck.addCard(new GameCard("Congress", new TouristicArea(6, "Moscou"), 2));
+		firstDeck.addCard(new GameCard("Congress", new TouristicArea(6, "Moscou"), 2));
+		
+		//Assistant
+		firstDeck.addCard(new GameCard("Assistant", new TouristicArea(1, "Paris"), 2));
+		firstDeck.addCard(new GameCard("Assistant", new TouristicArea(1, "Paris"), 2));
+		firstDeck.addCard(new GameCard("Assistant", new TouristicArea(2, "Rome"), 2));
+		firstDeck.addCard(new GameCard("Assistant", new TouristicArea(3, "Berlin"), 2));
+		firstDeck.addCard(new GameCard("Assistant", new TouristicArea(4, "Vienne"), 2));
+		firstDeck.addCard(new GameCard("Assistant", new TouristicArea(4, "Vienne"), 2));
+		
+		//Shovel
+		firstDeck.addCard(new GameCard("Shovel", new TouristicArea(0, "Londres"), 3));
+		firstDeck.addCard(new GameCard("Shovel", new TouristicArea(0, "Londres"), 3));
+		firstDeck.addCard(new GameCard("Shovel", new TouristicArea(2, "Rome"), 3));
+		firstDeck.addCard(new GameCard("Shovel", new TouristicArea(2, "Rome"), 3));
+		firstDeck.addCard(new GameCard("Shovel", new TouristicArea(6, "Moscou"), 3));
+		firstDeck.addCard(new GameCard("Shovel", new TouristicArea(6, "Moscou"), 3));
+		
+		/*
+		 * KnowledgeCards
+		 */
+		
+		// General Knowledge
+		firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", new TouristicArea(1, "Paris"), 3, 1, "All"));
+		firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", new TouristicArea(2, "Rome"), 3, 1, "All"));
+		firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", new TouristicArea(3, "Berlin"), 3, 1, "All"));
+		firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", new TouristicArea(4, "Vienne"), 3, 1, "All"));
+		
+		firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", new TouristicArea(0, "Londre"), 6, 2, "All"));
+		firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", new TouristicArea(1, "Paris"), 6, 2, "All"));
+		firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", new TouristicArea(3, "Berlin"), 6, 2, "All"));
+		firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", new TouristicArea(6, "Moscou"), 6, 2, "All"));
+		
+		// Specific knowledge
+		
+		//Grece
+		
+		firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", new TouristicArea(2, "Rome"), 1, 1, "Orange"));
+		firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", new TouristicArea(3, "Berlin"), 1, 1, "Orange"));
+		firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", new TouristicArea(4, "Vienne"), 1, 1, "Orange"));
+		firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", new TouristicArea(6, "Moscou"), 1, 1, "Orange"));
 
             Deck firstDeck = new Deck();
 
