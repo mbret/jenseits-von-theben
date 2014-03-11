@@ -4,10 +4,10 @@ public class Token {
 
 	private String name;
 	private String color;
-	private String value;
+	private int value;
 	
 	
-	public Token(String name, String color, String value){
+	public Token(String name, String color, int value){
 		this.name = name;
 		this.color = color;
 		this.value = value;
@@ -23,12 +23,12 @@ public class Token {
 		return name;
 	}
 
-	public String getValue() {
+	public int getValue() {
 		return value;
 	}
 
 	public String toString(){
-		return this.getColor()+ " token";
+		return this.getName()+ " token coloured "+this.getColor();
 	}
 	
 }

@@ -6,6 +6,7 @@ package game;
 import java.util.LinkedList;
 import java.util.List;
 
+import tokens.Token;
 import cards.Card;
 import cards.ExpoCard;
 import cards.GameCard;
@@ -91,19 +92,27 @@ public class Board {
 	 */
 	public void initAreas(){
 		
-		Area londres = new TouristicArea(0,"Londres");
-		Area paris = new TouristicArea(1,"Paris");
-		Area berlin = new TouristicArea(2,"Berlin");
-		Area rome = new TouristicArea(3,"Rome");
-		Area vienne = new TouristicArea(4,"Vienne");
-		Area varsovie = new TouristicArea(5,"Varsovie");
-		Area moscou = new TouristicArea(6,"Moscou");
+		TouristicArea londres = new TouristicArea(0,"Londres");
+		TouristicArea paris = new TouristicArea(1,"Paris");
+		TouristicArea berlin = new TouristicArea(2,"Berlin");
+		TouristicArea rome = new TouristicArea(3,"Rome");
+		TouristicArea vienne = new TouristicArea(4,"Vienne");
+		TouristicArea varsovie = new TouristicArea(5,"Varsovie");
+		TouristicArea moscou = new TouristicArea(6,"Moscou");
 		
-		Area grece = new ExcavationArea(7,"Grece","Orange");
-		Area crete = new ExcavationArea(8,"Crete","Violet");
-		Area egypte = new ExcavationArea(9,"Egypte","Jaune");
-		Area palestine = new ExcavationArea(10,"Palestine","Vert");
-		Area mesopotamie = new ExcavationArea(11,"Mesopotamie","Bleu");
+		ExcavationArea grece = new ExcavationArea(7,"Grece","Orange");
+		ExcavationArea crete = new ExcavationArea(8,"Crete","Violet");
+		ExcavationArea egypte = new ExcavationArea(9,"Egypte","Jaune");
+		ExcavationArea palestine = new ExcavationArea(10,"Palestine","Vert");
+		ExcavationArea mesopotamie = new ExcavationArea(11,"Mesopotamie","Bleu");
+		
+		
+		for(int i = 0; i < 16; i++){
+			
+			grece.addToken(new Token("Empty", "Orange", 0));
+		}
+		
+		
 		
 		
 		areas[0] = londres; areas[1] = paris; areas[2] = berlin; areas[3] = rome; areas[4] = vienne; areas[5] = varsovie;
@@ -153,11 +162,7 @@ public class Board {
 		
 		Deck firstDeck = new Deck();
 		
-		
-		
-
-		
-		
+	
 		/*
 		 * Creation of cards
 		 */
@@ -322,6 +327,12 @@ public class Board {
 		Deck deck2 = new Deck();
 		
 		if(this.nbPlayers > 2){
+			
+			/*
+			 * 3 decks, same size, insert little expo in the 2nd deck, mix the 2nd deck, union with first deck
+			 * Big Expo in the 3rd deck
+			 */
+			
 			deck1 = (Deck) firstDeck.divideDeck(0, (firstDeck.size()/3));
 			deck2 = (Deck) firstDeck.divideDeck((firstDeck.size()/3), ((firstDeck.size()/3)+(firstDeck.size()/3)));
 
@@ -346,6 +357,10 @@ public class Board {
 			
 		}
 		else{
+			
+			/*
+			 * 2 decks, same size, insert little expo & big expo in the 2nd deck, mix the 2nd deck, union with first deck
+			 */
 			deck1 = (Deck) firstDeck.divideDeck(0, (firstDeck.size()/3));
 			deck2 = (Deck) firstDeck.divideDeck((firstDeck.size()/3), ((firstDeck.size()/3)+(firstDeck.size()/3)));
 
@@ -371,13 +386,10 @@ public class Board {
 			
 		}
 		
-		
-		
-		
 	}
 	
 	
-	
+
 
 
 	

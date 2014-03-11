@@ -23,7 +23,7 @@ public class Deck extends LinkedList<Card>{
 	public Card draw(){
 		
 			
-		return this.getFirst();
+		return this.removeFirst();
 		
 		
 	}
