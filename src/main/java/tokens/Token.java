@@ -1,19 +1,34 @@
 package tokens;
 
-public abstract class Token {
+public class Token {
 
+	private String name;
 	private String color;
+	private int value;
 	
-	public Token(String color){
+	
+	public Token(String name, String color, int value){
+		this.name = name;
 		this.color = color;
+		this.value = value;
 	}
 
 	public String getColor() {
 		return color;
 	}
 	
+	
+	
+	public String getName() {
+		return name;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
 	public String toString(){
-		return this.getColor()+ " token";
+		return this.getName()+ " token coloured "+this.getColor();
 	}
 	
 }

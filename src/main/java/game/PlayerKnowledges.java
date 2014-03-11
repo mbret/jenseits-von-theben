@@ -1,47 +1,59 @@
 package game;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PlayerKnowledges {
 	
-	public int specificKnowledge;
-	public int ethnologicalKnowledge;
-	public boolean excavationAuthorisation;
+	private int generalKnowledge;
+	private Map<String, Integer> specificKnowledges;
+	private Map<String, Integer> ethnologicalKnowledges;
 	
 	public PlayerKnowledges(){
+		this.generalKnowledge = 0;
+		this.specificKnowledges = new HashMap<String, Integer>();
+		this.ethnologicalKnowledges = new HashMap<String, Integer>();
 		
-		this.specificKnowledge = 0;
-		this.ethnologicalKnowledge = 0;
-		this.excavationAuthorisation = true;
+		this.specificKnowledges.put("Orange", 0);
+		this.specificKnowledges.put("Purple", 0);
+		this.specificKnowledges.put("Yellow", 0);
+		this.specificKnowledges.put("Green", 0);
+		this.specificKnowledges.put("Blue", 0);
+		
+		this.ethnologicalKnowledges.put("Orange", 0);
+		this.ethnologicalKnowledges.put("Purple", 0);
+		this.ethnologicalKnowledges.put("Yellow", 0);
+		this.ethnologicalKnowledges.put("Green", 0);
+		this.ethnologicalKnowledges.put("Blue", 0);
 		
 	}
 
-	public int getEthnologicalKnowledge() {
-		return ethnologicalKnowledge;
+	public int getGeneralKnowledge() {
+		return generalKnowledge;
 	}
 
-	public void setEthnologicalKnowledge(int ethnologicalKnowledge) {
-		this.ethnologicalKnowledge = ethnologicalKnowledge;
+	public void setGeneralKnowledge(int generalKnowledge) {
+		this.generalKnowledge = generalKnowledge;
 	}
 
-	public boolean isExcavationAuthorisation() {
-		return excavationAuthorisation;
+	public Map<String, Integer> getSpecificKnowledges() {
+		return specificKnowledges;
 	}
 
-	public void setExcavationAuthorisation(boolean excavationAuthorisation) {
-		this.excavationAuthorisation = excavationAuthorisation;
+	public void setSpecificKnowledges(Map<String, Integer> specificKnowledges) {
+		this.specificKnowledges = specificKnowledges;
 	}
 
-	public int getSpecificKnowledge() {
-		return specificKnowledge;
+	public Map<String, Integer> getEthnologicalKnowledges() {
+		return ethnologicalKnowledges;
+	}
+
+	public void setEthnologicalKnowledges(
+			Map<String, Integer> ethnologicalKnowledges) {
+		this.ethnologicalKnowledges = ethnologicalKnowledges;
 	}
 	
 	
-	public void setSpecificKnowledge(int specificKnowledge) {
-		this.specificKnowledge = specificKnowledge;
-	}
-
-	public String toString(){
-		return this.getSpecificKnowledge()+" specific knowledge points and "+this.getEthnologicalKnowledge()+" ethnological knowledge";
-	}
 	
 	
 
