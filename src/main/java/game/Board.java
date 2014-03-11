@@ -37,7 +37,7 @@ public class Board {
 
     /**
      * Player token stack, define the player's time to play
-     */
+     */ 
     private PlayerTokenStack piecesStack;
 
     /**
