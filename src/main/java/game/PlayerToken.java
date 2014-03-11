@@ -1,19 +1,40 @@
+/*
+ * Copyright (C) 2014 maxime
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package game;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
 import areas.Area;
 
-public class Piece implements Comparable{
+/**
+ * 
+ * @author maxime
+ */
+public class PlayerToken implements Comparable{
 	
 	private String color;
 	private Area position;
+        /**
+         * 
+         */
 	private Calendar timeState;
-	private Player player;
 	
-	
-	public Piece(String color){
+	public PlayerToken(String color){
 		this.color = color;
 	}
 
@@ -41,17 +62,6 @@ public class Piece implements Comparable{
 		this.timeState = timeState;
 	}
 	
-	
-	
-	
-	public Player getPlayer() {
-		return player;
-	}
-
-
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
 
 
 	public String toString(){
@@ -67,7 +77,7 @@ public class Piece implements Comparable{
 		
 		int result;
 		
-		Piece p = (Piece) o;
+		PlayerToken p = (PlayerToken) o;
 		
 		if(this.getTimeState().compareTo(p.getTimeState()) < 1)
 			result = -1;

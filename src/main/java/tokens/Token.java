@@ -6,7 +6,6 @@ public class Token {
 	private String color;
 	private int value;
 	
-	
 	public Token(String name, String color, int value){
 		this.name = name;
 		this.color = color;
@@ -16,8 +15,6 @@ public class Token {
 	public String getColor() {
 		return color;
 	}
-	
-	
 	
 	public String getName() {
 		return name;

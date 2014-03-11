@@ -3,6 +3,10 @@ package game;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author maxime
+ */
 public class PlayerKnowledges {
 	
 	private int generalKnowledge;

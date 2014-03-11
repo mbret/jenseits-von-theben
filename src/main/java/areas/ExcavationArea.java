@@ -1,40 +1,88 @@
+/*
+ * Copyright (C) 2014 maxime
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package areas;
 
 import java.util.Collections;
 import java.util.LinkedList;
-
 import tokens.Token;
 
-
+/**
+ * Excavation area
+ * 
+ * @author maxime
+ * @version 1.0
+ */
 public class ExcavationArea extends Area {
 	
-	private String color;
-	private LinkedList<Token> tokenList;
-	
-	
-	public ExcavationArea(int num, String name, String color){
-		super(num, name);
-		this.color = color;
-		this.tokenList = new LinkedList<Token>();
-	}
+    private String color;
+    /**
+     * linked list because of storage without condition, work with firt element only and few element inside
+     */
+    private LinkedList<Token> tokenList; 
+
+    /**
+     * 
+     * @param num
+     * @param name
+     * @param color 
+     */
+    public ExcavationArea(int num, String name, String color){
+        super(num, name);
+        this.color = color;
+        this.tokenList = new LinkedList<Token>();
+    }
+    
+    /**
+     * 
+     * @param num
+     * @param name
+     * @param color
+     * @param tokenList 
+     */
+    public ExcavationArea(int num, String name, String color, LinkedList<Token> tokenList){
+        super(num, name);
+        this.color = color;
+        this.tokenList = tokenList;
+    }
 
 
-	public String getColor() {
-		return color;
-	}
-	
-	public void addToken(Token token){
-		this.tokenList.add(token);
-	}
-	
-	public Token drawToken(){
-		
-		return this.tokenList.removeFirst();
-	}
-	
-	public void mixTokenList(){
-		Collections.shuffle(this.tokenList);
-	}
+    public String getColor() {
+        return color;
+    }
+
+    public void addToken(Token token){
+        this.tokenList.add(token);
+    }
+
+    /**
+     * Pick a token in the list
+     * @return 
+     */
+    public Token pickToken(){
+        return this.tokenList.removeFirst();
+    }
+
+    /**
+     * Mix the list randomly
+     */
+    public void mixTokenList(){
+        Collections.shuffle(this.tokenList);
+    }
 	
 
 }
