@@ -3,9 +3,6 @@ package game;
 
 
 
-import java.util.LinkedList;
-import java.util.List;
-
 import tokens.Token;
 import cards.Card;
 import cards.ExpoCard;
@@ -24,6 +21,8 @@ public class Board {
 	private Piece currentPiece;
 	private int distances[][];
 	
+	private Chrono chrono;
+	
 	private Deck deck;
 	private Deck sideDeck;
 	
@@ -35,6 +34,8 @@ public class Board {
 		this.nbPlayers = nbPlayers;
 		this.piecesStack = new PiecesStack();
 		this.areas = new Area[12];
+		this.chrono = new Chrono();
+		this.chrono.initializationValues();
 		this.deck = new Deck();
 		this.sideDeck = new Deck();
 		this.four = new Card[4];
@@ -107,10 +108,118 @@ public class Board {
 		ExcavationArea mesopotamie = new ExcavationArea(11,"Mesopotamie","Bleu");
 		
 		
+		/*
+		 * Empty tokens
+		 */
 		for(int i = 0; i < 16; i++){
 			
 			grece.addToken(new Token("Empty", "Orange", 0));
+			crete.addToken(new Token("Empty", "Purple", 0));
+			egypte.addToken(new Token("Empty", "Yellow", 0));
+			palestine.addToken(new Token("Empty", "Green", 0));
+			mesopotamie.addToken(new Token("Empty", "Blue", 0));
 		}
+		
+		/*
+		 * Tokens Grece
+		 */
+		grece.addToken(new Token("Points", "Orange", 1));
+		grece.addToken(new Token("Points", "Orange", 1));
+		grece.addToken(new Token("Points", "Orange", 1));
+		grece.addToken(new Token("Points", "Orange", 1));
+		grece.addToken(new Token("Points", "Orange", 2));
+		grece.addToken(new Token("Points", "Orange", 2));
+		grece.addToken(new Token("Points", "Orange", 2));
+		grece.addToken(new Token("Points", "Orange", 3));
+		grece.addToken(new Token("Points", "Orange", 3));
+		grece.addToken(new Token("Points", "Orange", 4));
+		grece.addToken(new Token("Points", "Orange", 5));
+		grece.addToken(new Token("Points", "Orange", 5));
+		grece.addToken(new Token("Points", "Orange", 6));
+		grece.addToken(new Token("GeneralKnowledge", "All", 1));
+		grece.addToken(new Token("SpecificKnowledge", "Purple", 1));
+		
+		
+		/*
+		 * Tokens Crete
+		 */
+		crete.addToken(new Token("Points", "Purple", 1));
+		crete.addToken(new Token("Points", "Purple", 1));
+		crete.addToken(new Token("Points", "Purple", 1));
+		crete.addToken(new Token("Points", "Purple", 2));
+		crete.addToken(new Token("Points", "Purple", 2));
+		crete.addToken(new Token("Points", "Purple", 3));
+		crete.addToken(new Token("Points", "Purple", 3));
+		crete.addToken(new Token("Points", "Purple", 3));
+		crete.addToken(new Token("Points", "Purple", 3));
+		crete.addToken(new Token("Points", "Purple", 4));
+		crete.addToken(new Token("Points", "Purple", 4));
+		crete.addToken(new Token("Points", "Purple", 4));
+		crete.addToken(new Token("Points", "Purple", 5));
+		crete.addToken(new Token("GeneralKnowledge", "All", 1));
+		crete.addToken(new Token("SpecificKnowledge", "Orange", 1));
+		
+		
+		/*
+		 * Tokens Egypte
+		 */
+		egypte.addToken(new Token("Points", "Yellow", 1));
+		egypte.addToken(new Token("Points", "Yellow", 1));
+		egypte.addToken(new Token("Points", "Yellow", 1));
+		egypte.addToken(new Token("Points", "Yellow", 1));
+		egypte.addToken(new Token("Points", "Yellow", 2));
+		egypte.addToken(new Token("Points", "Yellow", 2));
+		egypte.addToken(new Token("Points", "Yellow", 3));
+		egypte.addToken(new Token("Points", "Yellow", 3));
+		egypte.addToken(new Token("Points", "Yellow", 3));
+		egypte.addToken(new Token("Points", "Yellow", 4));
+		egypte.addToken(new Token("Points", "Yellow", 4));
+		egypte.addToken(new Token("Points", "Yellow", 5));
+		egypte.addToken(new Token("Points", "Yellow", 6));
+		egypte.addToken(new Token("GeneralKnowledge", "All", 1));
+		egypte.addToken(new Token("SpecificKnowledge", "Blue", 1));
+		
+		
+		/*
+		 * Tokens Palestine
+		 */
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 1));
+		palestine.addToken(new Token("Points", "Green", 2));
+		palestine.addToken(new Token("Points", "Green", 2));
+		palestine.addToken(new Token("Points", "Green", 2));
+		palestine.addToken(new Token("Points", "Green", 3));
+		palestine.addToken(new Token("Points", "Green", 4));
+		palestine.addToken(new Token("Points", "Green", 5));
+		palestine.addToken(new Token("Points", "Green", 6));
+		palestine.addToken(new Token("Points", "Green", 7));
+		palestine.addToken(new Token("GeneralKnowledge", "All", 1));
+		palestine.addToken(new Token("SpecificKnowledge", "Yellow", 1));
+		
+		
+		/*
+		 * Tokens Mesopotamie
+		 */
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 1));
+		mesopotamie.addToken(new Token("Points", "Blue", 3));
+		mesopotamie.addToken(new Token("Points", "Blue", 3));
+		mesopotamie.addToken(new Token("Points", "Blue", 3));
+		mesopotamie.addToken(new Token("Points", "Blue", 4));
+		mesopotamie.addToken(new Token("Points", "Blue", 4));
+		mesopotamie.addToken(new Token("Points", "Blue", 4));
+		mesopotamie.addToken(new Token("Points", "Blue", 5));
+		mesopotamie.addToken(new Token("Points", "Blue", 5));
+		mesopotamie.addToken(new Token("GeneralKnowledge", "All", 1));
+		mesopotamie.addToken(new Token("SpecificKnowledge", "Green", 1));
+		
+		
 		
 		
 		
@@ -177,8 +286,8 @@ public class Board {
 		firstDeck.addCard(new GameCard("ExcavationAuthorization", new TouristicArea(6, "Moscou"), 3));
 		
 		// Zeppelin
-		firstDeck.addCard(new GameCard("Zeppelin", new TouristicArea(0, "Londres"), 1));
-		firstDeck.addCard(new GameCard("Zeppelin", new TouristicArea(0, "Londres"), 1));
+		firstDeck.addCard(new GameCard("Zeppelin", new TouristicArea(2, "Rome"), 1));
+		firstDeck.addCard(new GameCard("Zeppelin", new TouristicArea(4, "Vienne"), 1));
 		
 		// Car
 		firstDeck.addCard(new GameCard("Car", new TouristicArea(6, "Moscou"), 1));
