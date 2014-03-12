@@ -25,33 +25,45 @@ import areas.Area;
  */
 public abstract class Card {
 	
+    /**
+     * name: used as key inside program
+     */
     private String name;
+    
+    /**
+     * displayName: name used graphical
+     */
+    private String displayName;
+    
     private String areaName;
-    private int cost = 0;
+    
+    
+    private int weekCost = 0;
 
     /**
      * 
      * @param name
      * @param areaName
-     * @param cost 
+     * @param weekCost 
      */
-    public Card(String name, String areaName, int cost){
+    public Card(String name, String areaName, int weekCost){
             this.name = name;
             this.areaName = areaName;
-            this.cost = cost;
+            this.weekCost = weekCost;
     }
 
     public String getName() {
             return name;
     }
 
-    public int getCost() {
-            return cost;
+    public int getWeekCost() {
+        return weekCost;
     }
 
-    public void setCost(int c){
-            this.cost = c;
+    public void setWeekCost(int weekCost) {
+        this.weekCost = weekCost;
     }
+
 
     public String getAreaName() {
         return areaName;
@@ -59,11 +71,6 @@ public abstract class Card {
 
     public void setAreaName(String areaName) {
         this.areaName = areaName;
-    }
-
-    @Override
-    public String toString() {
-        return "Card{" + "name=" + name + ", areaName=" + areaName + ", cost=" + cost + '}';
     }
     
     

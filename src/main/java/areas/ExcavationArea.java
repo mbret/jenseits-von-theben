@@ -29,7 +29,11 @@ import tokens.Token;
  */
 public class ExcavationArea extends Area {
 	
-    private String color;
+    /**
+     * codeColor: easiest than color name. Can be used with graphical api
+     */
+    private String codeColor;
+    
     /**
      * linked list because of storage without condition, work with firt element only and few element inside
      */
@@ -41,9 +45,9 @@ public class ExcavationArea extends Area {
      * @param name
      * @param color 
      */
-    public ExcavationArea(int num, String name, String color){
+    public ExcavationArea(int num, String name, String codeColor){
         super(num, name);
-        this.color = color;
+        this.codeColor = codeColor;
         this.tokenList = new LinkedList<Token>();
     }
     
@@ -54,16 +58,12 @@ public class ExcavationArea extends Area {
      * @param color
      * @param tokenList 
      */
-    public ExcavationArea(int num, String name, String color, LinkedList<Token> tokenList){
+    public ExcavationArea(int num, String name, String codeColor, LinkedList<Token> tokenList){
         super(num, name);
-        this.color = color;
+        this.codeColor = codeColor;
         this.tokenList = tokenList;
     }
 
-
-    public String getColor() {
-        return color;
-    }
 
     public void addToken(Token token){
         this.tokenList.add(token);
@@ -83,6 +83,10 @@ public class ExcavationArea extends Area {
     public void mixTokenList(){
         Collections.shuffle(this.tokenList);
     }
-	
 
+    public String getCodeColor() {
+        return codeColor;
+    }
+	
+    
 }

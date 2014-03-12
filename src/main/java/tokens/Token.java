@@ -1,15 +1,13 @@
 package tokens;
 
-public class Token {
+public abstract class Token {
 
 	private String name;
 	private String color;
-	private int value;
 	
-	public Token(String name, String color, int value){
+	public Token(String name, String color){
 		this.name = name;
 		this.color = color;
-		this.value = value;
 	}
 
 	public String getColor() {
@@ -18,10 +16,6 @@ public class Token {
 	
 	public String getName() {
 		return name;
-	}
-
-	public int getValue() {
-		return value;
 	}
 
 	public String toString(){

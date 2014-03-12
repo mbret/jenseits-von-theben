@@ -15,56 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package areas;
+package tokens;
 
 /**
- * Places allowed for moving
- * 
+ * A point token can be empty or with a value
  * @author maxime
- * @version 1.0
  */
-public abstract class Area {
-	
-    /**
-     * Number (used inside distance array)
-     */
-    private Integer num;
+public class PointToken extends Token{
+
+    private Integer value;
     
-    /**
-     * Used as key inside program
-     */
-    private String name;
+    public PointToken(String name, String color, Integer value) {
+        super(name, color);
+        this.value = value;
+    }
     
-    /**
-     * Used for graphical display
-     */
-    private String displayName;
-    
-    /**
-     * 
-     * @param num
-     * @param name 
-     */
-    public Area(Integer num, String name){
-        this.name = name;
-        this.num = num;
-    }
-
-
-    public Integer getNum() {
-        return num;
-    }
-
-
-
-    public String getName() {
-        return name;
-    }
-
-
-    @Override
-    public String toString(){
-        return "Area : "+this.getName();
-    }
-
 }

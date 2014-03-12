@@ -15,56 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package areas;
+package tokens;
 
 /**
- * Places allowed for moving
- * 
+ *
  * @author maxime
- * @version 1.0
  */
-public abstract class Area {
-	
-    /**
-     * Number (used inside distance array)
-     */
-    private Integer num;
+public class GeneralKnowledgeToken extends Token{
+
+    public GeneralKnowledgeToken(String name, String color) {
+        super(name, color);
+    }
     
-    /**
-     * Used as key inside program
-     */
-    private String name;
-    
-    /**
-     * Used for graphical display
-     */
-    private String displayName;
-    
-    /**
-     * 
-     * @param num
-     * @param name 
-     */
-    public Area(Integer num, String name){
-        this.name = name;
-        this.num = num;
-    }
-
-
-    public Integer getNum() {
-        return num;
-    }
-
-
-
-    public String getName() {
-        return name;
-    }
-
-
-    @Override
-    public String toString(){
-        return "Area : "+this.getName();
-    }
-
 }

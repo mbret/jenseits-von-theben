@@ -17,7 +17,7 @@
 
 package game;
 
-import tokens.Token;
+import tokens.*;
 import cards.Card;
 import cards.ExpoCard;
 import cards.GameCard;
@@ -25,7 +25,11 @@ import cards.KnowledgeCard;
 import areas.Area;
 import areas.ExcavationArea;
 import areas.TouristicArea;
+import com.sun.corba.se.spi.orb.OperationFactory;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -45,12 +49,12 @@ public class Board {
     /**
      *  
      */
-    private Area areas[];
+    private HashMap<String, Area> areas;
 
     /**
      * List of player with their game token
      */
-    private HashMap<Player, PlayerToken> players = new HashMap<Player, PlayerToken>();
+    private HashMap<Player, PlayerToken> players;
 
     private PlayerToken currentPlayerToken;
 
@@ -77,169 +81,130 @@ public class Board {
 
     private Card fourCurrentCards[];
 
+    /**
+     * HashMap used to determine how many token of each points are present in each excavation point
+     * Init from extern configuration
+     */
+    private HashMap<String, HashMap<Integer, Integer>> areasTokensConfiguration;
 
+    
     public Board(int nbPlayers){
+        
         this.nbPlayers = nbPlayers;
         this.piecesStack = new PlayerTokenStack();
-        this.areas = new Area[12];
+        this.areas = new HashMap<String, Area>();
         this.chrono = new Chrono();
         this.chrono.initializationValues();
         this.deck = new Deck();
         this.sideDeck = new Deck();
         this.fourCurrentCards = new Card[4];
-
+        this.players = new HashMap<Player, PlayerToken>();
+        
+        this.initFromConfig();
+        
+        this.initAreas();
+        
+        this.initializationDecks();
     }
-	
+    
     /**
-     * Print the content of the deck
-     * @param deck Deck to print
-     * @return the content of the deck
+     * Init some resources using extern configuration
      */
-    public String printDeck(Deck deck){
-        return deck.toString();
+    public void initFromConfig(){
+        
+        // to put inside properties
+        this.areasTokensConfiguration = new HashMap<String, HashMap<Integer, Integer>>(){{
+            put("greece", new HashMap<Integer, Integer>(){{
+                put(1, 4);
+                put(2, 3);
+                put(3, 2);
+                put(4, 1);
+                put(5, 2);
+                put(6, 1);
+            }});
+            put("crete", new HashMap<Integer, Integer>(){{
+                put(1, 3);
+                put(2, 2);
+                put(3, 4);
+                put(4, 3);
+                put(5, 1);
+                put(6, 0);
+            }});
+            put("egypte", new HashMap<Integer, Integer>(){{
+                put(1, 4);
+                put(2, 2);
+                put(3, 3);
+                put(4, 2);
+                put(5, 1);
+                put(6, 1);
+            }});
+            put("palestine", new HashMap<Integer, Integer>(){{
+                put(1, 5);
+                put(2, 3);
+                put(3, 1);
+                put(4, 1);
+                put(5, 1);
+                put(6, 1);
+                put(7, 1);
+            }});
+            put("mesopotamie", new HashMap<Integer, Integer>(){{
+                put(1, 5);
+                put(3, 3);
+                put(4, 3);
+                put(5, 2);
+                put(6, 1);
+                put(7, 1);
+            }});
+        }};
     }
-
 
     /**
      * Initialization of areas
      */
     public void initAreas(){
 
-            TouristicArea londres = new TouristicArea(0,"Londres");
-            TouristicArea paris = new TouristicArea(1,"Paris");
-            TouristicArea berlin = new TouristicArea(2,"Berlin");
-            TouristicArea rome = new TouristicArea(3,"Rome");
-            TouristicArea vienne = new TouristicArea(4,"Vienne");
-            TouristicArea varsovie = new TouristicArea(5,"Varsovie");
-            TouristicArea moscou = new TouristicArea(6,"Moscou");
+        Integer nbEmptyTokenPoint = 16; // put inside properties
 
-            ExcavationArea grece = new ExcavationArea(7,"Grece","Orange");
-            ExcavationArea crete = new ExcavationArea(8,"Crete","Violet");
-            ExcavationArea egypte = new ExcavationArea(9,"Egypte","Jaune");
-            ExcavationArea palestine = new ExcavationArea(10,"Palestine","Vert");
-            ExcavationArea mesopotamie = new ExcavationArea(11,"Mesopotamie","Bleu");
+        areas.put( "london", new TouristicArea(0,"london"));
+        areas.put( "paris", new TouristicArea(1,"paris"));
+        areas.put( "berlin", new TouristicArea(2,"berlin"));
+        areas.put( "roma", new TouristicArea(3,"roma"));
+        areas.put( "vienne", new TouristicArea(4,"vienne"));
+        areas.put( "varsovie", new TouristicArea(5,"varsovie"));
+        areas.put( "moscow", new TouristicArea(6,"moscow"));
+        areas.put( "greece", new ExcavationArea(7,"greece","#ff5b2b")); // orange
+        areas.put( "crete", new ExcavationArea(8,"crete","#895959")); // purple
+        areas.put( "egypte", new ExcavationArea(9,"egypte","#fff168")); // yello
+        areas.put( "palestine", new ExcavationArea(10,"palestine","#b7ca79")); // green
+        areas.put( "mesopotamie", new ExcavationArea(11,"mesopotamie","#375d81")); // blue
 
+        // Init tokens
+        for (Area area : areas.values()) {
+            if(area instanceof ExcavationArea){
+                ExcavationArea areaTmp = ((ExcavationArea)area);
 
-            /*
-             * Empty tokens
-             */
-            for(int i = 0; i < 16; i++){
+                 // Set empty tokens
+                for (int i = 0; i < nbEmptyTokenPoint; i++) {
+                    areaTmp.addToken( new PointToken("empty", areaTmp.getCodeColor(), 0)); // assign empty point
+                }
 
-                    grece.addToken(new Token("Empty", "Orange", 0));
-                    crete.addToken(new Token("Empty", "Purple", 0));
-                    egypte.addToken(new Token("Empty", "Yellow", 0));
-                    palestine.addToken(new Token("Empty", "Green", 0));
-                    mesopotamie.addToken(new Token("Empty", "Blue", 0));
+                // Set knowledge (one to each excavation area)
+                areaTmp.addToken( new GeneralKnowledgeToken("GeneralKnowledge", areaTmp.getCodeColor() ) );
+                areaTmp.addToken( new SpecificKnowledgeToken("SpecificKnowledge", areaTmp.getCodeColor() ) );
+
+                // Set point tokens
+                HashMap<Integer, Integer> pointsToAssign = this.areasTokensConfiguration.get( areaTmp.getName() ); // get points to assign according to this city
+                for (Map.Entry<Integer, Integer> pointValue : pointsToAssign.entrySet()) { // loop on each point value
+                    Integer value = pointValue.getKey();
+                    Integer nbTokenOfThisValue = pointValue.getValue();
+                    for (int i = 0; i < nbTokenOfThisValue; i++) {
+                        areaTmp.addToken( new PointToken("point", areaTmp.getCodeColor(), value ) ); // assign one token of this value
+                    }
+                }
             }
-
-            /*
-             * Tokens Grece
-             */
-            grece.addToken(new Token("Points", "Orange", 1));
-            grece.addToken(new Token("Points", "Orange", 1));
-            grece.addToken(new Token("Points", "Orange", 1));
-            grece.addToken(new Token("Points", "Orange", 1));
-            grece.addToken(new Token("Points", "Orange", 2));
-            grece.addToken(new Token("Points", "Orange", 2));
-            grece.addToken(new Token("Points", "Orange", 2));
-            grece.addToken(new Token("Points", "Orange", 3));
-            grece.addToken(new Token("Points", "Orange", 3));
-            grece.addToken(new Token("Points", "Orange", 4));
-            grece.addToken(new Token("Points", "Orange", 5));
-            grece.addToken(new Token("Points", "Orange", 5));
-            grece.addToken(new Token("Points", "Orange", 6));
-            grece.addToken(new Token("GeneralKnowledge", "All", 1));
-            grece.addToken(new Token("SpecificKnowledge", "Purple", 1));
-
-
-            /*
-             * Tokens Crete
-             */
-            crete.addToken(new Token("Points", "Purple", 1));
-            crete.addToken(new Token("Points", "Purple", 1));
-            crete.addToken(new Token("Points", "Purple", 1));
-            crete.addToken(new Token("Points", "Purple", 2));
-            crete.addToken(new Token("Points", "Purple", 2));
-            crete.addToken(new Token("Points", "Purple", 3));
-            crete.addToken(new Token("Points", "Purple", 3));
-            crete.addToken(new Token("Points", "Purple", 3));
-            crete.addToken(new Token("Points", "Purple", 3));
-            crete.addToken(new Token("Points", "Purple", 4));
-            crete.addToken(new Token("Points", "Purple", 4));
-            crete.addToken(new Token("Points", "Purple", 4));
-            crete.addToken(new Token("Points", "Purple", 5));
-            crete.addToken(new Token("GeneralKnowledge", "All", 1));
-            crete.addToken(new Token("SpecificKnowledge", "Orange", 1));
-
-
-            /*
-             * Tokens Egypte
-             */
-            egypte.addToken(new Token("Points", "Yellow", 1));
-            egypte.addToken(new Token("Points", "Yellow", 1));
-            egypte.addToken(new Token("Points", "Yellow", 1));
-            egypte.addToken(new Token("Points", "Yellow", 1));
-            egypte.addToken(new Token("Points", "Yellow", 2));
-            egypte.addToken(new Token("Points", "Yellow", 2));
-            egypte.addToken(new Token("Points", "Yellow", 3));
-            egypte.addToken(new Token("Points", "Yellow", 3));
-            egypte.addToken(new Token("Points", "Yellow", 3));
-            egypte.addToken(new Token("Points", "Yellow", 4));
-            egypte.addToken(new Token("Points", "Yellow", 4));
-            egypte.addToken(new Token("Points", "Yellow", 5));
-            egypte.addToken(new Token("Points", "Yellow", 6));
-            egypte.addToken(new Token("GeneralKnowledge", "All", 1));
-            egypte.addToken(new Token("SpecificKnowledge", "Blue", 1));
-
-
-            /*
-             * Tokens Palestine
-             */
-            palestine.addToken(new Token("Points", "Green", 1));
-            palestine.addToken(new Token("Points", "Green", 1));
-            palestine.addToken(new Token("Points", "Green", 1));
-            palestine.addToken(new Token("Points", "Green", 1));
-            palestine.addToken(new Token("Points", "Green", 1));
-            palestine.addToken(new Token("Points", "Green", 2));
-            palestine.addToken(new Token("Points", "Green", 2));
-            palestine.addToken(new Token("Points", "Green", 2));
-            palestine.addToken(new Token("Points", "Green", 3));
-            palestine.addToken(new Token("Points", "Green", 4));
-            palestine.addToken(new Token("Points", "Green", 5));
-            palestine.addToken(new Token("Points", "Green", 6));
-            palestine.addToken(new Token("Points", "Green", 7));
-            palestine.addToken(new Token("GeneralKnowledge", "All", 1));
-            palestine.addToken(new Token("SpecificKnowledge", "Yellow", 1));
-
-
-            /*
-             * Tokens Mesopotamie
-             */
-            mesopotamie.addToken(new Token("Points", "Blue", 1));
-            mesopotamie.addToken(new Token("Points", "Blue", 1));
-            mesopotamie.addToken(new Token("Points", "Blue", 1));
-            mesopotamie.addToken(new Token("Points", "Blue", 1));
-            mesopotamie.addToken(new Token("Points", "Blue", 1));
-            mesopotamie.addToken(new Token("Points", "Blue", 3));
-            mesopotamie.addToken(new Token("Points", "Blue", 3));
-            mesopotamie.addToken(new Token("Points", "Blue", 3));
-            mesopotamie.addToken(new Token("Points", "Blue", 4));
-            mesopotamie.addToken(new Token("Points", "Blue", 4));
-            mesopotamie.addToken(new Token("Points", "Blue", 4));
-            mesopotamie.addToken(new Token("Points", "Blue", 5));
-            mesopotamie.addToken(new Token("Points", "Blue", 5));
-            mesopotamie.addToken(new Token("GeneralKnowledge", "All", 1));
-            mesopotamie.addToken(new Token("SpecificKnowledge", "Green", 1));
-
-
-
-
-
-
-            areas[0] = londres; areas[1] = paris; areas[2] = berlin; areas[3] = rome; areas[4] = vienne; areas[5] = varsovie;
-            areas[6] = moscou; areas[7] = grece; areas[8] = crete; areas[9] = egypte; areas[10] = palestine; areas[11] = mesopotamie;
-
+        }
     }
+    
 	
     /**
      * Return the distance between 2 areas
@@ -247,7 +212,10 @@ public class Board {
      * @param area2 second area
      * @return the distance between area1 & area2
      */
-    public static int distance(Area area1, Area area2){
+    public static int distance(Area area1, Area area2) throws InstantiationException{
+        if(Board.distances == null){
+            throw new InstantiationException("You must instanciate this class once before using this static method");
+        }
         return(Board.distances[area1.getNum()][area2.getNum()]);
     }
 	
@@ -494,6 +462,10 @@ public class Board {
      *  
     ************************************************************************************************/
     
+    /**
+     * 
+     * @return 
+     */
     public PlayerToken getCurrentPlayerToken() {
         return currentPlayerToken;
     }
