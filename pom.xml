@@ -8,7 +8,7 @@
   <packaging>jar</packaging>
 
   <name>jenseits-von-theben</name>
-  <url>http://maven.apache.org</url>
+  <url>https://github.com/mbret/jenseits-von-theben</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,8 +18,9 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.11</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
 </project>
