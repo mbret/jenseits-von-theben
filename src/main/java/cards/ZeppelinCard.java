@@ -15,42 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cards;
-import java.util.ArrayList;
-import java.util.List;
-import tokens.PointToken;
+package cards; 
 
 /**
- * 
+ * Allow the user to remove cost of one travel
  * @author maxime
  */
-public class ExpoCard extends Card {
-	
-    private boolean bigExpo;
-    private int value;
-    private List<PointToken> tokens;
+public class ZeppelinCard extends Card{
 
-    public ExpoCard(String name, String areaName,int cost,  boolean bigExpo) {
-        super(name, areaName, cost);
-        this.bigExpo = bigExpo;
-        this.tokens = new ArrayList<PointToken>();
-    }
-
-    public int getValue(){
-        return value;
-    }
-
-    public boolean getBigExpo(){
-        return bigExpo;
-    }
-
-    public String toString(){
-        return "Exposition "+super.toString();
+    
+    public ZeppelinCard(String areaName, int weekCost) {
+        super("", areaName, weekCost);
     }
 
     @Override
     public boolean isDiscardable() {
-        return false;
+        return true;
     }
+    
+    
     
 }

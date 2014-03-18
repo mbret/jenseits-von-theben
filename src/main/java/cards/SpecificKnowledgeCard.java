@@ -16,41 +16,33 @@
  */
 
 package cards;
-import java.util.ArrayList;
-import java.util.List;
-import tokens.PointToken;
 
 /**
  * 
  * @author maxime
  */
-public class ExpoCard extends Card {
+public class SpecificKnowledgeCard extends Card{
 	
-    private boolean bigExpo;
     private int value;
-    private List<PointToken> tokens;
+    private String codeColor;
 
-    public ExpoCard(String name, String areaName,int cost,  boolean bigExpo) {
-        super(name, areaName, cost);
-        this.bigExpo = bigExpo;
-        this.tokens = new ArrayList<PointToken>();
+    public SpecificKnowledgeCard(String areaName, int weekCost, int value, String codeColor) {
+            super("",areaName,weekCost);
+            this.value = value;
+            this.codeColor = codeColor;
     }
 
-    public int getValue(){
-        return value;
+    public int getValue() {
+            return value;
     }
 
-    public boolean getBigExpo(){
-        return bigExpo;
-    }
-
-    public String toString(){
-        return "Exposition "+super.toString();
+    public String getCodeColor() {
+        return codeColor;
     }
 
     @Override
     public boolean isDiscardable() {
         return false;
     }
-    
+
 }

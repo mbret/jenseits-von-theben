@@ -18,32 +18,18 @@
 package cards;
 
 /**
- * 
+ * Allow user to reduce travel cost of 1 week if the travel is longer than 2 weeks
  * @author maxime
  */
-public class KnowledgeCard extends Card{
-	
-	private int value;
-	private String color;
+public class CarCard extends Card{
 
-	public KnowledgeCard(String name, String areaName, int cost, int value, String color) {
-		super(name,areaName,cost);
-		this.value = value;
-		this.color = color;
-		
-		
-	}
+    public CarCard(String areaName, int weekCost) {
+        super("", areaName, weekCost);
+    }
 
-	public int getValue() {
-		return value;
-	}
-	
-	public String getColor(){
-		return color;
-	}
-	
-	public String toString(){
-		return "Knowledge "+ super.toString()+" and worthing "+this.getValue()+" points coloured "+this.getColor();
-	}
-
+    @Override
+    public boolean isDiscardable() {
+        return false;
+    }
+    
 }

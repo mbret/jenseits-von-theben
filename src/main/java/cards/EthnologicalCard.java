@@ -18,21 +18,30 @@
 package cards;
 
 /**
- * 
+ *
  * @author maxime
  */
-public class GameCard extends Card{
+public class EthnologicalCard extends Card{
+    
+    private int value;
+    private String codeColor;
 
-	public GameCard(String name, String areaName, int cost) {
-		super(name, areaName, cost);
-		
-	}
-	
-        @Override
-	public String toString(){
-		
-		return this.getName()+super.toString();
-		
-	}
+    public EthnologicalCard(String areaName, int weekCost, int value, String codeColor) {
+            super("",areaName,weekCost);
+            this.value = value;
+            this.codeColor = codeColor;
+    }
 
+    public int getValue() {
+            return value;
+    }
+
+    public String getCodeColor() {
+        return codeColor;
+    }
+
+    @Override
+    public boolean isDiscardable() {
+        return false;
+    }
 }

@@ -51,6 +51,16 @@ public abstract class Card {
             this.areaName = areaName;
             this.weekCost = weekCost;
     }
+    
+    /**
+     * 
+     * @param name
+     * @param areaName 
+     */
+    public Card(String name, String areaName){
+            this.name = name;
+            this.areaName = areaName;
+    }
 
     public String getName() {
             return name;
@@ -73,7 +83,7 @@ public abstract class Card {
         this.areaName = areaName;
     }
     
-    
+    abstract public boolean isDiscardable();
 
         
 }

@@ -16,41 +16,22 @@
  */
 
 package cards;
-import java.util.ArrayList;
-import java.util.List;
-import tokens.PointToken;
 
 /**
- * 
+ * Allow user to make a supplementary excavation action during the current year
  * @author maxime
  */
-public class ExpoCard extends Card {
-	
-    private boolean bigExpo;
-    private int value;
-    private List<PointToken> tokens;
+public class ExcavationAuthorizationCard extends Card{
 
-    public ExpoCard(String name, String areaName,int cost,  boolean bigExpo) {
-        super(name, areaName, cost);
-        this.bigExpo = bigExpo;
-        this.tokens = new ArrayList<PointToken>();
-    }
-
-    public int getValue(){
-        return value;
-    }
-
-    public boolean getBigExpo(){
-        return bigExpo;
-    }
-
-    public String toString(){
-        return "Exposition "+super.toString();
+    public ExcavationAuthorizationCard(String areaName, int weekCost) {
+        super("", areaName, weekCost);
     }
 
     @Override
     public boolean isDiscardable() {
-        return false;
+        return true;
     }
+    
+    
     
 }

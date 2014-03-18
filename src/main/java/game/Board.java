@@ -20,14 +20,16 @@ package game;
 import tokens.*;
 import cards.Card;
 import cards.ExpoCard;
-import cards.GameCard;
-import cards.KnowledgeCard;
+import cards.GeneralKnowledgeCard;
 import areas.Area;
 import areas.ExcavationArea;
 import areas.TouristicArea;
-import com.sun.corba.se.spi.orb.OperationFactory;
-import java.lang.reflect.Array;
-import java.util.Arrays;
+import cards.AssistantCard;
+import cards.CarCard;
+import cards.CongressCard;
+import cards.ExcavationAuthorizationCard;
+import cards.ShovelCard;
+import cards.ZeppelinCard;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -211,6 +213,7 @@ public class Board {
      * @param area1 first area
      * @param area2 second area
      * @return the distance between area1 & area2
+     * @throws java.lang.InstantiationException
      */
     public static int distance(Area area1, Area area2) throws InstantiationException{
         if(Board.distances == null){
@@ -239,140 +242,127 @@ public class Board {
          */
 
         // Excavation authorization
-        firstDeck.addCard(new GameCard("ExcavationAuthorization", "Londres", 3));
-        firstDeck.addCard(new GameCard("ExcavationAuthorization", "Moscou", 3));
+        firstDeck.addCard(new ExcavationAuthorizationCard("london", 3));
+        firstDeck.addCard(new ExcavationAuthorizationCard("moscow", 3));
 
         // Zeppelin
-        firstDeck.addCard(new GameCard("Zeppelin", "Londres", 1));
-        firstDeck.addCard(new GameCard("Zeppelin", "Londres", 1));
+        firstDeck.addCard(new ZeppelinCard("london", 1));
+        firstDeck.addCard(new ZeppelinCard("london", 1));
 
         // Car
-        firstDeck.addCard(new GameCard("Car", "Moscou", 1));
-        firstDeck.addCard(new GameCard("Car", "Rome", 1));
+        firstDeck.addCard(new CarCard("moscow", 1));
+        firstDeck.addCard(new CarCard("roma", 1));
 
         // Congress
-        firstDeck.addCard(new GameCard("Congress", "London", 2));
-        firstDeck.addCard(new GameCard("Congress", "Paris", 2));
-        firstDeck.addCard(new GameCard("Congress", "Paris", 2));
-        firstDeck.addCard(new GameCard("Congress", "Berlin", 2));
-        firstDeck.addCard(new GameCard("Congress", "Berlin", 2));
-        firstDeck.addCard(new GameCard("Congress", "Vienne", 2));
-        firstDeck.addCard(new GameCard("Congress", "Vienne", 2));
-        firstDeck.addCard(new GameCard("Congress", "Moscou", 2));
-        firstDeck.addCard(new GameCard("Congress", "Moscou", 2));
+        firstDeck.addCard(new CongressCard("London", 2));
+        firstDeck.addCard(new CongressCard("Paris", 2));
+        firstDeck.addCard(new CongressCard("Paris", 2));
+        firstDeck.addCard(new CongressCard("Berlin", 2));
+        firstDeck.addCard(new CongressCard("Berlin", 2));
+        firstDeck.addCard(new CongressCard("Vienne", 2));
+        firstDeck.addCard(new CongressCard("Vienne", 2));
+        firstDeck.addCard(new CongressCard("Moscou", 2));
+        firstDeck.addCard(new CongressCard("Moscou", 2));
 
         //Assistant
-        firstDeck.addCard(new GameCard("Assistant", "Paris", 2));
-        firstDeck.addCard(new GameCard("Assistant", "Paris", 2));
-        firstDeck.addCard(new GameCard("Assistant", "Rome", 2));
-        firstDeck.addCard(new GameCard("Assistant", "Berlin", 2));
-        firstDeck.addCard(new GameCard("Assistant", "Vienne", 2));
-        firstDeck.addCard(new GameCard("Assistant", "Vienne", 2));
+        firstDeck.addCard(new AssistantCard("Paris", 2));
+        firstDeck.addCard(new AssistantCard("Paris", 2));
+        firstDeck.addCard(new AssistantCard("Rome", 2));
+        firstDeck.addCard(new AssistantCard("Berlin", 2));
+        firstDeck.addCard(new AssistantCard("Vienne", 2));
+        firstDeck.addCard(new AssistantCard("Vienne", 2));
 
         //Shovel
-        firstDeck.addCard(new GameCard("Shovel", "Londres", 3));
-        firstDeck.addCard(new GameCard("Shovel", "Londres", 3));
-        firstDeck.addCard(new GameCard("Shovel", "Rome", 3));
-        firstDeck.addCard(new GameCard("Shovel", "Rome", 3));
-        firstDeck.addCard(new GameCard("Shovel", "Moscou", 3));
-        firstDeck.addCard(new GameCard("Shovel", "Moscou", 3));
+        firstDeck.addCard(new ShovelCard("Londres", 3));
+        firstDeck.addCard(new ShovelCard("Londres", 3));
+        firstDeck.addCard(new ShovelCard("Rome", 3));
+        firstDeck.addCard(new ShovelCard("Rome", 3));
+        firstDeck.addCard(new ShovelCard("Moscou", 3));
+        firstDeck.addCard(new ShovelCard("Moscou", 3));
 
         /*
          * KnowledgeCards
          */
 
         // General Knowledge
-        firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", "Paris", 3, 1, "All"));
-        firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", "Rome", 3, 1, "All"));
-        firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", "Berlin", 3, 1, "All"));
-        firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", "Vienne", 3, 1, "All"));
+        firstDeck.addCard( new GeneralKnowledgeCard("Paris", 3, 1) );
+        firstDeck.addCard( new GeneralKnowledgeCard("Rome", 3, 1));
+        firstDeck.addCard( new GeneralKnowledgeCard("Berlin", 3, 1));
+        firstDeck.addCard( new GeneralKnowledgeCard("Vienne", 3, 1));
+        firstDeck.addCard( new GeneralKnowledgeCard("Londre", 6, 2));
+        firstDeck.addCard( new GeneralKnowledgeCard("paris", 6, 2));
+        firstDeck.addCard( new GeneralKnowledgeCard("berlin", 6, 2));
+        firstDeck.addCard( new GeneralKnowledgeCard("Moscou", 6, 2));
 
-        firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", "Londre", 6, 2, "All"));
-        firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", "Paris", 6, 2, "All"));
-        firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", "Berlin", 6, 2, "All"));
-        firstDeck.addCard(new KnowledgeCard("GeneralKnowledge", "Moscou", 6, 2, "All"));
-
-        // Specific knowledge
+        // SpecGeneralKnowledgeCarde
 
         //Grece
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Rome", 1, 1, "Orange"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Berlin", 1, 1, "Orange"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Vienne", 1, 1, "Orange"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Moscou", 1, 1, "Orange"));
+        firstDeck.addCard(new KnowledgeCard("SpecifGeneralKnowledgeCard "Rome", 1, 1, "Orange"));
+        firstDeck.addCard(new KnowledgeCard("SGeneralKnowledgeCarddge", "Berlin", 1, 1, "Orange"));
+        firstDeck.addCard(new KnowledgeGeneralKnowledgeCardcKnowledge", "Vienne", 1, 1, "Orange"));
+        firstDeck.addCard(new KnoGeneralKnowledgeCardpecificKnowledge", "Moscou", 1, 1, "Orange"));
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Londres", 2, 2, "Orange"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Rome", 2, 2, "Orange"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Rome", 2, 2, "Orange"));
+        firstDeck.addCard(GeneralKnowledgeCardCard("SpecificKnowledge", "Londres", 2, 2, "Orange"));
+        firstDecGeneralKnowledgeCard KnowledgeCard("SpecificKnowledge", "Rome", 2, 2, "Orange"));
+        fiGeneralKnowledgeCardrd(new KnowledgeCard("SpecificKnowledge", "Rome", 2, 2, "Orange"));
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Londres", 4, 3, "Orange"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Berlin", 4, 4, "Orange"));
+     GeneralKnowledgeCardaddCard(new KnowledgeCard("SpecificKnowledge", "Londres", 4, 3, "Orange"));
+        firstDecGeneralKnowledgeCard KnowledgeCard("SpecificKnowledge", "Berlin", 4, 4, "Orange"));
 
 
-        //Crete
+      GeneralKnowledgeCard      firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 1GeneralKnowledgeCard));
+        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "BerGeneralKnowledgeCardPurple"));
+        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge"GeneralKnowledgeCard, 1, "Purple"));
+        firstDeck.addCard(new KnowledgeCard("SpecificKnGeneralKnowledgeCardenne", 1, 1, "Purple"));
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 1, 1, "Purple"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Berlin", 1, 1, "Purple"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Berlin", 1, 1, "Purple"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Vienne", 1, 1, "Purple"));
+        firstDeck.addCard(new KnowledgeCard("GeneralKnowledgeCardedge", "Paris", 2, 2, "Purple"));
+        firstDeck.addCard(new KnowledgeCGeneralKnowledgeCardKnowledge", "Rome", 2, 2, "Purple"));
+        firstDeck.addCard(new KnowlGeneralKnowledgeCardcificKnowledge", "Vienne", 2, 2, "Purple"));
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 2, 2, "Purple"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Rome", 2, 2, "Purple"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Vienne", 2, 2, "Purple"));
-
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Moscou", 4, 3, "Purple"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Moscou", 4, 4, "Purple"));	
+        firstDeck.addCard(new KnowledgeCard("SpecGeneralKnowledgeCard", "Moscou", 4, 3, "Purple"));
+        firstDeck.addCard(new KnowledgeCaGeneralKnowledgeCardnowledge", "Moscou", 4, 4, "Purple"));	
 
 
 
         //Egypte
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 1, 1, "Yellow"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 1, 1, "Yellow"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Rome", 1, 1, "Yellow"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Moscou", 1, 1, "Yellow"));
-
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Londres", 2, 2, "Yellow"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Berlin", 2, 2, "Yellow"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Berlin", 2, 2, "Yellow"));
-
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Londres", 4, 3, "Yellow"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Moscou", 4, 4, "Yellow"));
+        firGeneralKnowledgeCardd(new KnowledgeCard("SpecificKnowledge", "Paris", 1, 1, "Yellow"));
+   GeneralKnowledgeCardk.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 1, 1, "Yellow"))GeneralKnowledgeCardstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Rome", 1, 1, "YelloGeneralKnowledgeCard firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Moscou", 1, 1,GeneralKnowledgeCard
+        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "LondresGeneralKnowledgeCardlow"));
+        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "GeneralKnowledgeCard, "Yellow"));
+        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Berlin", 2, 2, "YGeneralKnowledgeCard      firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "LondreGeneralKnowledgeCardllow"));
+        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge"GeneralKnowledgeCard, 4, "Yellow"));
 
 
 
         //Palestine
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Rome", 1, 1, "Green"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Vienne", 1, 1, "Green"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Vienne", 1, 1, "Green"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Vienne", 1, 1, "Green"));
+        firstDeck.addCard(new KGeneralKnowledgeCard"SpecificKnowledge", "Rome", 1, 1, "Green"));
+        firstDeck.addCard(nGeneralKnowledgeCardard("SpecificKnowledge", "Vienne", 1, 1, "Green"));
+        firstDeck.addGeneralKnowledgeCardledgeCard("SpecificKnowledge", "Vienne", 1, 1, "Green"));
+        firstGeneralKnowledgeCardnew KnowledgeCard("SpecificKnowledge", "Vienne", 1, 1, "Green"));
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Londres", 2, 2, "Green"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 2, 2, "Green"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Berlin", 2, 2, "Green"));
+      GeneralKnowledgeCardddCard(new KnowledgeCard("SpecificKnowledge", "Londres", 2, 2, "Green"));GeneralKnowledgeCardtDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 2, 2, "Green"));
+        firstDeckGeneralKnowledgeCardKnowledgeCard("SpecificKnowledge", "Berlin", 2, 2, "Green"));
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Londres", 4, 3, "Green"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 4, 4, "Green"));
+       GeneralKnowledgeCarddCard(new KnowledgeCard("SpecificKnowledge", "Londres", 4, 3, "Green"GeneralKnowledgeCardirstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 4, 4, GeneralKnowledgeCard        //Mesopotamie
 
+        firstDeck.addCard(new KnowledgeCard("SpecGeneralKnowledgeCard", "Paris", 1, 1, "Blue"));
+        firstDeck.addCard(new KnowledgeCard(GeneralKnowledgeCardledge", "Rome", 1, 1, "Blue"));
+        firstDeck.addCard(new KnowledgeGeneralKnowledgeCardcKnowledge", "Moscou", 1, 1, "Blue"));
+        firstDeck.addCard(new KnoGeneralKnowledgeCardpecificKnowledge", "Moscou", 1, 1, "Blue"));
 
-        //Mesopotamie
+        firstDeck.addCard(GeneralKnowledgeCardCard("SpecificKnowledge", "Londres", 2, 2, "Blue"));
+        firstDeck.addCard(new KnowledgeCard("SpecificGeneralKnowledgeCardVienne", 2, 2, "Blue"));
+        firstDeck.addCard(new KnowledgeCard("SpecifiGeneralKnowledgeCard"Vienne", 2, 2, "Blue"));
 
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Paris", 1, 1, "Blue"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Rome", 1, 1, "Blue"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Moscou", 1, 1, "Blue"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Moscou", 1, 1, "Blue"));
-
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Londres", 2, 2, "Blue"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Vienne", 2, 2, "Blue"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Vienne", 2, 2, "Blue"));
-
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Londres", 4, 3, "Blue"));
-        firstDeck.addCard(new KnowledgeCard("SpecificKnowledge", "Moscou", 4, 4, "Blue"));
+        firstDeck.addCard(new KnowledgeCard("SpecGeneralKnowledgeCard", "Londres", 4, 3, "Blue"));
+        firstDeck.addCard(new KnowledgeCard("GeneralKnowledgeCardedge", "Moscou", 4, 4, "Blue"));
 
 
         //Ethnological knowledge
-        firstDeck.addCard(new KnowledgeCard("EthnologicalKnowledge", "Moscou", 1, 2, "Orange"));
+        GeneralKnowledgeCardCard(new KnowledgeCard("EthnologicalKnowledge", "Moscou", 1, 2, "Orange"));
         firstDeck.addCard(new KnowledgeCard("EthnologicalKnowledge", "Paris", 1, 2, "Purple"));
         firstDeck.addCard(new KnowledgeCard("EthnologicalKnowledge", "Rome", 1, 2, "Yellow"));
         firstDeck.addCard(new KnowledgeCard("EthnologicalKnowledge", "Vienne", 1, 2, "Green"));
