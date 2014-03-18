@@ -3,6 +3,8 @@ jenseits-von-theben
 
 Advanced Java M1 MIAGE
 
+* Scrum panel: https://trello.com/b/enM9BP2E/projet-jenseits-von-theben
+
 Use of Github
 --------------
 * Do not forget to often check and eventually merge master branch (or desired part) with your local work to avoid outdated works and stay in the dev line
