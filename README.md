@@ -13,7 +13,7 @@ To merge a local branch with another branch
 
 Branch
 -------
-| Branch	  | Detail |
+| Name	  | Detail |
 | ------------- | ------------- |
 | master  | latest project build merged from dev (only the repository owner can manage this  |
 | dev  | merged current works for all developpers (all developpers have access)  |
