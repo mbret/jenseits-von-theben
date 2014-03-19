@@ -27,6 +27,9 @@ There is no doubt about an easiest way with cloning but I never tried :D
 ### Useful commands
 * 
 
+### Useful links
+* Fetching a remote: https://help.github.com/articles/fetching-a-remote
+
 Branch
 -------
 | Name	  | Detail |
