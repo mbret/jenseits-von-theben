@@ -24,6 +24,9 @@ There is no doubt about an easiest way with cloning but I never tried :D
 * `git merge master` will merge local/master with your current local/branch
 * Netbeans: `git > Branch\Tag > Merge Revision..` will allow you to merge local or remote branch with your current local/branch
 
+### Useful commands
+* 
+
 Branch
 -------
 | Name	  | Detail |
