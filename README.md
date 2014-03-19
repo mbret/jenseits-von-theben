@@ -10,7 +10,7 @@ Use of Git and Github
 * Do not forget to often check and eventually merge master branch (or desired part) with your local work to avoid outdated works and stay in the dev line
 * Never push anything on remote/master if your are not allowed!
 
-### reate and connect my project with the repository
+### Create and connect my project with the repository
 * Create project (we use Maven) on local
 * Download the .gitignore https://github.com/mbret/jenseits-von-theben/blob/master/.gitignore and put inside root project folder
 * Make a first commit
