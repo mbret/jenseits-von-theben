@@ -29,6 +29,7 @@ public class PlayerToken implements Comparable{
 	
 	private String color;
 	private Area position;
+        
         /**
          * 
          */
@@ -38,7 +39,10 @@ public class PlayerToken implements Comparable{
 		this.color = color;
 	}
 
-
+        /**
+         * @author maxime
+         * @return 
+         */
 	public Area getPosition() {
 		return position;
 	}
