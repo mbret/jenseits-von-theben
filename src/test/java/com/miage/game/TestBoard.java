@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.miage.game.Board;
-import com.miage.game.PlayerToken;
+
+
 
 public class TestBoard {
 	
@@ -25,12 +25,9 @@ public class TestBoard {
 
 	@Before
 	public void setUp() throws Exception {
-		
-		board = new Board(3);
-		board.initAreas();
-		board.initializationDecks();
-		
-		
+            board = new Board(3);
+            board.initAreas();
+            board.initializationDecks();
 	}
 
 	@After
