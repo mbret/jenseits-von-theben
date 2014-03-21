@@ -1,8 +1,6 @@
-package game;
+package com.miage.game;
 
 import static org.junit.Assert.*;
-import game.PlayerToken;
-import game.PlayerTokenStack;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -12,6 +10,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.miage.game.PlayerToken;
+import com.miage.game.PlayerTokenStack;
 
 public class TestPieceStack {
 	

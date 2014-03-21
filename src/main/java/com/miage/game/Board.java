@@ -19,6 +19,7 @@ package com.miage.game;
 
 import com.miage.tokens.*;
 import com.miage.cards.*;
+import com.miage.areas.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -469,14 +470,6 @@ public class Board {
         this.currentPlayerToken = currentPlayerToken;
     }
     
-    public Deck getDeck(){
-    	return this.deck;
-    }
-
-    /**
-     * 
-     * @return 
-     */
     public Deck getDeck() {
         return deck;
     }

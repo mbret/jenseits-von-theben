@@ -1,20 +1,19 @@
-package game;
+package com.miage.game;
+
 import static org.junit.Assert.*;
-import game.Player;
-import game.PlayerKnowledges;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.miage.game.Board;
+import com.miage.game.PlayerToken;
 
-public class TestPlayer {
+public class TestBoard {
 	
-	private Player player;
-	PlayerKnowledges playerKnowledges;
+	Board board;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -27,7 +26,9 @@ public class TestPlayer {
 	@Before
 	public void setUp() throws Exception {
 		
-		player = new Player("Test");
+		board = new Board(3);
+		board.initAreas();
+		board.initializationDecks();
 		
 		
 	}
@@ -36,9 +37,21 @@ public class TestPlayer {
 	public void tearDown() throws Exception {
 	}
 
+	@Test
+	/**
+	 * Test of the method distance()
+	 */
+	public void testDistance() {
+		
+		
+	}
 	
-	
-	
-	
+	@Test
+	/**
+	 * Test of the method printDeck()
+	 */
+	public void testPrintDeck(){
+		System.out.println(board.getDeck().toString());
+	}
 
 }
