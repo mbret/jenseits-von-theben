@@ -469,7 +469,12 @@ public class Board {
     public void setCurrentPlayerToken(PlayerToken currentPlayerToken) {
         this.currentPlayerToken = currentPlayerToken;
     }
-    
+
+
+    /**
+     * 
+     * @return 
+     */
     public Deck getDeck() {
         return deck;
     }
