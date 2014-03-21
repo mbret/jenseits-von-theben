@@ -1,6 +1,5 @@
 package com.miage.game;
 
-import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -8,11 +7,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.miage.game.Board;
-import com.miage.game.PlayerToken;
-
 public class TestBoard {
 	
+    
 	Board board;
 
 	@BeforeClass

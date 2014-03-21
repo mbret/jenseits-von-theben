@@ -12,6 +12,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.miage.game.PlayerToken;
+import com.miage.game.PlayerToken;
+import com.miage.game.PlayerTokenStack;
 import com.miage.game.PlayerTokenStack;
 
 public class TestPieceStack {

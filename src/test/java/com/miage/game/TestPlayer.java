@@ -9,6 +9,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.miage.game.Player;
+import com.miage.game.Player;
+import com.miage.game.PlayerKnowledges;
 import com.miage.game.PlayerKnowledges;
 
 

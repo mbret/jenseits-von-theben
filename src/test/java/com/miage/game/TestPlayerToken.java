@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.miage.game.PlayerToken;
+import com.miage.game.PlayerToken;
 
 public class TestPlayerToken {
 	
