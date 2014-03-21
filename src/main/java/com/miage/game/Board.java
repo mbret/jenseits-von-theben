@@ -17,23 +17,8 @@
 
 package com.miage.game;
 
-import com.miage.tokens.SpecificKnowledgeToken;
-import com.miage.tokens.GeneralKnowledgeToken;
-import com.miage.tokens.PointToken;
-import com.miage.cards.ExpoCard;
-import com.miage.cards.GeneralKnowledgeCard;
-import com.miage.cards.ZeppelinCard;
-import com.miage.cards.Card;
-import com.miage.cards.EthnologicalKnowledgeCard;
-import com.miage.cards.SpecificKnowledgeCard;
-import com.miage.cards.ShovelCard;
-import com.miage.cards.ExcavationAuthorizationCard;
-import com.miage.cards.CarCard;
-import com.miage.cards.CongressCard;
-import com.miage.cards.AssistantCard;
-import com.miage.areas.Area;
-import com.miage.areas.TouristicArea;
-import com.miage.areas.ExcavationArea;
+import com.miage.tokens.*;
+import com.miage.cards.*;
 
 import java.util.HashMap;
 import java.util.Map;
