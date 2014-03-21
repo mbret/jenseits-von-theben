@@ -21,12 +21,12 @@ package cards;
  *
  * @author maxime
  */
-public class EthnologicalCard extends Card{
+public class EthnologicalKnowledgeCard extends Card{
     
     private int value;
     private String codeColor;
 
-    public EthnologicalCard(String areaName, int weekCost, int value, String codeColor) {
+    public EthnologicalKnowledgeCard(String areaName, int weekCost, int value, String codeColor) {
             super("",areaName,weekCost);
             this.value = value;
             this.codeColor = codeColor;
