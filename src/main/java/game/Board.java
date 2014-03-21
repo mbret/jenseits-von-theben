@@ -477,6 +477,10 @@ public class Board {
     public void setCurrentPlayerToken(PlayerToken currentPlayerToken) {
         this.currentPlayerToken = currentPlayerToken;
     }
+    
+    public Deck getDeck(){
+    	return this.deck;
+    }
 
 
     
