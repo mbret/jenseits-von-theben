@@ -25,12 +25,9 @@ public class TestBoard {
 
 	@Before
 	public void setUp() throws Exception {
-		
-		board = new Board(3);
-		board.initAreas();
-		board.initializationDecks();
-		
-		
+            board = new Board(3);
+            board.initAreas();
+            board.initializationDecks();
 	}
 
 	@After
