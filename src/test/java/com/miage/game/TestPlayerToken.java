@@ -1,7 +1,6 @@
-package game;
+package com.miage.game;
 
 import static org.junit.Assert.*;
-import game.PlayerToken;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,6 +11,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.miage.game.PlayerToken;
 
 public class TestPlayerToken {
 	
