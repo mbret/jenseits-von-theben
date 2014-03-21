@@ -470,6 +470,7 @@ public class Board {
         this.currentPlayerToken = currentPlayerToken;
     }
 
+
     /**
      * 
      * @return 
