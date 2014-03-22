@@ -53,6 +53,15 @@ public class Player {
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
     }
+    
+    /*
+     * @author david
+     * Renvoie un booléen autorisant la fouille ou non.
+     * Cette méthode vérifie l'emplacement et la carte de fouille.
+     */
+    public boolean allowSearch(){
+        return false;
+    }
 
 
 
