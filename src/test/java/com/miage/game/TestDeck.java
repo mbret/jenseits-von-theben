@@ -13,7 +13,7 @@ import com.miage.cards.SpecificKnowledgeCard;
 
 public class TestDeck {
 	
-	Deck deck;
+	private Deck deck;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -27,12 +27,12 @@ public class TestDeck {
 	public void setUp() throws Exception {
 		
 		this.deck = new Deck();
-		this.deck.addCard(new GeneralKnowledgeCard("Berlin", 2, 2));
-		this.deck.addCard(new SpecificKnowledgeCard("Paris", 2, 2, "Red"));
-		this.deck.addCard(new GeneralKnowledgeCard("Vienne", 3, 3));
-		this.deck.addCard(new GeneralKnowledgeCard("Rome", 4, 4));
-		this.deck.addCard(new GeneralKnowledgeCard("Moscou", 3, 2));
-		this.deck.addCard(new GeneralKnowledgeCard("Varsovie", 2, 3));
+		this.deck.addCard(new GeneralKnowledgeCard("berlin", 2, 2));
+		this.deck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "code"));
+		this.deck.addCard(new GeneralKnowledgeCard("vienna", 3, 3));
+		this.deck.addCard(new GeneralKnowledgeCard("rome", 4, 4));
+		this.deck.addCard(new GeneralKnowledgeCard("moscow", 3, 2));
+		this.deck.addCard(new GeneralKnowledgeCard("warsaw", 2, 3));
 		
 		
 	}
@@ -42,12 +42,16 @@ public class TestDeck {
 	}
 
 	@Test
+	/**
+	 * Test of the method pick()
+	 * @author Gael
+	 */
 	public void testPick() {
 		int sizeOfDeck = this.deck.size();
 		
-		assertEquals(this.deck.pick().toString(), "Connaissance générale,Berlin,2,2");
+		assertEquals(this.deck.pick().toString(), "generalKnowledge,berlin,2,2");
 		assertTrue(this.deck.size() == sizeOfDeck-1);
-		assertEquals(this.deck.pick().toString(), "Connaissance spécifique,Paris,2,2,Red");
+		assertEquals(this.deck.pick().toString(), "specificKnowledge,paris,2,2,code");
 		
 	}
 

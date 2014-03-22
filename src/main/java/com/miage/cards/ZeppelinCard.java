@@ -25,7 +25,7 @@ public class ZeppelinCard extends Card{
 
     
     public ZeppelinCard(String areaName, int weekCost) {
-        super("Zeppelin", areaName, weekCost);
+        super("zeppelin", areaName, weekCost);
     }
 
     @Override

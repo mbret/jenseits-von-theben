@@ -1,22 +1,17 @@
-package com.miage.game;
+package com.miage.cards;
+
 import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.miage.cards.GeneralKnowledgeCard;
-import com.miage.cards.SpecificKnowledgeCard;
+import com.miage.game.Deck;
 
-
-
-
-public class TestPlayer {
+public class TestCard {
 	
-	private Player player;
 	private Deck deck;
 
 	@BeforeClass
@@ -30,8 +25,6 @@ public class TestPlayer {
 	@Before
 	public void setUp() throws Exception {
 		
-		this.player = new Player("player");
-		
 		this.deck = new Deck();
 		this.deck.addCard(new GeneralKnowledgeCard("berlin", 2, 2));
 		this.deck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "code"));
@@ -39,30 +32,25 @@ public class TestPlayer {
 		this.deck.addCard(new GeneralKnowledgeCard("rome", 4, 4));
 		this.deck.addCard(new GeneralKnowledgeCard("moscow", 3, 2));
 		this.deck.addCard(new GeneralKnowledgeCard("warsaw", 2, 3));
-		
-		
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
-	
-	
+
 	@Test
 	/**
-	 * Test of the pick by the player
+	 * @author Gael
+	 * Test of the cards downcast method 
 	 */
-	public void testPickCard(){
+	public void testCastCards() {
 		
-		player.pickCard(deck);
+		Card card = this.deck.pick();
+		card = card.downCastCard();
 		
-		assertEquals(player.getCards().toString(), "[generalKnowledge,berlin,2,2]");
+		assertEquals(card.toString(), "generalKnowledge,berlin,2,2");
+		
 		
 	}
-
-	
-	
-	
-	
 
 }

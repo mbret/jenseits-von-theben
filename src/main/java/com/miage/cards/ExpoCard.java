@@ -31,7 +31,7 @@ public class ExpoCard extends Card {
     private List<PointToken> tokens;
 
     public ExpoCard(String areaName,int cost,  boolean bigExpo) {
-        super("exposition", areaName, cost);
+        super("expo", areaName, cost);
         this.bigExpo = bigExpo;
         this.tokens = new ArrayList<PointToken>();
     }
@@ -46,9 +46,9 @@ public class ExpoCard extends Card {
 
     public String toString(){
        if(bigExpo)
-    	   return "Grande "+super.toString()+","+value;
+    	   return "big "+super.toString()+","+value;
        else
-    	   return "Petite "+super.toString()+","+value;
+    	   return "little "+super.toString()+","+value;
     }
 
     @Override

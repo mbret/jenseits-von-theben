@@ -16,8 +16,8 @@ import org.junit.Test;
 
 public class TestPlayerToken {
 	
-	PlayerToken playerToken1, playerToken2;
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
+	private PlayerToken playerToken1, playerToken2;
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

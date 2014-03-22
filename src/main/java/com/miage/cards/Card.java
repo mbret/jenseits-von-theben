@@ -88,6 +88,59 @@ public abstract class Card {
     }
     
     abstract public boolean isDiscardable();
+    
+    
+    
+    /**
+     * Cast the abstract card in the correct sub instance
+     * @author Gael
+     * @return a downcast of this
+     */
+    public Card downCastCard(){
+    	
+    	if(this instanceof AssistantCard){
+    		AssistantCard cardReturned = (AssistantCard) this;
+    		return cardReturned;
+    	}
+    	else if(this instanceof CarCard){
+    		CarCard cardReturned = (CarCard) this;
+    		return cardReturned;
+    	}
+    	else if(this instanceof CongressCard){
+    		CongressCard cardReturned = (CongressCard) this;
+    		return cardReturned;
+    	}
+    	else if(this instanceof EthnologicalKnowledgeCard){
+    		EthnologicalKnowledgeCard cardReturned = (EthnologicalKnowledgeCard) this;
+    		return cardReturned;
+    	}
+    	else if(this instanceof ExcavationAuthorizationCard){
+    		ExcavationAuthorizationCard cardReturned = (ExcavationAuthorizationCard) this;
+    		return cardReturned;
+    	}
+    	else if(this instanceof ExpoCard){
+    		ExpoCard cardReturned = (ExpoCard) this;
+    		return cardReturned;
+    	}
+    	else if(this instanceof GeneralKnowledgeCard){
+    		GeneralKnowledgeCard cardReturned = (GeneralKnowledgeCard) this;
+    		return cardReturned;
+    	}
+    	else if(this instanceof ShovelCard){
+    		ShovelCard cardReturned = (ShovelCard) this;
+    		return cardReturned;
+    	}
+    	else if(this instanceof SpecificKnowledgeCard){
+    		SpecificKnowledgeCard cardReturned = (SpecificKnowledgeCard) this;
+    		return cardReturned;
+    	}
+    	else{
+    		ZeppelinCard cardReturned = (ZeppelinCard) this;
+    		return cardReturned;
+    	}
+    	
+    	
+    }
 
         
 }

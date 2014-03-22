@@ -27,7 +27,7 @@ public class EthnologicalKnowledgeCard extends Card{
     private String codeColor;
 
     public EthnologicalKnowledgeCard(String areaName, int weekCost, int value, String codeColor) {
-            super("Connaissance ethnologique",areaName,weekCost);
+            super("ethnologicalKnowledge",areaName,weekCost);
             this.value = value;
             this.codeColor = codeColor;
     }

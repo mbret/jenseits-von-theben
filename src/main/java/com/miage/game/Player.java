@@ -35,8 +35,22 @@ public class Player {
             this.playerKnowledges = new PlayerKnowledges();
             this.cards = new ArrayList<Card>();
     }
+    
+    /**
+     * The player pick a card in the deck, then the card is added in the Card List
+     * @author Gael
+     * @param deck where player will pick a card
+     */
+    public void pickCard(Deck deck){
+    	
+    	this.cards.add(deck.pick().downCastCard());
+    	
+    }
 
 
+    
+    
+    //************************************ GETTERS & SETTERS ****************************************************
 
     public String getName() {
             return name;

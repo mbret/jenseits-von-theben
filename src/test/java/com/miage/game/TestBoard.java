@@ -13,7 +13,7 @@ import org.junit.Test;
 
 public class TestBoard {
 	
-	Board board;
+	private Board board;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

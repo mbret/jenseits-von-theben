@@ -26,7 +26,7 @@ public class GeneralKnowledgeCard extends Card{
     private int value;
 
     public GeneralKnowledgeCard(String areaName, int weekCost, int value) {
-            super("Connaissance générale",areaName,weekCost);
+            super("generalKnowledge",areaName,weekCost);
             this.value = value;
     }
 

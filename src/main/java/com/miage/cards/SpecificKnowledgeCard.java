@@ -27,7 +27,7 @@ public class SpecificKnowledgeCard extends Card{
     private String codeColor;
 
     public SpecificKnowledgeCard(String areaName, int weekCost, int value, String codeColor) {
-            super("Connaissance spécifique",areaName,weekCost);
+            super("specificKnowledge",areaName,weekCost);
             this.value = value;
             this.codeColor = codeColor;
     }
