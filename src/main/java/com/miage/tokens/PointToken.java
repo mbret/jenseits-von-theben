@@ -30,4 +30,8 @@ public class PointToken extends Token{
         this.value = value;
     }
     
+    public String toString(){
+    	return super.toString()+","+value;
+    }
+    
 }

@@ -46,12 +46,6 @@ public class TestBoard {
 		
 	}
 	
-	@Test
-	/**
-	 * Test of the method printDeck()
-	 */
-	public void testPrintDeck(){
-		System.out.println(board.getDeck().toString());
-	}
+	
 
 }

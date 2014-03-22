@@ -24,7 +24,7 @@ package com.miage.cards;
 public class ExcavationAuthorizationCard extends Card{
 
     public ExcavationAuthorizationCard(String areaName, int weekCost) {
-        super("", areaName, weekCost);
+        super("Autorisation de fouille", areaName, weekCost);
     }
 
     @Override

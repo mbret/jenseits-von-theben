@@ -83,6 +83,10 @@ public abstract class Card {
         this.areaName = areaName;
     }
     
+    public String toString(){
+    	return name+","+areaName+","+weekCost;
+    }
+    
     abstract public boolean isDiscardable();
 
         

@@ -396,17 +396,17 @@ public class Board {
 
                 this.sideDeck = (Deck) firstDeck.divideDeck(((firstDeck.size()/3)+(firstDeck.size()/3)), firstDeck.size()-1);
 
-                deck2.add(new ExpoCard("LittleExpo", "London", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Paris", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Berlin", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Vienne", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Moscou", 3, false));
+                deck2.add(new ExpoCard("London", 3, false));
+                deck2.add(new ExpoCard("Paris", 3, false));
+                deck2.add(new ExpoCard("Berlin", 3, false));
+                deck2.add(new ExpoCard("Vienne", 3, false));
+                deck2.add(new ExpoCard("Moscou", 3, false));
 
-                this.sideDeck.add(new ExpoCard("BigExpo", "London", 4, false));
-                this.sideDeck.add(new ExpoCard("BigExpo", "Paris", 4, false));
-                this.sideDeck.add(new ExpoCard("BigExpo", "Berlin", 4, false));
-                this.sideDeck.add(new ExpoCard("BigExpo", "Vienne", 4, false));
-                this.sideDeck.add(new ExpoCard("BigExpo", "Moscou", 4, false));
+                this.sideDeck.add(new ExpoCard("London", 4, true));
+                this.sideDeck.add(new ExpoCard("Paris", 4, true));
+                this.sideDeck.add(new ExpoCard("Berlin", 4, true));
+                this.sideDeck.add(new ExpoCard("Vienne", 4, true));
+                this.sideDeck.add(new ExpoCard("Moscou", 4, true));
 
                 deck2.mix();
                 this.deck.addAll(deck2);
@@ -424,17 +424,17 @@ public class Board {
 
                 this.sideDeck = (Deck) firstDeck.divideDeck(((firstDeck.size()/3)+(firstDeck.size()/3)), firstDeck.size()-1);
 
-                deck2.add(new ExpoCard("LittleExpo", "London", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Paris", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Berlin", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Vienne", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Moscou", 3, false));
+                deck2.add(new ExpoCard("London", 3, false));
+                deck2.add(new ExpoCard("Paris", 3, false));
+                deck2.add(new ExpoCard("Berlin", 3, false));
+                deck2.add(new ExpoCard("Vienne", 3, false));
+                deck2.add(new ExpoCard("Moscou", 3, false));
 
-                deck2.add(new ExpoCard("BigExpo", "London", 4, false));
-                deck2.add(new ExpoCard("BigExpo", "Paris", 4, false));
-                deck2.add(new ExpoCard("BigExpo", "Berlin", 4, false));
-                deck2.add(new ExpoCard("BigExpo", "Vienne", 4, false));
-                deck2.add(new ExpoCard("BigExpo", "Moscou", 4, false));
+                deck2.add(new ExpoCard("London", 4, true));
+                deck2.add(new ExpoCard("Paris", 4, true));
+                deck2.add(new ExpoCard("Berlin", 4, true));
+                deck2.add(new ExpoCard("Vienne", 4, true));
+                deck2.add(new ExpoCard("Moscou", 4, true));
 
                 deck2.mix();
                 this.deck.addAll(deck2);
