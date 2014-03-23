@@ -37,13 +37,13 @@ public class Player {
     }
     
     /**
-     * The player pick a card in the deck, then the card is added in the Card List
      * @author Gael
-     * @param deck where player will pick a card
+     * @param board board of the game
+     * @param index index of the table which corresponds to the card
      */
-    public void pickCard(Deck deck){
+    public void pickCard(Board board, int index){
     	
-    	this.cards.add(deck.pick().downCastCard());
+    	this.cards.add(board.pickCardOnBoard(index).downCastCard());
     	
     }
 

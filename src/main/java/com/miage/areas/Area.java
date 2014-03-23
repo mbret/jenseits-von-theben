@@ -17,6 +17,8 @@
 
 package com.miage.areas;
 
+import java.util.HashMap;
+
 /**
  * Places allowed for moving
  * 
@@ -41,6 +43,11 @@ public abstract class Area {
     private String displayName;
     
     /**
+     * distance with other Areas
+     */
+    private HashMap<String, Integer> distances;
+    
+    /**
      * 
      * @param num
      * @param name 
@@ -48,6 +55,7 @@ public abstract class Area {
     public Area(Integer num, String name){
         this.name = name;
         this.num = num;
+        this.distances = new HashMap<String, Integer>();
     }
 
 
@@ -60,11 +68,17 @@ public abstract class Area {
     public String getName() {
         return name;
     }
+    
 
 
     @Override
     public String toString(){
         return "Area : "+this.getName();
+    }
+    
+    
+    public int getDistance(String area){
+    	return this.distances.get(area);
     }
 
 }

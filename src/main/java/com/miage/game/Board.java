@@ -100,6 +100,25 @@ public class Board {
         this.initializationDecks();
     }
     
+    
+    /**
+     * @author Gael
+     * Returns the card picked
+     * @param index of the card picked in the table
+     * @return card picked
+     */
+    public Card pickCardOnBoard(int index){
+    	
+    	Card card = this.fourCurrentCards[index];
+    	this.fourCurrentCards[index] = this.deck.pick();
+    	
+    	return card;
+    }
+    
+    
+    
+    
+    
     /**
      * Init some resources using extern configuration
      */
@@ -199,19 +218,7 @@ public class Board {
     }
     
 	
-    /**
-     * Return the distance between 2 areas
-     * @param area1 first area
-     * @param area2 second area
-     * @return the distance between area1 & area2
-     * @throws java.lang.InstantiationException
-     */
-    public static int distance(Area area1, Area area2) throws InstantiationException{
-        if(Board.distances == null){
-            throw new InstantiationException("You must instanciate this class once before using this static method");
-        }
-        return(Board.distances[area1.getNum()][area2.getNum()]);
-    }
+ 
 	
 	
     /**
@@ -478,6 +485,14 @@ public class Board {
     public Deck getDeck() {
         return deck;
     }
+    
+    /**
+     * 
+     * @param deck
+     */
+    public void setDeck(Deck deck){
+    	this.deck = deck;
+    }
 
     /**
      * 
@@ -486,6 +501,27 @@ public class Board {
     public HashMap<String, Area> getAreas() {
         return areas;
     }
+
+    /**
+     * 
+     * @return
+     */
+	public Card[] getFourCurrentCards() {
+		return fourCurrentCards;
+	}
+
+	/**
+	 * 
+	 * @param fourCurrentCards
+	 */
+	public void setFourCurrentCards(Card[] fourCurrentCards) {
+		this.fourCurrentCards = fourCurrentCards;
+	}
+	
+	
+	
+    
+    
 
     
     
