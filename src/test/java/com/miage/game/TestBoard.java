@@ -59,7 +59,9 @@ public class TestBoard {
 
 	@Test
 	/**
+	 * @author Gael
 	 * Test of the method pickCardOnBoard
+	 * 
 	 */
 	public void testpickCardOnBoard() {
 		

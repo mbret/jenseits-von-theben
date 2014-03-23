@@ -45,7 +45,7 @@ public abstract class Area {
     /**
      * distance with other Areas
      */
-    private HashMap<String, Integer> distances;
+    private HashMap<String, String[]> distances;
     
     /**
      * 
@@ -55,7 +55,7 @@ public abstract class Area {
     public Area(Integer num, String name){
         this.name = name;
         this.num = num;
-        this.distances = new HashMap<String, Integer>();
+        this.distances = new HashMap<String, String[]>();
     }
 
 
@@ -77,7 +77,7 @@ public abstract class Area {
     }
     
     
-    public int getDistance(String area){
+    public String[] getDistance(String area){
     	return this.distances.get(area);
     }
 

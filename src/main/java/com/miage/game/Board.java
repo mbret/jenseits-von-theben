@@ -176,19 +176,353 @@ public class Board {
     public void initAreas(){
 
         Integer nbEmptyTokenPoint = 16; // put inside properties
+        
+        /*
+         * Creation of the distance hashmap for each area 
+         */
+        
+        HashMap<String, String[]> londonDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> parisDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> romaDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> berlinDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> viennaDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> warsawDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> moscowDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> greeceDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> creteDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> egyptDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> palestineDistances = new HashMap<String, String[]>();
+        HashMap<String, String[]> mesopotamiaDistances = new HashMap<String, String[]>();
+        
+        
+        /*
+         * 
+         *************************** INITIALIZATION OF AREAS DISTANCES ***************************** 
+         * 
+         */
+        
+        
+        /*
+         * LONDON
+         */
+        londonDistances.put("paris", new String[0]);
+        String[] londonRoma = {"paris"};
+        londonDistances.put("roma", londonRoma);
+        londonDistances.put("berlin", new String[0]);
+        String[] londonVienna = {"paris"};
+        londonDistances.put("vienna", londonVienna);
+        String[] londonWarsaw = {"berlin"};
+        londonDistances.put("warsaw", londonWarsaw);
+        String[] londonMoscow = {"berlin","warsaw"};
+        londonDistances.put("moscow", londonMoscow);
+        String[] londonGreece = {"paris","roma"};
+        londonDistances.put("greece", londonGreece);
+        String[] londonCrete = {"paris","roma"};
+        londonDistances.put("crete",londonCrete);
+        String[] londonEgypt = {"paris","roma","crete"};
+        londonDistances.put("egypt",londonEgypt);
+        String[] londonPalestine = {"paris","roma","crete"};
+        londonDistances.put("palestine", londonPalestine);
+        String[] londonMesopotamia = {"paris","roma","greece"};
+        londonDistances.put("mesopotamia", londonMesopotamia);
+        
+        
+        /*
+         * PARIS
+         */
+        parisDistances.put("london", new String[0]);
+        parisDistances.put("roma", new String[0]);
+        parisDistances.put("berlin", new String[0]);
+        parisDistances.put("vienna",  new String[0]);
+        String[] parisWarsaw = {"berlin"};
+        parisDistances.put("warsaw", parisWarsaw);
+        String[] parisMoscow = {"berlin","warsaw"};
+        parisDistances.put("moscow", parisMoscow);
+        String[] parisGreece = {"roma"};
+        parisDistances.put("greece", parisGreece);
+        String[] parisCrete = {"roma"};
+        parisDistances.put("crete",parisCrete);
+        String[] parisEgypt = {"roma","crete"};
+        parisDistances.put("egypt",parisEgypt);
+        String[] parisPalestine = {"roma","crete"};
+        parisDistances.put("palestine", parisPalestine);
+        String[] parisMesopotamia = {"roma","greece"};
+        parisDistances.put("mesopotamia", parisMesopotamia);
+        
+        
+        
+        
+        /*
+         * ROMA
+         */
+        String[] romaLondon = {"paris"};
+        romaDistances.put("london", romaLondon);
+        romaDistances.put("paris", new String[0]);
+        String[] romaBerlin = {"paris"};
+        romaDistances.put("berlin", romaBerlin);
+        romaDistances.put("vienna",  new String[0]);
+        String[] romaWarsaw = {"vienna"};
+        romaDistances.put("warsaw", romaWarsaw);
+        String[] romaMoscow = {"vienna","warsaw"};
+        romaDistances.put("moscow", romaMoscow);
+        romaDistances.put("greece", new String[0]);
+        romaDistances.put("crete",new String[0]);
+        String[] romaEgypt = {"crete"};
+        romaDistances.put("egypt",romaEgypt);
+        String[] romaPalestine = {"crete"};
+        romaDistances.put("palestine", romaPalestine);
+        String[] romaMesopotamia = {"greece"};
+        romaDistances.put("mesopotamia", romaMesopotamia);
+        
+        
+        
+        /*
+         * BERLIN
+         */
+      
+        berlinDistances.put("london", new String[0]);
+        berlinDistances.put("paris", new String[0]);
+        String[] berlinRoma = {"paris"};
+        berlinDistances.put("roma", berlinRoma);
+        String[] berlinVienna = {"warsaw"};
+        berlinDistances.put("vienna",  berlinVienna);
+        berlinDistances.put("warsaw", new String[0]);
+        String[] berlinMoscow = {"warsaw"};
+        berlinDistances.put("moscow", berlinMoscow);
+        String[] berlinGreece = {"warsaw"};
+        berlinDistances.put("greece", berlinGreece);
+        String[] berlinCrete = {"warsaw","greece"};
+        berlinDistances.put("crete", berlinCrete);
+        String[] berlinEgypt = {"warsaw","crete"};
+        berlinDistances.put("egypt",berlinEgypt);
+        String[] berlinPalestine = {"warsaw","crete"};
+        berlinDistances.put("palestine", berlinPalestine);
+        String[] berlinMesopotamia = {"warsaw","greece"};
+        berlinDistances.put("mesopotamia", berlinMesopotamia);
+        
+        
+        /*
+         * VIENNA
+         */
+      
+        String[] viennaLondon = {"paris"};
+        viennaDistances.put("london", viennaLondon);
+        viennaDistances.put("paris", new String[0]);
+        viennaDistances.put("roma", new String[0]);
+        viennaDistances.put("berlin",  new String[0]);
+        viennaDistances.put("warsaw", new String[0]);
+        String[] viennaMoscow = {"warsaw"};
+        viennaDistances.put("moscow", viennaMoscow);
+        String[] viennaGreece = {"roma"};
+        viennaDistances.put("greece", viennaGreece);
+        String[] viennaCrete = {"roma"};
+        viennaDistances.put("crete", viennaCrete);
+        String[] viennaEgypt = {"roma","crete"};
+        viennaDistances.put("egypt",viennaEgypt);
+        String[] viennaPalestine = {"roma","crete"};
+        viennaDistances.put("palestine", viennaPalestine);
+        String[] viennaMesopotamia = {"roma","greece"};
+        viennaDistances.put("mesopotamia", viennaMesopotamia);
+        
+        
+        
+        /*
+         * WARSAW
+         */
+      
+        String[] warsawLondon = {"berlin"};
+        warsawDistances.put("london", warsawLondon);
+        String[] warsawParis = {"berlin"};
+        warsawDistances.put("paris", warsawParis);
+        String[] warsawRoma = {"vienna"};
+        warsawDistances.put("roma", warsawRoma);
+        warsawDistances.put("vienna", new String[0]);
+        warsawDistances.put("moscow", new String[0]);
+        warsawDistances.put("greece", new String[0]);
+        String[] warsawCrete = {"greece"};
+        warsawDistances.put("crete", warsawCrete);
+        String[] warsawEgypt = {"greece","crete"};
+        warsawDistances.put("egypt",warsawEgypt);
+        String[] warsawPalestine = {"greece","crete"};
+        warsawDistances.put("palestine", warsawPalestine);
+        String[] warsawMesopotamia = {"greece"};
+        warsawDistances.put("mesopotamia", warsawMesopotamia);
+        
+        
+        
+        /*
+         * MOSCOW
+         */
+      
+        String[] moscowLondon = {"warsaw","berlin"};
+        moscowDistances.put("london", moscowLondon);
+        String[] moscowParis = {"warsaw","berlin"};
+        moscowDistances.put("paris", moscowParis);
+        String[] moscowRoma = {"warsaw","vienna"};
+        moscowDistances.put("roma", moscowRoma);
+        String[] moscowVienna = {"warsaw"};
+        moscowDistances.put("vienna", moscowVienna);
+        moscowDistances.put("warsaw", new String[0]);
+        String[] moscowGreece = {"warsaw"};
+        moscowDistances.put("greece", moscowGreece);
+        String[] moscowCrete = {"warsaw","greece"};
+        moscowDistances.put("crete", moscowCrete);
+        String[] moscowEgypt = {"warsaw","greece","crete"};
+        moscowDistances.put("egypt",moscowEgypt);
+        String[] moscowPalestine = {"warsaw","greece","crete"};
+        moscowDistances.put("palestine", moscowPalestine);
+        String[] moscowMesopotamia = {"warsaw","greece"};
+        moscowDistances.put("mesopotamia", moscowMesopotamia);
+        
+        
+        
+        
+        /*
+         * GREECE
+         */
+      
+        String[] greeceLondon = {"warsaw","berlin"};
+        greeceDistances.put("london", greeceLondon);
+        String[] greeceParis = {"roma"};
+        greeceDistances.put("paris", greeceParis);
+        greeceDistances.put("roma", new String[0]);
+        String[] greeceVienna = {"roma"};
+        greeceDistances.put("vienna", greeceVienna);
+        greeceDistances.put("warsaw", new String[0]);
+        String[] greeceMoscow = {"warsaw"};
+        greeceDistances.put("moscow", greeceMoscow);
+        greeceDistances.put("crete", new String[0]);
+        String[] greeceEgypt = {"crete"};
+        greeceDistances.put("egypt",greeceEgypt);
+        String[] greecePalestine = {"crete"};
+        greeceDistances.put("palestine", greecePalestine);
+        greeceDistances.put("mesopotamia", new String[0]);
+        
+        
+        
+        
+        /*
+         * CRETE
+         */
+      
+        String[] creteLondon = {"roma","paris"};
+        creteDistances.put("london", creteLondon);
+        String[] creteParis = {"roma"};
+        creteDistances.put("paris", creteParis);
+        creteDistances.put("roma", new String[0]);
+        String[] creteVienna = {"roma"};
+        creteDistances.put("vienna", creteVienna);
+        String[] creteWarsaw = {"greece"};
+        creteDistances.put("warsaw", creteWarsaw);
+        String[] creteMoscow = {"greece","warsaw"};
+        creteDistances.put("moscow", creteMoscow);
+        creteDistances.put("greece", new String[0]);
+        creteDistances.put("egypt",new String[0]);  
+        creteDistances.put("palestine", new String[0]);
+        String[] creteMesopotamia = {"palestine"};
+        creteDistances.put("mesopotamia", creteMesopotamia);
+        
+        
+        /*
+         * EGYPT
+         */
+      
+        String[] egyptLondon = {"crete","roma","paris"};
+        egyptDistances.put("london", egyptLondon);
+        String[] egyptParis = {"crete","roma"};
+        egyptDistances.put("paris", egyptParis);
+        String[] egyptRoma = {"crete","roma"};
+        egyptDistances.put("roma", egyptRoma);
+        String[] egyptVienna = {"crete","roma"};
+        egyptDistances.put("vienna", egyptVienna);
+        String[] egyptWarsaw = {"crete","greece"};
+        egyptDistances.put("warsaw", egyptWarsaw);
+        String[] egyptMoscow = {"crete","greece","warsaw"};
+        egyptDistances.put("moscow", egyptMoscow);
+        String[] egyptGreece = {"crete"};
+        egyptDistances.put("greece", egyptGreece);
+        egyptDistances.put("crete",new String[0]);  
+        egyptDistances.put("palestine", new String[0]);
+        String[] egyptMesopotamia = {"palestine"};
+        egyptDistances.put("mesopotamia", egyptMesopotamia);
+        
+        
+        
+        /*
+         * PALESTINE
+         */
+      
+        String[] palestineLondon = {"crete","roma","paris"};
+        palestineDistances.put("london", palestineLondon);
+        String[] palestineParis = {"crete","roma"};
+        palestineDistances.put("paris", palestineParis);
+        String[] palestineRoma = {"crete","roma"};
+        palestineDistances.put("roma", palestineRoma);
+        String[] palestineVienna = {"crete","roma"};
+        palestineDistances.put("vienna", palestineVienna);
+        String[] palestineWarsaw = {"crete","greece"};
+        palestineDistances.put("warsaw", palestineWarsaw);
+        String[] palestineMoscow = {"crete","greece","warsaw"};
+        palestineDistances.put("moscow", palestineMoscow);
+        String[] palestineGreece = {"crete"};
+        palestineDistances.put("greece", palestineGreece);
+        palestineDistances.put("crete",new String[0]);  
+        palestineDistances.put("egypt", new String[0]);
+        palestineDistances.put("mesopotamia", new String[0]);
+        
+        
+        
+        /*
+         * MESOPOTAMIA
+         */
+      
+        String[] mesopotamiaLondon = {"greece","roma","paris"};
+        mesopotamiaDistances.put("london", mesopotamiaLondon);
+        String[] mesopotamiaParis = {"greece","roma"};
+        mesopotamiaDistances.put("paris", mesopotamiaParis);
+        String[] mesopotamiaRoma = {"greece","roma"};
+        mesopotamiaDistances.put("roma", mesopotamiaRoma);
+        String[] mesopotamiaVienna = {"greece","roma"};
+        mesopotamiaDistances.put("vienna", mesopotamiaVienna);
+        String[] mesopotamiaWarsaw = {"greece"};
+        mesopotamiaDistances.put("warsaw", mesopotamiaWarsaw);
+        String[] mesopotamiaMoscow = {"greece","warsaw"};
+        mesopotamiaDistances.put("moscow", mesopotamiaMoscow);
+        mesopotamiaDistances.put("greece", new String[0]);
+        String[] mesopotamiaCrete = {"palestine"};
+        mesopotamiaDistances.put("crete",mesopotamiaCrete);  
+        String[] mesopotamiaEgypt = {"palestine"};
+        mesopotamiaDistances.put("egypt", mesopotamiaEgypt);
+        mesopotamiaDistances.put("mesopotamia", new String[0]);
+        
+        
+        
+        
+        TouristicArea london  = new TouristicArea(0,"london");
+        TouristicArea paris  = new TouristicArea(1,"paris");
+        TouristicArea roma  = new TouristicArea(2,"roma");
+        TouristicArea berlin  = new TouristicArea(3,"berlin");
+        TouristicArea vienna  = new TouristicArea(4,"vienna");
+        TouristicArea warsaw  = new TouristicArea(5,"warsaw");
+        TouristicArea moscow  = new TouristicArea(6,"moscow");
+        ExcavationArea greece  = new ExcavationArea(7,"greece","#ff5b2b");
+        ExcavationArea crete  = new ExcavationArea(8,"crete","#895959");
+        ExcavationArea egypt  = new ExcavationArea(9,"egypt","#fff168");
+        ExcavationArea palestine  = new ExcavationArea(10,"palestine","#b7ca79");
+        ExcavationArea mesopotamia  = new ExcavationArea(11,"mesopotamia","#375d81");
 
-        areas.put( "london", new TouristicArea(0,"london"));
-        areas.put( "paris", new TouristicArea(1,"paris"));
-        areas.put( "berlin", new TouristicArea(2,"berlin"));
-        areas.put( "roma", new TouristicArea(3,"roma"));
-        areas.put( "vienna", new TouristicArea(4,"vienna"));
-        areas.put( "warsaw", new TouristicArea(5,"warsaw"));
-        areas.put( "moscow", new TouristicArea(6,"moscow"));
-        areas.put( "greece", new ExcavationArea(7,"greece","#ff5b2b")); // orange
-        areas.put( "crete", new ExcavationArea(8,"crete","#895959")); // purple
-        areas.put( "egypt", new ExcavationArea(9,"egypt","#fff168")); // yello
-        areas.put( "palestine", new ExcavationArea(10,"palestine","#b7ca79")); // green
-        areas.put( "mesopotamia", new ExcavationArea(11,"mesopotamia","#375d81")); // blue
+        areas.put( "london", london);
+        areas.put( "paris", paris);
+        areas.put( "roma", roma);
+        areas.put( "berlin", berlin);
+        areas.put( "vienna", vienna);
+        areas.put( "warsaw", warsaw);
+        areas.put( "moscow", moscow);
+        areas.put( "greece", greece); // orange
+        areas.put( "crete", crete); // purple
+        areas.put( "egypt", egypt); // yellow
+        areas.put( "palestine", palestine); // green
+        areas.put( "mesopotamia", mesopotamia); // blue
 
         // Init tokens
         for (Area area : areas.values()) {
