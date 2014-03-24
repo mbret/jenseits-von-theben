@@ -9,7 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.miage.cards.Card;
+import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
+import com.miage.cards.ShovelCard;
 
 
 
@@ -45,7 +47,9 @@ public class TestBoard {
 		board.setFourCurrentCards(fourCards);
 		
 		deckTest = new Deck();
-		deckTest.addCard(new GeneralKnowledgeCard("moscow", 2, 2));
+		deckTest.addCard(new ExpoCard("moscow", 4, true));
+		deckTest.addCard(new ExpoCard("warsaw", 4, true));
+		deckTest.addCard(new ShovelCard("london", 2));
 		board.setDeck(deckTest);
 		
 		
@@ -63,14 +67,47 @@ public class TestBoard {
 	 * Test of the method pickCardOnBoard
 	 * 
 	 */
-	public void testpickCardOnBoard() {
+	public void testPickCardOnBoard() {
 		
 		Card card = board.pickCardOnBoard(3);
-		assertEquals(board.getFourCurrentCards()[3].toString(), "generalKnowledge,moscow,2,2");
+		assertEquals(board.getFourCurrentCards()[3].toString(), "shovel,london,2");
 		assertEquals(card.getAreaName(), "vienna");
+		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,warsaw,4,5");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "big expo,moscow,4,5");
+		
+			
+	}
+	
+	@Test
+	/**
+	 * @author Gael
+	 * 
+	 * Test of the method to add an expo card on the board
+	 */
+	public void testAddExpoCardOnTheBoard(){
 		
 		
+		ExpoCard card1 = new ExpoCard("berlin", 4, true);
+		ExpoCard card2 = new ExpoCard("roma", 3, false);
+		ExpoCard card3 = new ExpoCard("vienna", 4, true);
+		ExpoCard card4 = new ExpoCard("paris", 3, false);
 		
+		board.addExpoCardOnBoard(card1);
+		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,berlin,4,5");
+		
+		board.addExpoCardOnBoard(card2);
+		assertEquals(board.getThreeExpoCards()[0].toString(), "little expo,roma,3,4");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "big expo,berlin,4,5");
+		
+		board.addExpoCardOnBoard(card3);
+		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,vienna,4,5");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "little expo,roma,3,4");
+		assertEquals(board.getThreeExpoCards()[2].toString(), "big expo,berlin,4,5");
+		
+		board.addExpoCardOnBoard(card4);
+		assertEquals(board.getThreeExpoCards()[0].toString(), "little expo,paris,3,4");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "big expo,vienna,4,5");
+		assertEquals(board.getThreeExpoCards()[2].toString(), "little expo,roma,3,4");
 		
 	}
 	

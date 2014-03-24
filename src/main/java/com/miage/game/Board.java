@@ -73,6 +73,7 @@ public class Board {
     private Deck sideDeck;
 
     private Card fourCurrentCards[];
+    private ExpoCard threeExpoCards[];
 
     /**
      * HashMap used to determine how many token of each points are present in each excavation point
@@ -91,6 +92,7 @@ public class Board {
         this.deck = new Deck();
         this.sideDeck = new Deck();
         this.fourCurrentCards = new Card[4];
+        this.threeExpoCards = new ExpoCard[3];
         this.players = new HashMap<Player, PlayerToken>();
         
         this.initFromConfig();
@@ -109,10 +111,38 @@ public class Board {
      */
     public Card pickCardOnBoard(int index){
     	
-    	Card card = this.fourCurrentCards[index];
-    	this.fourCurrentCards[index] = this.deck.pick();
+    	Card cardToReturn = this.fourCurrentCards[index];
     	
-    	return card;
+    	Card cardToAddOnTheBoard = this.deck.pick();
+    	
+    	while(cardToAddOnTheBoard instanceof ExpoCard){
+    		
+    		ExpoCard expoCard = (ExpoCard) cardToAddOnTheBoard;
+    		addExpoCardOnBoard(expoCard);
+    		cardToAddOnTheBoard = this.deck.pick();
+    	}
+    	
+    	this.fourCurrentCards[index] = cardToAddOnTheBoard;
+    	
+    	
+    	return cardToReturn;
+    }
+    
+    /**
+     * @author Gael
+     * 
+     * when an expo card is picked, this card goes on the expo cards place on the board
+     * 
+     * @param expoCard
+     */
+    public void addExpoCardOnBoard(ExpoCard expoCard){
+    	
+    	for(int i = 2; i > 0; i--){
+    		this.getThreeExpoCards()[i] = this.getThreeExpoCards()[i-1];
+    	}
+    	
+    	this.getThreeExpoCards()[0] = expoCard;
+    	
     }
     
     
@@ -851,6 +881,24 @@ public class Board {
 	public void setFourCurrentCards(Card[] fourCurrentCards) {
 		this.fourCurrentCards = fourCurrentCards;
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ExpoCard[] getThreeExpoCards() {
+		return threeExpoCards;
+	}
+
+	/**
+	 * 
+	 * @param threeExpoCards
+	 */
+	public void setThreeExpoCards(ExpoCard[] threeExpoCards) {
+		this.threeExpoCards = threeExpoCards;
+	}
+	
+	
 	
 	
 	

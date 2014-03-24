@@ -38,6 +38,9 @@ public class Player {
     
     /**
      * @author Gael
+     * 
+     * pick a card on the board
+     * 
      * @param board board of the game
      * @param index index of the table which corresponds to the card
      */
