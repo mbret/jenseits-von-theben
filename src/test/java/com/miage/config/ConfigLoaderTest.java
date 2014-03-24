@@ -49,8 +49,7 @@ public class ConfigLoaderTest {
     public void testGetConfig() throws Exception{
         System.out.println("getProperties");
         String expResult = "16";
-        Properties result = ConfigManager.getInstance().getConfig();
-        assertEquals(expResult, result.get("nbEmptyTokens"));
+        assertEquals(expResult, ConfigManager.getInstance().getConfig().getProperty("nbEmptyTokenPoint"));
     }
 
     

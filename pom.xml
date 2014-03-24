@@ -30,12 +30,12 @@
   
   
     <build>
-         <!--Default resources are located inside src/main/resources--> 
         <resources>
-             <!--Supplementary resource path--> 
+            <!--Supplementary resource path--> 
             <resource>
                 <directory>src/main/config</directory>
             </resource>
+            <!--default resource path--> 
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
