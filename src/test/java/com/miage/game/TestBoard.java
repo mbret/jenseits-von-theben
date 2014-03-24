@@ -52,9 +52,9 @@ public class TestBoard {
 		deckTest.addCard(new GeneralKnowledgeCard("moscow", 2, 2));
 		board.setDeck(deckTest);
 		
-		
-		
-		
+			
+            board = new Board(3);
+            board.initializationDecks();
 	}
 
 	@After
