@@ -51,23 +51,7 @@ public class Board {
 
     private PlayerToken currentPlayerToken;
 
-    /**
-     * Distances between each areas
-     */
-    private static int distances[][] = new int[][]{
-        {0,1,1,2,2,2,3,3,3,4,4,4},	// london -> 0
-        {1,0,1,1,1,2,3,2,2,3,3,3},	// paris -> 1
-        {1,1,0,2,2,1,2,2,3,3,4,4},	// berlin -> 2
-        {2,1,2,0,1,2,3,1,1,2,2,2},	// rome -> 3
-        {2,1,1,2,0,1,2,2,2,3,3,3},      // vienna -> 4
-        {2,2,2,1,1,0,1,1,2,3,3,2},	// warsaw -> 5
-        {3,3,3,2,2,1,0,2,3,4,4,3},	// moscow -> 6
-        {3,2,1,2,2,1,2,0,1,2,2,1},	// greece -> 7
-        {3,2,1,3,2,2,3,1,0,1,1,2},	// crete -> 8
-        {4,3,2,4,3,3,4,2,1,0,1,2},	// egypt -> 9
-        {4,3,4,4,3,3,4,2,1,1,0,1},	// palestine -> 10	
-        {4,3,2,3,3,2,3,1,2,2,1,0},	// mesopotamia -> 11
-    };
+    
 
     private Deck deck;
     private Deck sideDeck;
@@ -541,6 +525,22 @@ public class Board {
         ExcavationArea palestine  = new ExcavationArea(10,"palestine","#b7ca79");
         ExcavationArea mesopotamia  = new ExcavationArea(11,"mesopotamia","#375d81");
 
+        
+        london.setDistances(londonDistances);
+        paris.setDistances(parisDistances);
+        roma.setDistances(romaDistances);
+        berlin.setDistances(berlinDistances);
+        vienna.setDistances(viennaDistances);
+        warsaw.setDistances(warsawDistances);
+        moscow.setDistances(moscowDistances);
+        greece.setDistances(greeceDistances);
+        crete.setDistances(creteDistances);
+        egypt.setDistances(egyptDistances);
+        palestine.setDistances(palestineDistances);
+        mesopotamia.setDistances(mesopotamiaDistances);
+        
+        
+        
         areas.put( "london", london);
         areas.put( "paris", paris);
         areas.put( "roma", roma);
@@ -896,6 +896,12 @@ public class Board {
 	 */
 	public void setThreeExpoCards(ExpoCard[] threeExpoCards) {
 		this.threeExpoCards = threeExpoCards;
+	}
+	
+	
+	public Area getArea(String areaName){
+		
+		return this.getAreas().get(areaName);
 	}
 	
 	

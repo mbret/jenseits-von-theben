@@ -73,12 +73,16 @@ public abstract class Area {
 
     @Override
     public String toString(){
-        return "Area : "+this.getName();
+        return this.getName();
     }
     
     
     public String[] getDistance(String area){
     	return this.distances.get(area);
+    }
+    
+    public void setDistances(HashMap<String, String[]> distances){
+    	this.distances = distances;
     }
 
 }
