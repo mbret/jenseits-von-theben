@@ -31,12 +31,18 @@ import com.miage.areas.Area;
 public class PlayerToken implements Comparable{
 	
 	private String color;
-	private Area position;
+        
         /**
-         * 
+         * Define the actual position of the player token ( an area )
+         */
+	private Area position;
+        
+        /**
+         * Define the current Date (duration of playing) of the player
          */
 	private LocalDate timeState;
 	
+        
 	public PlayerToken(String color){
 		this.color = color;
 	}

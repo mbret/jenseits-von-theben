@@ -1,26 +1,13 @@
-/*
- * Copyright (C) 2014 maxime
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 
 package com.miage.game;
 
-import com.miage.tokens.*;
-import com.miage.cards.*;
 import com.miage.areas.*;
 
+import com.miage.cards.*;
+import com.miage.config.ConfigManager;
+import com.miage.tokens.*;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,18 +16,19 @@ import java.util.Map;
  * @author maxime
  */
 public class Board {
-	
+    
     private int nbPlayers;
 
     private Chrono chrono;
     
     /**
-     * Player token stack, define the player's time to play
-     */ 
-    private PlayerTokenStack piecesStack;
+     * Stack of player's token
+     * The stack allow to define which player should play before others
+     */
+    private PlayerTokenStack playerTokenStack;
 
     /**
-     *  
+     *  List of areas composing the board
      */
     private HashMap<String, Area> areas;
 
@@ -49,8 +37,10 @@ public class Board {
      */
     private HashMap<Player, PlayerToken> players;
 
+    
     private PlayerToken currentPlayerToken;
 
+    
     /**
      * Distances between each areas
      */
@@ -81,10 +71,10 @@ public class Board {
     private HashMap<String, HashMap<Integer, Integer>> areasTokensConfiguration;
 
     
-    public Board(int nbPlayers){
+    public Board(int nbPlayers) throws IOException{
         
         this.nbPlayers = nbPlayers;
-        this.piecesStack = new PlayerTokenStack();
+        this.playerTokenStack = new PlayerTokenStack();
         this.areas = new HashMap<String, Area>();
         this.chrono = new Chrono();
         this.chrono.initializationValues();
@@ -93,8 +83,6 @@ public class Board {
         this.fourCurrentCards = new Card[4];
         this.players = new HashMap<Player, PlayerToken>();
         
-        this.initFromConfig();
-        
         this.initAreas();
         
         this.initializationDecks();
@@ -102,8 +90,9 @@ public class Board {
     
     
     /**
-     * @author Gael
      * Returns the card picked
+     * 
+     * @author Gael
      * @param index of the card picked in the table
      * @return card picked
      */
@@ -115,438 +104,95 @@ public class Board {
     	return card;
     }
     
-    
-    
-    
-    
-    /**
-     * Init some resources using extern configuration
-     */
-    public void initFromConfig(){
-        
-        // to put inside properties
-        this.areasTokensConfiguration = new HashMap<String, HashMap<Integer, Integer>>(){{
-            put("greece", new HashMap<Integer, Integer>(){{
-                put(1, 4);
-                put(2, 3);
-                put(3, 2);
-                put(4, 1);
-                put(5, 2);
-                put(6, 1);
-            }});
-            put("crete", new HashMap<Integer, Integer>(){{
-                put(1, 3);
-                put(2, 2);
-                put(3, 4);
-                put(4, 3);
-                put(5, 1);
-                put(6, 0);
-            }});
-            put("egypt", new HashMap<Integer, Integer>(){{
-                put(1, 4);
-                put(2, 2);
-                put(3, 3);
-                put(4, 2);
-                put(5, 1);
-                put(6, 1);
-            }});
-            put("palestine", new HashMap<Integer, Integer>(){{
-                put(1, 5);
-                put(2, 3);
-                put(3, 1);
-                put(4, 1);
-                put(5, 1);
-                put(6, 1);
-                put(7, 1);
-            }});
-            put("mesopotamia", new HashMap<Integer, Integer>(){{
-                put(1, 5);
-                put(3, 3);
-                put(4, 3);
-                put(5, 2);
-                put(6, 1);
-                put(7, 1);
-            }});
-        }};
-    }
 
     /**
      * Initialization of areas
+     * - use configManager to get some informations
      */
-    public void initAreas(){
-
-        Integer nbEmptyTokenPoint = 16; // put inside properties
+    private void initAreas() throws IOException{
         
-        /*
-         * Creation of the distance hashmap for each area 
+        // Get the number of empty tokens inside each excavation areas
+        int nbEmptyTokenPoint = Integer.parseInt(ConfigManager.getInstance().getConfig().getProperty("nbEmptyTokenPoint") );
+        
+        /**
+         * Init areas
+         * - We get only keys beginning with 'areas'
+         * - We set basic informations (name, color, ...)
+         * - We set tokens inside each areas
+         * - We set distance between each areas
          */
-        
-        HashMap<String, String[]> londonDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> parisDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> romaDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> berlinDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> viennaDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> warsawDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> moscowDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> greeceDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> creteDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> egyptDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> palestineDistances = new HashMap<String, String[]>();
-        HashMap<String, String[]> mesopotamiaDistances = new HashMap<String, String[]>();
-        
-        
-        /*
-         * 
-         *************************** INITIALIZATION OF AREAS DISTANCES ***************************** 
-         * 
-         */
-        
-        
-        /*
-         * LONDON
-         */
-        londonDistances.put("paris", new String[0]);
-        String[] londonRoma = {"paris"};
-        londonDistances.put("roma", londonRoma);
-        londonDistances.put("berlin", new String[0]);
-        String[] londonVienna = {"paris"};
-        londonDistances.put("vienna", londonVienna);
-        String[] londonWarsaw = {"berlin"};
-        londonDistances.put("warsaw", londonWarsaw);
-        String[] londonMoscow = {"berlin","warsaw"};
-        londonDistances.put("moscow", londonMoscow);
-        String[] londonGreece = {"paris","roma"};
-        londonDistances.put("greece", londonGreece);
-        String[] londonCrete = {"paris","roma"};
-        londonDistances.put("crete",londonCrete);
-        String[] londonEgypt = {"paris","roma","crete"};
-        londonDistances.put("egypt",londonEgypt);
-        String[] londonPalestine = {"paris","roma","crete"};
-        londonDistances.put("palestine", londonPalestine);
-        String[] londonMesopotamia = {"paris","roma","greece"};
-        londonDistances.put("mesopotamia", londonMesopotamia);
-        
-        
-        /*
-         * PARIS
-         */
-        parisDistances.put("london", new String[0]);
-        parisDistances.put("roma", new String[0]);
-        parisDistances.put("berlin", new String[0]);
-        parisDistances.put("vienna",  new String[0]);
-        String[] parisWarsaw = {"berlin"};
-        parisDistances.put("warsaw", parisWarsaw);
-        String[] parisMoscow = {"berlin","warsaw"};
-        parisDistances.put("moscow", parisMoscow);
-        String[] parisGreece = {"roma"};
-        parisDistances.put("greece", parisGreece);
-        String[] parisCrete = {"roma"};
-        parisDistances.put("crete",parisCrete);
-        String[] parisEgypt = {"roma","crete"};
-        parisDistances.put("egypt",parisEgypt);
-        String[] parisPalestine = {"roma","crete"};
-        parisDistances.put("palestine", parisPalestine);
-        String[] parisMesopotamia = {"roma","greece"};
-        parisDistances.put("mesopotamia", parisMesopotamia);
-        
-        
-        
-        
-        /*
-         * ROMA
-         */
-        String[] romaLondon = {"paris"};
-        romaDistances.put("london", romaLondon);
-        romaDistances.put("paris", new String[0]);
-        String[] romaBerlin = {"paris"};
-        romaDistances.put("berlin", romaBerlin);
-        romaDistances.put("vienna",  new String[0]);
-        String[] romaWarsaw = {"vienna"};
-        romaDistances.put("warsaw", romaWarsaw);
-        String[] romaMoscow = {"vienna","warsaw"};
-        romaDistances.put("moscow", romaMoscow);
-        romaDistances.put("greece", new String[0]);
-        romaDistances.put("crete",new String[0]);
-        String[] romaEgypt = {"crete"};
-        romaDistances.put("egypt",romaEgypt);
-        String[] romaPalestine = {"crete"};
-        romaDistances.put("palestine", romaPalestine);
-        String[] romaMesopotamia = {"greece"};
-        romaDistances.put("mesopotamia", romaMesopotamia);
-        
-        
-        
-        /*
-         * BERLIN
-         */
-      
-        berlinDistances.put("london", new String[0]);
-        berlinDistances.put("paris", new String[0]);
-        String[] berlinRoma = {"paris"};
-        berlinDistances.put("roma", berlinRoma);
-        String[] berlinVienna = {"warsaw"};
-        berlinDistances.put("vienna",  berlinVienna);
-        berlinDistances.put("warsaw", new String[0]);
-        String[] berlinMoscow = {"warsaw"};
-        berlinDistances.put("moscow", berlinMoscow);
-        String[] berlinGreece = {"warsaw"};
-        berlinDistances.put("greece", berlinGreece);
-        String[] berlinCrete = {"warsaw","greece"};
-        berlinDistances.put("crete", berlinCrete);
-        String[] berlinEgypt = {"warsaw","crete"};
-        berlinDistances.put("egypt",berlinEgypt);
-        String[] berlinPalestine = {"warsaw","crete"};
-        berlinDistances.put("palestine", berlinPalestine);
-        String[] berlinMesopotamia = {"warsaw","greece"};
-        berlinDistances.put("mesopotamia", berlinMesopotamia);
-        
-        
-        /*
-         * VIENNA
-         */
-      
-        String[] viennaLondon = {"paris"};
-        viennaDistances.put("london", viennaLondon);
-        viennaDistances.put("paris", new String[0]);
-        viennaDistances.put("roma", new String[0]);
-        viennaDistances.put("berlin",  new String[0]);
-        viennaDistances.put("warsaw", new String[0]);
-        String[] viennaMoscow = {"warsaw"};
-        viennaDistances.put("moscow", viennaMoscow);
-        String[] viennaGreece = {"roma"};
-        viennaDistances.put("greece", viennaGreece);
-        String[] viennaCrete = {"roma"};
-        viennaDistances.put("crete", viennaCrete);
-        String[] viennaEgypt = {"roma","crete"};
-        viennaDistances.put("egypt",viennaEgypt);
-        String[] viennaPalestine = {"roma","crete"};
-        viennaDistances.put("palestine", viennaPalestine);
-        String[] viennaMesopotamia = {"roma","greece"};
-        viennaDistances.put("mesopotamia", viennaMesopotamia);
-        
-        
-        
-        /*
-         * WARSAW
-         */
-      
-        String[] warsawLondon = {"berlin"};
-        warsawDistances.put("london", warsawLondon);
-        String[] warsawParis = {"berlin"};
-        warsawDistances.put("paris", warsawParis);
-        String[] warsawRoma = {"vienna"};
-        warsawDistances.put("roma", warsawRoma);
-        warsawDistances.put("vienna", new String[0]);
-        warsawDistances.put("moscow", new String[0]);
-        warsawDistances.put("greece", new String[0]);
-        String[] warsawCrete = {"greece"};
-        warsawDistances.put("crete", warsawCrete);
-        String[] warsawEgypt = {"greece","crete"};
-        warsawDistances.put("egypt",warsawEgypt);
-        String[] warsawPalestine = {"greece","crete"};
-        warsawDistances.put("palestine", warsawPalestine);
-        String[] warsawMesopotamia = {"greece"};
-        warsawDistances.put("mesopotamia", warsawMesopotamia);
-        
-        
-        
-        /*
-         * MOSCOW
-         */
-      
-        String[] moscowLondon = {"warsaw","berlin"};
-        moscowDistances.put("london", moscowLondon);
-        String[] moscowParis = {"warsaw","berlin"};
-        moscowDistances.put("paris", moscowParis);
-        String[] moscowRoma = {"warsaw","vienna"};
-        moscowDistances.put("roma", moscowRoma);
-        String[] moscowVienna = {"warsaw"};
-        moscowDistances.put("vienna", moscowVienna);
-        moscowDistances.put("warsaw", new String[0]);
-        String[] moscowGreece = {"warsaw"};
-        moscowDistances.put("greece", moscowGreece);
-        String[] moscowCrete = {"warsaw","greece"};
-        moscowDistances.put("crete", moscowCrete);
-        String[] moscowEgypt = {"warsaw","greece","crete"};
-        moscowDistances.put("egypt",moscowEgypt);
-        String[] moscowPalestine = {"warsaw","greece","crete"};
-        moscowDistances.put("palestine", moscowPalestine);
-        String[] moscowMesopotamia = {"warsaw","greece"};
-        moscowDistances.put("mesopotamia", moscowMesopotamia);
-        
-        
-        
-        
-        /*
-         * GREECE
-         */
-      
-        String[] greeceLondon = {"warsaw","berlin"};
-        greeceDistances.put("london", greeceLondon);
-        String[] greeceParis = {"roma"};
-        greeceDistances.put("paris", greeceParis);
-        greeceDistances.put("roma", new String[0]);
-        String[] greeceVienna = {"roma"};
-        greeceDistances.put("vienna", greeceVienna);
-        greeceDistances.put("warsaw", new String[0]);
-        String[] greeceMoscow = {"warsaw"};
-        greeceDistances.put("moscow", greeceMoscow);
-        greeceDistances.put("crete", new String[0]);
-        String[] greeceEgypt = {"crete"};
-        greeceDistances.put("egypt",greeceEgypt);
-        String[] greecePalestine = {"crete"};
-        greeceDistances.put("palestine", greecePalestine);
-        greeceDistances.put("mesopotamia", new String[0]);
-        
-        
-        
-        
-        /*
-         * CRETE
-         */
-      
-        String[] creteLondon = {"roma","paris"};
-        creteDistances.put("london", creteLondon);
-        String[] creteParis = {"roma"};
-        creteDistances.put("paris", creteParis);
-        creteDistances.put("roma", new String[0]);
-        String[] creteVienna = {"roma"};
-        creteDistances.put("vienna", creteVienna);
-        String[] creteWarsaw = {"greece"};
-        creteDistances.put("warsaw", creteWarsaw);
-        String[] creteMoscow = {"greece","warsaw"};
-        creteDistances.put("moscow", creteMoscow);
-        creteDistances.put("greece", new String[0]);
-        creteDistances.put("egypt",new String[0]);  
-        creteDistances.put("palestine", new String[0]);
-        String[] creteMesopotamia = {"palestine"};
-        creteDistances.put("mesopotamia", creteMesopotamia);
-        
-        
-        /*
-         * EGYPT
-         */
-      
-        String[] egyptLondon = {"crete","roma","paris"};
-        egyptDistances.put("london", egyptLondon);
-        String[] egyptParis = {"crete","roma"};
-        egyptDistances.put("paris", egyptParis);
-        String[] egyptRoma = {"crete","roma"};
-        egyptDistances.put("roma", egyptRoma);
-        String[] egyptVienna = {"crete","roma"};
-        egyptDistances.put("vienna", egyptVienna);
-        String[] egyptWarsaw = {"crete","greece"};
-        egyptDistances.put("warsaw", egyptWarsaw);
-        String[] egyptMoscow = {"crete","greece","warsaw"};
-        egyptDistances.put("moscow", egyptMoscow);
-        String[] egyptGreece = {"crete"};
-        egyptDistances.put("greece", egyptGreece);
-        egyptDistances.put("crete",new String[0]);  
-        egyptDistances.put("palestine", new String[0]);
-        String[] egyptMesopotamia = {"palestine"};
-        egyptDistances.put("mesopotamia", egyptMesopotamia);
-        
-        
-        
-        /*
-         * PALESTINE
-         */
-      
-        String[] palestineLondon = {"crete","roma","paris"};
-        palestineDistances.put("london", palestineLondon);
-        String[] palestineParis = {"crete","roma"};
-        palestineDistances.put("paris", palestineParis);
-        String[] palestineRoma = {"crete","roma"};
-        palestineDistances.put("roma", palestineRoma);
-        String[] palestineVienna = {"crete","roma"};
-        palestineDistances.put("vienna", palestineVienna);
-        String[] palestineWarsaw = {"crete","greece"};
-        palestineDistances.put("warsaw", palestineWarsaw);
-        String[] palestineMoscow = {"crete","greece","warsaw"};
-        palestineDistances.put("moscow", palestineMoscow);
-        String[] palestineGreece = {"crete"};
-        palestineDistances.put("greece", palestineGreece);
-        palestineDistances.put("crete",new String[0]);  
-        palestineDistances.put("egypt", new String[0]);
-        palestineDistances.put("mesopotamia", new String[0]);
-        
-        
-        
-        /*
-         * MESOPOTAMIA
-         */
-      
-        String[] mesopotamiaLondon = {"greece","roma","paris"};
-        mesopotamiaDistances.put("london", mesopotamiaLondon);
-        String[] mesopotamiaParis = {"greece","roma"};
-        mesopotamiaDistances.put("paris", mesopotamiaParis);
-        String[] mesopotamiaRoma = {"greece","roma"};
-        mesopotamiaDistances.put("roma", mesopotamiaRoma);
-        String[] mesopotamiaVienna = {"greece","roma"};
-        mesopotamiaDistances.put("vienna", mesopotamiaVienna);
-        String[] mesopotamiaWarsaw = {"greece"};
-        mesopotamiaDistances.put("warsaw", mesopotamiaWarsaw);
-        String[] mesopotamiaMoscow = {"greece","warsaw"};
-        mesopotamiaDistances.put("moscow", mesopotamiaMoscow);
-        mesopotamiaDistances.put("greece", new String[0]);
-        String[] mesopotamiaCrete = {"palestine"};
-        mesopotamiaDistances.put("crete",mesopotamiaCrete);  
-        String[] mesopotamiaEgypt = {"palestine"};
-        mesopotamiaDistances.put("egypt", mesopotamiaEgypt);
-        mesopotamiaDistances.put("mesopotamia", new String[0]);
-        
-        
-        
-        
-        TouristicArea london  = new TouristicArea(0,"london");
-        TouristicArea paris  = new TouristicArea(1,"paris");
-        TouristicArea roma  = new TouristicArea(2,"roma");
-        TouristicArea berlin  = new TouristicArea(3,"berlin");
-        TouristicArea vienna  = new TouristicArea(4,"vienna");
-        TouristicArea warsaw  = new TouristicArea(5,"warsaw");
-        TouristicArea moscow  = new TouristicArea(6,"moscow");
-        ExcavationArea greece  = new ExcavationArea(7,"greece","#ff5b2b");
-        ExcavationArea crete  = new ExcavationArea(8,"crete","#895959");
-        ExcavationArea egypt  = new ExcavationArea(9,"egypt","#fff168");
-        ExcavationArea palestine  = new ExcavationArea(10,"palestine","#b7ca79");
-        ExcavationArea mesopotamia  = new ExcavationArea(11,"mesopotamia","#375d81");
-
-        areas.put( "london", london);
-        areas.put( "paris", paris);
-        areas.put( "roma", roma);
-        areas.put( "berlin", berlin);
-        areas.put( "vienna", vienna);
-        areas.put( "warsaw", warsaw);
-        areas.put( "moscow", moscow);
-        areas.put( "greece", greece); // orange
-        areas.put( "crete", crete); // purple
-        areas.put( "egypt", egypt); // yellow
-        areas.put( "palestine", palestine); // green
-        areas.put( "mesopotamia", mesopotamia); // blue
-
-        // Init tokens
-        for (Area area : areas.values()) {
-            if(area instanceof ExcavationArea){
-                ExcavationArea areaTmp = ((ExcavationArea)area);
-
-                 // Set empty tokens
-                for (int i = 0; i < nbEmptyTokenPoint; i++) {
-                    areaTmp.addToken( new PointToken("empty", areaTmp.getCodeColor(), 0)); // assign empty point
+        ArrayList<String> keys = ConfigManager.getInstance().getConfigKeysBeginningBy("areas");
+        for (String key : keys){
+            
+            // we split the key to get different part
+            String[] splittedKey = key.split( "\\." );
+            String categorie    = splittedKey[1];
+            String areaName     = splittedKey[2];
+            
+            // area does not exist
+            if( areas.containsKey( areaName ) == false ){
+                
+                Area newArea = null;
+                
+                /**
+                 * Case of touristic area
+                 */
+                if( categorie.equals( "touristic" )){
+                    newArea = new TouristicArea(0, areaName);
                 }
-
-                // Set knowledge (one to each excavation area)
-                areaTmp.addToken( new GeneralKnowledgeToken("GeneralKnowledge", areaTmp.getCodeColor() ) );
-                areaTmp.addToken( new SpecificKnowledgeToken("SpecificKnowledge", areaTmp.getCodeColor() ) );
-
-                // Set point tokens
-                HashMap<Integer, Integer> pointsToAssign = this.areasTokensConfiguration.get( areaTmp.getName() ); // get points to assign according to this city
-                for (Map.Entry<Integer, Integer> pointValue : pointsToAssign.entrySet()) { // loop on each point value
-                    Integer value = pointValue.getKey();
-                    Integer nbTokenOfThisValue = pointValue.getValue();
-                    for (int i = 0; i < nbTokenOfThisValue; i++) {
-                        areaTmp.addToken( new PointToken("point", areaTmp.getCodeColor(), value ) ); // assign one token of this value
+                /**
+                 * Case of excavation area
+                 */
+                else{
+                    String color = ConfigManager.getInstance().getConfig().getProperty( "areas." + categorie + "." + areaName + ".color" );
+                    newArea = new ExcavationArea(0, areaName, color);
+                    
+                    // Set empty tokens
+                    for (int i = 0; i < nbEmptyTokenPoint; i++) {
+                        ((ExcavationArea)newArea).addToken( new PointToken("empty", ((ExcavationArea)newArea).getCodeColor(), 0)); // assign empty point
+                    }
+                    
+                    // Set knowledge tokens (one to each excavation area)
+                    ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken("GeneralKnowledge", ((ExcavationArea)newArea).getCodeColor() ) );
+                    ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken("SpecificKnowledge", ((ExcavationArea)newArea).getCodeColor() ) );
+                    
+                    // Set point tokens
+                    String pointsTokenString = ConfigManager.getInstance().getConfig().getProperty("areas." + categorie + "." + areaName + ".pointTokens"); // get string liek 1:2,2:4
+                    String[] sections = pointsTokenString.split("\\,"); // split each 1:2,2:4 => (get [1:2] [2:4])
+                    for (String section : sections) {
+                        Integer value = Integer.parseInt( section.substring(0, section.indexOf(":")) ); // 1:2 => (get 1)
+                        Integer nbTokenOfThisValue = Integer.parseInt( section.substring(section.indexOf(":") + 1) ); // 1:2 => (get 2)
+                        for (int i = 0; i < nbTokenOfThisValue; i++) {
+                            ((ExcavationArea)newArea).addToken( new PointToken("point", ((ExcavationArea)newArea).getCodeColor(), value ) ); // assign one token of this value
+                        }
                     }
                 }
+                
+                /**
+                 * For all areas
+                 */
+                // We get only keys about the distance of this area and others area
+                ArrayList<String> keysOfDistance = ConfigManager.getInstance().getConfigKeysBeginningBy("areas." + categorie + "." + areaName + ".to");
+
+                // We iterate over each reachable area from this area
+                for (String keyOfDistance : keysOfDistance){
+                    String[] splittedkeyOfDistance = keyOfDistance.split( "\\." );
+                    String to   = splittedkeyOfDistance[4];
+                    
+                    // Get the steps areas of this area and its destination
+                    String stepsAreas = ConfigManager.getInstance().getConfig().getProperty( "areas." + categorie + "." + areaName + ".to." + to );
+                    String[] stepsAreasSplitted;
+                    if(stepsAreas.equals("")){
+                        stepsAreasSplitted = new String[0]; // no steps
+                    }
+                    else{
+                        stepsAreasSplitted = stepsAreas.split("\\,"); // some steps
+                    }
+                    
+                    newArea.getDistances().put( to, stepsAreasSplitted ); // We set the distance
+                }
+                
+                areas.put( areaName, newArea ); // We put this area inside list of areas
             }
         }
     }
@@ -840,25 +486,17 @@ public class Board {
      * 
      * @return
      */
-	public Card[] getFourCurrentCards() {
-		return fourCurrentCards;
-	}
+    public Card[] getFourCurrentCards() {
+            return fourCurrentCards;
+    }
 
-	/**
-	 * 
-	 * @param fourCurrentCards
-	 */
-	public void setFourCurrentCards(Card[] fourCurrentCards) {
-		this.fourCurrentCards = fourCurrentCards;
-	}
-	
-	
-	
-    
-    
+    /**
+     * 
+     * @param fourCurrentCards
+     */
+    public void setFourCurrentCards(Card[] fourCurrentCards) {
+            this.fourCurrentCards = fourCurrentCards;
+    }
 
-    
-    
-    
 	
 }

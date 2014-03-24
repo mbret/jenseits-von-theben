@@ -63,22 +63,17 @@ public abstract class Area {
         return num;
     }
 
-
-
     public String getName() {
         return name;
     }
-    
-
 
     @Override
-    public String toString(){
-        return "Area : "+this.getName();
+    public String toString() {
+        return "Area{" + "num=" + num + ", name=" + name + ", displayName=" + displayName + ", distances=" + distances + '}';
     }
-    
-    
-    public String[] getDistance(String area){
-    	return this.distances.get(area);
+
+    public HashMap<String, String[]> getDistances() {
+        return distances;
     }
 
 }
