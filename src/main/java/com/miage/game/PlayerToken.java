@@ -17,8 +17,11 @@
 
 package com.miage.game;
 
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+
 import com.miage.areas.Area;
 
 /**
@@ -32,7 +35,7 @@ public class PlayerToken implements Comparable{
         /**
          * 
          */
-	private Calendar timeState;
+	private LocalDate timeState;
 	
 	public PlayerToken(String color){
 		this.color = color;
@@ -53,12 +56,12 @@ public class PlayerToken implements Comparable{
 		return color;
 	}
 	
-	public Calendar getTimeState() {
+	public LocalDate getTimeState() {
 		return timeState;
 	}
 
 
-	public void setTimeState(Calendar timeState) {
+	public void setTimeState(LocalDate timeState) {
 		this.timeState = timeState;
 	}
 	
@@ -69,6 +72,7 @@ public class PlayerToken implements Comparable{
 	}
 
 	/**
+	 * @author Gael
 	 * Compare 2 pieces depending on their timeState
 	 * @param o Object to compare
 	 * @return -1 if the timeState of this is <= timeState of p, else 1
@@ -79,10 +83,10 @@ public class PlayerToken implements Comparable{
 		
 		PlayerToken p = (PlayerToken) o;
 		
-		if(this.getTimeState().compareTo(p.getTimeState()) < 1)
-			result = -1;
-		else
+		if(this.getTimeState().isAfter(p.getTimeState()))
 			result = 1;
+		else
+			result = -1;
 			
 		
 		
@@ -90,12 +94,36 @@ public class PlayerToken implements Comparable{
 	}
 	
 	
+	/**
+	 * @author Gael
+	 * Add some weeks at the timeState
+	 * @param nb number of weeks to add
+	 */
 	public void addWeeks(int nb){
 		
-		Calendar calendar = this.getTimeState();
-		calendar.add(Calendar.WEEK_OF_YEAR, nb);
-		this.setTimeState(calendar);
+		this.setTimeState(this.timeState.plusDays(nb*7));
 		
+	}
+	
+	/**
+	 * @author Gael
+	 * return the current number of week of the playerToken
+	 * @return
+	 */
+	public int getCurrentWeek(){
+		
+		return (int) (Math.ceil(this.timeState.getDayOfYear()));
+	}
+	
+	
+	/**
+	 * @author Gael
+	 * return the current year of the playerToken
+	 * @return
+	 */
+	public int getCurrentYear(){
+		
+		return this.timeState.getYear();
 	}
 
 	
