@@ -28,7 +28,7 @@ public class TestDeck {
 		
 		this.deck = new Deck();
 		this.deck.addCard(new GeneralKnowledgeCard("berlin", 2, 2));
-		this.deck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "code"));
+		this.deck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "greece"));
 		this.deck.addCard(new GeneralKnowledgeCard("vienna", 3, 3));
 		this.deck.addCard(new GeneralKnowledgeCard("rome", 4, 4));
 		this.deck.addCard(new GeneralKnowledgeCard("moscow", 3, 2));
@@ -41,17 +41,18 @@ public class TestDeck {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	
 	/**
 	 * Test of the method pick()
 	 * @author Gael
 	 */
+	@Test
 	public void testPick() {
 		int sizeOfDeck = this.deck.size();
 		
 		assertEquals(this.deck.pick().toString(), "generalKnowledge,berlin,2,2");
 		assertTrue(this.deck.size() == sizeOfDeck-1);
-		assertEquals(this.deck.pick().toString(), "specificKnowledge,paris,2,2,code");
+		assertEquals(this.deck.pick().toString(), "specificKnowledge,paris,2,2,greece");
 		
 	}
 

@@ -27,7 +27,7 @@ import com.miage.cards.ShovelCard;
 
 public class TestBoard {
 	
-	private Board board, board2;
+	private Board board;
 	private Card[] fourCards;
 	private Deck deckTest;
 
@@ -68,12 +68,13 @@ public class TestBoard {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	
 	/**
 	 * @author Gael
 	 * Test of the method pickCardOnBoard
 	 * 
 	 */
+	@Test
 	public void testPickCardOnBoard() {
 		
 		Card card = board.pickCardOnBoard(3);
@@ -85,12 +86,13 @@ public class TestBoard {
 			
 	}
 	
-	@Test
+	
 	/**
 	 * @author Gael
 	 * 
 	 * Test of the method to add an expo card on the board
 	 */
+	@Test
 	public void testAddExpoCardOnTheBoard(){
 		
 		

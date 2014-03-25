@@ -18,17 +18,17 @@ public class PlayerKnowledges {
 		this.specificKnowledges = new HashMap<String, Integer>();
 		this.ethnologicalKnowledges = new HashMap<String, Integer>();
 		
-		this.specificKnowledges.put("#ff5b2b", 0);   // Orange
-		this.specificKnowledges.put("#895959", 0);	 // Purple
-		this.specificKnowledges.put("#fff168", 0);	 // Yellow
-		this.specificKnowledges.put("#b7ca79", 0);   // Green
-		this.specificKnowledges.put("#375d81", 0);	 // Blue
+		this.specificKnowledges.put("greece", 0);   // Orange
+		this.specificKnowledges.put("crete", 0);	 // Purple
+		this.specificKnowledges.put("egypt", 0);	 // Yellow
+		this.specificKnowledges.put("palestine", 0);   // Green
+		this.specificKnowledges.put("mesopotamia", 0);	 // Blue
 		
-		this.ethnologicalKnowledges.put("#ff5b2b", 0);	// Orange
-		this.ethnologicalKnowledges.put("#895959", 0);	// Purple
-		this.ethnologicalKnowledges.put("#fff168", 0);	// Yellow
-		this.ethnologicalKnowledges.put("#b7ca79", 0);	// Green
-		this.ethnologicalKnowledges.put("#375d81", 0);	// Blue
+		this.ethnologicalKnowledges.put("greece", 0);	// Orange
+		this.ethnologicalKnowledges.put("crete", 0);	// Purple
+		this.ethnologicalKnowledges.put("egypt", 0);	// Yellow
+		this.ethnologicalKnowledges.put("palestine", 0);	// Green
+		this.ethnologicalKnowledges.put("mesopotamia", 0);	// Blue
 		
 	}
 	
@@ -41,9 +41,9 @@ public class PlayerKnowledges {
 	 * @param color of the knowledge concerned
 	 * @param value to add
 	 */
-	public void addSpecificKnowledges(String color, int value){
+	public void addSpecificKnowledges(String name, int value){
 		
-		this.specificKnowledges.put(color, this.specificKnowledges.get(color)+value);
+		this.specificKnowledges.put(name, this.specificKnowledges.get(name)+value);
 	}
 	
 	
@@ -55,9 +55,9 @@ public class PlayerKnowledges {
 	 * @param color of the knowledge concerned
 	 * @param value to add
 	 */
-	public void addEthnologicalKnowledges(String color, int value){
+	public void addEthnologicalKnowledges(String name, int value){
 		
-		this.ethnologicalKnowledges.put(color, this.ethnologicalKnowledges.get(color)+value);
+		this.ethnologicalKnowledges.put(name, this.ethnologicalKnowledges.get(name)+value);
 	}
 	
 	

@@ -92,7 +92,7 @@ public abstract class Area {
      * @param nameOfDestinationArea
      * @return
      */
-    public String[] distance(String nameOfDestinationArea){
+    public String[] getDistanceAreasSteps(String nameOfDestinationArea){
     	
     	return this.distances.get(nameOfDestinationArea);
     	
