@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.ini4j.Ini;
 
 /**
@@ -20,6 +22,9 @@ import org.ini4j.Ini;
  */
 public class ConfigManager {
  
+    // use the classname for the logger, this way you can refactor
+    private final static Logger LOGGER = LogManager.getLogger(ConfigManager.class.getName());
+
     private static ConfigManager instance;
     
     private final String configFilename = "config.properties";
