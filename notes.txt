@@ -6,8 +6,7 @@ Group can add note here...
 	Gael
 
 -----------------------
-- Revoir la structure des distances de ville, chaque intersection contient une liste de ville par laquel le pion doit passer poura aller de la ville A à la ville B. 
-Utiliser le numéro des villes comme indice
+- Finir le switch des competences, faire la gestion des couts quand carte piochÃ©e
 
 
 -----------------------

@@ -47,7 +47,7 @@ public class Board {
     /**
      * List of player with their game token
      */
-    private HashMap<Player, PlayerToken> players;
+    private HashMap<PlayerToken, Player> playerTokensAndPlayers;
 
     private PlayerToken currentPlayerToken;
 
@@ -77,7 +77,7 @@ public class Board {
         this.sideDeck = new Deck();
         this.fourCurrentCards = new Card[4];
         this.threeExpoCards = new ExpoCard[3];
-        this.players = new HashMap<Player, PlayerToken>();
+        this.playerTokensAndPlayers = new HashMap<PlayerToken, Player>();
         
         this.initFromConfig();
         
