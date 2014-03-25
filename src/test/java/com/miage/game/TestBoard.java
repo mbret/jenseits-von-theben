@@ -27,7 +27,7 @@ import com.miage.cards.ShovelCard;
 
 public class TestBoard {
 	
-	private Board board;
+	private Board board, board2;
 	private Card[] fourCards;
 	private Deck deckTest;
 
@@ -60,9 +60,8 @@ public class TestBoard {
 		deckTest.addCard(new ShovelCard("london", 2));
 		board.setDeck(deckTest);
 		
-			
-            board = new Board(3);
-            board.initializationDecks();
+		
+	
 	}
 
 	@After

@@ -70,7 +70,7 @@ public abstract class Area {
     @Override
 
     public String toString() {
-        return "Area{" + "num=" + num + ", name=" + name + ", displayName=" + displayName + ", distances=" + distances + '}';
+        return this.getName();
 
     }
 
@@ -80,6 +80,22 @@ public abstract class Area {
     
     public void setDistances(HashMap<String, String[]> distances){
     	this.distances = distances;
+    }
+    
+    
+    /**
+     * 
+     * @author Gael
+     * 
+     * return the table of steps between two areas
+     * 
+     * @param nameOfDestinationArea
+     * @return
+     */
+    public String[] distance(String nameOfDestinationArea){
+    	
+    	return this.distances.get(nameOfDestinationArea);
+    	
     }
 
 }

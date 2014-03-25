@@ -144,7 +144,7 @@ public class PlayerToken implements Comparable{
 	 */
 	public String[] move(String destinationArea, Board board){
 		
-		String[] steps = this.getPosition().getDistance(destinationArea);
+		String[] steps = this.getPosition().distance(destinationArea);
 		
 		
 		for(String step : steps){

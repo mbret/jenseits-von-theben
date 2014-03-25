@@ -33,7 +33,6 @@ public class TestPlayerToken {
 	public void setUp() throws Exception {
 		
 		board = new Board(2);
-		board.initAreas();
 		
 		playerToken1 = new PlayerToken("red");
 		playerToken2 = new PlayerToken("blue");
