@@ -29,5 +29,14 @@ public class PointToken extends Token{
         super(name, color);
         this.value = value;
     }
+
+    public Integer getValue() {
+        return value;
+    }
+    
+    
+    public String toString(){
+    	return super.toString()+","+value;
+    }
     
 }

@@ -35,8 +35,22 @@ public class Player {
             this.playerKnowledges = new PlayerKnowledges();
             this.cards = new ArrayList<Card>();
     }
+    
+    /**
+     * @author Gael
+     * @param board board of the game
+     * @param index index of the table which corresponds to the card
+     */
+    public void pickCard(Board board, int index){
+    	
+    	this.cards.add(board.pickCardOnBoard(index).downCastCard());
+    	
+    }
 
 
+    
+    
+    //************************************ GETTERS & SETTERS ****************************************************
 
     public String getName() {
             return name;

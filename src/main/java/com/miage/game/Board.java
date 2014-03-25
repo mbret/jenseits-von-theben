@@ -1,26 +1,13 @@
-/*
- * Copyright (C) 2014 maxime
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 
 package com.miage.game;
 
-import com.miage.tokens.*;
-import com.miage.cards.*;
 import com.miage.areas.*;
 
+import com.miage.cards.*;
+import com.miage.config.ConfigManager;
+import com.miage.tokens.*;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,18 +16,19 @@ import java.util.Map;
  * @author maxime
  */
 public class Board {
-	
+    
     private int nbPlayers;
 
     private Chrono chrono;
     
     /**
-     * Player token stack, define the player's time to play
-     */ 
-    private PlayerTokenStack piecesStack;
+     * Stack of player's token
+     * The stack allow to define which player should play before others
+     */
+    private PlayerTokenStack playerTokenStack;
 
     /**
-     *  
+     *  List of areas composing the board
      */
     private HashMap<String, Area> areas;
 
@@ -49,24 +37,26 @@ public class Board {
      */
     private HashMap<Player, PlayerToken> players;
 
+    
     private PlayerToken currentPlayerToken;
 
+    
     /**
      * Distances between each areas
      */
     private static int distances[][] = new int[][]{
-        {0,1,1,2,2,2,3,3,3,4,4,4},	// londres -> 0
+        {0,1,1,2,2,2,3,3,3,4,4,4},	// london -> 0
         {1,0,1,1,1,2,3,2,2,3,3,3},	// paris -> 1
         {1,1,0,2,2,1,2,2,3,3,4,4},	// berlin -> 2
         {2,1,2,0,1,2,3,1,1,2,2,2},	// rome -> 3
-        {2,1,1,2,0,1,2,2,2,3,3,3},      // vienne -> 4
-        {2,2,2,1,1,0,1,1,2,3,3,2},	// varsovie -> 5
-        {3,3,3,2,2,1,0,2,3,4,4,3},	// moscou -> 6
-        {3,2,1,2,2,1,2,0,1,2,2,1},	// grece -> 7
+        {2,1,1,2,0,1,2,2,2,3,3,3},      // vienna -> 4
+        {2,2,2,1,1,0,1,1,2,3,3,2},	// warsaw -> 5
+        {3,3,3,2,2,1,0,2,3,4,4,3},	// moscow -> 6
+        {3,2,1,2,2,1,2,0,1,2,2,1},	// greece -> 7
         {3,2,1,3,2,2,3,1,0,1,1,2},	// crete -> 8
-        {4,3,2,4,3,3,4,2,1,0,1,2},	// egypte -> 9
+        {4,3,2,4,3,3,4,2,1,0,1,2},	// egypt -> 9
         {4,3,4,4,3,3,4,2,1,1,0,1},	// palestine -> 10	
-        {4,3,2,3,3,2,3,1,2,2,1,0},	// mesopotamie -> 11
+        {4,3,2,3,3,2,3,1,2,2,1,0},	// mesopotamia -> 11
     };
 
     private Deck deck;
@@ -81,10 +71,10 @@ public class Board {
     private HashMap<String, HashMap<Integer, Integer>> areasTokensConfiguration;
 
     
-    public Board(int nbPlayers){
+    public Board(int nbPlayers) throws IOException{
         
         this.nbPlayers = nbPlayers;
-        this.piecesStack = new PlayerTokenStack();
+        this.playerTokenStack = new PlayerTokenStack();
         this.areas = new HashMap<String, Area>();
         this.chrono = new Chrono();
         this.chrono.initializationValues();
@@ -93,125 +83,122 @@ public class Board {
         this.fourCurrentCards = new Card[4];
         this.players = new HashMap<Player, PlayerToken>();
         
-        this.initFromConfig();
-        
         this.initAreas();
         
         this.initializationDecks();
     }
     
+    
     /**
-     * Init some resources using extern configuration
+     * Returns the card picked
+     * 
+     * @author Gael
+     * @param index of the card picked in the table
+     * @return card picked
      */
-    public void initFromConfig(){
-        
-        // to put inside properties
-        this.areasTokensConfiguration = new HashMap<String, HashMap<Integer, Integer>>(){{
-            put("greece", new HashMap<Integer, Integer>(){{
-                put(1, 4);
-                put(2, 3);
-                put(3, 2);
-                put(4, 1);
-                put(5, 2);
-                put(6, 1);
-            }});
-            put("crete", new HashMap<Integer, Integer>(){{
-                put(1, 3);
-                put(2, 2);
-                put(3, 4);
-                put(4, 3);
-                put(5, 1);
-                put(6, 0);
-            }});
-            put("egypte", new HashMap<Integer, Integer>(){{
-                put(1, 4);
-                put(2, 2);
-                put(3, 3);
-                put(4, 2);
-                put(5, 1);
-                put(6, 1);
-            }});
-            put("palestine", new HashMap<Integer, Integer>(){{
-                put(1, 5);
-                put(2, 3);
-                put(3, 1);
-                put(4, 1);
-                put(5, 1);
-                put(6, 1);
-                put(7, 1);
-            }});
-            put("mesopotamie", new HashMap<Integer, Integer>(){{
-                put(1, 5);
-                put(3, 3);
-                put(4, 3);
-                put(5, 2);
-                put(6, 1);
-                put(7, 1);
-            }});
-        }};
+    public Card pickCardOnBoard(int index){
+    	
+    	Card card = this.fourCurrentCards[index];
+    	this.fourCurrentCards[index] = this.deck.pick();
+    	
+    	return card;
     }
+    
 
     /**
      * Initialization of areas
+     * - use configManager to get some informations
      */
-    public void initAreas(){
-
-        Integer nbEmptyTokenPoint = 16; // put inside properties
-
-        areas.put( "london", new TouristicArea(0,"london"));
-        areas.put( "paris", new TouristicArea(1,"paris"));
-        areas.put( "berlin", new TouristicArea(2,"berlin"));
-        areas.put( "roma", new TouristicArea(3,"roma"));
-        areas.put( "vienne", new TouristicArea(4,"vienne"));
-        areas.put( "varsovie", new TouristicArea(5,"varsovie"));
-        areas.put( "moscow", new TouristicArea(6,"moscow"));
-        areas.put( "greece", new ExcavationArea(7,"greece","#ff5b2b")); // orange
-        areas.put( "crete", new ExcavationArea(8,"crete","#895959")); // purple
-        areas.put( "egypte", new ExcavationArea(9,"egypte","#fff168")); // yello
-        areas.put( "palestine", new ExcavationArea(10,"palestine","#b7ca79")); // green
-        areas.put( "mesopotamie", new ExcavationArea(11,"mesopotamie","#375d81")); // blue
-
-        // Init tokens
-        for (Area area : areas.values()) {
-            if(area instanceof ExcavationArea){
-                ExcavationArea areaTmp = ((ExcavationArea)area);
-
-                 // Set empty tokens
-                for (int i = 0; i < nbEmptyTokenPoint; i++) {
-                    areaTmp.addToken( new PointToken("empty", areaTmp.getCodeColor(), 0)); // assign empty point
+    private void initAreas() throws IOException{
+        
+        // Get the number of empty tokens inside each excavation areas
+        int nbEmptyTokenPoint = Integer.parseInt(ConfigManager.getInstance().getConfig().getProperty("nbEmptyTokenPoint") );
+        
+        /**
+         * Init areas
+         * - We get only keys beginning with 'areas'
+         * - We set basic informations (name, color, ...)
+         * - We set tokens inside each areas
+         * - We set distance between each areas
+         */
+        ArrayList<String> keys = ConfigManager.getInstance().getConfigKeysBeginningBy("areas");
+        for (String key : keys){
+            
+            // we split the key to get different part
+            String[] splittedKey = key.split( "\\." );
+            String categorie    = splittedKey[1];
+            String areaName     = splittedKey[2];
+            
+            // area does not exist
+            if( areas.containsKey( areaName ) == false ){
+                
+                Area newArea = null;
+                
+                /**
+                 * Case of touristic area
+                 */
+                if( categorie.equals( "touristic" )){
+                    newArea = new TouristicArea(0, areaName);
                 }
-
-                // Set knowledge (one to each excavation area)
-                areaTmp.addToken( new GeneralKnowledgeToken("GeneralKnowledge", areaTmp.getCodeColor() ) );
-                areaTmp.addToken( new SpecificKnowledgeToken("SpecificKnowledge", areaTmp.getCodeColor() ) );
-
-                // Set point tokens
-                HashMap<Integer, Integer> pointsToAssign = this.areasTokensConfiguration.get( areaTmp.getName() ); // get points to assign according to this city
-                for (Map.Entry<Integer, Integer> pointValue : pointsToAssign.entrySet()) { // loop on each point value
-                    Integer value = pointValue.getKey();
-                    Integer nbTokenOfThisValue = pointValue.getValue();
-                    for (int i = 0; i < nbTokenOfThisValue; i++) {
-                        areaTmp.addToken( new PointToken("point", areaTmp.getCodeColor(), value ) ); // assign one token of this value
+                /**
+                 * Case of excavation area
+                 */
+                else{
+                    String color = ConfigManager.getInstance().getConfig().getProperty( "areas." + categorie + "." + areaName + ".color" );
+                    newArea = new ExcavationArea(0, areaName, color);
+                    
+                    // Set empty tokens
+                    for (int i = 0; i < nbEmptyTokenPoint; i++) {
+                        ((ExcavationArea)newArea).addToken( new PointToken("empty", ((ExcavationArea)newArea).getCodeColor(), 0)); // assign empty point
+                    }
+                    
+                    // Set knowledge tokens (one to each excavation area)
+                    ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken("GeneralKnowledge", ((ExcavationArea)newArea).getCodeColor() ) );
+                    ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken("SpecificKnowledge", ((ExcavationArea)newArea).getCodeColor() ) );
+                    
+                    // Set point tokens
+                    String pointsTokenString = ConfigManager.getInstance().getConfig().getProperty("areas." + categorie + "." + areaName + ".pointTokens"); // get string liek 1:2,2:4
+                    String[] sections = pointsTokenString.split("\\,"); // split each 1:2,2:4 => (get [1:2] [2:4])
+                    for (String section : sections) {
+                        Integer value = Integer.parseInt( section.substring(0, section.indexOf(":")) ); // 1:2 => (get 1)
+                        Integer nbTokenOfThisValue = Integer.parseInt( section.substring(section.indexOf(":") + 1) ); // 1:2 => (get 2)
+                        for (int i = 0; i < nbTokenOfThisValue; i++) {
+                            ((ExcavationArea)newArea).addToken( new PointToken("point", ((ExcavationArea)newArea).getCodeColor(), value ) ); // assign one token of this value
+                        }
                     }
                 }
+                
+                /**
+                 * For all areas
+                 */
+                // We get only keys about the distance of this area and others area
+                ArrayList<String> keysOfDistance = ConfigManager.getInstance().getConfigKeysBeginningBy("areas." + categorie + "." + areaName + ".to");
+
+                // We iterate over each reachable area from this area
+                for (String keyOfDistance : keysOfDistance){
+                    String[] splittedkeyOfDistance = keyOfDistance.split( "\\." );
+                    String to   = splittedkeyOfDistance[4];
+                    
+                    // Get the steps areas of this area and its destination
+                    String stepsAreas = ConfigManager.getInstance().getConfig().getProperty( "areas." + categorie + "." + areaName + ".to." + to );
+                    String[] stepsAreasSplitted;
+                    if(stepsAreas.equals("")){
+                        stepsAreasSplitted = new String[0]; // no steps
+                    }
+                    else{
+                        stepsAreasSplitted = stepsAreas.split("\\,"); // some steps
+                    }
+                    
+                    newArea.getDistances().put( to, stepsAreasSplitted ); // We set the distance
+                }
+                
+                areas.put( areaName, newArea ); // We put this area inside list of areas
             }
         }
     }
     
 	
-    /**
-     * Return the distance between 2 areas
-     * @param area1 first area
-     * @param area2 second area
-     * @return the distance between area1 & area2
-     * @throws java.lang.InstantiationException
-     */
-    public static int distance(Area area1, Area area2) throws InstantiationException{
-        if(Board.distances == null){
-            throw new InstantiationException("You must instanciate this class once before using this static method");
-        }
-        return(Board.distances[area1.getNum()][area2.getNum()]);
-    }
+ 
 	
 	
     /**
@@ -245,130 +232,130 @@ public class Board {
         firstDeck.addCard(new CarCard("roma", 1));
 
         // Congress
-        firstDeck.addCard(new CongressCard("London", 2));
-        firstDeck.addCard(new CongressCard("Paris", 2));
-        firstDeck.addCard(new CongressCard("Paris", 2));
-        firstDeck.addCard(new CongressCard("Berlin", 2));
-        firstDeck.addCard(new CongressCard("Berlin", 2));
-        firstDeck.addCard(new CongressCard("Vienne", 2));
-        firstDeck.addCard(new CongressCard("Vienne", 2));
-        firstDeck.addCard(new CongressCard("Moscou", 2));
-        firstDeck.addCard(new CongressCard("Moscou", 2));
+        firstDeck.addCard(new CongressCard("london", 2));
+        firstDeck.addCard(new CongressCard("paris", 2));
+        firstDeck.addCard(new CongressCard("paris", 2));
+        firstDeck.addCard(new CongressCard("berlin", 2));
+        firstDeck.addCard(new CongressCard("berlin", 2));
+        firstDeck.addCard(new CongressCard("vienna", 2));
+        firstDeck.addCard(new CongressCard("vienna", 2));
+        firstDeck.addCard(new CongressCard("moscow", 2));
+        firstDeck.addCard(new CongressCard("moscow", 2));
 
         //Assistant
-        firstDeck.addCard(new AssistantCard("Paris", 2));
-        firstDeck.addCard(new AssistantCard("Paris", 2));
-        firstDeck.addCard(new AssistantCard("Rome", 2));
-        firstDeck.addCard(new AssistantCard("Berlin", 2));
-        firstDeck.addCard(new AssistantCard("Vienne", 2));
-        firstDeck.addCard(new AssistantCard("Vienne", 2));
+        firstDeck.addCard(new AssistantCard("paris", 2));
+        firstDeck.addCard(new AssistantCard("paris", 2));
+        firstDeck.addCard(new AssistantCard("rome", 2));
+        firstDeck.addCard(new AssistantCard("berlin", 2));
+        firstDeck.addCard(new AssistantCard("vienna", 2));
+        firstDeck.addCard(new AssistantCard("vienna", 2));
 
         //Shovel
-        firstDeck.addCard(new ShovelCard("Londres", 3));
-        firstDeck.addCard(new ShovelCard("Londres", 3));
-        firstDeck.addCard(new ShovelCard("Rome", 3));
-        firstDeck.addCard(new ShovelCard("Rome", 3));
-        firstDeck.addCard(new ShovelCard("Moscou", 3));
-        firstDeck.addCard(new ShovelCard("Moscou", 3));
+        firstDeck.addCard(new ShovelCard("london", 3));
+        firstDeck.addCard(new ShovelCard("london", 3));
+        firstDeck.addCard(new ShovelCard("rome", 3));
+        firstDeck.addCard(new ShovelCard("rome", 3));
+        firstDeck.addCard(new ShovelCard("moscow", 3));
+        firstDeck.addCard(new ShovelCard("moscow", 3));
 
         /*
          * KnowledgeCards
          */
 
         // General Knowledge
-        firstDeck.addCard( new GeneralKnowledgeCard("Paris", 3, 1) );
-        firstDeck.addCard( new GeneralKnowledgeCard("Rome", 3, 1));
-        firstDeck.addCard( new GeneralKnowledgeCard("Berlin", 3, 1));
-        firstDeck.addCard( new GeneralKnowledgeCard("Vienne", 3, 1));
+        firstDeck.addCard( new GeneralKnowledgeCard("paris", 3, 1) );
+        firstDeck.addCard( new GeneralKnowledgeCard("rome", 3, 1));
+        firstDeck.addCard( new GeneralKnowledgeCard("berlin", 3, 1));
+        firstDeck.addCard( new GeneralKnowledgeCard("vienna", 3, 1));
         firstDeck.addCard( new GeneralKnowledgeCard("Londre", 6, 2));
         firstDeck.addCard( new GeneralKnowledgeCard("paris", 6, 2));
         firstDeck.addCard( new GeneralKnowledgeCard("berlin", 6, 2));
-        firstDeck.addCard( new GeneralKnowledgeCard("Moscou", 6, 2));
+        firstDeck.addCard( new GeneralKnowledgeCard("moscow", 6, 2));
 
         // SpecificKnowledgeCarde
 
-        //Grece
+        //greece
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Rome", 1, 1, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Berlin", 1, 1, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Vienne", 1, 1, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Moscou", 1, 1, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 1, 1, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "Orange"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Londres", 2, 2, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Rome", 2, 2, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Rome", 2, 2, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "Orange"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Londres", 4, 3, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Berlin", 4, 3, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 4, 3, "Orange"));
 
-        //Crete
+        //crete
         
-        firstDeck.addCard(new SpecificKnowledgeCard("Berlin", 1, 1, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Berlin", 1, 1, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Paris", 1, 1, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Vienne", 1, 1, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 1, 1, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 1, 1, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Purple"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Rome", 2, 2, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Paris", 2, 2, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Vienne", 2, 2, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "Purple"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Moscou", 4, 3, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Moscou", 4, 3, "Purple"));
-
-
-
-        //Egypte
-
-        firstDeck.addCard(new SpecificKnowledgeCard("Rome", 1, 1, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Paris", 1, 1, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Paris", 1, 1, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Moscou", 1, 1, "Yellow"));
-
-        firstDeck.addCard(new SpecificKnowledgeCard("Berlin", 2, 2, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Berlin", 2, 2, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Londres", 2, 2, "Yellow"));
-
-        firstDeck.addCard(new SpecificKnowledgeCard("Moscou", 4, 3, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Londres", 4, 3, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "Purple"));
 
 
 
-        //Palestine
+        //egypt
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Vienne", 1, 1, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Vienne", 1, 1, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Vienne", 1, 1, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Rome", 1, 1, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "Yellow"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Paris", 2, 2, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Berlin", 2, 2, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Londres", 2, 2, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 2, 2, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 2, 2, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "Yellow"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Paris", 4, 3, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Londres", 4, 3, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "Yellow"));
+
+
+
+        //palestine
+
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "Green"));
+
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 2, 2, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "Green"));
+
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 4, 3, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "Green"));
         
         
-        //Mesopotamie
+        //mesopotamia
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Paris", 1, 1, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Rome", 1, 1, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Moscou", 1, 1, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Moscou", 1, 1, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "Blue"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Vienne", 2, 2, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Vienne", 2, 2, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Londres", 2, 2, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "Blue"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("Moscou", 4, 3, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("Londres", 4, 3, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "Blue"));
 
 
         //Ethnological knowledge
-        firstDeck.addCard(new EthnologicalKnowledgeCard("Moscou", 1, 2, "Orange"));
-        firstDeck.addCard(new EthnologicalKnowledgeCard("Paris", 1, 2, "Purple"));
-        firstDeck.addCard(new EthnologicalKnowledgeCard("Rome", 1, 2, "Yellow"));
-        firstDeck.addCard(new EthnologicalKnowledgeCard("Vienne", 1, 2, "Green"));
-        firstDeck.addCard(new EthnologicalKnowledgeCard("Berlin", 1, 2, "Blue"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("moscow", 1, 2, "Orange"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("paris", 1, 2, "Purple"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("rome", 1, 2, "Yellow"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("vienna", 1, 2, "Green"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("berlin", 1, 2, "Blue"));
 
 
         /*
@@ -396,17 +383,17 @@ public class Board {
 
                 this.sideDeck = (Deck) firstDeck.divideDeck(((firstDeck.size()/3)+(firstDeck.size()/3)), firstDeck.size()-1);
 
-                deck2.add(new ExpoCard("LittleExpo", "London", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Paris", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Berlin", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Vienne", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Moscou", 3, false));
+                deck2.add(new ExpoCard("london", 3, false));
+                deck2.add(new ExpoCard("paris", 3, false));
+                deck2.add(new ExpoCard("berlin", 3, false));
+                deck2.add(new ExpoCard("vienna", 3, false));
+                deck2.add(new ExpoCard("moscow", 3, false));
 
-                this.sideDeck.add(new ExpoCard("BigExpo", "London", 4, false));
-                this.sideDeck.add(new ExpoCard("BigExpo", "Paris", 4, false));
-                this.sideDeck.add(new ExpoCard("BigExpo", "Berlin", 4, false));
-                this.sideDeck.add(new ExpoCard("BigExpo", "Vienne", 4, false));
-                this.sideDeck.add(new ExpoCard("BigExpo", "Moscou", 4, false));
+                this.sideDeck.add(new ExpoCard("london", 4, true));
+                this.sideDeck.add(new ExpoCard("paris", 4, true));
+                this.sideDeck.add(new ExpoCard("berlin", 4, true));
+                this.sideDeck.add(new ExpoCard("vienna", 4, true));
+                this.sideDeck.add(new ExpoCard("moscow", 4, true));
 
                 deck2.mix();
                 this.deck.addAll(deck2);
@@ -424,17 +411,17 @@ public class Board {
 
                 this.sideDeck = (Deck) firstDeck.divideDeck(((firstDeck.size()/3)+(firstDeck.size()/3)), firstDeck.size()-1);
 
-                deck2.add(new ExpoCard("LittleExpo", "London", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Paris", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Berlin", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Vienne", 3, false));
-                deck2.add(new ExpoCard("LittleExpo", "Moscou", 3, false));
+                deck2.add(new ExpoCard("london", 3, false));
+                deck2.add(new ExpoCard("paris", 3, false));
+                deck2.add(new ExpoCard("berlin", 3, false));
+                deck2.add(new ExpoCard("vienna", 3, false));
+                deck2.add(new ExpoCard("moscow", 3, false));
 
-                deck2.add(new ExpoCard("BigExpo", "London", 4, false));
-                deck2.add(new ExpoCard("BigExpo", "Paris", 4, false));
-                deck2.add(new ExpoCard("BigExpo", "Berlin", 4, false));
-                deck2.add(new ExpoCard("BigExpo", "Vienne", 4, false));
-                deck2.add(new ExpoCard("BigExpo", "Moscou", 4, false));
+                deck2.add(new ExpoCard("london", 4, true));
+                deck2.add(new ExpoCard("paris", 4, true));
+                deck2.add(new ExpoCard("berlin", 4, true));
+                deck2.add(new ExpoCard("vienna", 4, true));
+                deck2.add(new ExpoCard("moscow", 4, true));
 
                 deck2.mix();
                 this.deck.addAll(deck2);
@@ -478,6 +465,14 @@ public class Board {
     public Deck getDeck() {
         return deck;
     }
+    
+    /**
+     * 
+     * @param deck
+     */
+    public void setDeck(Deck deck){
+    	this.deck = deck;
+    }
 
     /**
      * 
@@ -487,8 +482,21 @@ public class Board {
         return areas;
     }
 
-    
-    
-    
+    /**
+     * 
+     * @return
+     */
+    public Card[] getFourCurrentCards() {
+            return fourCurrentCards;
+    }
+
+    /**
+     * 
+     * @param fourCurrentCards
+     */
+    public void setFourCurrentCards(Card[] fourCurrentCards) {
+            this.fourCurrentCards = fourCurrentCards;
+    }
+
 	
 }
