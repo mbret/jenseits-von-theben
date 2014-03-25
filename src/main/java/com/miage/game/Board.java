@@ -135,18 +135,15 @@ public class Board {
          * - We set tokens inside each areas
          * - We set distance between each areas
          */
-        
-        
-
         ArrayList<String> keys = ConfigManager.getInstance().getConfigKeysBeginningBy("areas");
         for (String key : keys){
             
             // we split the key to get different part
             String[] splittedKey = key.split( "\\." );
-            String categorie    = splittedKey[1];
-            String areaName     = splittedKey[2];
+            String areaName     = splittedKey[1];
+            String categorie    = ConfigManager.getInstance().getConfig().getProperty( "areas." + areaName + ".type" );
             
-            // area does not exist
+            // area does not exist in list yet
             if( areas.containsKey( areaName ) == false ){
                 
                 Area newArea = null;
@@ -162,7 +159,7 @@ public class Board {
                  * Case of excavation area
                  */
                 else{
-                    String color = ConfigManager.getInstance().getConfig().getProperty( "areas." + categorie + "." + areaName + ".color" );
+                    String color = ConfigManager.getInstance().getConfig().getProperty( "areas." + areaName + ".color" );
                     newArea = new ExcavationArea(0, areaName, color);
                     
                     // Set empty tokens
@@ -175,7 +172,7 @@ public class Board {
                     ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken("SpecificKnowledge", ((ExcavationArea)newArea).getCodeColor() ) );
                     
                     // Set point tokens
-                    String pointsTokenString = ConfigManager.getInstance().getConfig().getProperty("areas." + categorie + "." + areaName + ".pointTokens"); // get string liek 1:2,2:4
+                    String pointsTokenString = ConfigManager.getInstance().getConfig().getProperty("areas." + areaName + ".pointTokens"); // get string liek 1:2,2:4
                     String[] sections = pointsTokenString.split("\\,"); // split each 1:2,2:4 => (get [1:2] [2:4])
                     for (String section : sections) {
                         Integer value = Integer.parseInt( section.substring(0, section.indexOf(":")) ); // 1:2 => (get 1)
@@ -190,15 +187,15 @@ public class Board {
                  * For all areas
                  */
                 // We get only keys about the distance of this area and others area
-                ArrayList<String> keysOfDistance = ConfigManager.getInstance().getConfigKeysBeginningBy("areas." + categorie + "." + areaName + ".to");
+                ArrayList<String> keysOfDistance = ConfigManager.getInstance().getConfigKeysBeginningBy("areas." + areaName + ".to");
 
                 // We iterate over each reachable area from this area
                 for (String keyOfDistance : keysOfDistance){
                     String[] splittedkeyOfDistance = keyOfDistance.split( "\\." );
-                    String to   = splittedkeyOfDistance[4];
+                    String to   = splittedkeyOfDistance[3];
                     
                     // Get the steps areas of this area and its destination
-                    String stepsAreas = ConfigManager.getInstance().getConfig().getProperty( "areas." + categorie + "." + areaName + ".to." + to );
+                    String stepsAreas = ConfigManager.getInstance().getConfig().getProperty( "areas." + areaName + ".to." + to );
                     String[] stepsAreasSplitted;
                     if(stepsAreas.equals("")){
                         stepsAreasSplitted = new String[0]; // no steps

@@ -43,8 +43,8 @@ public class ConfigManager {
             InputStream input = null;
             try {
 
-                input = ClassLoader.getSystemResourceAsStream(this.configFilename );
-
+                input = ClassLoader.getSystemResourceAsStream( this.configFilename );
+                
                 if(input == null){
                     throw new FileNotFoundException("property file '" + this.configFilename + "' not found in the classpath");
                 }
