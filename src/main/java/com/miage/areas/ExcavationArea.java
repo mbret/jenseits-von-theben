@@ -87,6 +87,17 @@ public class ExcavationArea extends Area {
     public String getCodeColor() {
         return codeColor;
     }
+
+    public LinkedList<Token> getTokenList() {
+        return tokenList;
+    }
+
+    
+    @Override
+    public String toString() {
+        return "ExcavationArea{" + super.toString() + "codeColor=" + codeColor + ", tokenList=" + tokenList + '}';
+    }
 	
+    
     
 }
