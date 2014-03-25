@@ -38,11 +38,12 @@ public class TestCard {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	
 	/**
 	 * @author Gael
 	 * Test of the cards downcast method 
 	 */
+	@Test
 	public void testCastCards() {
 		
 		Card card = this.deck.pick();

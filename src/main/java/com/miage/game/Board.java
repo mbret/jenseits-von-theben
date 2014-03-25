@@ -291,86 +291,86 @@ public class Board {
 
         //greece
 
-        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 1, 1, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "greece"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 1, 1, "greece"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "greece"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "greece"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "greece"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "greece"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "greece"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "Orange"));
-        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 4, 3, "Orange"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "greece"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 4, 3, "greece"));
 
         //crete
         
-        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 1, 1, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 1, 1, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 1, 1, "crete"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 1, 1, "crete"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "crete"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "crete"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "crete"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "crete"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "crete"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "Purple"));
-        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "Purple"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "crete"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "crete"));
 
 
 
         //egypt
 
-        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "egypt"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "egypt"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "egypt"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "egypt"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 2, 2, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 2, 2, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 2, 2, "egypt"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 2, 2, "egypt"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "egypt"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "Yellow"));
-        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "Yellow"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "egypt"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "egypt"));
 
 
 
         //palestine
 
-        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "palestine"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "palestine"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "palestine"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "palestine"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 2, 2, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "palestine"));
+        firstDeck.addCard(new SpecificKnowledgeCard("berlin", 2, 2, "palestine"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "palestine"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("paris", 4, 3, "Green"));
-        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "Green"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 4, 3, "palestine"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "palestine"));
         
         
         //mesopotamia
 
-        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "mesopotamia"));
+        firstDeck.addCard(new SpecificKnowledgeCard("rome", 1, 1, "mesopotamia"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "mesopotamia"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 1, 1, "mesopotamia"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "mesopotamia"));
+        firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "mesopotamia"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 2, 2, "mesopotamia"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "Blue"));
-        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "Blue"));
+        firstDeck.addCard(new SpecificKnowledgeCard("moscow", 4, 3, "mesopotamia"));
+        firstDeck.addCard(new SpecificKnowledgeCard("london", 4, 3, "mesopotamia"));
 
 
         //Ethnological knowledge
-        firstDeck.addCard(new EthnologicalKnowledgeCard("moscow", 1, 2, "Orange"));
-        firstDeck.addCard(new EthnologicalKnowledgeCard("paris", 1, 2, "Purple"));
-        firstDeck.addCard(new EthnologicalKnowledgeCard("rome", 1, 2, "Yellow"));
-        firstDeck.addCard(new EthnologicalKnowledgeCard("vienna", 1, 2, "Green"));
-        firstDeck.addCard(new EthnologicalKnowledgeCard("berlin", 1, 2, "Blue"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("moscow", 1, 2, "greece"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("paris", 1, 2, "crete"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("rome", 1, 2, "egypt"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("vienna", 1, 2, "palestine"));
+        firstDeck.addCard(new EthnologicalKnowledgeCard("berlin", 1, 2, "mesopotamia"));
 
 
         /*
@@ -447,6 +447,8 @@ public class Board {
         }
 
     }
+    
+   
 
     
     /***********************************************************************************************
@@ -536,6 +538,21 @@ public class Board {
 		
 		return this.getAreas().get(areaName);
 	}
+
+
+	public HashMap<PlayerToken, Player> getPlayerTokensAndPlayers() {
+		return playerTokensAndPlayers;
+	}
+
+
+	public void setPlayerTokensAndPlayers(
+			HashMap<PlayerToken, Player> playerTokensAndPlayers) {
+		this.playerTokensAndPlayers = playerTokensAndPlayers;
+	}
+	
+	
+	
+	
 	
 
 	

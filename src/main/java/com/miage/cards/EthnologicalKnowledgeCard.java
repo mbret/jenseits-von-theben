@@ -24,12 +24,27 @@ package com.miage.cards;
 public class EthnologicalKnowledgeCard extends Card{
     
     private int value;
+    private String excavationAreaName;
     private String codeColor;
 
-    public EthnologicalKnowledgeCard(String areaName, int weekCost, int value, String codeColor) {
+    public EthnologicalKnowledgeCard(String areaName, int weekCost, int value, String paramExcavationAreaName) {
             super("ethnologicalKnowledge",areaName,weekCost);
             this.value = value;
-            this.codeColor = codeColor;
+            this.excavationAreaName = paramExcavationAreaName;
+            
+            
+            if(excavationAreaName.compareTo("greece") == 0)
+            	this.codeColor = "#ff5b2b";
+            else if(excavationAreaName.compareTo("crete") == 0)
+            	this.codeColor = "#895959";
+            else if(excavationAreaName.compareTo("egypt") == 0)
+            	this.codeColor = "#fff168";
+            else if(excavationAreaName.compareTo("palestine") == 0)
+            	this.codeColor = "#b7ca79";
+            else if(excavationAreaName.compareTo("mesopotamia") == 0)
+            	this.codeColor = "#375d81";
+            	
+            
     }
 
     public int getValue() {
@@ -45,7 +60,12 @@ public class EthnologicalKnowledgeCard extends Card{
         return false;
     }
     
-    public String toString(){
-    	return super.toString()+","+value+","+codeColor;
+    
+    public String getExcavationAreaName() {
+		return excavationAreaName;
+	}
+
+	public String toString(){
+    	return super.toString()+","+value+","+excavationAreaName;
     }
 }

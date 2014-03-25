@@ -55,10 +55,11 @@ public class TestPieceStack {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	
 	/**
 	 * Test of the method addPiece()
 	 */
+	@Test
 	public void testAddPiece() {
 		
 		playerTokenStack.addPlayerToken(playerToken1);
@@ -72,10 +73,11 @@ public class TestPieceStack {
 		
 	}
 	
-	@Test
+	
 	/**
 	 * Test of the method getFirst()
 	 */
+	@Test
 	public void testGetFirst(){
 		
 		playerTokenStack.addPlayerToken(playerToken1);

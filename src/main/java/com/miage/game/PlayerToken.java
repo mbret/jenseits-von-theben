@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import com.miage.areas.Area;
+import com.miage.cards.Card;
 
 /**
  * 
@@ -121,7 +122,7 @@ public class PlayerToken implements Comparable{
 	 */
 	public int getCurrentWeek(){
 		
-		return (int) (Math.ceil(this.timeState.getDayOfYear()));
+		return (int) (Math.ceil(this.timeState.getDayOfYear()/7));
 	}
 	
 	
@@ -139,16 +140,17 @@ public class PlayerToken implements Comparable{
 	/**
 	 * @author Gael
 	 * 
-	 * Move a playerToken by going in all the steps Area on the pass
+	 * Move a playerToken by going in all the steps Area on the pass, add cost of the move depending on zeppelin or car cards
+	 * the player owns
 	 * 
 	 * @param destinationArea 
 	 * @param board
+	 * @param useZeppelin
 	 * @return the table of steps
 	 */
-	public String[] move(String destinationArea, Board board){
+	public String[] move(String destinationArea, Board board, boolean useZeppelin){
 		
-		String[] steps = this.getPosition().distance(destinationArea);
-		
+		String[] steps = this.getPosition().getDistanceAreasSteps(destinationArea);
 		
 		for(String step : steps){
 			this.setPosition(board.getArea(step));
@@ -156,9 +158,39 @@ public class PlayerToken implements Comparable{
 		
 		this.setPosition(board.getArea(destinationArea));
 		
+		if(!useZeppelin){
+			if(steps.length+1 >= 3){
+				if(board.getPlayerTokensAndPlayers().get(board.getCurrentPlayerToken()).getCompetences().get("car") > 0)
+					board.getCurrentPlayerToken().addWeeks(steps.length);
+				else
+					board.getCurrentPlayerToken().addWeeks(steps.length+1);
+			}
+			else
+				board.getCurrentPlayerToken().addWeeks(steps.length+1);
+		}
+	
+			
+		
 		return steps;
 		
 	}
+	
+	
+	/**
+	 * @author Gael
+	 * 
+	 * add weeks at the playerToken depending on the card picked
+	 * 
+	 * @param card 
+	 */
+	public void addWeeksPlayerToken(Card card){
+		
+		addWeeks(card.getWeekCost());
+		
+	}
+	
+	
+	
 
 	
 	

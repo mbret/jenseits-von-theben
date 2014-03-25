@@ -2,10 +2,8 @@ package com.miage.game;
 
 import static org.junit.Assert.*;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,13 +11,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.miage.cards.*;
+
 
 
 public class TestPlayerToken {
 	
 	private Board board;
 	private PlayerToken playerToken1, playerToken2;
-	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
+
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -37,8 +37,8 @@ public class TestPlayerToken {
 		playerToken1 = new PlayerToken("red");
 		playerToken2 = new PlayerToken("blue");
 		
-		LocalDate date1 = LocalDate.of(1900, 1, 1);
-		LocalDate date2 = LocalDate.of(1900, 1, 1);
+		LocalDate date1 = LocalDate.of(1900, 12, 31);
+		LocalDate date2 = LocalDate.of(1900, 12, 31);
 		
 		playerToken1.setTimeState(date1);
 		playerToken2.setTimeState(date2);
@@ -46,16 +46,29 @@ public class TestPlayerToken {
 		playerToken1.setPosition(board.getArea("warsaw"));
 		playerToken2.setPosition(board.getArea("warsaw"));
 		
+	
+		
+		Player player1 = new Player("Gael");
+		player1.addCompetencesPointsOrKnowledge(new CarCard("berlin",1));
+		
+		HashMap<PlayerToken, Player> playerTokensAndPlayers = new HashMap<PlayerToken, Player>();
+		playerTokensAndPlayers.put(playerToken1, player1);
+		
+		board.setPlayerTokensAndPlayers(playerTokensAndPlayers);
+		board.setCurrentPlayerToken(playerToken1);
+		
+		
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	
 	/**
 	 * Test of the method compareTo() for pieces
 	 */
+	@Test
 	public void testCompareTo() {
 		
 		
@@ -92,28 +105,78 @@ public class TestPlayerToken {
 	
 	
 	
-	@Test
+	
 	/**
 	 * Test of the method to move a playerToken
 	 */
+	@Test
 	public void testMove(){
 		
-		String[] moveWarsawToLondon = this.playerToken1.move("london", board);
+		String[] moveWarsawToLondon = this.playerToken1.move("london", board, false);
 		
 		assertEquals(moveWarsawToLondon[0], "berlin");
 		assertEquals(this.playerToken1.getPosition().toString(), "london");
 		
-		String[] moveLondonToPalestine = this.playerToken1.move("palestine", board);
+		/*
+		 * Test of the cost of move
+		 */
+		assertEquals(playerToken1.getCurrentWeek(), 2);
+		
+		
+		
+		
+		String[] moveLondonToPalestine = this.playerToken1.move("palestine", board, false);
 		
 		assertEquals(moveLondonToPalestine[0], "paris");
 		assertEquals(moveLondonToPalestine[1], "roma");
 		assertEquals(moveLondonToPalestine[2], "crete");
 		assertEquals(this.playerToken1.getPosition().toString(), "palestine");
 		
-		String[] movePalestineToEgypt = this.playerToken1.move("egypt", board);
+		
+		/*
+		 * Test of the cost of move
+		 */
+		assertEquals(playerToken1.getCurrentWeek(), 5);
+		
+		String[] movePalestineToEgypt = this.playerToken1.move("egypt", board, true);
 		
 		assertEquals(movePalestineToEgypt.length, 0);
 		assertEquals(this.playerToken1.getPosition().toString(), "egypt");
+		
+		/*
+		 * Test of the cost of move
+		 */
+		assertEquals(playerToken1.getCurrentWeek(), 5);
+		
+		
+		
+		
+		
+	}
+	
+	
+	/**
+	 * 
+	 * @author Gael
+	 * 
+	 * Test of the method addWeeksPlayerToken
+	 * 
+	 */
+	@Test
+	public void testAddWeeksPlayerToken(){
+		
+		GeneralKnowledgeCard generalKnowledgeCard = new GeneralKnowledgeCard("berlin",3,1);
+		GeneralKnowledgeCard generalKnowledgeCard2 = new GeneralKnowledgeCard("berlin",6,1);
+		ShovelCard shovelCard = new ShovelCard("paris", 3);
+		
+		
+		this.playerToken1.addWeeksPlayerToken(generalKnowledgeCard);
+		this.playerToken1.addWeeksPlayerToken(generalKnowledgeCard2);
+		this.playerToken1.addWeeksPlayerToken(shovelCard);
+		
+		
+		assertEquals(this.playerToken1.getCurrentWeek() , 12);
+		
 		
 		
 	}
