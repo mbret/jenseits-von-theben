@@ -29,10 +29,7 @@ public class TouristicArea extends Area {
         super(num,name);
     }
 
-    @Override
-    public String toString() {
-        return "TouristicArea{" + super.toString() + '}';
-    }
+   
 
     
 }

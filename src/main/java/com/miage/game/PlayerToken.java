@@ -47,7 +47,10 @@ public class PlayerToken implements Comparable{
 		this.color = color;
 	}
 
-
+        /**
+         * @author maxime
+         * @return 
+         */
 	public Area getPosition() {
 		return position;
 	}
@@ -130,6 +133,31 @@ public class PlayerToken implements Comparable{
 	public int getCurrentYear(){
 		
 		return this.timeState.getYear();
+	}
+	
+	
+	/**
+	 * @author Gael
+	 * 
+	 * Move a playerToken by going in all the steps Area on the pass
+	 * 
+	 * @param destinationArea 
+	 * @param board
+	 * @return the table of steps
+	 */
+	public String[] move(String destinationArea, Board board){
+		
+		String[] steps = this.getPosition().distance(destinationArea);
+		
+		
+		for(String step : steps){
+			this.setPosition(board.getArea(step));
+		}
+		
+		this.setPosition(board.getArea(destinationArea));
+		
+		return steps;
+		
 	}
 
 	

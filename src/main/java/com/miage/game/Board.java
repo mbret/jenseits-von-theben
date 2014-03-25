@@ -35,34 +35,19 @@ public class Board {
     /**
      * List of player with their game token
      */
-    private HashMap<Player, PlayerToken> players;
+    private HashMap<PlayerToken, Player> playerTokensAndPlayers;
 
     
     private PlayerToken currentPlayerToken;
 
     
-    /**
-     * Distances between each areas
-     */
-    private static int distances[][] = new int[][]{
-        {0,1,1,2,2,2,3,3,3,4,4,4},	// london -> 0
-        {1,0,1,1,1,2,3,2,2,3,3,3},	// paris -> 1
-        {1,1,0,2,2,1,2,2,3,3,4,4},	// berlin -> 2
-        {2,1,2,0,1,2,3,1,1,2,2,2},	// rome -> 3
-        {2,1,1,2,0,1,2,2,2,3,3,3},      // vienna -> 4
-        {2,2,2,1,1,0,1,1,2,3,3,2},	// warsaw -> 5
-        {3,3,3,2,2,1,0,2,3,4,4,3},	// moscow -> 6
-        {3,2,1,2,2,1,2,0,1,2,2,1},	// greece -> 7
-        {3,2,1,3,2,2,3,1,0,1,1,2},	// crete -> 8
-        {4,3,2,4,3,3,4,2,1,0,1,2},	// egypt -> 9
-        {4,3,4,4,3,3,4,2,1,1,0,1},	// palestine -> 10	
-        {4,3,2,3,3,2,3,1,2,2,1,0},	// mesopotamia -> 11
-    };
+
 
     private Deck deck;
     private Deck sideDeck;
 
     private Card fourCurrentCards[];
+    private ExpoCard threeExpoCards[];
 
     /**
      * HashMap used to determine how many token of each points are present in each excavation point
@@ -81,7 +66,8 @@ public class Board {
         this.deck = new Deck();
         this.sideDeck = new Deck();
         this.fourCurrentCards = new Card[4];
-        this.players = new HashMap<Player, PlayerToken>();
+        this.threeExpoCards = new ExpoCard[3];
+        this.playerTokensAndPlayers = new HashMap<PlayerToken, Player>();
         
         this.initAreas();
         
@@ -98,10 +84,38 @@ public class Board {
      */
     public Card pickCardOnBoard(int index){
     	
-    	Card card = this.fourCurrentCards[index];
-    	this.fourCurrentCards[index] = this.deck.pick();
+    	Card cardToReturn = this.fourCurrentCards[index];
     	
-    	return card;
+    	Card cardToAddOnTheBoard = this.deck.pick();
+    	
+    	while(cardToAddOnTheBoard instanceof ExpoCard){
+    		
+    		ExpoCard expoCard = (ExpoCard) cardToAddOnTheBoard;
+    		addExpoCardOnBoard(expoCard);
+    		cardToAddOnTheBoard = this.deck.pick();
+    	}
+    	
+    	this.fourCurrentCards[index] = cardToAddOnTheBoard;
+    	
+    	
+    	return cardToReturn;
+    }
+    
+    /**
+     * @author Gael
+     * 
+     * when an expo card is picked, this card goes on the expo cards place on the board
+     * 
+     * @param expoCard
+     */
+    public void addExpoCardOnBoard(ExpoCard expoCard){
+    	
+    	for(int i = 2; i > 0; i--){
+    		this.getThreeExpoCards()[i] = this.getThreeExpoCards()[i-1];
+    	}
+    	
+    	this.getThreeExpoCards()[0] = expoCard;
+    	
     }
     
 
@@ -121,6 +135,9 @@ public class Board {
          * - We set tokens inside each areas
          * - We set distance between each areas
          */
+        
+        
+
         ArrayList<String> keys = ConfigManager.getInstance().getConfigKeysBeginningBy("areas");
         for (String key : keys){
             
@@ -139,6 +156,7 @@ public class Board {
                  */
                 if( categorie.equals( "touristic" )){
                     newArea = new TouristicArea(0, areaName);
+
                 }
                 /**
                  * Case of excavation area
@@ -486,17 +504,42 @@ public class Board {
      * 
      * @return
      */
-    public Card[] getFourCurrentCards() {
-            return fourCurrentCards;
-    }
+    
 
-    /**
-     * 
-     * @param fourCurrentCards
-     */
-    public void setFourCurrentCards(Card[] fourCurrentCards) {
-            this.fourCurrentCards = fourCurrentCards;
-    }
+	public Card[] getFourCurrentCards() {
+		return fourCurrentCards;
+	}
+
+	/**
+	 * 
+	 * @param fourCurrentCards
+	 */
+	public void setFourCurrentCards(Card[] fourCurrentCards) {
+		this.fourCurrentCards = fourCurrentCards;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ExpoCard[] getThreeExpoCards() {
+		return threeExpoCards;
+	}
+
+	/**
+	 * 
+	 * @param threeExpoCards
+	 */
+	public void setThreeExpoCards(ExpoCard[] threeExpoCards) {
+		this.threeExpoCards = threeExpoCards;
+	}
+	
+	
+	public Area getArea(String areaName){
+		
+		return this.getAreas().get(areaName);
+	}
+	
 
 	
 }

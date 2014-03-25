@@ -17,6 +17,7 @@ import org.junit.Test;
 
 public class TestPlayerToken {
 	
+	private Board board;
 	private PlayerToken playerToken1, playerToken2;
 	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
 
@@ -31,6 +32,8 @@ public class TestPlayerToken {
 	@Before
 	public void setUp() throws Exception {
 		
+		board = new Board(2);
+		
 		playerToken1 = new PlayerToken("red");
 		playerToken2 = new PlayerToken("blue");
 		
@@ -39,6 +42,9 @@ public class TestPlayerToken {
 		
 		playerToken1.setTimeState(date1);
 		playerToken2.setTimeState(date2);
+		
+		playerToken1.setPosition(board.getArea("warsaw"));
+		playerToken2.setPosition(board.getArea("warsaw"));
 		
 	}
 
@@ -81,6 +87,34 @@ public class TestPlayerToken {
 		
 		assertEquals(-1, playerToken1.compareTo(playerToken2));
 		assertEquals(-1, playerToken2.compareTo(playerToken1));
+		
+	}
+	
+	
+	
+	@Test
+	/**
+	 * Test of the method to move a playerToken
+	 */
+	public void testMove(){
+		
+		String[] moveWarsawToLondon = this.playerToken1.move("london", board);
+		
+		assertEquals(moveWarsawToLondon[0], "berlin");
+		assertEquals(this.playerToken1.getPosition().toString(), "london");
+		
+		String[] moveLondonToPalestine = this.playerToken1.move("palestine", board);
+		
+		assertEquals(moveLondonToPalestine[0], "paris");
+		assertEquals(moveLondonToPalestine[1], "roma");
+		assertEquals(moveLondonToPalestine[2], "crete");
+		assertEquals(this.playerToken1.getPosition().toString(), "palestine");
+		
+		String[] movePalestineToEgypt = this.playerToken1.move("egypt", board);
+		
+		assertEquals(movePalestineToEgypt.length, 0);
+		assertEquals(this.playerToken1.getPosition().toString(), "egypt");
+		
 		
 	}
 
