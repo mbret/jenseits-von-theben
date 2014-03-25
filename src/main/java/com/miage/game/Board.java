@@ -219,7 +219,7 @@ public class Board {
     /**
      * Initialization of decks depending on the number of players
      */
-    public void initializationDecks(){
+    public void initializationDecks() throws IOException{
 
 
         Deck firstDeck = new Deck();
@@ -310,7 +310,7 @@ public class Board {
         firstDeck.addCard(new SpecificKnowledgeCard("paris", 1, 1, "crete"));
         firstDeck.addCard(new SpecificKnowledgeCard("vienna", 1, 1, "crete"));
 
-        firstDeck.addCard(new SpecificKnowledgeCard("rome", 2, 2, "crete"));
+        firstDeck.addCard(new SpecificKnowledgeCard("roma", 2, 2, "crete"));
         firstDeck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "crete"));
         firstDeck.addCard(new SpecificKnowledgeCard("vienna", 2, 2, "crete"));
 
