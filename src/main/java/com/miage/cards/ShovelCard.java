@@ -24,7 +24,7 @@ package com.miage.cards;
 public class ShovelCard extends Card{
 
     public ShovelCard(String areaName, int weekCost) {
-        super("", areaName, weekCost);
+        super("shovel", areaName, weekCost);
     }
 
     @Override

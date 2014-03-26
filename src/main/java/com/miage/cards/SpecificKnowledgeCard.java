@@ -27,7 +27,7 @@ public class SpecificKnowledgeCard extends Card{
     private String codeColor;
 
     public SpecificKnowledgeCard(String areaName, int weekCost, int value, String codeColor) {
-            super("",areaName,weekCost);
+            super("specificKnowledge",areaName,weekCost);
             this.value = value;
             this.codeColor = codeColor;
     }
@@ -43,6 +43,10 @@ public class SpecificKnowledgeCard extends Card{
     @Override
     public boolean isDiscardable() {
         return false;
+    }
+    
+    public String toString(){
+    	return super.toString()+","+value+","+codeColor;
     }
 
 }

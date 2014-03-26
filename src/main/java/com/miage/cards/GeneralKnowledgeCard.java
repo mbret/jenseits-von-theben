@@ -26,7 +26,7 @@ public class GeneralKnowledgeCard extends Card{
     private int value;
 
     public GeneralKnowledgeCard(String areaName, int weekCost, int value) {
-            super("",areaName,weekCost);
+            super("generalKnowledge",areaName,weekCost);
             this.value = value;
     }
 
@@ -37,6 +37,10 @@ public class GeneralKnowledgeCard extends Card{
     @Override
     public boolean isDiscardable() {
         return false;
+    }
+    
+    public String toString(){
+    	return super.toString()+","+value;
     }
 
 }

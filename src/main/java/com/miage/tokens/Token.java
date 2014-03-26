@@ -19,7 +19,7 @@ public abstract class Token {
 	}
 
 	public String toString(){
-		return this.getName()+ " token coloured "+this.getColor();
+		return this.getName()+","+this.getColor();
 	}
 	
 	

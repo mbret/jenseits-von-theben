@@ -2,6 +2,7 @@ package com.miage.game;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -31,20 +32,20 @@ public class TestPieceStack {
 	public void setUp() throws Exception {
 		playerTokenStack = new PlayerTokenStack();
 		
-		Calendar c1 = new GregorianCalendar(1900, 11, 31);
-		Calendar c2 = new GregorianCalendar(1901, 3, 20);
-		Calendar c3 = new GregorianCalendar(1901, 2, 27);
-		Calendar c4 = new GregorianCalendar(1900, 11, 31);
+		LocalDate d1 = LocalDate.of(1900, 12, 31);
+		LocalDate d2 = LocalDate.of(1901, 3, 20);
+		LocalDate d3 = LocalDate.of(1901, 3, 27);
+		LocalDate d4 = LocalDate.of(1900, 12, 31);
 		
 		playerToken1 = new PlayerToken("red");
 		playerToken2 = new PlayerToken("blue");
 		playerToken3 = new PlayerToken("green");
 		playerToken4 = new PlayerToken("yellow");
 		
-		playerToken1.setTimeState(c1);
-		playerToken2.setTimeState(c2);
-		playerToken3.setTimeState(c3);
-		playerToken4.setTimeState(c4);
+		playerToken1.setTimeState(d1);
+		playerToken2.setTimeState(d2);
+		playerToken3.setTimeState(d3);
+		playerToken4.setTimeState(d4);
 		
 		
 		
@@ -65,9 +66,9 @@ public class TestPieceStack {
 		playerTokenStack.addPlayerToken(playerToken2);
 		assertEquals("red blue ", playerTokenStack.toString());
 		playerTokenStack.addPlayerToken(playerToken3);
-		assertEquals("red green blue ", playerTokenStack.toString());
+		assertEquals("red blue green ", playerTokenStack.toString());
 		playerTokenStack.addPlayerToken(playerToken4);
-		assertEquals("yellow red green blue ", playerTokenStack.toString());
+		assertEquals("yellow red blue green ", playerTokenStack.toString());
 		
 	}
 	
@@ -84,8 +85,8 @@ public class TestPieceStack {
 		
 		assertEquals("yellow", playerTokenStack.getFirstPlayerToken().getColor());
 		assertEquals("red", playerTokenStack.getFirstPlayerToken().getColor());
-		assertEquals("green", playerTokenStack.getFirstPlayerToken().getColor());
 		assertEquals("blue", playerTokenStack.getFirstPlayerToken().getColor());
+		assertEquals("green", playerTokenStack.getFirstPlayerToken().getColor());
 		
 	}
 
