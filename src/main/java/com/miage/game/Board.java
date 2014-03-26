@@ -549,6 +549,23 @@ public class Board {
 			HashMap<PlayerToken, Player> playerTokensAndPlayers) {
 		this.playerTokensAndPlayers = playerTokensAndPlayers;
 	}
+        
+        /*
+         * @author david
+         * Renvoie un booléen indiquant si le joueur peut fouiller 
+         * (autorisation de fouille ou carte spéciale + compétences nécessaires).
+         */
+        public boolean allowSearch(Area a){
+            boolean allowed = false;
+            Player p = this.playerTokensAndPlayers.get(this.currentPlayerToken);
+            if(p.hasAlreadyExcavateArea(a.getName())
+                    && p.getPlayerKnowledges().getSpecificKnowledges().get(a.getName())>0
+                    && p.getCompetences().get("excavationAuthorization")>0
+                    ){
+                allowed = true;
+            }  
+            return allowed;
+        }
 	
 	
 	
