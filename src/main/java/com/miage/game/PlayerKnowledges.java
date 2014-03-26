@@ -18,19 +18,61 @@ public class PlayerKnowledges {
 		this.specificKnowledges = new HashMap<String, Integer>();
 		this.ethnologicalKnowledges = new HashMap<String, Integer>();
 		
-		this.specificKnowledges.put("Orange", 0);
-		this.specificKnowledges.put("Purple", 0);
-		this.specificKnowledges.put("Yellow", 0);
-		this.specificKnowledges.put("Green", 0);
-		this.specificKnowledges.put("Blue", 0);
+		this.specificKnowledges.put("greece", 0);   // Orange
+		this.specificKnowledges.put("crete", 0);	 // Purple
+		this.specificKnowledges.put("egypt", 0);	 // Yellow
+		this.specificKnowledges.put("palestine", 0);   // Green
+		this.specificKnowledges.put("mesopotamia", 0);	 // Blue
 		
-		this.ethnologicalKnowledges.put("Orange", 0);
-		this.ethnologicalKnowledges.put("Purple", 0);
-		this.ethnologicalKnowledges.put("Yellow", 0);
-		this.ethnologicalKnowledges.put("Green", 0);
-		this.ethnologicalKnowledges.put("Blue", 0);
+		this.ethnologicalKnowledges.put("greece", 0);	// Orange
+		this.ethnologicalKnowledges.put("crete", 0);	// Purple
+		this.ethnologicalKnowledges.put("egypt", 0);	// Yellow
+		this.ethnologicalKnowledges.put("palestine", 0);	// Green
+		this.ethnologicalKnowledges.put("mesopotamia", 0);	// Blue
 		
 	}
+	
+	
+	/**
+	 * @author Gael
+	 * 
+	 *  add specific knowledge points in the specified color
+	 * 
+	 * @param color of the knowledge concerned
+	 * @param value to add
+	 */
+	public void addSpecificKnowledges(String name, int value){
+		
+		this.specificKnowledges.put(name, this.specificKnowledges.get(name)+value);
+	}
+	
+	
+	/**
+	 * @author Gael
+	 * 
+	 *  add ethnological knowledge points in the specified color
+	 * 
+	 * @param color of the knowledge concerned
+	 * @param value to add
+	 */
+	public void addEthnologicalKnowledges(String name, int value){
+		
+		this.ethnologicalKnowledges.put(name, this.ethnologicalKnowledges.get(name)+value);
+	}
+	
+	
+	/**
+	 * @author Gael
+	 * 
+	 *  add general knowledge points in the specified color
+	 *
+	 * @param value to add
+	 */
+	public void addGeneralKnowledges(int value){
+		
+		this.generalKnowledge += value;
+	}
+	
 
 	public int getGeneralKnowledge() {
 		return generalKnowledge;

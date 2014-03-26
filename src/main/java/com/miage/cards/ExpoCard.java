@@ -34,6 +34,10 @@ public class ExpoCard extends Card {
         super("expo", areaName, cost);
         this.bigExpo = bigExpo;
         this.tokens = new ArrayList<PointToken>();
+        if(bigExpo)
+        	this.value = 5;
+        else
+        	this.value = 4;
     }
 
     public int getValue(){

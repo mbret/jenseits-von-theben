@@ -87,6 +87,14 @@ public class ExcavationArea extends Area {
     public String getCodeColor() {
         return codeColor;
     }
+
+    public LinkedList<Token> getTokenList() {
+        return tokenList;
+    }
+
+    
+   
 	
+    
     
 }

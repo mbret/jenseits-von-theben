@@ -63,22 +63,39 @@ public abstract class Area {
         return num;
     }
 
-
-
     public String getName() {
         return name;
     }
-    
-
 
     @Override
-    public String toString(){
-        return "Area : "+this.getName();
+
+    public String toString() {
+        return this.getName();
+
+    }
+
+    public HashMap<String, String[]> getDistances() {
+        return distances;
+    }
+    
+    public void setDistances(HashMap<String, String[]> distances){
+    	this.distances = distances;
     }
     
     
-    public String[] getDistance(String area){
-    	return this.distances.get(area);
+    /**
+     * 
+     * @author Gael
+     * 
+     * return the table of steps between two areas
+     * 
+     * @param nameOfDestinationArea
+     * @return
+     */
+    public String[] getDistanceAreasSteps(String nameOfDestinationArea){
+    	
+    	return this.distances.get(nameOfDestinationArea);
+    	
     }
 
 }

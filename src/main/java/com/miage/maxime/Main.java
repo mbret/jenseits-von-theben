@@ -15,28 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.miage.tokens;
+package com.miage.maxime;
+
+import com.miage.game.Board;
+import java.io.IOException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
- * A point token can be empty or with a value
+ *
  * @author maxime
  */
-public class PointToken extends Token{
-
-    private Integer value;
+public class Main{
     
-    public PointToken(String name, String color, Integer value) {
-        super(name, color);
-        this.value = value;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
+    private final static Logger LOGGER = LogManager.getLogger(Main.class.getName());
     
-    
-    public String toString(){
-    	return super.toString()+","+value;
+    public static void main(String[] args) throws IOException {
+        Board b = new Board( 2 );
+        LOGGER.info( "test" );
     }
     
 }

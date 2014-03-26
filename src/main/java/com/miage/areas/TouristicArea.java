@@ -29,4 +29,7 @@ public class TouristicArea extends Area {
         super(num,name);
     }
 
+   
+
+    
 }
