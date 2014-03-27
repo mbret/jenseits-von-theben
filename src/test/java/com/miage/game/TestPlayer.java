@@ -110,13 +110,13 @@ public class TestPlayer {
 	@Test
 	public void testPickCard(){
 		
-		player.pickCard(board,2);
-		
-		assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3]");
-		
-		player.pickCard(board, 2);
-		
-		assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3, specificKnowledge,paris,2,3,greece]");
+            player.pickCard(board,2);
+
+            assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3]");
+
+            player.pickCard(board, 2);
+
+            assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3, specificKnowledge,paris,2,3,greece]");
 		
 	}
 	
@@ -170,10 +170,13 @@ public class TestPlayer {
 		assertEquals(this.player.getPoints(), 15);
 		
 		
+		assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3]");
 		
 		
+		assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3, specificKnowledge,paris,2,3,greece]");
 		
 	}
+	
 
 	
 	

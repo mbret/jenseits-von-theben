@@ -39,7 +39,7 @@ public class ConfigLoaderTest {
 
     @Test
     public void testInit() throws IOException{
-        ConfigManager.getInstance().init();
+        ConfigManager.getInstance().loadAll();
     }
     
     /**
@@ -49,7 +49,7 @@ public class ConfigLoaderTest {
     public void testGetConfig() throws Exception{
         System.out.println("getProperties");
         String expResult = "16";
-        assertEquals(expResult, ConfigManager.getInstance().getConfig().getProperty("nbEmptyTokenPoint"));
+        assertEquals(expResult, ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty("nbEmptyTokenPoint"));
     }
 
     

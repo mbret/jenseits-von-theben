@@ -27,15 +27,15 @@ public class EthnologicalKnowledgeCard extends Card{
             
             
             if(excavationAreaName.equals("greece"))
-            	this.codeColor = ConfigManager.getInstance().getConfig().getProperty("areas.greece.color");
+            	this.codeColor = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty("greece.color");
             else if(excavationAreaName.equals("crete"))
-            	this.codeColor = ConfigManager.getInstance().getConfig().getProperty("areas.crete.color");
+            	this.codeColor = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty("crete.color");
             else if(excavationAreaName.equals("egypt"))
-            	this.codeColor = ConfigManager.getInstance().getConfig().getProperty("areas.egypt.color");
+            	this.codeColor = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME ).getProperty("egypt.color");
             else if(excavationAreaName.equals("palestine"))
-            	this.codeColor = ConfigManager.getInstance().getConfig().getProperty("areas.palestine.color");
+            	this.codeColor = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME ).getProperty("palestine.color");
             else if(excavationAreaName.equals("mesopotamia"))
-            	this.codeColor = ConfigManager.getInstance().getConfig().getProperty("areas.mesopotamia.color");
+            	this.codeColor = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME ).getProperty("mesopotamia.color");
             	
             
     }

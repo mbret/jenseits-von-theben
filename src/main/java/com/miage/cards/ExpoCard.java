@@ -30,7 +30,7 @@ public class ExpoCard extends Card {
     private int value;
     private List<PointToken> tokens;
 
-    public ExpoCard(String areaName,int cost,  boolean bigExpo) {
+    public ExpoCard(String areaName, int cost,  boolean bigExpo) {
         super("expo", areaName, cost);
         this.bigExpo = bigExpo;
         this.tokens = new ArrayList<PointToken>();

@@ -2,7 +2,11 @@ package com.miage.game;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.Card;
+import com.miage.cards.ExcavationAuthorizationCard;
+import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
+import com.miage.cards.ShovelCard;
+import com.miage.cards.ZeppelinCard;
 import com.miage.config.ConfigManager;
 import com.miage.tokens.PointToken;
 import com.miage.tokens.Token;
@@ -15,11 +19,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-
-import com.miage.cards.ExpoCard;
-
-import com.miage.cards.ShovelCard;
 
 
 
@@ -143,7 +142,7 @@ public class TestBoard {
             
             // test total point token 
             // test total point token of 4 
-            Integer nbPointToken = 14 + Integer.parseInt(ConfigManager.getInstance().getConfig().getProperty("nbEmptyTokenPoint")); // (greece should have 13 pointTokens)
+            Integer nbPointToken = 14 + Integer.parseInt(ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty("nbEmptyTokenPoint")); // (greece should have 13 pointTokens)
             Integer nbPointTokenOf4InsideGreece = 1; // (greece should have 3 pointTokens of 4)
             LinkedList<Token> tokens = ((ExcavationArea)b.getAreas().get("greece")).getTokenList();
             Integer countedPointToken = 0;
@@ -158,6 +157,31 @@ public class TestBoard {
             }
             assertEquals(nbPointToken, countedPointToken );
             assertEquals(nbPointTokenOf4InsideGreece, countedNbPointTokenOf4InsideCrete );
+        }
+        
+        @Test
+        public void testInitCards() throws IOException{
+            System.out.println("testInitCards");
+            Board b = new Board(3);
+            
+            
+            boolean found1 = false, 
+                    found2 = false, 
+                    found3 = false, 
+                    found4 = false, 
+                    found5 = false;
+            for (Card card : b.getDeck()) {
+                // deck must have => card.1 = london,excavationAuthorizationCard,3
+                if( card instanceof ExcavationAuthorizationCard && card.getAreaName().equals("london") && card.getWeekCost() == 3){
+                    found1 = true;
+                }
+                // deck must have => card.3        = london,zeppelinCard,1
+                if( card instanceof ZeppelinCard && card.getAreaName().equals("london") && card.getWeekCost() == 1){
+                    found2 = true;
+                }
+            }
+            assertEquals( true, found1); 
+            assertEquals( true, found2);
         }
 	
 
