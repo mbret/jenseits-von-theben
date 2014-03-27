@@ -6,7 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.ini4j.Ini;
@@ -22,50 +26,75 @@ import org.ini4j.Ini;
  */
 public class ConfigManager {
  
-    // use the classname for the logger, this way you can refactor
     private final static Logger LOGGER = LogManager.getLogger(ConfigManager.class.getName());
 
+    /**
+     * Singleton
+     */
     private static ConfigManager instance;
     
-    private final String configFilename = "config.properties";
     private final String optionsFilename = "src/options.ini";
-    private Properties config;
     private Ini options;
+    
+    /**
+     * Contain all loaded config files, they are added dynamically when asked
+     */
+    private HashMap<String, Properties> configs;
 
+    public final static String GENERAL_CONFIG_NAME = "config.properties";
+    public final static String AREAS_CONFIG_NAME = "areas.properties";
+    public final static String CARDS_CONFIG_NAME = "cards.properties";
+    
+    
+    
     private ConfigManager() throws IOException {
-        this.init();
+        this.configs = new HashMap<String, Properties>();
+        this.loadAll();
     }
     
     
+    /***********************************************************************************************
+     *
+     *                                  Methods
+     * 
+     ***********************************************************************************************/
+    
     /**
-     * Init loading of all files
-     * @throws java.io.IOException
+     * Load the specified config file. Use static Board name as parameter (Board.NAME_OF_CONFIG)
+     * @param name
+     * @throws IOException 
      */
-    public void init() throws IOException{
-        // Load config.properties
-        if( this.config == null){
-            this.config = new Properties();
-            InputStream input = null;
-            try {
-
-                input = ClassLoader.getSystemResourceAsStream( this.configFilename );
-                
-                if(input == null){
-                    throw new FileNotFoundException("property file '" + this.configFilename + "' not found in the classpath");
-                }
-
-                //load a properties file from class path, inside static method
-                this.config.load( input );
-            } 
-            catch (IOException e) {
-                throw new IOException(e);
-            } 
-            finally{
-                if(input != null){
-                    input.close();
-                }
+    private void loadConfigFile( String name ) throws IOException{
+        LOGGER.debug("loadConfigFile: load config file " + name);
+        InputStream input = null;
+        try {
+            input = ClassLoader.getSystemResourceAsStream( name );
+            if(input == null){
+                throw new FileNotFoundException("property file '" + name + "' not found in the classpath");
+            }
+            this.configs.put( name, new Properties()); // add new properties
+            this.configs.get( name ).load( input ); // load file
+        } 
+        catch (IOException e) {
+            throw new IOException(e);
+        } 
+        finally{
+            if(input != null){
+                input.close();
             }
         }
+    }
+    
+    /**
+     * Init loading of all config files
+     * Useful to try/catch just one time this class
+     * @throws java.io.IOException
+     */
+    public void loadAll() throws IOException{
+        LOGGER.debug("loadAll: Load all configs and otpions files");
+        this.loadConfigFile( ConfigManager.GENERAL_CONFIG_NAME );
+        this.loadConfigFile( ConfigManager.AREAS_CONFIG_NAME );
+        this.loadConfigFile( ConfigManager.CARDS_CONFIG_NAME );
         
         // Load ini file
         if( this.options == null ){
@@ -92,18 +121,23 @@ public class ConfigManager {
      * @return Properties file
      * @throws java.io.IOException
      */
-    public Properties getConfig(){
-        return this.config;
+    public Properties getConfig( String name ) throws IOException{
+        if( ! this.configs.containsKey( name )){
+            this.loadConfigFile( name );
+        }
+        return this.configs.get( name );
     }
     
-//    public <T extends Object> T getConfigValue( String key, Class<T> desiredClass){
-//        Class<T extends Object> theClass = desiredClass;
-//        return (T)(desiredClass.getClass().cast( this.config.get(key) ));
-//    }
-    
-    public ArrayList<String> getConfigKeysBeginningBy( String beginning ){
+    /**
+     * @deprecated 
+     * @param configName
+     * @param beginning
+     * @return 
+     */
+    public ArrayList<String> getConfigKeysBeginningBy( String configName, String beginning ){
+        LOGGER.debug("getConfigKeysBeginningBy: Load all keys beginning by " + beginning);
         ArrayList<String> keys = new ArrayList<String>();
-        Enumeration<Object> result = config.keys();
+        Enumeration<Object> result = this.configs.get(configName).keys();
         while(result.hasMoreElements()){
             String param = (String) result.nextElement();
             if( param.startsWith( beginning )){
@@ -113,18 +147,22 @@ public class ConfigManager {
         return keys;
     }
     
-    
-    
     /**
-     * Return options.ini
-     * 
-     * @return 
-     * @throws java.lang.Exception 
+     * Return an hashmap of keys -> value but only those (keys) which are beginning by the given string
+     * @param configName
+     * @param beginning 
      */
-    public Ini getOptions(){
-        return this.options;
+    public HashMap<String, String> getConfigEntriesWithKeysBeginningBy( String configName, String beginning ){
+        HashMap<String, String> entries = new HashMap<String, String>();
+        Enumeration<Object> result = this.configs.get(configName).keys();
+        while(result.hasMoreElements()){
+            String param = (String) result.nextElement();
+            if( param.startsWith( beginning )){
+                entries.put( param, this.configs.get(configName).getProperty(param));
+            }
+        }
+        return entries;
     }
-    
     
     
     
@@ -155,6 +193,24 @@ public class ConfigManager {
         this.options.put(section, key, value); // add or replace
         this.options.store(); // store new data inside file
     }
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Getter & Setter
+     * 
+     ***********************************************************************************************/
+    
+    /**
+     * Return options.ini
+     * 
+     * @return 
+     * @throws java.lang.Exception 
+     */
+    public Ini getOptions(){
+        return this.options;
+    }
+    
     
     
 }

@@ -17,9 +17,11 @@
 
 package com.miage.game;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import com.miage.cards.Card;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 
@@ -81,17 +83,32 @@ public class Deck extends LinkedList<Card>{
 	 * @return a new Deck containing the part of the first deck
 	 */
 	public Deck divideDeck(int fromIndex, int toIndex){
-		
-		Deck result = new Deck();
-		
-		for(int i = fromIndex; i <= toIndex; i++){
-			result.addCard(this.get(i));
-		}
-		
-		return result;
-		
+            Deck result = new Deck();
+            for(int i = fromIndex; i <= toIndex; i++){
+                    result.addCard(this.get(i));
+            }
+            return result;
 	}
 	
+        
+        public static HashMap<Object, Integer> transformListOfCard( List<String> cardsNumbers , Class classOfKey){
+            HashMap<Object, Integer> cardsInsideDeck = new HashMap<Object, Integer>();
+            for (String numberStr : cardsNumbers) {
+                Object key = null;
+                if( classOfKey.getName().equals("Integer") ){
+                    key = Integer.parseInt(numberStr);
+                }
+                else if( classOfKey.getName().equals("String") ){
+                    key = numberStr;
+                }
+                else{
+                    key = numberStr;
+                }
+                cardsInsideDeck.putIfAbsent(key, 0); // add
+                cardsInsideDeck.put(key, cardsInsideDeck.get(key) + 1); // and add the occurence
+            }
+            return cardsInsideDeck;
+        }
 	
         
 }

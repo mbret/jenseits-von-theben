@@ -39,7 +39,7 @@ public class ConfigLoaderTest {
 
     @Test
     public void testInit() throws IOException{
-        ConfigManager.getInstance().init();
+        ConfigManager.getInstance().loadAll();
     }
     
     /**
@@ -49,7 +49,7 @@ public class ConfigLoaderTest {
     public void testGetConfig() throws Exception{
         System.out.println("getProperties");
         String expResult = "16";
-        assertEquals(expResult, ConfigManager.getInstance().getConfig().getProperty("nbEmptyTokenPoint"));
+        assertEquals(expResult, ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty("nbEmptyTokenPoint"));
     }
 
     
@@ -64,9 +64,11 @@ public class ConfigLoaderTest {
     @Test
     public void testSetOption() throws Exception{
         System.out.println("setOption");
+        String oldValue = ConfigManager.getInstance().getOptionValue( "test" , "testSet", String.class); // we keep old value to dont have any conflict with git
         Double expResult = (Math.random() * ( 5000 - 1 ));
         ConfigManager.getInstance().setOption("test", "testSet", expResult.toString());
         assertEquals(expResult,  ConfigManager.getInstance().getOptions().get( "test", "testSet", double.class));
+        ConfigManager.getInstance().setOption("test", "testSet", oldValue); // we put old value (no conflict with futur git merge)
     }
     
     public void testInitArrea() throws Exception{

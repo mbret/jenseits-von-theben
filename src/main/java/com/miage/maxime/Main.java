@@ -17,6 +17,7 @@
 
 package com.miage.maxime;
 
+import com.miage.cards.Card;
 import com.miage.game.Board;
 import java.io.IOException;
 import org.apache.log4j.LogManager;
@@ -31,8 +32,12 @@ public class Main{
     private final static Logger LOGGER = LogManager.getLogger(Main.class.getName());
     
     public static void main(String[] args) throws IOException {
-        Board b = new Board( 2 );
+        Board b = new Board( 3 );
         LOGGER.info( "test" );
+        
+        for (Card card : b.getDeck()) {
+            System.out.println(card);
+        }
     }
     
 }

@@ -1,21 +1,9 @@
-/*
- * Copyright (C) 2014 maxime
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 
 package com.miage.cards;
+
+import com.miage.config.ConfigManager;
+import java.io.IOException;
 
 /**
  *
@@ -24,12 +12,32 @@ package com.miage.cards;
 public class EthnologicalKnowledgeCard extends Card{
     
     private int value;
+    private String excavationAreaName;
+    
+    /**
+     * Color relating to the excavation zone
+     * @deprecated 
+     */
     private String codeColor;
 
-    public EthnologicalKnowledgeCard(String areaName, int weekCost, int value, String codeColor) {
+    public EthnologicalKnowledgeCard(String areaName, int weekCost, int value, String paramExcavationAreaName) throws IOException {
             super("ethnologicalKnowledge",areaName,weekCost);
             this.value = value;
-            this.codeColor = codeColor;
+            this.excavationAreaName = paramExcavationAreaName;
+            
+            
+            if(excavationAreaName.equals("greece"))
+            	this.codeColor = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty("greece.color");
+            else if(excavationAreaName.equals("crete"))
+            	this.codeColor = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty("crete.color");
+            else if(excavationAreaName.equals("egypt"))
+            	this.codeColor = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME ).getProperty("egypt.color");
+            else if(excavationAreaName.equals("palestine"))
+            	this.codeColor = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME ).getProperty("palestine.color");
+            else if(excavationAreaName.equals("mesopotamia"))
+            	this.codeColor = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME ).getProperty("mesopotamia.color");
+            	
+            
     }
 
     public int getValue() {
@@ -45,7 +53,12 @@ public class EthnologicalKnowledgeCard extends Card{
         return false;
     }
     
+    
+    public String getExcavationAreaName() {
+        return excavationAreaName;
+    }
+
     public String toString(){
-    	return super.toString()+","+value+","+codeColor;
+    	return super.toString()+","+value+","+excavationAreaName;
     }
 }
