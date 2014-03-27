@@ -139,6 +139,24 @@ public class TestPlayer {
 		
 		
 	}
+        
+        /**
+	 * Test of the pick by the player
+	 * @author Gael
+	 */
+	@Test
+	public void testCanExcavate(){
+		
+            this.player.addAreaAlreadyExcavate(this.board.getArea("greece").getName());
+            this.player.addAreaAlreadyExcavate(this.board.getArea("egypt").getName());
+                    
+            assertTrue(this.player.canExcavate(this.board.getArea("greece")));
+            assertFalse(this.player.canExcavate(this.board.getArea("warsaw")));
+            assertFalse(this.player.canExcavate(this.board.getArea("egypt")));
+            assertTrue(this.player.canExcavate(this.board.getArea("greece")));
+            assertFalse(this.player.canExcavate(this.board.getArea("rome")));
+            assertFalse(this.player.canExcavate(this.board.getArea("greece")));
+	}
 	
 	
 	/**

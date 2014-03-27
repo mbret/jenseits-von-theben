@@ -2,6 +2,7 @@ package com.miage.game;
 
 
 import com.miage.areas.Area;
+import com.miage.areas.ExcavationArea;
 import com.miage.cards.AssistantCard;
 import com.miage.cards.CarCard;
 import com.miage.cards.Card;
@@ -226,17 +227,18 @@ public class Player {
     
     /*
          * @author david
-         * Renvoie un booléen indiquant si le joueur peut fouiller 
-         * (autorisation de fouille ou carte spéciale + compétences nécessaires).
+         * return a boolean means if the player can excavate in this area
          */
-        public boolean allowSearch(Area a){
+        public boolean canExcavate(Area a){
             boolean allowed = false;
-            if(this.hasAlreadyExcavateArea(a.getName())
-                    && this.getPlayerKnowledges().getSpecificKnowledges().get(a.getName())>0
-                    && this.getCompetences().get("excavationAuthorization")>0
-                    ){
-                allowed = true;
-            }  
+            if(a instanceof ExcavationArea){
+                if(this.hasAlreadyExcavateArea(a.getName())
+                        && this.playerKnowledges.getSpecificKnowledges().get(a.getName())>0
+                        && this.competences.get("excavationAuthorization")>0
+                        ){
+                    allowed = true;
+                }  
+            }
             return allowed;
         }
     
