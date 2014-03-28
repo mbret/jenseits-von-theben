@@ -185,12 +185,11 @@ public class Player {
     	else if(card instanceof EthnologicalKnowledgeCard){
     		
     			/*
-    			 * Add the value of cards into the ethnological knowledge color corresponding 
+    			 * Add or subsract the value of cards into the ethnological knowledge color corresponding 
     			 */
     		
     			EthnologicalKnowledgeCard ethnologicalKnowledgeCard = (EthnologicalKnowledgeCard) card;
     			this.playerKnowledges.addEthnologicalKnowledges(ethnologicalKnowledgeCard.getExcavationAreaName(), 
-    			this.playerKnowledges.getEthnologicalKnowledges().get(ethnologicalKnowledgeCard.getExcavationAreaName())+
     			ethnologicalKnowledgeCard.getValue()*plusOrMinus);
     		
     	}
@@ -256,8 +255,11 @@ public class Player {
          * @param sideDeck
          */
         public void useCard(Card card, Deck sideDeck){
+        	
+        	this.cards.remove(card);	
         	if(card.isDiscardable())
         		card.discardCard(sideDeck);
+        		this.updateCompetencesPointsOrKnowledge(card, -1);
         }
     
     

@@ -20,7 +20,7 @@ import com.miage.cards.*;
 public class TestPlayer {
 	
 	private Board board;
-	private Player player;
+	private Player player, player2;
 	private Deck deck;
 
 	@BeforeClass
@@ -38,6 +38,7 @@ public class TestPlayer {
 		
 		this.player = new Player("player");
 		
+		this.player2 = new Player("player 2");
 		
 		
 		
@@ -148,7 +149,7 @@ public class TestPlayer {
 	 * 
 	 */
 	@Test
-	public void testAddCompetencePoints(){
+	public void testUpdateCompetencePoints(){
 		
 		// scan all the deck & add points with each card
 		for(Card firstCardOfTheDeck : this.deck){
@@ -172,7 +173,38 @@ public class TestPlayer {
 		assertEquals(this.player.getPoints(), 15);
 		
 		
+		for(Card firstCardOfTheDeck : this.deck){
+			
+			this.player.updateCompetencesPointsOrKnowledge(firstCardOfTheDeck, -1);
+		}
+		
+		
+		assertEquals(this.player.getCompetences().get("assistant"), new Integer(0));
 	
+		assertEquals(this.player.getCompetences().get("zeppelin"), new Integer(0));
+
+		assertEquals(this.player.getCompetences().get("excavationAuthorization"), new Integer(0));
+		assertEquals(this.player.getCompetences().get("shovel"), new Integer(0));
+
+		assertEquals(this.player.getPlayerKnowledges().getEthnologicalKnowledges().get("greece"), new Integer(0));
+		
+	
+		
+		
+	
+		
+	}
+	
+	
+	/**
+	 * Test of the method for discarding cards
+	 * 
+	 * @author Gael
+	 */
+	@Test
+	public void testDiscardCard(){
+		
+		
 		
 	}
 	
