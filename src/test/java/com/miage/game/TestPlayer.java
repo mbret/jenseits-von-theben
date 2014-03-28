@@ -153,7 +153,7 @@ public class TestPlayer {
 		// scan all the deck & add points with each card
 		for(Card firstCardOfTheDeck : this.deck){
 			
-			this.player.addCompetencesPointsOrKnowledge(firstCardOfTheDeck);
+			this.player.updateCompetencesPointsOrKnowledge(firstCardOfTheDeck, 1);
 		}
 		
 		

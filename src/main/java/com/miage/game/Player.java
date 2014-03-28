@@ -118,7 +118,7 @@ public class Player {
     	
     	Card cardPicked = board.pickCardOnBoard(index).downCastCard();
     	this.cards.add(cardPicked);
-    	addCompetencesPointsOrKnowledge(cardPicked);
+    	updateCompetencesPointsOrKnowledge(cardPicked, 1);
     	board.getCurrentPlayerToken().addWeeksPlayerToken(cardPicked);
     	
     }
@@ -131,10 +131,10 @@ public class Player {
      * @author Gael
      * @param card
      */
-    public void addCompetencesPointsOrKnowledge(Card card){
+    public void updateCompetencesPointsOrKnowledge(Card card, int plusOrMinus){
     	
     	if(card instanceof AssistantCard){
-    		this.competences.put("assistant", this.competences.get("assistant")+1);
+    		this.competences.put("assistant", this.competences.get("assistant")+1*plusOrMinus);
     	
     	}
     	else if(card instanceof CarCard){
@@ -190,12 +190,13 @@ public class Player {
     		
     			EthnologicalKnowledgeCard ethnologicalKnowledgeCard = (EthnologicalKnowledgeCard) card;
     			this.playerKnowledges.addEthnologicalKnowledges(ethnologicalKnowledgeCard.getExcavationAreaName(), 
-    			ethnologicalKnowledgeCard.getValue());
+    			this.playerKnowledges.getEthnologicalKnowledges().get(ethnologicalKnowledgeCard.getExcavationAreaName())+
+    			ethnologicalKnowledgeCard.getValue()*plusOrMinus);
     		
     	}
     	else if(card instanceof ExcavationAuthorizationCard){
     		
-    		this.competences.put("excavationAuthorization", this.competences.get("excavationAuthorization")+1);
+    		this.competences.put("excavationAuthorization", this.competences.get("excavationAuthorization")+1*plusOrMinus);
     		
     	}
     	else if(card instanceof ExpoCard){
@@ -214,7 +215,7 @@ public class Player {
     	}
     	else if(card instanceof ShovelCard){
     		
-    		this.competences.put("shovel", this.competences.get("shovel")+1);
+    		this.competences.put("shovel", this.competences.get("shovel")+1*plusOrMinus);
     		
     	}
     	else if(card instanceof SpecificKnowledgeCard){
@@ -225,7 +226,7 @@ public class Player {
     		
     	}
     	else{
-    		this.competences.put("zeppelin", this.competences.get("zeppelin")+1);
+    		this.competences.put("zeppelin", this.competences.get("zeppelin")+1*plusOrMinus);
     		
     	}
     }
@@ -247,6 +248,13 @@ public class Player {
         }
         
         
+        /**
+         * When a player use a zeppelin, unique assistant or unique shovel or ethnological knowledge, the card is discard
+         * 
+         * @author Gael
+         * @param card
+         * @param sideDeck
+         */
         public void useCard(Card card, Deck sideDeck){
         	if(card.isDiscardable())
         		card.discardCard(sideDeck);
