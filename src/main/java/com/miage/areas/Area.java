@@ -19,6 +19,7 @@ package com.miage.areas;
 
 import java.util.HashMap;
 
+
 /**
  * Places allowed for moving
  * 
