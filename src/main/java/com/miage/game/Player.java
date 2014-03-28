@@ -230,6 +230,32 @@ public class Player {
     	}
     }
     
+    
+    /**
+     * 
+     * 	add competence points using the card in parameters
+     * @author Gael
+     * @param card
+     */
+    public void addCompetencesPointsOrKnowledge(Card card){
+    	updateCompetencesPointsOrKnowledge(card, 1);
+    }
+    
+    
+    
+    /**
+     * 
+     * 	remove competence points using the card in parameters
+     * @author Gael
+     * @param card
+     */
+    public void removeCompetencesPointsOrKnowledge(Card card){
+    	updateCompetencesPointsOrKnowledge(card, -1);
+    }
+    
+    
+    
+    
     /**
          * @author david
          * Renvoie un booléen indiquant si le joueur peut fouiller 
@@ -256,10 +282,12 @@ public class Player {
          */
         public void useCard(Card card, Deck sideDeck){
         	
-        	this.cards.remove(card);	
-        	if(card.isDiscardable())
+        		
+        	if(card.isDiscardable()){
+        		this.cards.remove(card);
         		card.discardCard(sideDeck);
         		this.updateCompetencesPointsOrKnowledge(card, -1);
+        	}
         }
     
     

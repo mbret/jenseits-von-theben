@@ -467,7 +467,19 @@ public class Board {
     public void setPlayerTokensAndPlayers(
                     HashMap<PlayerToken, Player> playerTokensAndPlayers) {
             this.playerTokensAndPlayers = playerTokensAndPlayers;
-    }	
+    }
+
+
+	public Deck getSideDeck() {
+		return sideDeck;
+	}
+
+
+	public void setSideDeck(Deck sideDeck) {
+		this.sideDeck = sideDeck;
+	}
+    
+    
 
 	
 }

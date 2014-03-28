@@ -20,7 +20,7 @@ import com.miage.cards.*;
 public class TestPlayer {
 	
 	private Board board;
-	private Player player, player2;
+	private Player player;
 	private Deck deck;
 
 	@BeforeClass
@@ -38,7 +38,7 @@ public class TestPlayer {
 		
 		this.player = new Player("player");
 		
-		this.player2 = new Player("player 2");
+
 		
 		
 		
@@ -71,7 +71,7 @@ public class TestPlayer {
 		
 		Card[] fourCards = new Card[4];
 		
-		fourCards[0] = new GeneralKnowledgeCard("berlin", 2, 3);		
+		fourCards[0] = new AssistantCard("berlin", 2);		
 		fourCards[1] = new GeneralKnowledgeCard("paris", 2, 3);		
 		fourCards[2] = new GeneralKnowledgeCard("rome", 2, 3);		
 		fourCards[3] = new GeneralKnowledgeCard("vienna", 2, 3);
@@ -154,7 +154,7 @@ public class TestPlayer {
 		// scan all the deck & add points with each card
 		for(Card firstCardOfTheDeck : this.deck){
 			
-			this.player.updateCompetencesPointsOrKnowledge(firstCardOfTheDeck, 1);
+			this.player.addCompetencesPointsOrKnowledge(firstCardOfTheDeck);
 		}
 		
 		
@@ -175,7 +175,7 @@ public class TestPlayer {
 		
 		for(Card firstCardOfTheDeck : this.deck){
 			
-			this.player.updateCompetencesPointsOrKnowledge(firstCardOfTheDeck, -1);
+			this.player.removeCompetencesPointsOrKnowledge(firstCardOfTheDeck);
 		}
 		
 		
@@ -203,6 +203,49 @@ public class TestPlayer {
 	 */
 	@Test
 	public void testDiscardCard(){
+		
+		this.deck = new Deck();		
+		this.deck.addCard(new AssistantCard("london", 2));
+		this.deck.addCard(new CarCard("berlin", 2));
+		this.deck.addCard(new AssistantCard("roma", 2));
+		this.deck.addCard(new AssistantCard("vienna", 2));
+		this.deck.addCard(new ZeppelinCard("paris", 2));
+		
+		this.board.setDeck(this.deck);
+		
+	
+		
+		player.pickCard(board, 0);
+		player.pickCard(board, 0);
+		player.pickCard(board, 0);
+		player.pickCard(board, 0);
+		player.pickCard(board, 0);
+		
+		assertEquals(player.getCards().size(), 5);
+		assertEquals(player.getCards().get(0).getName(), "assistant");
+		assertEquals(player.getCards().get(0).getAreaName(), "berlin");
+		
+		assertEquals(board.getSideDeck().size(), 0);
+		
+		player.useCard(player.getCards().get(0), board.getSideDeck());
+		
+		assertEquals(player.getCards().size(), 4);
+		assertEquals(player.getCards().get(0).getName(), "assistant");
+		assertEquals(player.getCards().get(0).getAreaName(), "london");
+		
+		assertEquals(board.getSideDeck().get(0).getName(), "assistant");
+		assertEquals(board.getSideDeck().get(0).getAreaName(), "berlin");
+		
+		assertEquals(board.getSideDeck().size(), 1);
+		
+		
+		player.useCard(player.getCards().get(0), board.getSideDeck());
+		player.useCard(player.getCards().get(0), board.getSideDeck());
+		
+		assertEquals(player.getCards().size(), 3);
+		assertEquals(board.getSideDeck().size(), 2);
+		
+		
 		
 		
 		
