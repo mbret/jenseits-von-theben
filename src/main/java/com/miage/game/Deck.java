@@ -91,6 +91,12 @@ public class Deck extends LinkedList<Card>{
 	}
 	
         
+        /**
+         * @deprecated 
+         * @param cardsNumbers
+         * @param classOfKey
+         * @return 
+         */
         public static HashMap<Object, Integer> transformListOfCard( List<String> cardsNumbers , Class classOfKey){
             HashMap<Object, Integer> cardsInsideDeck = new HashMap<Object, Integer>();
             for (String numberStr : cardsNumbers) {
@@ -110,5 +116,9 @@ public class Deck extends LinkedList<Card>{
             return cardsInsideDeck;
         }
 	
+        
+        public Card[] pickFourFirstCards(){
+            return new Card[]{ this.pick(), this.pick(), this.pick(), this.pick()};
+        }
         
 }

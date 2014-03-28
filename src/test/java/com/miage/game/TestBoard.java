@@ -162,7 +162,7 @@ public class TestBoard {
         @Test
         public void testInitCards() throws IOException{
             System.out.println("testInitCards");
-            Board b = new Board(3);
+            Board b = new Board(2);
             
             
             boolean found1 = false, 
@@ -182,6 +182,8 @@ public class TestBoard {
             }
             assertEquals( true, found1); 
             assertEquals( true, found2);
+            // deck should have 
+            assertEquals( 83, b.getDeck().size());
         }
 	
 
