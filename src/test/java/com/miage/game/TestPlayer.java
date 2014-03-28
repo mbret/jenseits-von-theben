@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
+import java.io.IOException;
 
 
 
@@ -141,19 +142,22 @@ public class TestPlayer {
 	}
         
         /**
-	 * Test of the pick by the player
-	 * @author Gael
+	 * Test the allowed excavate
+	 * @author david
 	 */
 	@Test
-	public void testCanExcavate(){
+	public void testCanExcavate() throws IOException{
 		
-            this.player.addAreaAlreadyExcavate(this.board.getArea("greece").getName());
-            this.player.addAreaAlreadyExcavate(this.board.getArea("egypt").getName());
-                    
+            this.player.addCompetencesPointsOrKnowledge(new SpecificKnowledgeCard("paris", 2, 3, "greece"));
+            this.player.addAreaAlreadyExcavate(this.board.getArea("egypt").getName()); 
             assertTrue(this.player.canExcavate(this.board.getArea("greece")));
+            this.player.addAreaAlreadyExcavate(this.board.getArea("greece").getName());
+            assertFalse(this.player.canExcavate(this.board.getArea("greece")));
+            this.player.addCompetencesPointsOrKnowledge(new ExcavationAuthorizationCard("warsaw", 2));
             assertFalse(this.player.canExcavate(this.board.getArea("warsaw")));
             assertFalse(this.player.canExcavate(this.board.getArea("egypt")));
             assertTrue(this.player.canExcavate(this.board.getArea("greece")));
+            this.player.getCompetences().put("excavationAuthorization", this.player.getCompetences().get("excavationAuthorization")-1);
             assertFalse(this.player.canExcavate(this.board.getArea("rome")));
             assertFalse(this.player.canExcavate(this.board.getArea("greece")));
 	}

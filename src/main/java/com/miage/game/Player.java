@@ -232,12 +232,17 @@ public class Player {
         public boolean canExcavate(Area a){
             boolean allowed = false;
             if(a instanceof ExcavationArea){
-                if(this.hasAlreadyExcavateArea(a.getName())
-                        && this.playerKnowledges.getSpecificKnowledges().get(a.getName())>0
-                        && this.competences.get("excavationAuthorization")>0
-                        ){
-                    allowed = true;
-                }  
+                if(this.hasAlreadyExcavateArea(a.getName())){
+                        if(this.competences.get("excavationAuthorization")>0){
+                             if(this.playerKnowledges.getSpecificKnowledges().get(a.getName())>0){
+                                 allowed = true;
+                            }
+                        }
+                }else{
+                    if(this.playerKnowledges.getSpecificKnowledges().get(a.getName())>0){
+                        allowed = true;
+                    }
+                }
             }
             return allowed;
         }
