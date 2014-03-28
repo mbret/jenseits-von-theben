@@ -124,7 +124,13 @@ public class Player {
     }
     
     
-    
+    /**
+     * 
+     *  add competences points depending on the card in param
+     * 
+     * @author Gael
+     * @param card
+     */
     public void addCompetencesPointsOrKnowledge(Card card){
     	
     	if(card instanceof AssistantCard){
@@ -224,7 +230,7 @@ public class Player {
     	}
     }
     
-    /*
+    /**
          * @author david
          * Renvoie un booléen indiquant si le joueur peut fouiller 
          * (autorisation de fouille ou carte spéciale + compétences nécessaires).
@@ -238,6 +244,12 @@ public class Player {
                 allowed = true;
             }  
             return allowed;
+        }
+        
+        
+        public void useCard(Card card, Deck sideDeck){
+        	if(card.isDiscardable())
+        		card.discardCard(sideDeck);
         }
     
     

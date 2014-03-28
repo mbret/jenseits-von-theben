@@ -180,8 +180,8 @@ public class TestBoard {
                     found2 = true;
                 }
             }
-            assertEquals( true, found1); 
-            assertEquals( true, found2);
+            assertTrue(found1);
+            assertTrue(found2);
         }
 	
 

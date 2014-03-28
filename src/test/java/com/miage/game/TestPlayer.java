@@ -156,6 +156,8 @@ public class TestPlayer {
 			this.player.addCompetencesPointsOrKnowledge(firstCardOfTheDeck);
 		}
 		
+		
+		
 		assertEquals(this.player.getCompetences().get("assistant"), new Integer(3));
 		assertEquals(this.player.getCompetences().get("car"), new Integer(1));
 		assertEquals(this.player.getCompetences().get("zeppelin"), new Integer(1));
@@ -170,10 +172,7 @@ public class TestPlayer {
 		assertEquals(this.player.getPoints(), 15);
 		
 		
-		assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3]");
-		
-		
-		assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3, specificKnowledge,paris,2,3,greece]");
+	
 		
 	}
 	
