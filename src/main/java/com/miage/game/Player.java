@@ -2,6 +2,7 @@ package com.miage.game;
 
 
 import com.miage.areas.Area;
+import com.miage.areas.ExcavationArea;
 import com.miage.cards.AssistantCard;
 import com.miage.cards.CarCard;
 import com.miage.cards.Card;
@@ -118,17 +119,23 @@ public class Player {
     	
     	Card cardPicked = board.pickCardOnBoard(index).downCastCard();
     	this.cards.add(cardPicked);
-    	addCompetencesPointsOrKnowledge(cardPicked);
+    	updateCompetencesPointsOrKnowledge(cardPicked, 1);
     	board.getCurrentPlayerToken().addWeeksPlayerToken(cardPicked);
     	
     }
     
     
-    
-    public void addCompetencesPointsOrKnowledge(Card card){
+    /**
+     * 
+     *  add competences points depending on the card in param
+     * 
+     * @author Gael
+     * @param card
+     */
+    public void updateCompetencesPointsOrKnowledge(Card card, int plusOrMinus){
     	
     	if(card instanceof AssistantCard){
-    		this.competences.put("assistant", this.competences.get("assistant")+1);
+    		this.competences.put("assistant", this.competences.get("assistant")+1*plusOrMinus);
     	
     	}
     	else if(card instanceof CarCard){
@@ -179,17 +186,17 @@ public class Player {
     	else if(card instanceof EthnologicalKnowledgeCard){
     		
     			/*
-    			 * Add the value of cards into the ethnological knowledge color corresponding 
+    			 * Add or subsract the value of cards into the ethnological knowledge color corresponding 
     			 */
     		
     			EthnologicalKnowledgeCard ethnologicalKnowledgeCard = (EthnologicalKnowledgeCard) card;
     			this.playerKnowledges.addEthnologicalKnowledges(ethnologicalKnowledgeCard.getExcavationAreaName(), 
-    			ethnologicalKnowledgeCard.getValue());
+    			ethnologicalKnowledgeCard.getValue()*plusOrMinus);
     		
     	}
     	else if(card instanceof ExcavationAuthorizationCard){
     		
-    		this.competences.put("excavationAuthorization", this.competences.get("excavationAuthorization")+1);
+    		this.competences.put("excavationAuthorization", this.competences.get("excavationAuthorization")+1*plusOrMinus);
     		
     	}
     	else if(card instanceof ExpoCard){
@@ -208,7 +215,7 @@ public class Player {
     	}
     	else if(card instanceof ShovelCard){
     		
-    		this.competences.put("shovel", this.competences.get("shovel")+1);
+    		this.competences.put("shovel", this.competences.get("shovel")+1*plusOrMinus);
     		
     	}
     	else if(card instanceof SpecificKnowledgeCard){
@@ -219,25 +226,75 @@ public class Player {
     		
     	}
     	else{
-    		this.competences.put("zeppelin", this.competences.get("zeppelin")+1);
+    		this.competences.put("zeppelin", this.competences.get("zeppelin")+1*plusOrMinus);
     		
     	}
     }
     
-    /*
+    
+    /**
+     * 
+     * 	add competence points using the card in parameters
+     * @author Gael
+     * @param card
+     */
+    public void addCompetencesPointsOrKnowledge(Card card){
+    	updateCompetencesPointsOrKnowledge(card, 1);
+    }
+    
+    
+    
+    /**
+     * 
+     * 	remove competence points using the card in parameters
+     * @author Gael
+     * @param card
+     */
+    public void removeCompetencesPointsOrKnowledge(Card card){
+    	updateCompetencesPointsOrKnowledge(card, -1);
+    }
+    
+    
+    
+    
+    /**
          * @author david
-         * Renvoie un booléen indiquant si le joueur peut fouiller 
-         * (autorisation de fouille ou carte spéciale + compétences nécessaires).
+         * return a boolean means if the player can excavate in this area
          */
-        public boolean allowSearch(Area a){
+        public boolean canExcavate(Area a){
             boolean allowed = false;
-            if(this.hasAlreadyExcavateArea(a.getName())
-                    && this.getPlayerKnowledges().getSpecificKnowledges().get(a.getName())>0
-                    && this.getCompetences().get("excavationAuthorization")>0
-                    ){
-                allowed = true;
-            }  
+            if(a instanceof ExcavationArea){
+                if(this.hasAlreadyExcavateArea(a.getName())){
+                        if(this.competences.get("excavationAuthorization")>0){
+                             if(this.playerKnowledges.getSpecificKnowledges().get(a.getName())>0){
+                                 allowed = true;
+                            }
+                        }
+                }else{
+                    if(this.playerKnowledges.getSpecificKnowledges().get(a.getName())>0){
+                        allowed = true;
+                    }
+                }
+            }
             return allowed;
+        }
+        
+        
+        /**
+         * When a player use a zeppelin, unique assistant or unique shovel or ethnological knowledge, the card is discard
+         * 
+         * @author Gael
+         * @param card
+         * @param sideDeck
+         */
+        public void useCard(Card card, Deck sideDeck){
+        	
+        		
+        	if(card.isDiscardable()){
+        		this.cards.remove(card);
+        		card.discardCard(sideDeck);
+        		this.updateCompetencesPointsOrKnowledge(card, -1);
+        	}
         }
     
     

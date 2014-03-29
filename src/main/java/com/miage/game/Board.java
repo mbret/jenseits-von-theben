@@ -56,6 +56,10 @@ public class Board {
     private PlayerToken currentPlayerToken;
 
     private Deck deck;
+    
+    /**
+     * défausse 
+     */
     private Deck sideDeck;
 
     private Card fourCurrentCards[];
@@ -342,6 +346,28 @@ public class Board {
         this.deck = new Deck( dividedDecks[1] ); // tmp deck 1 & 2 become main deck
     }
     
+    /**
+     * 
+     * @author david
+     */
+    public void changeFourCurrentCards(){
+        //if(this.currentPlayerToken.getPosition().getName() == "warsaw"){
+            this.sideDeck.add(this.fourCurrentCards[0]);
+            this.sideDeck.add(this.fourCurrentCards[1]);
+            this.sideDeck.add(this.fourCurrentCards[2]);
+            this.sideDeck.add(this.fourCurrentCards[3]);
+            
+            for(int i=0;i<4;i++){
+                this.fourCurrentCards[i] = this.deck.pick();
+                while(this.fourCurrentCards[i] instanceof ExpoCard){
+                    this.addExpoCardOnBoard((ExpoCard)this.fourCurrentCards[i]);
+                    this.fourCurrentCards[i] = this.deck.pick();
+                }
+            }
+            this.setFourCurrentCards(fourCurrentCards);
+       //}
+    }
+    
    
 
     
@@ -451,14 +477,17 @@ public class Board {
             this.playerTokensAndPlayers = playerTokensAndPlayers;
     }
 
-    public Deck getSideDeck() {
-        return sideDeck;
-    }
-	
+
+	public Deck getSideDeck() {
+		return sideDeck;
+	}
+
+
+	public void setSideDeck(Deck sideDeck) {
+		this.sideDeck = sideDeck;
+	}
     
-	
-	
-	
+    
 
 	
 }

@@ -1,16 +1,20 @@
 package com.miage.game;
 
 import com.miage.areas.ExcavationArea;
+import com.miage.areas.TouristicArea;
 import com.miage.cards.Card;
+import com.miage.cards.EthnologicalKnowledgeCard;
 import com.miage.cards.ExcavationAuthorizationCard;
 import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
+import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.cards.ZeppelinCard;
 import com.miage.config.ConfigManager;
 import com.miage.tokens.PointToken;
 import com.miage.tokens.Token;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -184,7 +188,44 @@ public class TestBoard {
                     found1 = true;
                 }
             }
-            assertEquals( true, found1); 
+            assertTrue(found1);
+            assertTrue(found2);
+        }
+        
+        @Test
+        public void testChangeFourCurrentCards() throws IOException{
+            /*
+             * Initialize a player
+             */
+            Player p1 = new Player("player");
+            PlayerToken pt = new PlayerToken("blue");
+            HashMap<PlayerToken, Player> playersAndTokens= new HashMap<PlayerToken, Player>();
+            playersAndTokens.put(pt, p1);
+            pt.setPosition(board.getArea("warsaw"));
+            board.setPlayerTokensAndPlayers(playersAndTokens);
+            board.setCurrentPlayerToken(pt);
+            
+            /*
+             * Set some cards into the deck
+             */
+            Deck deckTest2 = new Deck();
+            deckTest2.addCard(new ExpoCard("moscow", 4, true));
+            deckTest2.addCard(new ExpoCard("warsaw", 4, true));
+            deckTest2.addCard(new GeneralKnowledgeCard("berlin", 2, 3));
+            deckTest2.addCard(new ShovelCard("london", 2));
+            deckTest2.addCard(new EthnologicalKnowledgeCard("berlin", 2, 2,"greece"));
+            deckTest2.addCard(new EthnologicalKnowledgeCard("rome", 2, 2,"egypt"));
+            deckTest2.addCard(new SpecificKnowledgeCard("rome", 2, 2,"crete"));
+            board.setDeck(deckTest2);
+            
+            board.changeFourCurrentCards();
+            
+            assertEquals(board.getCurrentPlayerToken().getPosition().toString(),"warsaw");
+            assertEquals(board.getFourCurrentCards()[0].toString(),"generalKnowledge,berlin,2,3");
+            assertEquals(board.getFourCurrentCards()[1].toString(),"shovel,london,2");	
+            assertEquals(board.getFourCurrentCards()[2].toString(),"ethnologicalKnowledge,berlin,2,2,greece");	
+            assertEquals(board.getFourCurrentCards()[3].toString(),"ethnologicalKnowledge,rome,2,2,egypt");
+           
         }
 	
 

@@ -49,7 +49,7 @@ public class TestPlayerToken {
 	
 		
 		Player player1 = new Player("Gael");
-		player1.addCompetencesPointsOrKnowledge(new CarCard("berlin",1));
+		player1.updateCompetencesPointsOrKnowledge(new CarCard("berlin",1), 1);
 		
 		HashMap<PlayerToken, Player> playerTokensAndPlayers = new HashMap<PlayerToken, Player>();
 		playerTokensAndPlayers.put(playerToken1, player1);

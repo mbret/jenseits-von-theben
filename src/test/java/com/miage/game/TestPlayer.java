@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
+import java.io.IOException;
 
 
 
@@ -38,6 +39,7 @@ public class TestPlayer {
 		
 		this.player = new Player("player");
 		
+
 		
 		
 		
@@ -70,7 +72,7 @@ public class TestPlayer {
 		
 		Card[] fourCards = new Card[4];
 		
-		fourCards[0] = new GeneralKnowledgeCard("berlin", 2, 3);		
+		fourCards[0] = new AssistantCard("berlin", 2);		
 		fourCards[1] = new GeneralKnowledgeCard("paris", 2, 3);		
 		fourCards[2] = new GeneralKnowledgeCard("rome", 2, 3);		
 		fourCards[3] = new GeneralKnowledgeCard("vienna", 2, 3);
@@ -139,6 +141,27 @@ public class TestPlayer {
 		
 		
 	}
+        
+        /**
+	 * Test the allowed excavate
+	 * @author david
+	 */
+	@Test
+	public void testCanExcavate() throws IOException{
+		
+            this.player.addCompetencesPointsOrKnowledge(new SpecificKnowledgeCard("paris", 2, 3, "greece"));
+            this.player.addAreaAlreadyExcavate(this.board.getArea("egypt").getName()); 
+            assertTrue(this.player.canExcavate(this.board.getArea("greece")));
+            this.player.addAreaAlreadyExcavate(this.board.getArea("greece").getName());
+            assertFalse(this.player.canExcavate(this.board.getArea("greece")));
+            this.player.addCompetencesPointsOrKnowledge(new ExcavationAuthorizationCard("warsaw", 2));
+            assertFalse(this.player.canExcavate(this.board.getArea("warsaw")));
+            assertFalse(this.player.canExcavate(this.board.getArea("egypt")));
+            assertTrue(this.player.canExcavate(this.board.getArea("greece")));
+            this.player.getCompetences().put("excavationAuthorization", this.player.getCompetences().get("excavationAuthorization")-1);
+            assertFalse(this.player.canExcavate(this.board.getArea("rome")));
+            assertFalse(this.player.canExcavate(this.board.getArea("greece")));
+	}
 	
 	
 	/**
@@ -148,13 +171,15 @@ public class TestPlayer {
 	 * 
 	 */
 	@Test
-	public void testAddCompetencePoints(){
+	public void testUpdateCompetencePoints(){
 		
 		// scan all the deck & add points with each card
 		for(Card firstCardOfTheDeck : this.deck){
 			
 			this.player.addCompetencesPointsOrKnowledge(firstCardOfTheDeck);
 		}
+		
+		
 		
 		assertEquals(this.player.getCompetences().get("assistant"), new Integer(3));
 		assertEquals(this.player.getCompetences().get("car"), new Integer(1));
@@ -170,10 +195,81 @@ public class TestPlayer {
 		assertEquals(this.player.getPoints(), 15);
 		
 		
-		assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3]");
+		for(Card firstCardOfTheDeck : this.deck){
+			
+			this.player.removeCompetencesPointsOrKnowledge(firstCardOfTheDeck);
+		}
 		
 		
-		assertEquals(player.getCards().toString(), "[generalKnowledge,rome,2,3, specificKnowledge,paris,2,3,greece]");
+		assertEquals(this.player.getCompetences().get("assistant"), new Integer(0));
+	
+		assertEquals(this.player.getCompetences().get("zeppelin"), new Integer(0));
+
+		assertEquals(this.player.getCompetences().get("excavationAuthorization"), new Integer(0));
+		assertEquals(this.player.getCompetences().get("shovel"), new Integer(0));
+
+		assertEquals(this.player.getPlayerKnowledges().getEthnologicalKnowledges().get("greece"), new Integer(0));
+		
+	
+		
+		
+	
+		
+	}
+	
+	
+	/**
+	 * Test of the method for discarding cards
+	 * 
+	 * @author Gael
+	 */
+	@Test
+	public void testDiscardCard(){
+		
+		this.deck = new Deck();		
+		this.deck.addCard(new AssistantCard("london", 2));
+		this.deck.addCard(new CarCard("berlin", 2));
+		this.deck.addCard(new AssistantCard("roma", 2));
+		this.deck.addCard(new AssistantCard("vienna", 2));
+		this.deck.addCard(new ZeppelinCard("paris", 2));
+		
+		this.board.setDeck(this.deck);
+		
+	
+		
+		player.pickCard(board, 0);
+		player.pickCard(board, 0);
+		player.pickCard(board, 0);
+		player.pickCard(board, 0);
+		player.pickCard(board, 0);
+		
+		assertEquals(player.getCards().size(), 5);
+		assertEquals(player.getCards().get(0).getName(), "assistant");
+		assertEquals(player.getCards().get(0).getAreaName(), "berlin");
+		
+		assertEquals(board.getSideDeck().size(), 0);
+		
+		player.useCard(player.getCards().get(0), board.getSideDeck());
+		
+		assertEquals(player.getCards().size(), 4);
+		assertEquals(player.getCards().get(0).getName(), "assistant");
+		assertEquals(player.getCards().get(0).getAreaName(), "london");
+		
+		assertEquals(board.getSideDeck().get(0).getName(), "assistant");
+		assertEquals(board.getSideDeck().get(0).getAreaName(), "berlin");
+		
+		assertEquals(board.getSideDeck().size(), 1);
+		
+		
+		player.useCard(player.getCards().get(0), board.getSideDeck());
+		player.useCard(player.getCards().get(0), board.getSideDeck());
+		
+		assertEquals(player.getCards().size(), 3);
+		assertEquals(board.getSideDeck().size(), 2);
+		
+		
+		
+		
 		
 	}
 	
