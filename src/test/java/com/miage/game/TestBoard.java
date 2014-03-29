@@ -189,7 +189,6 @@ public class TestBoard {
                 }
             }
             assertTrue(found1);
-            assertTrue(found2);
         }
         
         @Test
