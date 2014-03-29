@@ -59,5 +59,10 @@ public class ExpoCard extends Card {
     public boolean isDiscardable() {
         return false;
     }
+
+    public boolean isBigExpo() {
+        return bigExpo;
+    }
+    
     
 }

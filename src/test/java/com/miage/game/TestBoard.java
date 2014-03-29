@@ -159,29 +159,32 @@ public class TestBoard {
             assertEquals(nbPointTokenOf4InsideGreece, countedNbPointTokenOf4InsideCrete );
         }
         
+        /**
+         * Valid only for 95 cards in total
+         * @throws IOException 
+         */
         @Test
         public void testInitCards() throws IOException{
             System.out.println("testInitCards");
-            Board b = new Board(3);
             
+            Board b = new Board(2);
+            assertEquals( 95 - 4, b.getDeck().size()); // 95 cards - four cards
+            assertTrue( b.getSideDeck().isEmpty());
             
-            boolean found1 = false, 
-                    found2 = false, 
-                    found3 = false, 
-                    found4 = false, 
-                    found5 = false;
+            b = new Board(3);
+            assertEquals( 27+27 + 5, b.getDeck().size()); // 2 decks + small expo - four cards
+            assertEquals( 27 + 5, b.getSideDeck().size() ); // 5 big expo + 1 deck
+            
+            boolean found1 = false;
+            
+            // We test only expo card because there are 4 cards which are picked randomly (so its impossible to test)
             for (Card card : b.getDeck()) {
                 // deck must have => card.1 = london,excavationAuthorizationCard,3
-                if( card instanceof ExcavationAuthorizationCard && card.getAreaName().equals("london") && card.getWeekCost() == 3){
+                if( card instanceof ExpoCard && ! ((ExpoCard)card).isBigExpo() && card.getAreaName().equals("berlin")){
                     found1 = true;
-                }
-                // deck must have => card.3        = london,zeppelinCard,1
-                if( card instanceof ZeppelinCard && card.getAreaName().equals("london") && card.getWeekCost() == 1){
-                    found2 = true;
                 }
             }
             assertEquals( true, found1); 
-            assertEquals( true, found2);
         }
 	
 

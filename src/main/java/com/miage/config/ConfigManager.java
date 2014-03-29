@@ -135,7 +135,7 @@ public class ConfigManager {
      * @return 
      */
     public ArrayList<String> getConfigKeysBeginningBy( String configName, String beginning ){
-        LOGGER.debug("getConfigKeysBeginningBy: Load all keys beginning by " + beginning);
+//        LOGGER.debug("getConfigKeysBeginningBy: Load all keys beginning by " + beginning);
         ArrayList<String> keys = new ArrayList<String>();
         Enumeration<Object> result = this.configs.get(configName).keys();
         while(result.hasMoreElements()){
