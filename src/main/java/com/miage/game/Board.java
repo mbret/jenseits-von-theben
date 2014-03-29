@@ -227,19 +227,15 @@ public class Board {
     /**
      * Initialization of the decks
      * - we get all cards from the config
-     * - we get all number of cards present in each decks
-     * - we instantiate new cards and we put in the decks which contains these cards
+     * - we instantiate new cards and we put these cards inside first deck
      * - we run process to finish deck (cute, mix, etc)
      * @author maxime
      */
     private void initDecks() throws IOException{
 
-        ArrayList<ExpoCard> expoCards = new ArrayList<ExpoCard>();
+        ArrayList<ExpoCard> expoCards = new ArrayList<ExpoCard>(); // used to retain apart expo cards
         Deck firstDeck = new Deck();
-        Deck tmpDeck1 = new Deck();
-        Deck tmpDeck2 = new Deck();
-        Deck tmpDeck3 = new Deck();
-        
+
         // Main loop to init cards, and add to the decks
         HashMap<String, String> cardsEntriesFromConfig = ConfigManager.getInstance().getConfigEntriesWithKeysBeginningBy(ConfigManager.CARDS_CONFIG_NAME, "card");
         for (Entry<String, String> entry : cardsEntriesFromConfig.entrySet()) {
@@ -247,7 +243,7 @@ public class Board {
             /**
              * Here we get basic information from the key and the values
              */
-            String cardNumberString = entry.getKey().substring( "card.".length() );  // get only the number of the card (card.x) -> x
+//            String cardNumberString = entry.getKey().substring( "card.".length() );  // get only the number of the card (card.x) -> x
             String[] values = entry.getValue().split("\\,"); // split values line
             String area = values[0];
             String type = values[1];
@@ -306,36 +302,31 @@ public class Board {
         
         
         firstDeck.mix(); // We mix the big deck
+//        LOGGER.debug("initDecks : sizeof firsDeck : " + firstDeck.size());
         this.fourCurrentCards = firstDeck.pickFourFirstCards(); // We Pick the four first cards from the main deck
+        Deck[] dividedDecks;
 
-        int indexToDivideFirstDeck;
-        // only 2 decks
         if(nbPlayers <= 2){
-            indexToDivideFirstDeck = firstDeck.size() / 2;
+            dividedDecks = firstDeck.getDividedDeck( 2 ); // only 2 decks
+            dividedDecks[1].addAll( expoCards ); // we add all expo in deck 2
+            this.sideDeck = new Deck(); // sideDeck is null/empty
         }
-        // three equal decks
         else{
-            indexToDivideFirstDeck = firstDeck.size() / 3;
-            tmpDeck1  = firstDeck.divideDeck( 0, indexToDivideFirstDeck ); // part 1/3
-            tmpDeck2  = firstDeck.divideDeck( indexToDivideFirstDeck, indexToDivideFirstDeck + indexToDivideFirstDeck ); // part 2/3
-            tmpDeck3  = firstDeck.divideDeck( ( indexToDivideFirstDeck + indexToDivideFirstDeck ), firstDeck.size()-1 ); // part 3/3
-            // we add big expo in deck 2
+            dividedDecks = firstDeck.getDividedDeck( 3 ); // three equal decks
             for (ExpoCard card : expoCards) {
+                if( ! card.isBigExpo()){
+                    dividedDecks[1].add( card ); // add small expo in deck 2
+                }
                 if( card.isBigExpo()){
-                    tmpDeck3.add( card );
+                    dividedDecks[2].add( card ); // add big expo in deck 3
                 }
             }
+            this.sideDeck = dividedDecks[2];
+            this.sideDeck.mix();
         }
-        
-        // we add small expo in deck 2
-        for (ExpoCard card : expoCards) {
-            if( ! card.isBigExpo()){
-                tmpDeck2.add( card );
-            }
-        }
-        tmpDeck2.addAll( tmpDeck1 ); // we put deck1 on deck2
-        this.deck.addAll( tmpDeck2 ); // tmp deck 1 & 2 become main deck
-        this.sideDeck = tmpDeck3; // tmpdeck 3 become waiting deck (sidedeck)
+
+        dividedDecks[1].addAll( dividedDecks[0] ); // we put deck1 on deck2
+        this.deck = new Deck( dividedDecks[1] ); // tmp deck 1 & 2 become main deck
     }
     
    
@@ -446,8 +437,12 @@ public class Board {
                     HashMap<PlayerToken, Player> playerTokensAndPlayers) {
             this.playerTokensAndPlayers = playerTokensAndPlayers;
     }
+
+    public Deck getSideDeck() {
+        return sideDeck;
+    }
 	
-	
+    
 	
 	
 	
