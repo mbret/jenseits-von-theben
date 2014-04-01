@@ -20,8 +20,8 @@ public class EthnologicalKnowledgeCard extends Card{
      */
     private String codeColor;
 
-    public EthnologicalKnowledgeCard(String areaName, int weekCost, int value, String paramExcavationAreaName) throws IOException {
-            super("ethnologicalKnowledge",areaName,weekCost);
+    public EthnologicalKnowledgeCard(int id, String areaName, int weekCost, int value, String paramExcavationAreaName) throws IOException {
+        super(id, "ethnologicalKnowledge",areaName,weekCost);
             this.value = value;
             this.excavationAreaName = paramExcavationAreaName;
             

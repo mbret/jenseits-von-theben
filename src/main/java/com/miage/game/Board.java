@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -139,10 +140,7 @@ public class Board {
      * @author maxime
      */
     private void initAreas() throws IOException{
-        
-        // Get the number of empty tokens inside each excavation areas
-        int nbEmptyTokenPoint = Integer.parseInt(ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty("nbEmptyTokenPoint") );
-
+       
         /**
          * Init areas
          * - We get only keys beginning with 'areas'
@@ -150,67 +148,107 @@ public class Board {
          * - We set tokens inside each areas
          * - We set distance between each areas
          */
-        Set<String> keys = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME).stringPropertyNames();
-        for (String key : keys){
-            
+        HashMap<String, String> entries = ConfigManager.getInstance().getConfigEntriesWithKeysBeginningBy( ConfigManager.AREAS_CONFIG_NAME, "area");
+        for (Entry<String, String> entry : entries.entrySet()) {
+            String string1 = entry.getValue();
+  
             // we split the key to get different part
-            String[] splittedKey = key.split( "\\." );
-            String areaName     = splittedKey[0];
-            String categorie    = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty( areaName + ".type" );
+            String[] splittedKey = entry.getKey().split( "\\." );
+            String areaName     = splittedKey[1]; // area.(areaname)
             
             // area does not exist in list yet
             if( areas.containsKey( areaName ) == false ){
                 
                 Area newArea = null;
+//                LOGGER.debug("area." + areaName + ".type");
+                String categorie    = entries.get("area." + areaName + ".type" );
                 
                 /**
                  * Case of touristic area
                  */
                 if( categorie.equals( "touristic" )){
                     newArea = new TouristicArea(0, areaName);
-
                 }
                 /**
                  * Case of excavation area
                  */
                 else{
-                    String color = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty( areaName + ".color" );
+                    String color = entries.get("area." + areaName + ".color" );
                     newArea = new ExcavationArea(0, areaName, color);
                     
+                    /**
+                     * Lets fill tokens
+                     */
+                    String id; // define the id to retrieve image file
+                    int nb; // nb occurence of the current token
+                    int nbTokens; // nb different tokens
+                    String[] set; // contain the token id or id,value and its occurence
+                    
                     // Set empty tokens
-                    for (int i = 0; i < nbEmptyTokenPoint; i++) {
-                        ((ExcavationArea)newArea).addToken( new PointToken("empty", ((ExcavationArea)newArea).getCodeColor(), 0)); // assign empty point
+                    String[] emptyTokens = ((String)entries.get("area." + areaName + ".emptyTokens" )).split("\\|");
+                    nbTokens = emptyTokens.length;
+                    for (int i = 0; i < nbTokens; i++) {
+                        set = emptyTokens[i].split("\\:");
+                        nb = Integer.parseInt(set[1]);
+                        id = set[0];
+                        for (int j = 0; j < nb; j++) {
+                            ((ExcavationArea)newArea).addToken( new PointToken(id, "undefined", ((ExcavationArea)newArea).getCodeColor(), 0)); // assign empty point
+                        }
                     }
                     
-                    // Set knowledge tokens (one to each excavation area)
-                    ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken("GeneralKnowledge", ((ExcavationArea)newArea).getCodeColor() ) );
-                    ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken("SpecificKnowledge", ((ExcavationArea)newArea).getCodeColor() ) );
+                    // Set value tokens
+                    String[] pointTokens = ((String)entries.get("area." + areaName + ".pointTokens" )).split("\\|");
+                    nbTokens = pointTokens.length;
+                    for (int i = 0; i < nbTokens; i++) {
+                        set = pointTokens[i].split("\\:");
+                        String[] subSet = set[0].split("\\,");
+                        nb = Integer.parseInt(set[1]);
+                        id = subSet[0];
+                        int value = Integer.parseInt(subSet[1]);
+                        for (int j = 0; j < nb; j++) {
+                            ((ExcavationArea)newArea).addToken( new PointToken(id, "undefined", ((ExcavationArea)newArea).getCodeColor(), value ) ); 
+                        }
+                    }
+
+                    // Set general knowledge tokens (one to each excavation area)
+                    String[] generalKnowledgesTokens = ((String)entries.get("area." + areaName + ".generalKnowledgeTokens" )).split("\\|");
+                    nbTokens = generalKnowledgesTokens.length;
+                    for (int i = 0; i < nbTokens; i++) {
+                        set = generalKnowledgesTokens[i].split("\\:");
+                        nb = Integer.parseInt(set[1]);
+                        id = set[0];
+                        for (int j = 0; j < nb; j++) {
+                            ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken(id, "undefined", ((ExcavationArea)newArea).getCodeColor() ) );
+                        }
+                    }
                     
-                    // Set point tokens
-                    String pointsTokenString = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty(areaName + ".pointTokens"); // get string liek 1:2,2:4
-                    String[] sections = pointsTokenString.split("\\,"); // split each 1:2,2:4 => (get [1:2] [2:4])
-                    for (String section : sections) {
-                        Integer value = Integer.parseInt( section.substring(0, section.indexOf(":")) ); // 1:2 => (get 1)
-                        Integer nbTokenOfThisValue = Integer.parseInt( section.substring(section.indexOf(":") + 1) ); // 1:2 => (get 2)
-                        for (int i = 0; i < nbTokenOfThisValue; i++) {
-                            ((ExcavationArea)newArea).addToken( new PointToken("point", ((ExcavationArea)newArea).getCodeColor(), value ) ); // assign one token of this value
+                    // Set general knowledge tokens (one to each excavation area)
+                    String[] specificKnowledgesTokens = ((String)entries.get("area." + areaName + ".specificKnowledgeTokens" )).split("\\|");
+                    nbTokens = specificKnowledgesTokens.length;
+                    for (int i = 0; i < nbTokens; i++) {
+                        set = specificKnowledgesTokens[i].split("\\:");
+                        nb = Integer.parseInt(set[1]);
+                        id = set[0];
+                        for (int j = 0; j < nb; j++) {
+                            ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken(id, "undefined", ((ExcavationArea)newArea).getCodeColor() ) );
                         }
                     }
                 }
                 
                 /**
-                 * For all areas
+                 * For all areas we set the distance with others area
                  */
                 // We get only keys about the distance of this area and others area
-                ArrayList<String> keysOfDistance = ConfigManager.getInstance().getConfigKeysBeginningBy(ConfigManager.AREAS_CONFIG_NAME, areaName + ".to");
+                HashMap<String, String> keysOfDistance = ConfigManager.getInstance().getConfigEntriesWithKeysBeginningBy(ConfigManager.AREAS_CONFIG_NAME, "area." + areaName + ".to");
 
                 // We iterate over each reachable area from this area
-                for (String keyOfDistance : keysOfDistance){
-                    String[] splittedkeyOfDistance = keyOfDistance.split( "\\." );
-                    String to   = splittedkeyOfDistance[2];
+                for (Entry<String, String> entry1 : keysOfDistance.entrySet()) {
+
+                    String[] splittedkeyOfDistance = entry1.getKey().split( "\\." );
+                    String to   = splittedkeyOfDistance[3];
                     
                     // Get the steps areas of this area and its destination
-                    String stepsAreas = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty( areaName + ".to." + to );
+                    String stepsAreas = keysOfDistance.get( "area." + areaName + ".to." + to );
                     String[] stepsAreasSplitted;
                     if(stepsAreas.equals("")){
                         stepsAreasSplitted = new String[0]; // no steps
@@ -261,47 +299,48 @@ public class Board {
             String area = values[0];
             String type = values[1];
             Integer weekCost = Integer.parseInt( values[2] );
-            
+            int id = Integer.parseInt( entry.getKey().substring( "card.".length() ));
+                    
             Card newCard = null;
 
             /**
              * Here we instantiate the card relating to the specified type in config file (the values)
              */
             if( type.equals("excavationAuthorization") ){
-                newCard = new ExcavationAuthorizationCard(area, weekCost);
+                newCard = new ExcavationAuthorizationCard(id, area, weekCost);
             }
             else if( type.equals("zeppelin") ){
-                newCard = new ZeppelinCard(area, weekCost);
+                newCard = new ZeppelinCard(id, area, weekCost);
             }
             else if( type.equals("car") ){
-                newCard = new CarCard(area, weekCost);
+                newCard = new CarCard(id, area, weekCost);
             }
             else if( type.equals("congress") ){
-                newCard = new CongressCard(area, weekCost);
+                newCard = new CongressCard(id, area, weekCost);
             }
             else if( type.equals("assistant") ){
-                newCard = new AssistantCard(area, weekCost);
+                newCard = new AssistantCard(id, area, weekCost);
             }
             else if( type.equals("shovel") ){
-                newCard = new ShovelCard(area, weekCost);
+                newCard = new ShovelCard(id, area, weekCost);
             }
             else if( type.equals("generalKnowledge") ){
                 int value = Integer.parseInt(values[3]); // check pattern in .properties
-                newCard = new GeneralKnowledgeCard(area, weekCost, value);
+                newCard = new GeneralKnowledgeCard(id, area, weekCost, value);
             }
             else if (type.equals("specificKnowledge")){
                 int value = Integer.parseInt(values[3]); // check pattern in .properties
                 String excavationArea = values[4];
-                newCard = new SpecificKnowledgeCard(area, weekCost, value, excavationArea);
+                newCard = new SpecificKnowledgeCard(id, area, weekCost, value, excavationArea);
             }
             else if (type.equals("ethnologicalKnowledge")){
                 int value = Integer.parseInt(values[3]); // check pattern in .properties
                 String excavationArea = values[4];
-                newCard = new EthnologicalKnowledgeCard(area, weekCost, value, excavationArea);
+                newCard = new EthnologicalKnowledgeCard(id, area, weekCost, value, excavationArea);
             }
             else if(type.equals("expo")){
                 boolean bigExpo = Boolean.parseBoolean(values[3]); // check pattern in .properties
-                newCard = new ExpoCard(area, weekCost, bigExpo);
+                newCard = new ExpoCard(id, area, weekCost, bigExpo);
             }
             
             // We add the card inside deck but we retain expo card
@@ -368,7 +407,23 @@ public class Board {
        //}
     }
     
-   
+   /**
+    * Take a number of knowledge points and return the number of tokens related to the week cost
+    * @param knowledgePoints (mix of all knowledge points)
+    * @param weekCost
+    * @return int, the number of tokens the player can pick up
+    * @throws IOException 
+    */
+    public static int getNbTokensFromChronotime( int knowledgePoints, int weekCost) throws IOException{
+        String[] values = ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty( "chronotime." + knowledgePoints).split("\\|");
+        try{
+            return Integer.parseInt(values[ weekCost ]);
+        }
+        catch( ArrayIndexOutOfBoundsException e){
+            throw new ArrayIndexOutOfBoundsException("The knowledge points provided is not setted in configuration file");
+        }
+    }
+
 
     
     /***********************************************************************************************

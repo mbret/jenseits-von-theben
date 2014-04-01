@@ -23,8 +23,8 @@ package com.miage.tokens;
  */
 public class GeneralKnowledgeToken extends Token{
 
-    public GeneralKnowledgeToken(String name, String color) {
-        super(name, color);
+    public GeneralKnowledgeToken(String id, String name, String color) {
+        super(id, name, color);
     }
     
 }

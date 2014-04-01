@@ -29,9 +29,10 @@ import java.util.HashMap;
 public abstract class Area {
 
     /**
-     * Number (used inside distance array)
+     * Used as id from .properties
+     * used to retrieve the image file
      */
-    private Integer num;
+    private int id;
     
     /**
      * Used as key inside program
@@ -50,18 +51,21 @@ public abstract class Area {
     
     /**
      * 
-     * @param num
+     * @param id
      * @param name 
      */
-    public Area(Integer num, String name){
+    public Area(int id, String name){
         this.name = name;
-        this.num = num;
+        this.id = id;
         this.distances = new HashMap<String, String[]>();
     }
 
+    public int getId() {
+        return id;
+    }
 
-    public Integer getNum() {
-        return num;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
