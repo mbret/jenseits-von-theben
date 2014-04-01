@@ -28,15 +28,32 @@ public class MapPanel extends javax.swing.JPanel {
         menuCardsPlayer.setVisible(false);
         closeMenuLabel.setVisible(false);
         displayedCardPanel.setVisible(false);
+        menuCardsPlayer.remove(3);
+        menuCardsPlayer.remove(2);
         b = new Board(2);
         p1 = new Player("Rouch");
         d = b.getDeck();
         ar = new ArrayList<Card>();
-        ar.add(new CongressCard("paris", 2));
-        ar.add(new CongressCard("roma", 2));
-        ar.add(new SpecificKnowledgeCard("london", 2, 2, "greece"));
-        ar.add(new CongressCard("london", 2));
-        ar.add(new CarCard("berlin", 2));
+        ar.add(new CongressCard(8, "paris", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new CongressCard(10, "vienna", 2));
+        ar.add(new SpecificKnowledgeCard(43, "london", 2, 2, "greece"));
+        ar.add(new CongressCard(7, "london", 2));
+        ar.add(new CarCard(5, "moscow", 2));
         p1.setCards(ar);
         menuCardsPlayer.setTitleAt(0, p1.getName());
     }
@@ -189,9 +206,25 @@ public class MapPanel extends javax.swing.JPanel {
         player1Panel.add(berlinEtnoP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, -1, -1));
 
         romaZeppelinP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/3.jpg"))); // NOI18N
+        romaZeppelinP1Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                romaZeppelinP1LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                romaZeppelinP1LabelMouseExited(evt);
+            }
+        });
         player1Panel.add(romaZeppelinP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
 
         londonExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
+        londonExcavationP1Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                londonExcavationP1LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                londonExcavationP1LabelMouseExited(evt);
+            }
+        });
         player1Panel.add(londonExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
 
         berlinCongressP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
@@ -206,6 +239,11 @@ public class MapPanel extends javax.swing.JPanel {
         player1Panel.add(berlinCongressP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
 
         berlinGenKnowledgeP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/31.jpg"))); // NOI18N
+        berlinGenKnowledgeP1Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinGenKnowledgeP1LabelMouseEntered(evt);
+            }
+        });
         player1Panel.add(berlinGenKnowledgeP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
 
         moscowScienKnowledgeP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/74.jpg"))); // NOI18N
@@ -264,14 +302,6 @@ public class MapPanel extends javax.swing.JPanel {
         player2Panel.add(berlinGenKnowledgeP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
 
         berlinCongressP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
-        berlinCongressP2Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                berlinCongressP2LabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                berlinCongressP2LabelMouseExited(evt);
-            }
-        });
         player2Panel.add(berlinCongressP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
 
         berlinAssistantP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/18.jpg"))); // NOI18N
@@ -299,14 +329,6 @@ public class MapPanel extends javax.swing.JPanel {
         player2Panel.add(greeceExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
 
         moscowCarP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg"))); // NOI18N
-        moscowCarP2Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                moscowCarP2LabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                moscowCarP2LabelMouseExited(evt);
-            }
-        });
         player2Panel.add(moscowCarP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
 
         londonExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
@@ -335,35 +357,57 @@ public class MapPanel extends javax.swing.JPanel {
 
         menuCardsPlayer.addTab("Joueur 2", player2Panel);
 
+        player3Panel.setOpaque(false);
         player3Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         palestineExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/palestineExcavation.jpg"))); // NOI18N
         player3Panel.add(palestineExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
 
         berlinEtnoP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/85.jpg"))); // NOI18N
+        berlinEtnoP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinEtnoP3LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinEtnoP3LabelMouseExited(evt);
+            }
+        });
         player3Panel.add(berlinEtnoP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, -1, -1));
 
         berlinGenKnowledgeP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/31.jpg"))); // NOI18N
+        berlinGenKnowledgeP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinGenKnowledgeP3LabelMouseExited(evt);
+            }
+        });
         player3Panel.add(berlinGenKnowledgeP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
 
         berlinCongressP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
-        berlinCongressP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                berlinCongressP3LabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                berlinCongressP3LabelMouseExited(evt);
-            }
-        });
         player3Panel.add(berlinCongressP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
 
         berlinAssistantP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/18.jpg"))); // NOI18N
+        berlinAssistantP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinAssistantP3LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinAssistantP3LabelMouseExited(evt);
+            }
+        });
         player3Panel.add(berlinAssistantP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
 
         romaZeppelinP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/3.jpg"))); // NOI18N
         player3Panel.add(romaZeppelinP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
 
         moscowScienKnowledgeP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/74.jpg"))); // NOI18N
+        moscowScienKnowledgeP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                moscowScienKnowledgeP3LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                moscowScienKnowledgeP3LabelMouseExited(evt);
+            }
+        });
         player3Panel.add(moscowScienKnowledgeP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 360, -1, -1));
 
         mesopotamiaNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/blueNull.png"))); // NOI18N
@@ -376,26 +420,34 @@ public class MapPanel extends javax.swing.JPanel {
         player3Panel.add(creteExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
 
         berlinSmallExpoP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/88.jpg"))); // NOI18N
+        berlinSmallExpoP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinSmallExpoP3LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinSmallExpoP3LabelMouseExited(evt);
+            }
+        });
         player3Panel.add(berlinSmallExpoP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 390, -1, -1));
 
         greeceExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/greeceExcavation.jpg"))); // NOI18N
         player3Panel.add(greeceExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
 
         moscowCarP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg"))); // NOI18N
-        moscowCarP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                moscowCarP3LabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                moscowCarP3LabelMouseExited(evt);
-            }
-        });
         player3Panel.add(moscowCarP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
 
         londonExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
         player3Panel.add(londonExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
 
         londonShovelP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/22.jpg"))); // NOI18N
+        londonShovelP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                londonShovelP3LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                londonShovelP3LabelMouseExited(evt);
+            }
+        });
         player3Panel.add(londonShovelP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
 
         egyptExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/egyptExcavation.jpg"))); // NOI18N
@@ -430,14 +482,6 @@ public class MapPanel extends javax.swing.JPanel {
         player4Panel.add(berlinGenKnowledgeP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
 
         berlinCongressP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
-        berlinCongressP4Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                berlinCongressP4LabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                berlinCongressP4LabelMouseExited(evt);
-            }
-        });
         player4Panel.add(berlinCongressP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
 
         berlinAssistantP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/18.jpg"))); // NOI18N
@@ -465,14 +509,6 @@ public class MapPanel extends javax.swing.JPanel {
         player4Panel.add(greeceExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
 
         moscowCarP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg"))); // NOI18N
-        moscowCarP4Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                moscowCarP4LabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                moscowCarP4LabelMouseExited(evt);
-            }
-        });
         player4Panel.add(moscowCarP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
 
         londonExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
@@ -550,7 +586,7 @@ public class MapPanel extends javax.swing.JPanel {
         for (Card c : p1.getCards()) {
             if (c instanceof CongressCard) {
                 javax.swing.JLabel k = new javax.swing.JLabel();
-                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/8.jpg")));
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
                 displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
             }
         }
@@ -567,7 +603,7 @@ public class MapPanel extends javax.swing.JPanel {
         for (Card c : p1.getCards()) {
             if (c instanceof CarCard) {
                 javax.swing.JLabel k = new javax.swing.JLabel();
-                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg")));
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
                 displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
             }
         }
@@ -579,53 +615,141 @@ public class MapPanel extends javax.swing.JPanel {
         displayedCardPanel.removeAll();
     }//GEN-LAST:event_moscowCarP1LabelMouseExited
 
-    private void berlinCongressP2LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP2LabelMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_berlinCongressP2LabelMouseEntered
+    private void londonExcavationP1LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonExcavationP1LabelMouseEntered
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof ExcavationAuthorizationCard) {
+                javax.swing.JLabel k = new javax.swing.JLabel();
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+            }
+        }
+        usedCardsMenu.updateUI();
+    }//GEN-LAST:event_londonExcavationP1LabelMouseEntered
 
-    private void berlinCongressP2LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP2LabelMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_berlinCongressP2LabelMouseExited
+    private void londonExcavationP1LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonExcavationP1LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_londonExcavationP1LabelMouseExited
 
-    private void moscowCarP2LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP2LabelMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_moscowCarP2LabelMouseEntered
+    private void romaZeppelinP1LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_romaZeppelinP1LabelMouseEntered
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof ZeppelinCard) {
+                javax.swing.JLabel k = new javax.swing.JLabel();
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+            }
+        }
+        usedCardsMenu.updateUI();
+    }//GEN-LAST:event_romaZeppelinP1LabelMouseEntered
 
-    private void moscowCarP2LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP2LabelMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_moscowCarP2LabelMouseExited
+    private void romaZeppelinP1LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_romaZeppelinP1LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_romaZeppelinP1LabelMouseExited
 
-    private void berlinCongressP3LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP3LabelMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_berlinCongressP3LabelMouseEntered
+    private void berlinGenKnowledgeP1LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinGenKnowledgeP1LabelMouseEntered
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof GeneralKnowledgeCard) {
+                javax.swing.JLabel k = new javax.swing.JLabel();
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+            }
+        }
+        usedCardsMenu.updateUI();
+    }//GEN-LAST:event_berlinGenKnowledgeP1LabelMouseEntered
 
-    private void berlinCongressP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP3LabelMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_berlinCongressP3LabelMouseExited
+    private void berlinGenKnowledgeP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinGenKnowledgeP3LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_berlinGenKnowledgeP3LabelMouseExited
 
-    private void moscowCarP3LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP3LabelMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_moscowCarP3LabelMouseEntered
+    private void berlinEtnoP3LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinEtnoP3LabelMouseEntered
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof EthnologicalKnowledgeCard) {
+                javax.swing.JLabel k = new javax.swing.JLabel();
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+            }
+        }
+        usedCardsMenu.updateUI();
+    }//GEN-LAST:event_berlinEtnoP3LabelMouseEntered
 
-    private void moscowCarP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP3LabelMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_moscowCarP3LabelMouseExited
+    private void berlinEtnoP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinEtnoP3LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_berlinEtnoP3LabelMouseExited
 
-    private void berlinCongressP4LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP4LabelMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_berlinCongressP4LabelMouseEntered
+    private void londonShovelP3LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonShovelP3LabelMouseEntered
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof ShovelCard) {
+                javax.swing.JLabel k = new javax.swing.JLabel();
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+            }
+        }
+        usedCardsMenu.updateUI();
+    }//GEN-LAST:event_londonShovelP3LabelMouseEntered
 
-    private void berlinCongressP4LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP4LabelMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_berlinCongressP4LabelMouseExited
+    private void londonShovelP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonShovelP3LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_londonShovelP3LabelMouseExited
 
-    private void moscowCarP4LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP4LabelMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_moscowCarP4LabelMouseEntered
+    private void berlinAssistantP3LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinAssistantP3LabelMouseEntered
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof AssistantCard) {
+                javax.swing.JLabel k = new javax.swing.JLabel();
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+            }
+        }
+        usedCardsMenu.updateUI();
+    }//GEN-LAST:event_berlinAssistantP3LabelMouseEntered
 
-    private void moscowCarP4LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP4LabelMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_moscowCarP4LabelMouseExited
+    private void berlinAssistantP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinAssistantP3LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_berlinAssistantP3LabelMouseExited
+
+    private void moscowScienKnowledgeP3LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowScienKnowledgeP3LabelMouseEntered
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof SpecificKnowledgeCard) {
+                javax.swing.JLabel k = new javax.swing.JLabel();
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+            }
+        }
+        usedCardsMenu.updateUI();
+    }//GEN-LAST:event_moscowScienKnowledgeP3LabelMouseEntered
+
+    private void moscowScienKnowledgeP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowScienKnowledgeP3LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_moscowScienKnowledgeP3LabelMouseExited
+
+    private void berlinSmallExpoP3LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinSmallExpoP3LabelMouseEntered
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof ExpoCard) {
+                javax.swing.JLabel k = new javax.swing.JLabel();
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+            }
+        }
+        usedCardsMenu.updateUI();
+    }//GEN-LAST:event_berlinSmallExpoP3LabelMouseEntered
+
+    private void berlinSmallExpoP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinSmallExpoP3LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_berlinSmallExpoP3LabelMouseExited
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel backgroundLabel;
     private javax.swing.JLabel berlinAssistantP1Label;
