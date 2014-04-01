@@ -18,10 +18,13 @@
 package com.miage.game;
 
 import com.miage.cards.Card;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * 
@@ -30,11 +33,19 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Deck extends LinkedList<Card>{
 	
+        private final static Logger LOGGER = LogManager.getLogger(Deck.class.getName());
+    
 	
 	public Deck(){
 		
 	}
-	
+
+        public Deck(Collection<? extends Card> c) {
+            super(c);
+        }
+
+        
+
 	
 	/**
 	 * Draw the first card of the deck
@@ -81,16 +92,42 @@ public class Deck extends LinkedList<Card>{
 	 * @param fromIndex index of beginning
 	 * @param toIndex index of end
 	 * @return a new Deck containing the part of the first deck
+         * @deprecated 
 	 */
-	public Deck divideDeck(int fromIndex, int toIndex){
+	public Deck getPartOfDeck(int fromIndex, int toIndex){
             Deck result = new Deck();
             for(int i = fromIndex; i <= toIndex; i++){
                     result.addCard(this.get(i));
             }
             return result;
 	}
+        
+        /**
+         * Return the deck divided in (nbPart) decks inside an array
+         * @param nbPart
+         * @return Deck[] the array of divided decks
+         */
+        public Deck[] getDividedDeck( int nbPart ){ // 2
+            Deck[] decksReturn = new Deck[nbPart];
+            int indexRatio = this.size() / nbPart; // get the lower (5/2 = 2 and not 2,5 or 3)
+            int to = 0, from;
+            for (int i = 0; i < nbPart; i++) {
+                from = to;
+                if (i == nbPart - 1) to = this.size(); // case of we are in the last part we get the size - 1 in order to cover unpair number of (nbPart) (because of int to = this.size() / nbPart;)
+                else to = to + indexRatio;
+                LOGGER.debug("getDividedDeck : from " + from + ", to " + to + " of a deck sizeof : " + this.size());
+                decksReturn[i] = new Deck( this.subList(from, to) );
+            }
+            return decksReturn;
+        }
 	
         
+        /**
+         * @deprecated 
+         * @param cardsNumbers
+         * @param classOfKey
+         * @return 
+         */
         public static HashMap<Object, Integer> transformListOfCard( List<String> cardsNumbers , Class classOfKey){
             HashMap<Object, Integer> cardsInsideDeck = new HashMap<Object, Integer>();
             for (String numberStr : cardsNumbers) {
@@ -110,5 +147,9 @@ public class Deck extends LinkedList<Card>{
             return cardsInsideDeck;
         }
 	
+        
+        public Card[] pickFourFirstCards(){
+            return new Card[]{ this.pick(), this.pick(), this.pick(), this.pick()};
+        }
         
 }

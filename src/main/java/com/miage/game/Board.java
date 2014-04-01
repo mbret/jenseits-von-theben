@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  */
 public class Board {
     
-    private final static Logger LOGGER = LogManager.getLogger(SAMPLECLASS.class.getName());
+    private final static Logger LOGGER = LogManager.getLogger(Board.class.getName());
     
     private int nbPlayers;
 
@@ -231,13 +231,13 @@ public class Board {
     /**
      * Initialization of the decks
      * - we get all cards from the config
-     * - we get all number of cards present in each decks
-     * - we instantiate new cards and we put in the decks which contains these cards
+     * - we instantiate new cards and we put these cards inside first deck
      * - we run process to finish deck (cute, mix, etc)
      * @author maxime
      */
     private void initDecks() throws IOException{
 
+        ArrayList<ExpoCard> expoCards = new ArrayList<ExpoCard>(); // used to retain apart expo cards
         Deck firstDeck = new Deck();
         Deck deck1 = new Deck();
         Deck deck2 = new Deck();
@@ -249,18 +249,6 @@ public class Board {
         HashMap<Object, Integer> cardsInsideSideDeck;   // above ..
                 
 
-        // We get all card's numbers inside this deck (these cards can be in mutliple occurance)
-        cardsInsideFirstDeckUnsorted.addAll( Arrays.asList( ConfigManager.getInstance().getConfig( ConfigManager.CARDS_CONFIG_NAME ).getProperty( "deck.firstDeck.cards" ).split("\\,") ));
-        cardsInsideDeck2Unsorted.addAll( Arrays.asList( ConfigManager.getInstance().getConfig( ConfigManager.CARDS_CONFIG_NAME ).getProperty( "deck.2.cards" ).split("\\,") ));
-        cardsInsideDeck2Unsorted.addAll( Arrays.asList( ConfigManager.getInstance().getConfig( ConfigManager.CARDS_CONFIG_NAME ).getProperty( "deck.2.cards.players." + nbPlayers ).split("\\,"))); // we add the cards relating to how many players
-        cardsInsideSideDeckUnsorted.addAll( Arrays.asList( ConfigManager.getInstance().getConfig( ConfigManager.CARDS_CONFIG_NAME ).getProperty( "deck.sideDeck.cards" ).split("\\,")) );
-        cardsInsideSideDeckUnsorted.addAll( Arrays.asList( ConfigManager.getInstance().getConfig( ConfigManager.CARDS_CONFIG_NAME ).getProperty( "deck.sideDeck.cards.players." + nbPlayers ).split("\\,") )); // we add the cards relating to how many players
-        
-        // We transform the list of cards to an hashmap with their occurance
-        cardsInsideFirstDeck = Deck.transformListOfCard( cardsInsideFirstDeckUnsorted, String.class );
-        cardsInsideDeck2 = Deck.transformListOfCard( cardsInsideDeck2Unsorted, String.class );
-        cardsInsideSideDeck = Deck.transformListOfCard( cardsInsideSideDeckUnsorted, String.class );
-        
         // Main loop to init cards, and add to the decks
         HashMap<String, String> cardsEntriesFromConfig = ConfigManager.getInstance().getConfigEntriesWithKeysBeginningBy(ConfigManager.CARDS_CONFIG_NAME, "card");
         for (Entry<String, String> entry : cardsEntriesFromConfig.entrySet()) {
@@ -268,7 +256,7 @@ public class Board {
             /**
              * Here we get basic information from the key and the values
              */
-            String cardNumberString = entry.getKey().substring( "card.".length() );  // get only the number of the card (card.x) -> x
+//            String cardNumberString = entry.getKey().substring( "card.".length() );  // get only the number of the card (card.x) -> x
             String[] values = entry.getValue().split("\\,"); // split values line
             String area = values[0];
             String type = values[1];
@@ -316,52 +304,46 @@ public class Board {
                 newCard = new ExpoCard(area, weekCost, bigExpo);
             }
             
-            LOGGER.debug("current card : " + newCard);
-            /**
-             * Here we check if the card should be added to the different deck and how many time
-             */
-            // Deck 1
-            if(cardsInsideFirstDeck.containsKey( cardNumberString )){
-                for (int i = 0; i < cardsInsideFirstDeck.get( cardNumberString ); i++) {
-                    firstDeck.add( newCard );
-                }
+            // We add the card inside deck but we retain expo card
+            if( newCard instanceof ExpoCard){
+                expoCards.add( (ExpoCard)newCard );
             }
-            // Deck 2
-            if(cardsInsideDeck2.containsKey( cardNumberString )){
-                for (int i = 0; i < cardsInsideDeck2.get( cardNumberString ); i++) {
-                    deck2.add( newCard );
-                }
-            }
-            // sidedeck
-            if(cardsInsideSideDeck.containsKey( cardNumberString )){
-                for (int i = 0; i < cardsInsideSideDeck.get( cardNumberString ); i++) {
-                    this.sideDeck.add( newCard );
-                }
+            else{
+                firstDeck.add( newCard );
             }
         }
-
-        /*
-         * Mix of the first deck and initialization of the four cards on the board
-         */
-        firstDeck.mix();
-        int indexOfPartOneOfThree = (firstDeck.size()/3);
-        deck1           = firstDeck.divideDeck( 0, indexOfPartOneOfThree ); // deck 1 contain the part 1/3
-        deck2           = firstDeck.divideDeck( indexOfPartOneOfThree, indexOfPartOneOfThree + indexOfPartOneOfThree ); // deck 2 contain part 2/3
-        this.sideDeck   = firstDeck.divideDeck( ( indexOfPartOneOfThree + indexOfPartOneOfThree ), firstDeck.size()-1 ); // side deck contain part 3/3
         
-        if(this.nbPlayers <= 2){
-            this.sideDeck.clear();
+        // We transform the list of cards to an hashmap with their occurance
+        cardsInsideFirstDeck = Deck.transformListOfCard( cardsInsideFirstDeckUnsorted, String.class );
+        cardsInsideDeck2 = Deck.transformListOfCard( cardsInsideDeck2Unsorted, String.class );
+        cardsInsideSideDeck = Deck.transformListOfCard( cardsInsideSideDeckUnsorted, String.class );
+        
+        firstDeck.mix(); // We mix the big deck
+//        LOGGER.debug("initDecks : sizeof firsDeck : " + firstDeck.size());
+        this.fourCurrentCards = firstDeck.pickFourFirstCards(); // We Pick the four first cards from the main deck
+        Deck[] dividedDecks;
+
+        if(nbPlayers <= 2){
+            dividedDecks = firstDeck.getDividedDeck( 2 ); // only 2 decks
+            dividedDecks[1].addAll( expoCards ); // we add all expo in deck 2
+            this.sideDeck = new Deck(); // sideDeck is null/empty
         }
-        
-        deck2.mix();
-        this.deck.addAll(deck2);
-        this.deck.addAll(deck1);
+        else{
+            dividedDecks = firstDeck.getDividedDeck( 3 ); // three equal decks
+            for (ExpoCard card : expoCards) {
+                if( ! card.isBigExpo()){
+                    dividedDecks[1].add( card ); // add small expo in deck 2
+                }
+                if( card.isBigExpo()){
+                    dividedDecks[2].add( card ); // add big expo in deck 3
+                }
+            }
+            this.sideDeck = dividedDecks[2];
+            this.sideDeck.mix();
+        }
 
-        // Pick four card inside main deck and put on the board
-        this.fourCurrentCards[0] = this.deck.pick();
-        this.fourCurrentCards[1] = this.deck.pick();
-        this.fourCurrentCards[2] = this.deck.pick();
-        this.fourCurrentCards[3] = this.deck.pick();
+        dividedDecks[1].addAll( dividedDecks[0] ); // we put deck1 on deck2
+        this.deck = new Deck( dividedDecks[1] ); // tmp deck 1 & 2 become main deck
     }
     
     /**
