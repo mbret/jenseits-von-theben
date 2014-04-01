@@ -64,82 +64,82 @@ public class MapPanel extends javax.swing.JPanel {
         moscowScienKnowledgeP1Label = new javax.swing.JLabel();
         londonShovelP1Label = new javax.swing.JLabel();
         berlinSmallExpoP1Label = new javax.swing.JLabel();
-        blueExcavationP1Label = new javax.swing.JLabel();
-        greenExcavationP1Label = new javax.swing.JLabel();
-        yellowExcavationP1Label = new javax.swing.JLabel();
-        purpleExcavationP1Label = new javax.swing.JLabel();
-        orangeExcavationP1Label = new javax.swing.JLabel();
-        blueNullTokenP1Label = new javax.swing.JLabel();
-        greenNullTokenP1Label = new javax.swing.JLabel();
-        orangeNullTokenP1Label = new javax.swing.JLabel();
-        purpleNullTokenP1Label = new javax.swing.JLabel();
-        yellowNullTokenP1Label = new javax.swing.JLabel();
+        mesopotamiaExcavationP1Label = new javax.swing.JLabel();
+        palestineExcavationP1Label = new javax.swing.JLabel();
+        egyptExcavationP1Label = new javax.swing.JLabel();
+        creteExcavationP1Label = new javax.swing.JLabel();
+        greeceExcavationP1Label = new javax.swing.JLabel();
+        mesopotamiaNullTokenP1Label = new javax.swing.JLabel();
+        palestineNullTokenP1Label = new javax.swing.JLabel();
+        greeceNullTokenP1Label = new javax.swing.JLabel();
+        creteNullTokenP1Label = new javax.swing.JLabel();
+        egyptNullTokenP1Label = new javax.swing.JLabel();
         player1BackgroundLabel = new javax.swing.JLabel();
         player2Panel = new javax.swing.JPanel();
-        berlinAssistantP2Label = new javax.swing.JLabel();
-        moscowCarP2Label = new javax.swing.JLabel();
+        palestineExcavationP2Label = new javax.swing.JLabel();
         berlinEtnoP2Label = new javax.swing.JLabel();
-        romaZeppelinP2Label = new javax.swing.JLabel();
-        londonExcavationP2Label = new javax.swing.JLabel();
-        berlinCongressP2Label = new javax.swing.JLabel();
         berlinGenKnowledgeP2Label = new javax.swing.JLabel();
+        berlinCongressP2Label = new javax.swing.JLabel();
+        berlinAssistantP2Label = new javax.swing.JLabel();
+        romaZeppelinP2Label = new javax.swing.JLabel();
         moscowScienKnowledgeP2Label = new javax.swing.JLabel();
-        londonShovelP2Label = new javax.swing.JLabel();
+        mesopotamiaNullTokenP2Label = new javax.swing.JLabel();
+        mesopotamiaExcavationP2Label = new javax.swing.JLabel();
+        creteExcavationP2Label = new javax.swing.JLabel();
         berlinSmallExpoP2Label = new javax.swing.JLabel();
-        blueExcavationP2Label = new javax.swing.JLabel();
-        greenExcavationP2Label = new javax.swing.JLabel();
-        yellowExcavationP2Label = new javax.swing.JLabel();
-        orangeExcavationP2Label = new javax.swing.JLabel();
-        purpleExcavationP2Label = new javax.swing.JLabel();
-        blueNullTokenP2Label = new javax.swing.JLabel();
-        greenNullTokenP2Label = new javax.swing.JLabel();
-        orangeNullTokenP2Label = new javax.swing.JLabel();
-        purpleNullTokenP2Label = new javax.swing.JLabel();
-        yellowNullTokenP2Label = new javax.swing.JLabel();
+        greeceExcavationP2Label = new javax.swing.JLabel();
+        moscowCarP2Label = new javax.swing.JLabel();
+        londonExcavationP2Label = new javax.swing.JLabel();
+        londonShovelP2Label = new javax.swing.JLabel();
+        egyptExcavationP2Label = new javax.swing.JLabel();
+        greeceNullTokenP2Label = new javax.swing.JLabel();
+        palestineNullTokenP2Label = new javax.swing.JLabel();
+        creteNullTokenP2Label = new javax.swing.JLabel();
+        egyptNullTokenP2Label = new javax.swing.JLabel();
         player2BackgroundLabel = new javax.swing.JLabel();
         player3Panel = new javax.swing.JPanel();
-        berlinAssistantP3Label = new javax.swing.JLabel();
-        moscowCarP3Label = new javax.swing.JLabel();
+        palestineExcavationP3Label = new javax.swing.JLabel();
         berlinEtnoP3Label = new javax.swing.JLabel();
-        romaZeppelinP3Label = new javax.swing.JLabel();
-        londonExcavationP3Label = new javax.swing.JLabel();
-        berlinCongressP3Label = new javax.swing.JLabel();
         berlinGenKnowledgeP3Label = new javax.swing.JLabel();
+        berlinCongressP3Label = new javax.swing.JLabel();
+        berlinAssistantP3Label = new javax.swing.JLabel();
+        romaZeppelinP3Label = new javax.swing.JLabel();
         moscowScienKnowledgeP3Label = new javax.swing.JLabel();
-        londonShovelP3Label = new javax.swing.JLabel();
+        mesopotamiaNullTokenP3Label = new javax.swing.JLabel();
+        mesopotamiaExcavationP3Label = new javax.swing.JLabel();
+        creteExcavationP3Label = new javax.swing.JLabel();
         berlinSmallExpoP3Label = new javax.swing.JLabel();
-        blueExcavationP3Label = new javax.swing.JLabel();
-        greenExcavationP3Label = new javax.swing.JLabel();
-        yellowExcavationP3Label = new javax.swing.JLabel();
-        orangeExcavationP3Label = new javax.swing.JLabel();
-        purpleExcavationP3Label = new javax.swing.JLabel();
-        blueNullTokenP3Label = new javax.swing.JLabel();
-        greenNullTokenP3Label = new javax.swing.JLabel();
-        orangeNullTokenP3Label = new javax.swing.JLabel();
-        purpleNullTokenP3Label = new javax.swing.JLabel();
-        yellowNullTokenP3Label = new javax.swing.JLabel();
+        greeceExcavationP3Label = new javax.swing.JLabel();
+        moscowCarP3Label = new javax.swing.JLabel();
+        londonExcavationP3Label = new javax.swing.JLabel();
+        londonShovelP3Label = new javax.swing.JLabel();
+        egyptExcavationP3Label = new javax.swing.JLabel();
+        greeceNullTokenP3Label = new javax.swing.JLabel();
+        palestineNullTokenP3Label = new javax.swing.JLabel();
+        creteNullTokenP3Label = new javax.swing.JLabel();
+        egyptNullTokenP3Label = new javax.swing.JLabel();
         player3BackgroundLabel = new javax.swing.JLabel();
         player4Panel = new javax.swing.JPanel();
-        berlinAssistantP4Label = new javax.swing.JLabel();
-        moscowCarP4Label = new javax.swing.JLabel();
+        palestineExcavationP4Label = new javax.swing.JLabel();
         berlinEtnoP4Label = new javax.swing.JLabel();
-        romaZeppelinP4Label = new javax.swing.JLabel();
-        londonExcavationP4Label = new javax.swing.JLabel();
-        berlinCongressP4Label = new javax.swing.JLabel();
         berlinGenKnowledgeP4Label = new javax.swing.JLabel();
+        berlinCongressP4Label = new javax.swing.JLabel();
+        berlinAssistantP4Label = new javax.swing.JLabel();
+        romaZeppelinP4Label = new javax.swing.JLabel();
         moscowScienKnowledgeP4Label = new javax.swing.JLabel();
-        londonShovelP4Label = new javax.swing.JLabel();
+        mesopotamiaNullTokenP4Label = new javax.swing.JLabel();
+        mesopotamiaExcavationP4Label = new javax.swing.JLabel();
+        creteExcavationP4Label = new javax.swing.JLabel();
         berlinSmallExpoP4Label = new javax.swing.JLabel();
-        blueExcavationP4Label = new javax.swing.JLabel();
-        greenExcavationP4Label = new javax.swing.JLabel();
-        yellowExcavationP4Label = new javax.swing.JLabel();
-        orangeExcavationP4Label = new javax.swing.JLabel();
-        purpleExcavationP4Label = new javax.swing.JLabel();
-        blueNullTokenP4Label = new javax.swing.JLabel();
-        greenNullTokenP4Label = new javax.swing.JLabel();
-        orangeNullTokenP4Label = new javax.swing.JLabel();
-        purpleNullTokenP4Label = new javax.swing.JLabel();
-        yellowNullTokenP4Label = new javax.swing.JLabel();
+        greeceExcavationP4Label = new javax.swing.JLabel();
+        moscowCarP4Label = new javax.swing.JLabel();
+        londonExcavationP4Label = new javax.swing.JLabel();
+        londonShovelP4Label = new javax.swing.JLabel();
+        egyptExcavationP4Label = new javax.swing.JLabel();
+        greeceNullTokenP4Label = new javax.swing.JLabel();
+        palestineNullTokenP4Label = new javax.swing.JLabel();
+        creteNullTokenP4Label = new javax.swing.JLabel();
+        egyptNullTokenP4Label = new javax.swing.JLabel();
         player4BackgroundLabel = new javax.swing.JLabel();
         logMenu = new javax.swing.JPanel();
         logMenuScrollBar = new javax.swing.JScrollBar();
@@ -152,7 +152,7 @@ public class MapPanel extends javax.swing.JPanel {
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        openMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/background/arrowRight.png"))); // NOI18N
+        openMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/arrowRight.png"))); // NOI18N
         openMenuLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 openMenuLabelMouseClicked(evt);
@@ -160,7 +160,7 @@ public class MapPanel extends javax.swing.JPanel {
         });
         add(openMenuLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        closeMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/background/arrowLeft.png"))); // NOI18N
+        closeMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/arrowLeft.png"))); // NOI18N
         closeMenuLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 closeMenuLabelMouseClicked(evt);
@@ -171,10 +171,10 @@ public class MapPanel extends javax.swing.JPanel {
 
         player1Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        berlinAssistantP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/assistant/berlinAssitant.png"))); // NOI18N
+        berlinAssistantP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/18.jpg"))); // NOI18N
         player1Panel.add(berlinAssistantP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
 
-        moscowCarP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/car/moscowCar.png"))); // NOI18N
+        moscowCarP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg"))); // NOI18N
         moscowCarP1Label.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 moscowCarP1LabelMouseEntered(evt);
@@ -185,16 +185,16 @@ public class MapPanel extends javax.swing.JPanel {
         });
         player1Panel.add(moscowCarP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
 
-        berlinEtnoP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/etnologicalKnowledge/berlinEtnoKnowledge.png"))); // NOI18N
+        berlinEtnoP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/85.jpg"))); // NOI18N
         player1Panel.add(berlinEtnoP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, -1, -1));
 
-        romaZeppelinP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/zeppelin/romZeppelin.png"))); // NOI18N
+        romaZeppelinP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/3.jpg"))); // NOI18N
         player1Panel.add(romaZeppelinP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
 
-        londonExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/excavations/londonExcavation.png"))); // NOI18N
+        londonExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
         player1Panel.add(londonExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
 
-        berlinCongressP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/congress/berlinCongress.png"))); // NOI18N
+        berlinCongressP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
         berlinCongressP1Label.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 berlinCongressP1LabelMouseEntered(evt);
@@ -205,250 +205,298 @@ public class MapPanel extends javax.swing.JPanel {
         });
         player1Panel.add(berlinCongressP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
 
-        berlinGenKnowledgeP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/generalKnowledge/oneBook/berlinGenKnowledge.png"))); // NOI18N
+        berlinGenKnowledgeP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/31.jpg"))); // NOI18N
         player1Panel.add(berlinGenKnowledgeP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
 
-        moscowScienKnowledgeP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/scientificKnowledge/oneBook/blue/moscowScienKnowledge.png"))); // NOI18N
+        moscowScienKnowledgeP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/74.jpg"))); // NOI18N
         player1Panel.add(moscowScienKnowledgeP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 360, -1, -1));
 
-        londonShovelP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/shovel/london.png"))); // NOI18N
+        londonShovelP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/22.jpg"))); // NOI18N
         player1Panel.add(londonShovelP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
 
-        berlinSmallExpoP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/smallExposition/berlinSmallExpo.png"))); // NOI18N
+        berlinSmallExpoP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/88.jpg"))); // NOI18N
         player1Panel.add(berlinSmallExpoP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 390, -1, -1));
 
-        blueExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/blueExcavation.png"))); // NOI18N
-        player1Panel.add(blueExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
+        mesopotamiaExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/mesopotamiaExcavation.jpg"))); // NOI18N
+        player1Panel.add(mesopotamiaExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
 
-        greenExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/greenExcavation.png"))); // NOI18N
-        player1Panel.add(greenExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
+        palestineExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/palestineExcavation.jpg"))); // NOI18N
+        player1Panel.add(palestineExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
 
-        yellowExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/yellowExcavation.png"))); // NOI18N
-        player1Panel.add(yellowExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
+        egyptExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/egyptExcavation.jpg"))); // NOI18N
+        player1Panel.add(egyptExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
 
-        purpleExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/violetExcavation.png"))); // NOI18N
-        player1Panel.add(purpleExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
+        creteExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/creteExcavation.jpg"))); // NOI18N
+        player1Panel.add(creteExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
 
-        orangeExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/orangeExcavation.png"))); // NOI18N
-        player1Panel.add(orangeExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
+        greeceExcavationP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/greeceExcavation.jpg"))); // NOI18N
+        player1Panel.add(greeceExcavationP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
 
-        blueNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/blue/blueNull.png"))); // NOI18N
-        player1Panel.add(blueNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
+        mesopotamiaNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/blueNull.png"))); // NOI18N
+        player1Panel.add(mesopotamiaNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
 
-        greenNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/green/greenNull.png"))); // NOI18N
-        player1Panel.add(greenNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
+        palestineNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/palestine/greenNull.png"))); // NOI18N
+        player1Panel.add(palestineNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
 
-        orangeNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/orange/orangeNull.png"))); // NOI18N
-        player1Panel.add(orangeNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
+        greeceNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/greece/orangeNull.png"))); // NOI18N
+        player1Panel.add(greeceNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
 
-        purpleNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/violet/purpleNull.png"))); // NOI18N
-        player1Panel.add(purpleNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
+        creteNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/crete/purpleNull.png"))); // NOI18N
+        player1Panel.add(creteNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
 
-        yellowNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/yellow/yellowNull.png"))); // NOI18N
-        player1Panel.add(yellowNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
+        egyptNullTokenP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/egypt/yellowNull.png"))); // NOI18N
+        player1Panel.add(egyptNullTokenP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
 
-        player1BackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/background/playerBackground.png"))); // NOI18N
+        player1BackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/playerBackground.jpg"))); // NOI18N
         player1Panel.add(player1BackgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         menuCardsPlayer.addTab("Joueur 1", player1Panel);
 
         player2Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        berlinAssistantP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/assistant/berlinAssitant.png"))); // NOI18N
-        player2Panel.add(berlinAssistantP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
+        palestineExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/palestineExcavation.jpg"))); // NOI18N
+        player2Panel.add(palestineExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
 
-        moscowCarP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/car/moscowCar.png"))); // NOI18N
-        player2Panel.add(moscowCarP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
-
-        berlinEtnoP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/etnologicalKnowledge/berlinEtnoKnowledge.png"))); // NOI18N
+        berlinEtnoP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/85.jpg"))); // NOI18N
         player2Panel.add(berlinEtnoP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, -1, -1));
 
-        romaZeppelinP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/zeppelin/romZeppelin.png"))); // NOI18N
-        player2Panel.add(romaZeppelinP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
-
-        londonExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/excavations/londonExcavation.png"))); // NOI18N
-        player2Panel.add(londonExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
-
-        berlinCongressP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/congress/berlinCongress.png"))); // NOI18N
-        player2Panel.add(berlinCongressP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
-
-        berlinGenKnowledgeP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/generalKnowledge/oneBook/berlinGenKnowledge.png"))); // NOI18N
+        berlinGenKnowledgeP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/31.jpg"))); // NOI18N
         player2Panel.add(berlinGenKnowledgeP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
 
-        moscowScienKnowledgeP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/scientificKnowledge/oneBook/blue/moscowScienKnowledge.png"))); // NOI18N
+        berlinCongressP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
+        berlinCongressP2Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinCongressP2LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinCongressP2LabelMouseExited(evt);
+            }
+        });
+        player2Panel.add(berlinCongressP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+
+        berlinAssistantP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/18.jpg"))); // NOI18N
+        player2Panel.add(berlinAssistantP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
+
+        romaZeppelinP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/3.jpg"))); // NOI18N
+        player2Panel.add(romaZeppelinP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
+
+        moscowScienKnowledgeP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/74.jpg"))); // NOI18N
         player2Panel.add(moscowScienKnowledgeP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 360, -1, -1));
 
-        londonShovelP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/shovel/london.png"))); // NOI18N
-        player2Panel.add(londonShovelP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
+        mesopotamiaNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/blueNull.png"))); // NOI18N
+        player2Panel.add(mesopotamiaNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
 
-        berlinSmallExpoP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/smallExposition/berlinSmallExpo.png"))); // NOI18N
+        mesopotamiaExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/mesopotamiaExcavation.jpg"))); // NOI18N
+        player2Panel.add(mesopotamiaExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
+
+        creteExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/creteExcavation.jpg"))); // NOI18N
+        player2Panel.add(creteExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
+
+        berlinSmallExpoP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/88.jpg"))); // NOI18N
         player2Panel.add(berlinSmallExpoP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 390, -1, -1));
 
-        blueExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/blueExcavation.png"))); // NOI18N
-        player2Panel.add(blueExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
+        greeceExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/greeceExcavation.jpg"))); // NOI18N
+        player2Panel.add(greeceExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
 
-        greenExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/greenExcavation.png"))); // NOI18N
-        player2Panel.add(greenExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
+        moscowCarP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg"))); // NOI18N
+        moscowCarP2Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                moscowCarP2LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                moscowCarP2LabelMouseExited(evt);
+            }
+        });
+        player2Panel.add(moscowCarP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
 
-        yellowExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/yellowExcavation.png"))); // NOI18N
-        player2Panel.add(yellowExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
+        londonExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
+        player2Panel.add(londonExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
 
-        orangeExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/orangeExcavation.png"))); // NOI18N
-        player2Panel.add(orangeExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
+        londonShovelP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/22.jpg"))); // NOI18N
+        player2Panel.add(londonShovelP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
 
-        purpleExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/violetExcavation.png"))); // NOI18N
-        player2Panel.add(purpleExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
+        egyptExcavationP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/egyptExcavation.jpg"))); // NOI18N
+        player2Panel.add(egyptExcavationP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
 
-        blueNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/blue/blueNull.png"))); // NOI18N
-        player2Panel.add(blueNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
+        greeceNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/greece/orangeNull.png"))); // NOI18N
+        player2Panel.add(greeceNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
 
-        greenNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/green/greenNull.png"))); // NOI18N
-        player2Panel.add(greenNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
+        palestineNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/palestine/greenNull.png"))); // NOI18N
+        player2Panel.add(palestineNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
 
-        orangeNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/orange/orangeNull.png"))); // NOI18N
-        player2Panel.add(orangeNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
+        creteNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/crete/purpleNull.png"))); // NOI18N
+        player2Panel.add(creteNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
 
-        purpleNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/violet/purpleNull.png"))); // NOI18N
-        player2Panel.add(purpleNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
+        egyptNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/egypt/yellowNull.png"))); // NOI18N
+        player2Panel.add(egyptNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
 
-        yellowNullTokenP2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/yellow/yellowNull.png"))); // NOI18N
-        player2Panel.add(yellowNullTokenP2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
-
-        player2BackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/background/playerBackground.png"))); // NOI18N
+        player2BackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/playerBackground.jpg"))); // NOI18N
         player2Panel.add(player2BackgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         menuCardsPlayer.addTab("Joueur 2", player2Panel);
 
         player3Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        berlinAssistantP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/assistant/berlinAssitant.png"))); // NOI18N
-        player3Panel.add(berlinAssistantP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
+        palestineExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/palestineExcavation.jpg"))); // NOI18N
+        player3Panel.add(palestineExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
 
-        moscowCarP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/car/moscowCar.png"))); // NOI18N
-        player3Panel.add(moscowCarP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
-
-        berlinEtnoP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/etnologicalKnowledge/berlinEtnoKnowledge.png"))); // NOI18N
+        berlinEtnoP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/85.jpg"))); // NOI18N
         player3Panel.add(berlinEtnoP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, -1, -1));
 
-        romaZeppelinP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/zeppelin/romZeppelin.png"))); // NOI18N
-        player3Panel.add(romaZeppelinP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
-
-        londonExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/excavations/londonExcavation.png"))); // NOI18N
-        player3Panel.add(londonExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
-
-        berlinCongressP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/congress/berlinCongress.png"))); // NOI18N
-        player3Panel.add(berlinCongressP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
-
-        berlinGenKnowledgeP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/generalKnowledge/oneBook/berlinGenKnowledge.png"))); // NOI18N
+        berlinGenKnowledgeP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/31.jpg"))); // NOI18N
         player3Panel.add(berlinGenKnowledgeP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
 
-        moscowScienKnowledgeP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/scientificKnowledge/oneBook/blue/moscowScienKnowledge.png"))); // NOI18N
+        berlinCongressP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
+        berlinCongressP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinCongressP3LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinCongressP3LabelMouseExited(evt);
+            }
+        });
+        player3Panel.add(berlinCongressP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+
+        berlinAssistantP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/18.jpg"))); // NOI18N
+        player3Panel.add(berlinAssistantP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
+
+        romaZeppelinP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/3.jpg"))); // NOI18N
+        player3Panel.add(romaZeppelinP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
+
+        moscowScienKnowledgeP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/74.jpg"))); // NOI18N
         player3Panel.add(moscowScienKnowledgeP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 360, -1, -1));
 
-        londonShovelP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/shovel/london.png"))); // NOI18N
-        player3Panel.add(londonShovelP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
+        mesopotamiaNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/blueNull.png"))); // NOI18N
+        player3Panel.add(mesopotamiaNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
 
-        berlinSmallExpoP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/smallExposition/berlinSmallExpo.png"))); // NOI18N
+        mesopotamiaExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/mesopotamiaExcavation.jpg"))); // NOI18N
+        player3Panel.add(mesopotamiaExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
+
+        creteExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/creteExcavation.jpg"))); // NOI18N
+        player3Panel.add(creteExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
+
+        berlinSmallExpoP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/88.jpg"))); // NOI18N
         player3Panel.add(berlinSmallExpoP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 390, -1, -1));
 
-        blueExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/blueExcavation.png"))); // NOI18N
-        player3Panel.add(blueExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
+        greeceExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/greeceExcavation.jpg"))); // NOI18N
+        player3Panel.add(greeceExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
 
-        greenExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/greenExcavation.png"))); // NOI18N
-        player3Panel.add(greenExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
+        moscowCarP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg"))); // NOI18N
+        moscowCarP3Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                moscowCarP3LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                moscowCarP3LabelMouseExited(evt);
+            }
+        });
+        player3Panel.add(moscowCarP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
 
-        yellowExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/yellowExcavation.png"))); // NOI18N
-        player3Panel.add(yellowExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
+        londonExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
+        player3Panel.add(londonExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
 
-        orangeExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/orangeExcavation.png"))); // NOI18N
-        player3Panel.add(orangeExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
+        londonShovelP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/22.jpg"))); // NOI18N
+        player3Panel.add(londonShovelP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
 
-        purpleExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/violetExcavation.png"))); // NOI18N
-        player3Panel.add(purpleExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
+        egyptExcavationP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/egyptExcavation.jpg"))); // NOI18N
+        player3Panel.add(egyptExcavationP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
 
-        blueNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/blue/blueNull.png"))); // NOI18N
-        player3Panel.add(blueNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
+        greeceNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/greece/orangeNull.png"))); // NOI18N
+        player3Panel.add(greeceNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
 
-        greenNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/green/greenNull.png"))); // NOI18N
-        player3Panel.add(greenNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
+        palestineNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/palestine/greenNull.png"))); // NOI18N
+        player3Panel.add(palestineNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
 
-        orangeNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/orange/orangeNull.png"))); // NOI18N
-        player3Panel.add(orangeNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
+        creteNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/crete/purpleNull.png"))); // NOI18N
+        player3Panel.add(creteNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
 
-        purpleNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/violet/purpleNull.png"))); // NOI18N
-        player3Panel.add(purpleNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
+        egyptNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/egypt/yellowNull.png"))); // NOI18N
+        player3Panel.add(egyptNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
 
-        yellowNullTokenP3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/yellow/yellowNull.png"))); // NOI18N
-        player3Panel.add(yellowNullTokenP3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
-
-        player3BackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/background/playerBackground.png"))); // NOI18N
+        player3BackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/playerBackground.jpg"))); // NOI18N
         player3Panel.add(player3BackgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         menuCardsPlayer.addTab("Joueur 3", player3Panel);
 
         player4Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        berlinAssistantP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/assistant/berlinAssitant.png"))); // NOI18N
-        player4Panel.add(berlinAssistantP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
+        palestineExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/palestineExcavation.jpg"))); // NOI18N
+        player4Panel.add(palestineExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
 
-        moscowCarP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/car/moscowCar.png"))); // NOI18N
-        player4Panel.add(moscowCarP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
-
-        berlinEtnoP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/etnologicalKnowledge/berlinEtnoKnowledge.png"))); // NOI18N
+        berlinEtnoP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/85.jpg"))); // NOI18N
         player4Panel.add(berlinEtnoP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, -1, -1));
 
-        romaZeppelinP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/zeppelin/romZeppelin.png"))); // NOI18N
-        player4Panel.add(romaZeppelinP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
-
-        londonExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/excavations/londonExcavation.png"))); // NOI18N
-        player4Panel.add(londonExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
-
-        berlinCongressP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/congress/berlinCongress.png"))); // NOI18N
-        player4Panel.add(berlinCongressP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
-
-        berlinGenKnowledgeP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/generalKnowledge/oneBook/berlinGenKnowledge.png"))); // NOI18N
+        berlinGenKnowledgeP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/31.jpg"))); // NOI18N
         player4Panel.add(berlinGenKnowledgeP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
 
-        moscowScienKnowledgeP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/scientificKnowledge/oneBook/blue/moscowScienKnowledge.png"))); // NOI18N
+        berlinCongressP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
+        berlinCongressP4Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinCongressP4LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinCongressP4LabelMouseExited(evt);
+            }
+        });
+        player4Panel.add(berlinCongressP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+
+        berlinAssistantP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/18.jpg"))); // NOI18N
+        player4Panel.add(berlinAssistantP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
+
+        romaZeppelinP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/3.jpg"))); // NOI18N
+        player4Panel.add(romaZeppelinP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
+
+        moscowScienKnowledgeP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/74.jpg"))); // NOI18N
         player4Panel.add(moscowScienKnowledgeP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 360, -1, -1));
 
-        londonShovelP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/shovel/london.png"))); // NOI18N
-        player4Panel.add(londonShovelP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
+        mesopotamiaNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/blueNull.png"))); // NOI18N
+        player4Panel.add(mesopotamiaNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
 
-        berlinSmallExpoP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/smallExposition/berlinSmallExpo.png"))); // NOI18N
+        mesopotamiaExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/mesopotamiaExcavation.jpg"))); // NOI18N
+        player4Panel.add(mesopotamiaExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
+
+        creteExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/creteExcavation.jpg"))); // NOI18N
+        player4Panel.add(creteExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
+
+        berlinSmallExpoP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/88.jpg"))); // NOI18N
         player4Panel.add(berlinSmallExpoP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 390, -1, -1));
 
-        blueExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/blueExcavation.png"))); // NOI18N
-        player4Panel.add(blueExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
+        greeceExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/greeceExcavation.jpg"))); // NOI18N
+        player4Panel.add(greeceExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
 
-        greenExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/greenExcavation.png"))); // NOI18N
-        player4Panel.add(greenExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
+        moscowCarP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg"))); // NOI18N
+        moscowCarP4Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                moscowCarP4LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                moscowCarP4LabelMouseExited(evt);
+            }
+        });
+        player4Panel.add(moscowCarP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
 
-        yellowExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/yellowExcavation.png"))); // NOI18N
-        player4Panel.add(yellowExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
+        londonExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
+        player4Panel.add(londonExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
 
-        orangeExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/orangeExcavation.png"))); // NOI18N
-        player4Panel.add(orangeExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
+        londonShovelP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/22.jpg"))); // NOI18N
+        player4Panel.add(londonShovelP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
 
-        purpleExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/excavations/recto/violetExcavation.png"))); // NOI18N
-        player4Panel.add(purpleExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
+        egyptExcavationP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/egyptExcavation.jpg"))); // NOI18N
+        player4Panel.add(egyptExcavationP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
 
-        blueNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/blue/blueNull.png"))); // NOI18N
-        player4Panel.add(blueNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
+        greeceNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/greece/orangeNull.png"))); // NOI18N
+        player4Panel.add(greeceNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
 
-        greenNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/green/greenNull.png"))); // NOI18N
-        player4Panel.add(greenNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
+        palestineNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/palestine/greenNull.png"))); // NOI18N
+        player4Panel.add(palestineNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
 
-        orangeNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/orange/orangeNull.png"))); // NOI18N
-        player4Panel.add(orangeNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
+        creteNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/crete/purpleNull.png"))); // NOI18N
+        player4Panel.add(creteNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
 
-        purpleNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/violet/purpleNull.png"))); // NOI18N
-        player4Panel.add(purpleNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
+        egyptNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/egypt/yellowNull.png"))); // NOI18N
+        player4Panel.add(egyptNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
 
-        yellowNullTokenP4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tokens/yellow/yellowNull.png"))); // NOI18N
-        player4Panel.add(yellowNullTokenP4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
-
-        player4BackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/background/playerBackground.png"))); // NOI18N
+        player4BackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/playerBackground.jpg"))); // NOI18N
         player4Panel.add(player4BackgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         menuCardsPlayer.addTab("Joueur 4", player4Panel);
@@ -473,7 +521,7 @@ public class MapPanel extends javax.swing.JPanel {
         displayedCardPanel.setOpaque(false);
         add(displayedCardPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, 550, 730));
 
-        backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/background/map.png"))); // NOI18N
+        backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/map.jpg"))); // NOI18N
         add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -502,7 +550,7 @@ public class MapPanel extends javax.swing.JPanel {
         for (Card c : p1.getCards()) {
             if (c instanceof CongressCard) {
                 javax.swing.JLabel k = new javax.swing.JLabel();
-                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/congress/parisCongress.png")));
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/8.jpg")));
                 displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
             }
         }
@@ -519,7 +567,7 @@ public class MapPanel extends javax.swing.JPanel {
         for (Card c : p1.getCards()) {
             if (c instanceof CarCard) {
                 javax.swing.JLabel k = new javax.swing.JLabel();
-                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/car/moscowCar.png")));
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg")));
                 displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
             }
         }
@@ -530,6 +578,54 @@ public class MapPanel extends javax.swing.JPanel {
         displayedCardPanel.setVisible(false);
         displayedCardPanel.removeAll();
     }//GEN-LAST:event_moscowCarP1LabelMouseExited
+
+    private void berlinCongressP2LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP2LabelMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_berlinCongressP2LabelMouseEntered
+
+    private void berlinCongressP2LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP2LabelMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_berlinCongressP2LabelMouseExited
+
+    private void moscowCarP2LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP2LabelMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_moscowCarP2LabelMouseEntered
+
+    private void moscowCarP2LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP2LabelMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_moscowCarP2LabelMouseExited
+
+    private void berlinCongressP3LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP3LabelMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_berlinCongressP3LabelMouseEntered
+
+    private void berlinCongressP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP3LabelMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_berlinCongressP3LabelMouseExited
+
+    private void moscowCarP3LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP3LabelMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_moscowCarP3LabelMouseEntered
+
+    private void moscowCarP3LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP3LabelMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_moscowCarP3LabelMouseExited
+
+    private void berlinCongressP4LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP4LabelMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_berlinCongressP4LabelMouseEntered
+
+    private void berlinCongressP4LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP4LabelMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_berlinCongressP4LabelMouseExited
+
+    private void moscowCarP4LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP4LabelMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_moscowCarP4LabelMouseEntered
+
+    private void moscowCarP4LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP4LabelMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_moscowCarP4LabelMouseExited
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel backgroundLabel;
     private javax.swing.JLabel berlinAssistantP1Label;
@@ -552,24 +648,32 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel berlinSmallExpoP2Label;
     private javax.swing.JLabel berlinSmallExpoP3Label;
     private javax.swing.JLabel berlinSmallExpoP4Label;
-    private javax.swing.JLabel blueExcavationP1Label;
-    private javax.swing.JLabel blueExcavationP2Label;
-    private javax.swing.JLabel blueExcavationP3Label;
-    private javax.swing.JLabel blueExcavationP4Label;
-    private javax.swing.JLabel blueNullTokenP1Label;
-    private javax.swing.JLabel blueNullTokenP2Label;
-    private javax.swing.JLabel blueNullTokenP3Label;
-    private javax.swing.JLabel blueNullTokenP4Label;
     private javax.swing.JLabel closeMenuLabel;
+    private javax.swing.JLabel creteExcavationP1Label;
+    private javax.swing.JLabel creteExcavationP2Label;
+    private javax.swing.JLabel creteExcavationP3Label;
+    private javax.swing.JLabel creteExcavationP4Label;
+    private javax.swing.JLabel creteNullTokenP1Label;
+    private javax.swing.JLabel creteNullTokenP2Label;
+    private javax.swing.JLabel creteNullTokenP3Label;
+    private javax.swing.JLabel creteNullTokenP4Label;
     private javax.swing.JPanel displayedCardPanel;
-    private javax.swing.JLabel greenExcavationP1Label;
-    private javax.swing.JLabel greenExcavationP2Label;
-    private javax.swing.JLabel greenExcavationP3Label;
-    private javax.swing.JLabel greenExcavationP4Label;
-    private javax.swing.JLabel greenNullTokenP1Label;
-    private javax.swing.JLabel greenNullTokenP2Label;
-    private javax.swing.JLabel greenNullTokenP3Label;
-    private javax.swing.JLabel greenNullTokenP4Label;
+    private javax.swing.JLabel egyptExcavationP1Label;
+    private javax.swing.JLabel egyptExcavationP2Label;
+    private javax.swing.JLabel egyptExcavationP3Label;
+    private javax.swing.JLabel egyptExcavationP4Label;
+    private javax.swing.JLabel egyptNullTokenP1Label;
+    private javax.swing.JLabel egyptNullTokenP2Label;
+    private javax.swing.JLabel egyptNullTokenP3Label;
+    private javax.swing.JLabel egyptNullTokenP4Label;
+    private javax.swing.JLabel greeceExcavationP1Label;
+    private javax.swing.JLabel greeceExcavationP2Label;
+    private javax.swing.JLabel greeceExcavationP3Label;
+    private javax.swing.JLabel greeceExcavationP4Label;
+    private javax.swing.JLabel greeceNullTokenP1Label;
+    private javax.swing.JLabel greeceNullTokenP2Label;
+    private javax.swing.JLabel greeceNullTokenP3Label;
+    private javax.swing.JLabel greeceNullTokenP4Label;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPanel logMenu;
@@ -583,6 +687,14 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel londonShovelP3Label;
     private javax.swing.JLabel londonShovelP4Label;
     private javax.swing.JTabbedPane menuCardsPlayer;
+    private javax.swing.JLabel mesopotamiaExcavationP1Label;
+    private javax.swing.JLabel mesopotamiaExcavationP2Label;
+    private javax.swing.JLabel mesopotamiaExcavationP3Label;
+    private javax.swing.JLabel mesopotamiaExcavationP4Label;
+    private javax.swing.JLabel mesopotamiaNullTokenP1Label;
+    private javax.swing.JLabel mesopotamiaNullTokenP2Label;
+    private javax.swing.JLabel mesopotamiaNullTokenP3Label;
+    private javax.swing.JLabel mesopotamiaNullTokenP4Label;
     private javax.swing.JLabel moscowCarP1Label;
     private javax.swing.JLabel moscowCarP2Label;
     private javax.swing.JLabel moscowCarP3Label;
@@ -592,14 +704,14 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel moscowScienKnowledgeP3Label;
     private javax.swing.JLabel moscowScienKnowledgeP4Label;
     private javax.swing.JLabel openMenuLabel;
-    private javax.swing.JLabel orangeExcavationP1Label;
-    private javax.swing.JLabel orangeExcavationP2Label;
-    private javax.swing.JLabel orangeExcavationP3Label;
-    private javax.swing.JLabel orangeExcavationP4Label;
-    private javax.swing.JLabel orangeNullTokenP1Label;
-    private javax.swing.JLabel orangeNullTokenP2Label;
-    private javax.swing.JLabel orangeNullTokenP3Label;
-    private javax.swing.JLabel orangeNullTokenP4Label;
+    private javax.swing.JLabel palestineExcavationP1Label;
+    private javax.swing.JLabel palestineExcavationP2Label;
+    private javax.swing.JLabel palestineExcavationP3Label;
+    private javax.swing.JLabel palestineExcavationP4Label;
+    private javax.swing.JLabel palestineNullTokenP1Label;
+    private javax.swing.JLabel palestineNullTokenP2Label;
+    private javax.swing.JLabel palestineNullTokenP3Label;
+    private javax.swing.JLabel palestineNullTokenP4Label;
     private javax.swing.JLabel player1BackgroundLabel;
     private javax.swing.JPanel player1Panel;
     private javax.swing.JLabel player2BackgroundLabel;
@@ -608,27 +720,11 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel player3Panel;
     private javax.swing.JLabel player4BackgroundLabel;
     private javax.swing.JPanel player4Panel;
-    private javax.swing.JLabel purpleExcavationP1Label;
-    private javax.swing.JLabel purpleExcavationP2Label;
-    private javax.swing.JLabel purpleExcavationP3Label;
-    private javax.swing.JLabel purpleExcavationP4Label;
-    private javax.swing.JLabel purpleNullTokenP1Label;
-    private javax.swing.JLabel purpleNullTokenP2Label;
-    private javax.swing.JLabel purpleNullTokenP3Label;
-    private javax.swing.JLabel purpleNullTokenP4Label;
     private javax.swing.JLabel romaZeppelinP1Label;
     private javax.swing.JLabel romaZeppelinP2Label;
     private javax.swing.JLabel romaZeppelinP3Label;
     private javax.swing.JLabel romaZeppelinP4Label;
     private javax.swing.JPanel usableCardsMenu;
     private javax.swing.JPanel usedCardsMenu;
-    private javax.swing.JLabel yellowExcavationP1Label;
-    private javax.swing.JLabel yellowExcavationP2Label;
-    private javax.swing.JLabel yellowExcavationP3Label;
-    private javax.swing.JLabel yellowExcavationP4Label;
-    private javax.swing.JLabel yellowNullTokenP1Label;
-    private javax.swing.JLabel yellowNullTokenP2Label;
-    private javax.swing.JLabel yellowNullTokenP3Label;
-    private javax.swing.JLabel yellowNullTokenP4Label;
     // End of variables declaration//GEN-END:variables
 }
