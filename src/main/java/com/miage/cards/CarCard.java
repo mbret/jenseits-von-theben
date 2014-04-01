@@ -23,8 +23,8 @@ package com.miage.cards;
  */
 public class CarCard extends Card{
 
-    public CarCard(String areaName, int weekCost) {
-        super("car", areaName, weekCost);
+    public CarCard(int id, String areaName, int weekCost) {
+        super(id, "car", areaName, weekCost);
     }
 
     @Override

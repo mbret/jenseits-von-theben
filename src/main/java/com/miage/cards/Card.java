@@ -23,6 +23,11 @@ public abstract class Card {
 
 	private String areaName;
 
+        /**
+         * Used in .properties to define each cards uniquely
+         * Use this id to retrieve image file
+         */
+        private int id;
 
 	private int weekCost = 0;
 
@@ -32,18 +37,22 @@ public abstract class Card {
 	 * @param areaName
 	 * @param weekCost 
 	 */
-	public Card(String name, String areaName, int weekCost){
-		this.name = name;
-		this.areaName = areaName;
-		this.weekCost = weekCost;
+	public Card(int id, String name, String areaName, int weekCost){
+            this.id = id;
+            this.name = name;
+            this.areaName = areaName;
+            this.weekCost = weekCost;
 	}
+        
+        
 
 	/**
 	 * 
 	 * @param name
 	 * @param areaName 
 	 */
-	public Card(String name, String areaName){
+	public Card(int id, String name, String areaName){
+            this.id = id;
 		this.name = name;
 		this.areaName = areaName;
 	}
@@ -140,5 +149,22 @@ public abstract class Card {
 		sideDeck.addCard(this);
 	}
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+        
 
 }
