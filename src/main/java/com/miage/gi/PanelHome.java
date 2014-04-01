@@ -4,7 +4,10 @@
  */
 package com.miage.gi;
 
-import java.awt.Color;
+import com.miage.game.Board;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -106,6 +109,9 @@ public class PanelHome extends javax.swing.JPanel {
         newPlayRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         newPlayRedLabel.setText("<html><b>JOUER !</b>");
         newPlayRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newPlayRedLabelMouseClicked(evt);
+            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 newPlayRedLabelMouseExited(evt);
             }
@@ -230,11 +236,6 @@ public class PanelHome extends javax.swing.JPanel {
 
         colorPlayer1ComboBox.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
         colorPlayer1ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<html><FONT COLOR=\"blue\">Bleu</FONT>", "<html><FONT COLOR=\"green\">Vert</FONT>", "<html><FONT COLOR=\"yellow\">Jaune</FONT>", "<html><FONT COLOR=\"red\">Rouge</FONT>" }));
-        colorPlayer1ComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                colorPlayer1ComboBoxActionPerformed(evt);
-            }
-        });
         newGamePanel.add(colorPlayer1ComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 210, -1, -1));
 
         colorPlayer2ComboBox.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
@@ -594,11 +595,6 @@ public class PanelHome extends javax.swing.JPanel {
         playPanel.setVisible(true);
     }//GEN-LAST:event_backRedNewGamePanelLabelMouseClicked
 
-    private void colorPlayer1ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorPlayer1ComboBoxActionPerformed
-        
-        
-    }//GEN-LAST:event_colorPlayer1ComboBoxActionPerformed
-
     private void newPlayLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newPlayLabelMouseEntered
         newPlayLabel.setVisible(false);
         newPlayRedLabel.setVisible(true);
@@ -609,6 +605,40 @@ public class PanelHome extends javax.swing.JPanel {
         newPlayRedLabel.setVisible(false);
     }//GEN-LAST:event_newPlayRedLabelMouseExited
 
+    private void newPlayRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newPlayRedLabelMouseClicked
+        int nbPlayer = Integer.parseInt(nbPlayers);
+        if(checkColors()){
+            try { 
+                Board board = new Board(nbPlayer);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(PanelHome.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_newPlayRedLabelMouseClicked
+
+    //vérification des couleurs des joueurs
+    public boolean checkColors(){
+        nbPlayers =  (String)jComboBox1.getSelectedItem();
+        boolean ok = true;
+        String colorPlayer1 = (String)colorPlayer1ComboBox.getSelectedItem();
+        String colorPlayer2 = (String)colorPlayer2ComboBox.getSelectedItem();
+        String colorPlayer3 = (String)colorPlayer3ComboBox.getSelectedItem();
+        String colorPlayer4 = (String)colorPlayer4ComboBox.getSelectedItem();
+        if(nbPlayers.compareTo("2")==0){
+            if(colorPlayer1.compareTo(colorPlayer2)==0)
+                ok = false;
+            
+        }else if(nbPlayers.compareTo("3")==0){
+            if(colorPlayer1.compareTo(colorPlayer2)==0 || colorPlayer1.compareTo(colorPlayer3)==0 || colorPlayer2.compareTo(colorPlayer3)==0)
+                ok = false;
+        }else if(nbPlayers.compareTo("4")==0){
+            if(colorPlayer1.compareTo(colorPlayer2)==0 || colorPlayer1.compareTo(colorPlayer3)==0 || colorPlayer2.compareTo(colorPlayer3)==0
+               || colorPlayer1.compareTo(colorPlayer4)==0 || colorPlayer2.compareTo(colorPlayer4)==0 || colorPlayer3.compareTo(colorPlayer4)==0)
+                ok = false;
+        }
+        return ok;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MenuPanel;
     private javax.swing.JLabel backLabel;

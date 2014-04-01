@@ -93,10 +93,7 @@ public class ExcavationArea extends Area {
     }
 
     
-    @Override
-    public String toString() {
-        return "ExcavationArea{" + super.toString() + "codeColor=" + codeColor + ", tokenList=" + tokenList + '}';
-    }
+   
 	
     
     

@@ -29,7 +29,7 @@ public class ShovelCard extends Card{
 
     @Override
     public boolean isDiscardable() {
-        return false;
+        return true;
     }
     
 }

@@ -1,12 +1,20 @@
 package com.miage.game;
 
 import com.miage.areas.ExcavationArea;
+import com.miage.areas.TouristicArea;
 import com.miage.cards.Card;
+import com.miage.cards.EthnologicalKnowledgeCard;
+import com.miage.cards.ExcavationAuthorizationCard;
+import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
+import com.miage.cards.ShovelCard;
+import com.miage.cards.SpecificKnowledgeCard;
+import com.miage.cards.ZeppelinCard;
 import com.miage.config.ConfigManager;
 import com.miage.tokens.PointToken;
 import com.miage.tokens.Token;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,6 +23,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 
 
 
@@ -49,32 +58,68 @@ public class TestBoard {
 		board.setFourCurrentCards(fourCards);
 		
 		deckTest = new Deck();
-		deckTest.addCard(new GeneralKnowledgeCard("moscow", 2, 2));
+		deckTest.addCard(new ExpoCard("moscow", 4, true));
+		deckTest.addCard(new ExpoCard("warsaw", 4, true));
+		deckTest.addCard(new ShovelCard("london", 2));
 		board.setDeck(deckTest);
 		
-			
-            board = new Board(3);
-            board.initializationDecks();
+		
+	
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	
 	/**
 	 * @author Gael
 	 * Test of the method pickCardOnBoard
 	 * 
 	 */
-	public void testpickCardOnBoard() {
+	@Test
+	public void testPickCardOnBoard() {
 		
 		Card card = board.pickCardOnBoard(3);
-		assertEquals(board.getFourCurrentCards()[3].toString(), "generalKnowledge,moscow,2,2");
+		assertEquals(board.getFourCurrentCards()[3].toString(), "shovel,london,2");
 		assertEquals(card.getAreaName(), "vienna");
+		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,warsaw,4,5");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "big expo,moscow,4,5");
+		
+			
+	}
+	
+	
+	/**
+	 * @author Gael
+	 * 
+	 * Test of the method to add an expo card on the board
+	 */
+	@Test
+	public void testAddExpoCardOnTheBoard(){
 		
 		
+		ExpoCard card1 = new ExpoCard("berlin", 4, true);
+		ExpoCard card2 = new ExpoCard("roma", 3, false);
+		ExpoCard card3 = new ExpoCard("vienna", 4, true);
+		ExpoCard card4 = new ExpoCard("paris", 3, false);
 		
+		board.addExpoCardOnBoard(card1);
+		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,berlin,4,5");
+		
+		board.addExpoCardOnBoard(card2);
+		assertEquals(board.getThreeExpoCards()[0].toString(), "little expo,roma,3,4");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "big expo,berlin,4,5");
+		
+		board.addExpoCardOnBoard(card3);
+		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,vienna,4,5");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "little expo,roma,3,4");
+		assertEquals(board.getThreeExpoCards()[2].toString(), "big expo,berlin,4,5");
+		
+		board.addExpoCardOnBoard(card4);
+		assertEquals(board.getThreeExpoCards()[0].toString(), "little expo,paris,3,4");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "big expo,vienna,4,5");
+		assertEquals(board.getThreeExpoCards()[2].toString(), "little expo,roma,3,4");
 		
 	}
 	
@@ -101,7 +146,7 @@ public class TestBoard {
             
             // test total point token 
             // test total point token of 4 
-            Integer nbPointToken = 14 + Integer.parseInt(ConfigManager.getInstance().getConfig().getProperty("nbEmptyTokenPoint")); // (greece should have 13 pointTokens)
+            Integer nbPointToken = 14 + Integer.parseInt(ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty("nbEmptyTokenPoint")); // (greece should have 13 pointTokens)
             Integer nbPointTokenOf4InsideGreece = 1; // (greece should have 3 pointTokens of 4)
             LinkedList<Token> tokens = ((ExcavationArea)b.getAreas().get("greece")).getTokenList();
             Integer countedPointToken = 0;
@@ -116,6 +161,70 @@ public class TestBoard {
             }
             assertEquals(nbPointToken, countedPointToken );
             assertEquals(nbPointTokenOf4InsideGreece, countedNbPointTokenOf4InsideCrete );
+        }
+        
+        /**
+         * Valid only for 95 cards in total
+         * @throws IOException 
+         */
+        @Test
+        public void testInitCards() throws IOException{
+            System.out.println("testInitCards");
+            
+            Board b = new Board(2);
+            assertEquals( 95 - 4, b.getDeck().size()); // 95 cards - four cards
+            assertTrue( b.getSideDeck().isEmpty());
+            
+            b = new Board(3);
+            assertEquals( 27+27 + 5, b.getDeck().size()); // 2 decks + small expo - four cards
+            assertEquals( 27 + 5, b.getSideDeck().size() ); // 5 big expo + 1 deck
+            
+            boolean found1 = false;
+            
+            // We test only expo card because there are 4 cards which are picked randomly (so its impossible to test)
+            for (Card card : b.getDeck()) {
+                // deck must have => card.1 = london,excavationAuthorizationCard,3
+                if( card instanceof ExpoCard && ! ((ExpoCard)card).isBigExpo() && card.getAreaName().equals("berlin")){
+                    found1 = true;
+                }
+            }
+            assertTrue(found1);
+        }
+        
+        @Test
+        public void testChangeFourCurrentCards() throws IOException{
+            /*
+             * Initialize a player
+             */
+            Player p1 = new Player("player");
+            PlayerToken pt = new PlayerToken("blue");
+            HashMap<PlayerToken, Player> playersAndTokens= new HashMap<PlayerToken, Player>();
+            playersAndTokens.put(pt, p1);
+            pt.setPosition(board.getArea("warsaw"));
+            board.setPlayerTokensAndPlayers(playersAndTokens);
+            board.setCurrentPlayerToken(pt);
+            
+            /*
+             * Set some cards into the deck
+             */
+            Deck deckTest2 = new Deck();
+            deckTest2.addCard(new ExpoCard("moscow", 4, true));
+            deckTest2.addCard(new ExpoCard("warsaw", 4, true));
+            deckTest2.addCard(new GeneralKnowledgeCard("berlin", 2, 3));
+            deckTest2.addCard(new ShovelCard("london", 2));
+            deckTest2.addCard(new EthnologicalKnowledgeCard("berlin", 2, 2,"greece"));
+            deckTest2.addCard(new EthnologicalKnowledgeCard("rome", 2, 2,"egypt"));
+            deckTest2.addCard(new SpecificKnowledgeCard("rome", 2, 2,"crete"));
+            board.setDeck(deckTest2);
+            
+            board.changeFourCurrentCards();
+            
+            assertEquals(board.getCurrentPlayerToken().getPosition().toString(),"warsaw");
+            assertEquals(board.getFourCurrentCards()[0].toString(),"generalKnowledge,berlin,2,3");
+            assertEquals(board.getFourCurrentCards()[1].toString(),"shovel,london,2");	
+            assertEquals(board.getFourCurrentCards()[2].toString(),"ethnologicalKnowledge,berlin,2,2,greece");	
+            assertEquals(board.getFourCurrentCards()[3].toString(),"ethnologicalKnowledge,rome,2,2,egypt");
+           
         }
 	
 
