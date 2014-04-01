@@ -15,11 +15,11 @@ import java.util.ArrayList;
  */
 public class MapPanel extends javax.swing.JPanel {
 
-    
     private Board b;
     private Player p1;
     private Deck d;
     private ArrayList<Card> ar;
+
     /**
      * Creates new form MapPanel
      */
@@ -27,13 +27,16 @@ public class MapPanel extends javax.swing.JPanel {
         initComponents();
         menuCardsPlayer.setVisible(false);
         closeMenuLabel.setVisible(false);
+        displayedCardPanel.setVisible(false);
         b = new Board(2);
         p1 = new Player("Rouch");
         d = b.getDeck();
         ar = new ArrayList<Card>();
         ar.add(new CongressCard("paris", 2));
         ar.add(new CongressCard("roma", 2));
-        //ar.add(new CarCard("berlin", 2));
+        ar.add(new SpecificKnowledgeCard("london", 2, 2, "greece"));
+        ar.add(new CongressCard("london", 2));
+        ar.add(new CarCard("berlin", 2));
         p1.setCards(ar);
         menuCardsPlayer.setTitleAt(0, p1.getName());
     }
@@ -144,6 +147,7 @@ public class MapPanel extends javax.swing.JPanel {
         jSeparator3 = new javax.swing.JSeparator();
         usedCardsMenu = new javax.swing.JPanel();
         jSeparator2 = new javax.swing.JSeparator();
+        displayedCardPanel = new javax.swing.JPanel();
         backgroundLabel = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -171,6 +175,14 @@ public class MapPanel extends javax.swing.JPanel {
         player1Panel.add(berlinAssistantP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
 
         moscowCarP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/car/moscowCar.png"))); // NOI18N
+        moscowCarP1Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                moscowCarP1LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                moscowCarP1LabelMouseExited(evt);
+            }
+        });
         player1Panel.add(moscowCarP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
 
         berlinEtnoP1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/etnologicalKnowledge/berlinEtnoKnowledge.png"))); // NOI18N
@@ -186,6 +198,9 @@ public class MapPanel extends javax.swing.JPanel {
         berlinCongressP1Label.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 berlinCongressP1LabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinCongressP1LabelMouseExited(evt);
             }
         });
         player1Panel.add(berlinCongressP1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
@@ -455,6 +470,9 @@ public class MapPanel extends javax.swing.JPanel {
 
         add(usedCardsMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 550, 320, 220));
 
+        displayedCardPanel.setOpaque(false);
+        add(displayedCardPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, 550, 730));
+
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/background/map.png"))); // NOI18N
         add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
@@ -480,16 +498,38 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_closeMenuLabelMouseClicked
 
     private void berlinCongressP1LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP1LabelMouseEntered
-        for(Card c: p1.getCards()){
-            if(c instanceof CongressCard){
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof CongressCard) {
                 javax.swing.JLabel k = new javax.swing.JLabel();
                 k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/congress/parisCongress.png")));
-                usedCardsMenu.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
             }
         }
         usedCardsMenu.updateUI();
     }//GEN-LAST:event_berlinCongressP1LabelMouseEntered
 
+    private void berlinCongressP1LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressP1LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_berlinCongressP1LabelMouseExited
+
+    private void moscowCarP1LabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP1LabelMouseEntered
+        displayedCardPanel.setVisible(true);
+        for (Card c : p1.getCards()) {
+            if (c instanceof CarCard) {
+                javax.swing.JLabel k = new javax.swing.JLabel();
+                k.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cards/car/moscowCar.png")));
+                displayedCardPanel.add(k, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+            }
+        }
+        usedCardsMenu.updateUI();
+    }//GEN-LAST:event_moscowCarP1LabelMouseEntered
+
+    private void moscowCarP1LabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarP1LabelMouseExited
+        displayedCardPanel.setVisible(false);
+        displayedCardPanel.removeAll();
+    }//GEN-LAST:event_moscowCarP1LabelMouseExited
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel backgroundLabel;
     private javax.swing.JLabel berlinAssistantP1Label;
@@ -521,6 +561,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel blueNullTokenP3Label;
     private javax.swing.JLabel blueNullTokenP4Label;
     private javax.swing.JLabel closeMenuLabel;
+    private javax.swing.JPanel displayedCardPanel;
     private javax.swing.JLabel greenExcavationP1Label;
     private javax.swing.JLabel greenExcavationP2Label;
     private javax.swing.JLabel greenExcavationP3Label;
