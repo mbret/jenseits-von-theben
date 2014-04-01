@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -406,7 +407,23 @@ public class Board {
        //}
     }
     
-   
+   /**
+    * Take a number of knowledge points and return the number of tokens related to the week cost
+    * @param knowledgePoints (mix of all knowledge points)
+    * @param weekCost
+    * @return int, the number of tokens the player can pick up
+    * @throws IOException 
+    */
+    public static int getNbTokensFromChronotime( int knowledgePoints, int weekCost) throws IOException{
+        String[] values = ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty( "chronotime." + knowledgePoints).split("\\|");
+        try{
+            return Integer.parseInt(values[ weekCost ]);
+        }
+        catch( ArrayIndexOutOfBoundsException e){
+            throw new ArrayIndexOutOfBoundsException("The knowledge points provided is not setted in configuration file");
+        }
+    }
+
 
     
     /***********************************************************************************************
