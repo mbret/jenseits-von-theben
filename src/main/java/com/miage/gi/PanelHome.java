@@ -1,20 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.miage.gi;
 
 import com.miage.game.Board;
+import com.miage.game.Player;
+import com.miage.game.PlayerToken;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Class Home Panel
  * @author Anne-Sophie
  */
 public class PanelHome extends javax.swing.JPanel {
 
+    // number of players
     private String nbPlayers;
 
     /**
@@ -40,6 +41,13 @@ public class PanelHome extends javax.swing.JPanel {
         
         backRedNewGamePanelLabel.setVisible(false);
         newPlayRedLabel.setVisible(false);
+        
+        player1TextField.setText("");
+        player2TextField.setText("");
+        player3TextField.setText("");
+        player4TextField.setText("");
+        
+        player1TextField.setFocusable(true);
         
         
 
@@ -436,25 +444,45 @@ public class PanelHome extends javax.swing.JPanel {
         add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1370, 770));
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Quit application
+     * @param evt 
+     */
     private void crossLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_crossLabelMouseClicked
         System.exit(0);
     }//GEN-LAST:event_crossLabelMouseClicked
 
+    /**
+     * When mouse enter into play label
+     * @param evt 
+     */
     private void playLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playLabelMouseEntered
         playLabel.setVisible(false);
         playRedLabel.setVisible(true);
     }//GEN-LAST:event_playLabelMouseEntered
 
+    /**
+     * When mouse exit from quit label
+     * @param evt 
+     */
     private void quitRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quitRedLabelMouseExited
         quitRedLabel.setVisible(false);
         quitLabel.setVisible(true);
     }//GEN-LAST:event_quitRedLabelMouseExited
 
+    /**
+     * When mouse enter into quit label
+     * @param evt 
+     */
     private void quitLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quitLabelMouseEntered
         quitLabel.setVisible(false);
         quitRedLabel.setVisible(true);
     }//GEN-LAST:event_quitLabelMouseEntered
 
+    /**
+     * When mouse exit from play label
+     * @param evt 
+     */
     private void playRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playRedLabelMouseExited
         playLabel.setVisible(true);
         playRedLabel.setVisible(false);
@@ -462,62 +490,110 @@ public class PanelHome extends javax.swing.JPanel {
 
     }//GEN-LAST:event_playRedLabelMouseExited
 
+    /**
+     * When mouse enter into parameter label
+     * @param evt 
+     */
     private void parameterLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parameterLabelMouseEntered
         parameterLabel.setVisible(false);
         parameterRedLabel.setVisible(true);
     }//GEN-LAST:event_parameterLabelMouseEntered
 
+    /**
+     * When mouse exit from parameter label
+     * @param evt 
+     */
     private void parameterRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parameterRedLabelMouseExited
         parameterLabel.setVisible(true);
         parameterRedLabel.setVisible(false);
     }//GEN-LAST:event_parameterRedLabelMouseExited
 
+    /**
+     * When mouse enter into rules label
+     * @param evt 
+     */
     private void rulesLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rulesLabelMouseEntered
         rulesLabel.setVisible(false);
         rulesRedLabel.setVisible(true);
     }//GEN-LAST:event_rulesLabelMouseEntered
 
+    /**
+     * When mouse exit from rules label
+     * @param evt 
+     */
     private void rulesRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rulesRedLabelMouseExited
         rulesLabel.setVisible(true);
         rulesRedLabel.setVisible(false);
     }//GEN-LAST:event_rulesRedLabelMouseExited
 
+    /**
+     * When mouse click on play label
+     * @param evt 
+     */
     private void playRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playRedLabelMouseClicked
         MenuPanel.setVisible(false);
         playPanel.setVisible(true);
     }//GEN-LAST:event_playRedLabelMouseClicked
 
+    /**
+     * When mouse enter into new game label
+     * @param evt 
+     */
     private void newGameLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameLabelMouseEntered
         newGameLabel.setVisible(false);
         newGameRedLabel.setVisible(true);
     }//GEN-LAST:event_newGameLabelMouseEntered
 
+    /**
+     * When mouse exit from new game label
+     * @param evt 
+     */
     private void newGameRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameRedLabelMouseExited
         newGameLabel.setVisible(true);
         newGameRedLabel.setVisible(false);
     }//GEN-LAST:event_newGameRedLabelMouseExited
 
+    /**
+     * When mouse exit from load game label
+     * @param evt 
+     */
     private void loadGameRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadGameRedLabelMouseExited
         loadGameLabel.setVisible(true);
         loadGameRedLabel.setVisible(false);
     }//GEN-LAST:event_loadGameRedLabelMouseExited
 
+    /**
+     * When mouse enter into load game label
+     * @param evt 
+     */
     private void loadGameLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadGameLabelMouseEntered
         loadGameLabel.setVisible(false);
         loadGameRedLabel.setVisible(true);
     }//GEN-LAST:event_loadGameLabelMouseEntered
 
+    /**
+     * When mouse enter into back label
+     * @param evt 
+     */
     private void backLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backLabelMouseEntered
         backLabel.setVisible(false);
         backRedLabel.setVisible(true);
     }//GEN-LAST:event_backLabelMouseEntered
 
+    /**
+     * When mouse exit from back label
+     * @param evt 
+     */
     private void backRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backRedLabelMouseExited
         backLabel.setVisible(true);
         backRedLabel.setVisible(false);
 
     }//GEN-LAST:event_backRedLabelMouseExited
 
+    /**
+     * When mouse click on back label
+     * @param evt 
+     */
     private void backRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backRedLabelMouseClicked
         MenuPanel.setVisible(true);
         playLabel.setVisible(true);
@@ -528,6 +604,10 @@ public class PanelHome extends javax.swing.JPanel {
         playPanel.setVisible(false);
     }//GEN-LAST:event_backRedLabelMouseClicked
 
+    /**
+     * When mouse click on new game label
+     * @param evt 
+     */
     private void newGameRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameRedLabelMouseClicked
         newGamePanel.setVisible(true);
         player3Label.setVisible(false);
@@ -536,6 +616,8 @@ public class PanelHome extends javax.swing.JPanel {
         player4TextField.setVisible(false);
         colorPlayer3ComboBox.setVisible(false);
         colorPlayer4ComboBox.setVisible(false);
+        
+        player1TextField.requestFocus();
     }//GEN-LAST:event_newGameRedLabelMouseClicked
 
     private void player1TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_player1TextFieldActionPerformed
@@ -554,6 +636,7 @@ public class PanelHome extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_player4TextFieldActionPerformed
 
+    //show elements according to number of players
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         nbPlayers =  (String)jComboBox1.getSelectedItem();
         if (nbPlayers.compareTo("3") == 0) {
@@ -580,36 +663,112 @@ public class PanelHome extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    /**
+     * When mouse exit from back label
+     * @param evt 
+     */
     private void backRedNewGamePanelLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backRedNewGamePanelLabelMouseExited
         backRedNewGamePanelLabel.setVisible(false);
         backNewGamePanelLabel.setVisible(true);
     }//GEN-LAST:event_backRedNewGamePanelLabelMouseExited
 
+    /**
+     * When mouse enter into back label
+     * @param evt 
+     */
     private void backNewGamePanelLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backNewGamePanelLabelMouseEntered
         backRedNewGamePanelLabel.setVisible(true);
         backNewGamePanelLabel.setVisible(false);
     }//GEN-LAST:event_backNewGamePanelLabelMouseEntered
 
+    /**
+     * When mouse click on back label
+     * @param evt 
+     */
     private void backRedNewGamePanelLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backRedNewGamePanelLabelMouseClicked
         newGamePanel.setVisible(false);
         playPanel.setVisible(true);
     }//GEN-LAST:event_backRedNewGamePanelLabelMouseClicked
 
+    /**
+     * When mouse enter into play label(run map)
+     * @param evt 
+     */
     private void newPlayLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newPlayLabelMouseEntered
         newPlayLabel.setVisible(false);
         newPlayRedLabel.setVisible(true);
     }//GEN-LAST:event_newPlayLabelMouseEntered
 
+    /**
+     * When mouse exit from play label
+     * @param evt 
+     */
     private void newPlayRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newPlayRedLabelMouseExited
         newPlayLabel.setVisible(true);
         newPlayRedLabel.setVisible(false);
     }//GEN-LAST:event_newPlayRedLabelMouseExited
 
+    /**
+     * When mouse click on play label(run map and create board)
+     * @param evt 
+     */
+    
+    //définir area position et localdate pour chaque playerToken
     private void newPlayRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newPlayRedLabelMouseClicked
         int nbPlayer = Integer.parseInt(nbPlayers);
-        if(checkColors()){
+        PlayerToken playerToken1 = null;
+        PlayerToken playerToken2 = null;
+        PlayerToken playerToken3 = null;
+        PlayerToken playerToken4 = null;
+        Player player1 = null;
+        Player player2 = null;
+        Player player3 = null;
+        Player player4 = null;
+        String colorPlayer1 =(String)colorPlayer1ComboBox.getSelectedItem();
+        String colorPlayer2 =(String)colorPlayer2ComboBox.getSelectedItem();
+        String colorPlayer3 =(String)colorPlayer3ComboBox.getSelectedItem();
+        String colorPlayer4 =(String)colorPlayer4ComboBox.getSelectedItem();
+        String logPlayer1 = player1TextField.getText();
+        String logPlayer2 = player2TextField.getText();
+        String logPlayer3 = player3TextField.getText();
+        String logPlayer4 = player4TextField.getText();
+        HashMap<PlayerToken,Player> hashMapPlayerTokenPlayer;
+        
+        if(checkColors() && checkLogin()){
+            if(nbPlayers.compareTo("2")==0){
+                //annee 1901 case 0
+                playerToken1 = new PlayerToken(colorPlayer1);
+                player1 = new Player(logPlayer1);
+                //playerToken1.setTimeState(new LocalDate(31,12,1901));
+                playerToken2 = new PlayerToken(colorPlayer2);
+                player2 = new Player(logPlayer2);
+            }else if(nbPlayers.compareTo("3")==0){
+                //annee 1901 case 16
+                playerToken1 = new PlayerToken(colorPlayer1);
+                player1 = new Player(logPlayer1);
+                playerToken2 = new PlayerToken(colorPlayer2);
+                player2 = new Player(logPlayer2);
+                playerToken3 = new PlayerToken(colorPlayer3);
+                player3 = new Player(logPlayer3);
+            }else if(nbPlayers.compareTo("4")==0){
+                //annee 1902 case 0
+                playerToken1 = new PlayerToken(colorPlayer1);
+                player1 = new Player(logPlayer1);
+                playerToken2 = new PlayerToken(colorPlayer2);
+                player2 = new Player(logPlayer2);
+                playerToken3 = new PlayerToken(colorPlayer3);
+                player3 = new Player(logPlayer3);
+                playerToken4 = new PlayerToken(colorPlayer4);
+                player4 = new Player(logPlayer4);
+            }
             try { 
                 Board board = new Board(nbPlayer);
+                hashMapPlayerTokenPlayer = board.getPlayerTokensAndPlayers();
+                hashMapPlayerTokenPlayer.put(playerToken1, player1);
+                hashMapPlayerTokenPlayer.put(playerToken2, player2);
+                hashMapPlayerTokenPlayer.put(playerToken3, player3);
+                hashMapPlayerTokenPlayer.put(playerToken4, player4);
+                board.setPlayerTokensAndPlayers(hashMapPlayerTokenPlayer);
                 
             } catch (IOException ex) {
                 Logger.getLogger(PanelHome.class.getName()).log(Level.SEVERE, null, ex);
@@ -617,7 +776,10 @@ public class PanelHome extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_newPlayRedLabelMouseClicked
 
-    //vérification des couleurs des joueurs
+    /**
+     * check color players
+     * @return ok 
+     */
     public boolean checkColors(){
         nbPlayers =  (String)jComboBox1.getSelectedItem();
         boolean ok = true;
@@ -636,6 +798,35 @@ public class PanelHome extends javax.swing.JPanel {
             if(colorPlayer1.compareTo(colorPlayer2)==0 || colorPlayer1.compareTo(colorPlayer3)==0 || colorPlayer2.compareTo(colorPlayer3)==0
                || colorPlayer1.compareTo(colorPlayer4)==0 || colorPlayer2.compareTo(colorPlayer4)==0 || colorPlayer3.compareTo(colorPlayer4)==0)
                 ok = false;
+        }
+        return ok;
+    }
+    
+    /**
+     * check login players
+     * @return ok
+     */
+    public boolean checkLogin(){
+        boolean ok = false;
+        String logPlayer1 = player1TextField.getText();
+        String logPlayer2 = player2TextField.getText();
+        String logPlayer3 = player3TextField.getText();
+        String logPlayer4 = player4TextField.getText();
+        if(nbPlayers.compareTo("2")==0){
+            if(logPlayer1.compareTo("")!=0 && logPlayer2.compareTo("")!=0 && logPlayer1.compareTo(logPlayer2)!=0)
+                ok = true;
+        }else if(nbPlayers.compareTo("3")==0){
+            if(logPlayer1.compareTo("")!=0 && logPlayer2.compareTo("")!=0 && logPlayer3.compareTo("")!=0 
+              && logPlayer1.compareTo(logPlayer2)!=0 && logPlayer1.compareTo(logPlayer3)!=0 && logPlayer2.compareTo(logPlayer3)!=0)
+                ok = true;
+        }else if(nbPlayers.compareTo("4")==0){
+            if(logPlayer1.compareTo("")!=0 && logPlayer2.compareTo("")!=0 && logPlayer3.compareTo("")!=0 
+               && logPlayer4.compareTo("")!=0 && logPlayer1.compareTo(logPlayer2)!=0 
+               && logPlayer1.compareTo(logPlayer3)!=0 && logPlayer2.compareTo(logPlayer3)!=0
+               && logPlayer1.compareTo(logPlayer4)!=0 && logPlayer2.compareTo(logPlayer4)!=0
+               && logPlayer3.compareTo(logPlayer4)!=0)
+                
+               ok = true;
         }
         return ok;
     }

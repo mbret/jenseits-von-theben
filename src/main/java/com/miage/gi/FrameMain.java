@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.miage.gi;
 
 import com.miage.gi.Audio2;
@@ -12,8 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Anne-Sophie
+ * Class Main Frame 
+ * @author Anne-Sophie Duhaut
  */
 public class FrameMain extends javax.swing.JFrame {
 
@@ -21,6 +18,7 @@ public class FrameMain extends javax.swing.JFrame {
      * Creates new form FrameMain
      */
     public FrameMain() throws IOException, InterruptedException{
+        //full screen
         setUndecorated(true);
         initComponents();
         GraphicsDevice device;
@@ -32,7 +30,8 @@ public class FrameMain extends javax.swing.JFrame {
         }
        // Audio2 a = new Audio2("C:\\Users\\Anne-Sophie\\Documents\\NetBeansProjects\\Thebes\\src\\main\\java\\musich.wav");
         //a.play();
-        //PanelHome panelHome = new PanelHome();
+        
+        // add home panel to main frame
         PanelContainer.add(new PanelHome(), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
         PanelContainer.updateUI();
     }
@@ -105,7 +104,7 @@ public class FrameMain extends javax.swing.JFrame {
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
+            //run application
             public void run() {
                 FrameMain frameMain;
                 try {
