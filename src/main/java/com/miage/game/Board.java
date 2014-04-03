@@ -1,28 +1,19 @@
-
 package com.miage.game;
 
-import com.miage.SAMPLE.SAMPLECLASS;
 import com.miage.areas.*;
-
 import com.miage.cards.*;
 import com.miage.config.ConfigManager;
 import com.miage.tokens.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 /**
  * 
- * 
+ * note :
  * action du joueur :   - piocher une carte des quatres cartes
  *                      - piocher une carte expo
  *                      - se déplacer à varsovie pour changer les quatre cartes
@@ -34,9 +25,15 @@ public class Board {
     
     private final static Logger LOGGER = LogManager.getLogger(Board.class.getName());
     
-    private int nbPlayers;
+    /**
+     * 
+     */
+    private final int nbPlayers;
 
-    private Chrono chrono;
+    /**
+     * 
+     */
+    private final Chrono chrono;
     
     /**
      * Stack of player's token
@@ -88,6 +85,16 @@ public class Board {
         this.initAreas();
         this.initDecks();
     }
+    
+    
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Methods
+     * 
+     ***********************************************************************************************/
+    
     
     
     /**
@@ -277,14 +284,6 @@ public class Board {
 
         ArrayList<ExpoCard> expoCards = new ArrayList<ExpoCard>(); // used to retain apart expo cards
         Deck firstDeck = new Deck();
-        Deck deck1 = new Deck();
-        Deck deck2 = new Deck();
-        List<String> cardsInsideFirstDeckUnsorted = new ArrayList();  // list of cards number present in this deck (if a card is present x times there are x time the number of this card inside this list)
-        List<String> cardsInsideDeck2Unsorted = new ArrayList();      // same as above for deck 2
-        List<String> cardsInsideSideDeckUnsorted = new ArrayList();   // same as above for side deck
-        HashMap<Object, Integer> cardsInsideFirstDeck;  // hashmap with the cards numbers inside the deck and for each number the number of occurance
-        HashMap<Object, Integer> cardsInsideDeck2;      // above ..
-        HashMap<Object, Integer> cardsInsideSideDeck;   // above ..
                 
 
         // Main loop to init cards, and add to the decks
@@ -353,11 +352,7 @@ public class Board {
             }
         }
         
-        // We transform the list of cards to an hashmap with their occurance
-        cardsInsideFirstDeck = Deck.transformListOfCard( cardsInsideFirstDeckUnsorted, String.class );
-        cardsInsideDeck2 = Deck.transformListOfCard( cardsInsideDeck2Unsorted, String.class );
-        cardsInsideSideDeck = Deck.transformListOfCard( cardsInsideSideDeckUnsorted, String.class );
-        
+
         firstDeck.mix(); // We mix the big deck
 //        LOGGER.debug("initDecks : sizeof firsDeck : " + firstDeck.size());
         this.fourCurrentCards = firstDeck.pickFourFirstCards(); // We Pick the four first cards from the main deck
@@ -427,6 +422,8 @@ public class Board {
 
 
     
+    
+    
     /***********************************************************************************************
      *
      *                                  Getter & Setter
@@ -443,107 +440,61 @@ public class Board {
         return this.playerTokensAndPlayers.get( token );
     }
     
-    /**
-     * 
-     * @return 
-     */
     public PlayerToken getCurrentPlayerToken() {
         return currentPlayerToken;
     }
 
-    /**
-     * 
-     * @param currentPlayerToken 
-     */
     public void setCurrentPlayerToken(PlayerToken currentPlayerToken) {
         this.currentPlayerToken = currentPlayerToken;
     }
 
 
-    /**
-     * 
-     * @return 
-     */
     public Deck getDeck() {
         return deck;
     }
     
-    /**
-     * 
-     * @param deck
-     */
     public void setDeck(Deck deck){
     	this.deck = deck;
     }
 
-    /**
-     * 
-     * @return 
-     */
     public HashMap<String, Area> getAreas() {
         return areas;
     }
 
-    /**
-     * 
-     * @return
-     */
     public Card[] getFourCurrentCards() {
-            return fourCurrentCards;
+        return fourCurrentCards;
     }
 
-    /**
-     * 
-     * @param fourCurrentCards
-     */
     public void setFourCurrentCards(Card[] fourCurrentCards) {
-            this.fourCurrentCards = fourCurrentCards;
+        this.fourCurrentCards = fourCurrentCards;
     }
 
-    /**
-     * 
-     * @return
-     */
     public ExpoCard[] getThreeExpoCards() {
-            return threeExpoCards;
+        return threeExpoCards;
     }
 
-    /**
-     * 
-     * @param threeExpoCards
-     */
     public void setThreeExpoCards(ExpoCard[] threeExpoCards) {
-            this.threeExpoCards = threeExpoCards;
+        this.threeExpoCards = threeExpoCards;
     }
-
 
     public Area getArea(String areaName){
-
-            return this.getAreas().get(areaName);
+        return this.getAreas().get(areaName);
     }
-
 
     public HashMap<PlayerToken, Player> getPlayerTokensAndPlayers() {
-            return playerTokensAndPlayers;
+        return playerTokensAndPlayers;
     }
 
-
-    public void setPlayerTokensAndPlayers(
-                    HashMap<PlayerToken, Player> playerTokensAndPlayers) {
-            this.playerTokensAndPlayers = playerTokensAndPlayers;
+    public void setPlayerTokensAndPlayers( HashMap<PlayerToken, Player> playerTokensAndPlayers ) {
+        this.playerTokensAndPlayers = playerTokensAndPlayers;
     }
 
+    public Deck getSideDeck() {
+        return sideDeck;
+    }
 
-	public Deck getSideDeck() {
-		return sideDeck;
-	}
-
-
-	public void setSideDeck(Deck sideDeck) {
-		this.sideDeck = sideDeck;
-	}
+    public void setSideDeck(Deck sideDeck) {
+        this.sideDeck = sideDeck;
+    }
     
-    
-
-	
 }
