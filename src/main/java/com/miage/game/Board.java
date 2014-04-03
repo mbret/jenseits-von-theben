@@ -307,40 +307,41 @@ public class Board {
              * Here we instantiate the card relating to the specified type in config file (the values)
              */
             if( type.equals("excavationAuthorization") ){
-                newCard = new ExcavationAuthorizationCard(id, area, weekCost);
+                newCard = new ExcavationAuthorizationCard(id, "displayName", area, weekCost);
             }
             else if( type.equals("zeppelin") ){
-                newCard = new ZeppelinCard(id, area, weekCost);
+                newCard = new ZeppelinCard(id, "displayName", area, weekCost);
             }
             else if( type.equals("car") ){
-                newCard = new CarCard(id, area, weekCost);
+                newCard = new CarCard(id, "displayName", area, weekCost);
             }
             else if( type.equals("congress") ){
-                newCard = new CongressCard(id, area, weekCost);
+                newCard = new CongressCard(id, "displayName", area, weekCost);
             }
             else if( type.equals("assistant") ){
-                newCard = new AssistantCard(id, area, weekCost);
+                newCard = new AssistantCard(id, "displayName", area, weekCost);
             }
             else if( type.equals("shovel") ){
-                newCard = new ShovelCard(id, area, weekCost);
+                newCard = new ShovelCard(id, "displayName", area, weekCost);
             }
             else if( type.equals("generalKnowledge") ){
                 int value = Integer.parseInt(values[3]); // check pattern in .properties
-                newCard = new GeneralKnowledgeCard(id, area, weekCost, value);
+                newCard = new GeneralKnowledgeCard(id, "displayName", area, weekCost, value);
             }
             else if (type.equals("specificKnowledge")){
                 int value = Integer.parseInt(values[3]); // check pattern in .properties
                 String excavationArea = values[4];
-                newCard = new SpecificKnowledgeCard(id, area, weekCost, value, excavationArea);
+                newCard = new SpecificKnowledgeCard(id, "displayName", area, weekCost, value, excavationArea);
             }
             else if (type.equals("ethnologicalKnowledge")){
                 int value = Integer.parseInt(values[3]); // check pattern in .properties
                 String excavationArea = values[4];
-                newCard = new EthnologicalKnowledgeCard(id, area, weekCost, value, excavationArea);
+                newCard = new EthnologicalKnowledgeCard(id, "displayName", area, weekCost, value, excavationArea);
             }
             else if(type.equals("expo")){
                 boolean bigExpo = Boolean.parseBoolean(values[3]); // check pattern in .properties
-                newCard = new ExpoCard(id, area, weekCost, bigExpo);
+                int value = Integer.parseInt(values[4]);
+                newCard = new ExpoCard(id, "displayName", area, weekCost, bigExpo, value);
             }
             
             // We add the card inside deck but we retain expo card

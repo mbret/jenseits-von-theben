@@ -9,10 +9,23 @@ package com.miage.cards;
 public class ZeppelinCard extends Card{
 
     
-    public ZeppelinCard(int id, String areaName, int weekCost) {
-        super(id, "zeppelin", areaName, weekCost);
+    public ZeppelinCard(int id, String displayName, String areaName, int weekCost) {
+        super(displayName, areaName, id, weekCost);
     }
 
+    /**
+     * 
+     * @param id
+     * @param areaName
+     * @param weekCost 
+     * @deprecated 
+     */
+    public ZeppelinCard(int id, String areaName, int weekCost) {
+        this(id, "displayName", areaName, weekCost);
+    }
+
+    
+    
     @Override
     public boolean isDiscardable() {
         return true;
