@@ -296,6 +296,56 @@ public class Player {
         		this.updateCompetencesPointsOrKnowledge(card, -1);
         	}
         }
+        
+        
+        
+        /**
+         * 
+         * Return the total of knowledge points for excavate in the area
+         * 
+         * @param area 
+         * @param ethnologicalKnowledge
+         * @return the number of knowledge points
+         */
+        public int totalKnowledgePoints(Area area, boolean ethnologicalKnowledge){
+        	
+        	int numberOfPoints = 0;
+        	
+        	int numberOfGeneralKnowledgePoints = this.playerKnowledges.getGeneralKnowledge();
+        	int numberOfSpecificKnowledgePoints = this.playerKnowledges.getSpecificKnowledges().get(area.getName());
+        	
+        	if(ethnologicalKnowledge){
+        		numberOfSpecificKnowledgePoints = this.playerKnowledges.getEthnologicalKnowledges().get(area.getName());
+        	}
+        	
+        	if(numberOfSpecificKnowledgePoints > numberOfGeneralKnowledgePoints)
+        		numberOfPoints = numberOfGeneralKnowledgePoints*2;
+        	else
+        		numberOfPoints = numberOfGeneralKnowledgePoints + numberOfSpecificKnowledgePoints;
+        		
+        	return numberOfPoints;
+        	
+        }
+        
+        
+       /**
+        * 
+        * method which returns the number of tokens that a player can pick in a Area
+        * 
+        * @param area where excavate
+        * @param ethnologicKnowledge if the player use his ethnologic knowledge
+        * @param uniqueShovel if the player use an unique shovel
+        * @param uniqueAssistant if the player use an unique assistant
+        * @return
+        */
+        public int numberOfTokensPickable(Area area, boolean ethnologicKnowledge, boolean uniqueShovel, boolean uniqueAssistant){
+        	
+        	int numberOfTokens = 0;
+        	
+        	
+        	
+        	
+        }
     
     
     
