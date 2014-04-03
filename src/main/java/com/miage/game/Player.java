@@ -315,11 +315,11 @@ public class Player {
         	int numberOfSpecificKnowledgePoints = this.playerKnowledges.getSpecificKnowledges().get(area.getName());
         	
         	if(ethnologicalKnowledge){
-        		numberOfSpecificKnowledgePoints = this.playerKnowledges.getEthnologicalKnowledges().get(area.getName());
+        		numberOfSpecificKnowledgePoints += this.playerKnowledges.getEthnologicalKnowledges().get(area.getName());
         	}
         	
-        	if(numberOfSpecificKnowledgePoints > numberOfGeneralKnowledgePoints)
-        		numberOfPoints = numberOfGeneralKnowledgePoints*2;
+        	if(numberOfGeneralKnowledgePoints > numberOfSpecificKnowledgePoints)
+        		numberOfPoints = numberOfSpecificKnowledgePoints*2;
         	else
         		numberOfPoints = numberOfGeneralKnowledgePoints + numberOfSpecificKnowledgePoints;
         		
@@ -328,7 +328,7 @@ public class Player {
         }
         
         
-       /**
+        /**
         * 
         * method which returns the number of tokens that a player can pick in a Area
         * 
@@ -338,7 +338,7 @@ public class Player {
         * @param uniqueAssistant if the player use an unique assistant
         * @return
         */
-        public int numberOfTokensPickable(Area area, boolean ethnologicKnowledge, boolean uniqueShovel, boolean uniqueAssistant){
+        public void numberOfTokensPickable(Area area, boolean ethnologicKnowledge, boolean uniqueShovel, boolean uniqueAssistant){
         	
         	int numberOfTokens = 0;
         	

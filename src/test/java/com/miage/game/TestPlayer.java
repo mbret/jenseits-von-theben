@@ -273,6 +273,27 @@ public class TestPlayer {
 		
 	}
 	
+	
+	/**
+	 * Test of the method which calcul the total of knowledge points
+	 */
+	@Test
+	public void testTotalPointsOfKnowledge(){
+		
+		for(int i=0;i < 8;i++)
+		this.player.pickCard(board, 3);
+		
+		assertEquals(this.player.totalKnowledgePoints(board.getArea("greece"), true), 6);
+		assertEquals(this.player.totalKnowledgePoints(board.getArea("greece"), false), 6);
+		
+		for(int i=0;i < 8;i++)
+			this.player.pickCard(board, 3);
+		
+		assertEquals(this.player.totalKnowledgePoints(board.getArea("greece"), true), 12);
+		assertEquals(this.player.totalKnowledgePoints(board.getArea("greece"), false), 6);
+		
+	}
+	
 
 	
 	
