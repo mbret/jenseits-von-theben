@@ -213,7 +213,7 @@ public abstract class Card {
     /**
      * 
      * @return
-     * @deprecated 
+     * @deprecated
      */
     public String getName() {
         return name;
