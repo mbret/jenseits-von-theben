@@ -50,17 +50,17 @@ public class TestBoard {
 		
 		fourCards = new Card[4];
 		
-		fourCards[0] = new GeneralKnowledgeCard("berlin", 2, 2);		
-		fourCards[1] = new GeneralKnowledgeCard("paris", 2, 2);		
-		fourCards[2] = new GeneralKnowledgeCard("rome", 2, 2);		
-		fourCards[3] = new GeneralKnowledgeCard("vienna", 2, 2);		
+		fourCards[0] = new GeneralKnowledgeCard(0,"berlin", 2, 2);		
+		fourCards[1] = new GeneralKnowledgeCard(0,"paris", 2, 2);		
+		fourCards[2] = new GeneralKnowledgeCard(0,"rome", 2, 2);		
+		fourCards[3] = new GeneralKnowledgeCard(0,"vienna", 2, 2);		
 		
 		board.setFourCurrentCards(fourCards);
 		
 		deckTest = new Deck();
-		deckTest.addCard(new ExpoCard("moscow", 4, true));
-		deckTest.addCard(new ExpoCard("warsaw", 4, true));
-		deckTest.addCard(new ShovelCard("london", 2));
+		deckTest.addCard(new ExpoCard(0,"moscow", 4, true));
+		deckTest.addCard(new ExpoCard(0,"warsaw", 4, true));
+		deckTest.addCard(new ShovelCard(0,"london", 2));
 		board.setDeck(deckTest);
 		
 		
@@ -99,10 +99,10 @@ public class TestBoard {
 	public void testAddExpoCardOnTheBoard(){
 		
 		
-		ExpoCard card1 = new ExpoCard("berlin", 4, true);
-		ExpoCard card2 = new ExpoCard("roma", 3, false);
-		ExpoCard card3 = new ExpoCard("vienna", 4, true);
-		ExpoCard card4 = new ExpoCard("paris", 3, false);
+		ExpoCard card1 = new ExpoCard(0,"berlin", 4, true);
+		ExpoCard card2 = new ExpoCard(0,"roma", 3, false);
+		ExpoCard card3 = new ExpoCard(0,"vienna", 4, true);
+		ExpoCard card4 = new ExpoCard(0,"paris", 3, false);
 		
 		board.addExpoCardOnBoard(card1);
 		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,berlin,4,5");
@@ -146,19 +146,25 @@ public class TestBoard {
             
             // test total point token 
             // test total point token of 4 
-            Integer nbPointToken = 14 + Integer.parseInt(ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty("nbEmptyTokenPoint")); // (greece should have 13 pointTokens)
+            Integer nbPointToken = 31; // (greece should have 31 pointTokens)
             Integer nbPointTokenOf4InsideGreece = 1; // (greece should have 3 pointTokens of 4)
             LinkedList<Token> tokens = ((ExcavationArea)b.getAreas().get("greece")).getTokenList();
             Integer countedPointToken = 0;
+            int expectedNbEmptyTokens = 16;
+            int nbEmptyTokens = 0;
             Integer countedNbPointTokenOf4InsideCrete = 0;
-            for (Token token : tokens) {
+            for (Token token : tokens){
                 if(token instanceof PointToken){
                     countedPointToken ++;
+                    if( ((PointToken)token).getValue() == 0 || ((PointToken)token).getValue() == null){
+                        nbEmptyTokens++;
+                    }
                     if( ((PointToken)token).getValue() == 4 ){
                         countedNbPointTokenOf4InsideCrete ++;
                     }
                 }
             }
+            assertEquals(expectedNbEmptyTokens, nbEmptyTokens);
             assertEquals(nbPointToken, countedPointToken );
             assertEquals(nbPointTokenOf4InsideGreece, countedNbPointTokenOf4InsideCrete );
         }
@@ -208,13 +214,13 @@ public class TestBoard {
              * Set some cards into the deck
              */
             Deck deckTest2 = new Deck();
-            deckTest2.addCard(new ExpoCard("moscow", 4, true));
-            deckTest2.addCard(new ExpoCard("warsaw", 4, true));
-            deckTest2.addCard(new GeneralKnowledgeCard("berlin", 2, 3));
-            deckTest2.addCard(new ShovelCard("london", 2));
-            deckTest2.addCard(new EthnologicalKnowledgeCard("berlin", 2, 2,"greece"));
-            deckTest2.addCard(new EthnologicalKnowledgeCard("rome", 2, 2,"egypt"));
-            deckTest2.addCard(new SpecificKnowledgeCard("rome", 2, 2,"crete"));
+            deckTest2.addCard(new ExpoCard(0,"moscow", 4, true));
+            deckTest2.addCard(new ExpoCard(0,"warsaw", 4, true));
+            deckTest2.addCard(new GeneralKnowledgeCard(0,"berlin", 2, 3));
+            deckTest2.addCard(new ShovelCard(0,"london", 2));
+            deckTest2.addCard(new EthnologicalKnowledgeCard(0,"berlin", 2, 2,"greece"));
+            deckTest2.addCard(new EthnologicalKnowledgeCard(0,"rome", 2, 2,"egypt"));
+            deckTest2.addCard(new SpecificKnowledgeCard(0,"rome", 2, 2,"crete"));
             board.setDeck(deckTest2);
             
             board.changeFourCurrentCards();

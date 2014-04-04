@@ -46,36 +46,54 @@ public class TestPlayer {
 		
 		
 		this.deck = new Deck();
-		this.deck.addCard(new SpecificKnowledgeCard("paris", 2, 3, "greece"));
-		this.deck.addCard(new GeneralKnowledgeCard("vienna", 2, 3));
-		this.deck.addCard(new GeneralKnowledgeCard("rome", 2, 3));
-		this.deck.addCard(new GeneralKnowledgeCard("moscow", 2, 3));
-		this.deck.addCard(new GeneralKnowledgeCard("warsaw", 2, 3));
+		this.deck.addCard(new SpecificKnowledgeCard(0,"paris", 2, 3, "greece"));
+		this.deck.addCard(new GeneralKnowledgeCard(0,"vienna", 2, 3));
+		this.deck.addCard(new GeneralKnowledgeCard(0,"rome", 2, 3));
+		this.deck.addCard(new GeneralKnowledgeCard(0,"moscow", 2, 3));
+		this.deck.addCard(new GeneralKnowledgeCard(0,"warsaw", 2, 3));
 		
 		
 		
-		this.deck.addCard(new AssistantCard("london", 2));
-		this.deck.addCard(new AssistantCard("roma", 2));
-		this.deck.addCard(new AssistantCard("vienna", 2));
-		this.deck.addCard(new CarCard("berlin", 2));
-		this.deck.addCard(new ZeppelinCard("paris", 2));
-		this.deck.addCard(new CongressCard("roma", 2));
-		this.deck.addCard(new CongressCard("paris", 2));
-		this.deck.addCard(new CongressCard("berlin", 2));
-		this.deck.addCard(new EthnologicalKnowledgeCard("warsaw", 2, 3, "greece"));
-		this.deck.addCard(new ExcavationAuthorizationCard("warsaw", 2));
-		this.deck.addCard(new ExpoCard("warsaw", 2, true));
-		this.deck.addCard(new ExpoCard("moscow", 2, false));
-		this.deck.addCard(new ShovelCard("warsaw", 2));
-		this.deck.addCard(new ShovelCard("london", 2));
+		this.deck.addCard(new AssistantCard(0,"london", 2));
+		this.deck.addCard(new AssistantCard(0,"roma", 2));
+		this.deck.addCard(new AssistantCard(0,"vienna", 2));
+		this.deck.addCard(new CarCard(0,"berlin", 2));
+		this.deck.addCard(new ZeppelinCard(0,"paris", 2));
+		this.deck.addCard(new CongressCard(0,"roma", 2));
+		this.deck.addCard(new CongressCard(0,"paris", 2));
+		this.deck.addCard(new CongressCard(0,"berlin", 2));
+		this.deck.addCard(new EthnologicalKnowledgeCard(0,"warsaw", 2, 3, "greece"));
+		this.deck.addCard(new ExcavationAuthorizationCard(0,"warsaw", 2));
+		this.deck.addCard(new ExpoCard(0,"warsaw", 2, true));
+		this.deck.addCard(new ExpoCard(0,"moscow", 2, false));
+		this.deck.addCard(new ShovelCard(0,"warsaw", 2));
+		this.deck.addCard(new ShovelCard(0,"london", 2));
+	
+		
+		
+		
+		this.deck.addCard(new AssistantCard(0,"london", 2));
+		this.deck.addCard(new AssistantCard(0,"roma", 2));
+		this.deck.addCard(new AssistantCard(0,"vienna", 2));
+		this.deck.addCard(new CarCard(0,"berlin", 2));
+		this.deck.addCard(new ZeppelinCard(0,"paris", 2));
+		this.deck.addCard(new CongressCard(0,"roma", 2));
+		this.deck.addCard(new CongressCard(0,"paris", 2));
+		this.deck.addCard(new CongressCard(0,"berlin", 2));
+		this.deck.addCard(new EthnologicalKnowledgeCard(0,"warsaw", 2, 3, "greece"));
+		this.deck.addCard(new ExcavationAuthorizationCard(0,"warsaw", 2));
+		this.deck.addCard(new ExpoCard(0,"warsaw", 2, true));
+		this.deck.addCard(new ExpoCard(0,"moscow", 2, false));
+		this.deck.addCard(new ShovelCard(0,"warsaw", 2));
+		this.deck.addCard(new ShovelCard(0,"london", 2));
 	
 		
 		Card[] fourCards = new Card[4];
 		
-		fourCards[0] = new AssistantCard("berlin", 2);		
-		fourCards[1] = new GeneralKnowledgeCard("paris", 2, 3);		
-		fourCards[2] = new GeneralKnowledgeCard("rome", 2, 3);		
-		fourCards[3] = new GeneralKnowledgeCard("vienna", 2, 3);
+		fourCards[0] = new AssistantCard(0,"berlin", 2);		
+		fourCards[1] = new GeneralKnowledgeCard(0,"paris", 2, 3);		
+		fourCards[2] = new GeneralKnowledgeCard(0,"rome", 2, 3);		
+		fourCards[3] = new GeneralKnowledgeCard(0,"vienna", 2, 3);
 		
 		this.board.setDeck(deck);
 		this.board.setFourCurrentCards(fourCards);
@@ -149,12 +167,12 @@ public class TestPlayer {
 	@Test
 	public void testCanExcavate() throws IOException{
 		
-            this.player.addCompetencesPointsOrKnowledge(new SpecificKnowledgeCard("paris", 2, 3, "greece"));
+            this.player.addCompetencesPointsOrKnowledge(new SpecificKnowledgeCard(0,"paris", 2, 3, "greece"));
             this.player.addAreaAlreadyExcavate(this.board.getArea("egypt").getName()); 
             assertTrue(this.player.canExcavate(this.board.getArea("greece")));
             this.player.addAreaAlreadyExcavate(this.board.getArea("greece").getName());
             assertFalse(this.player.canExcavate(this.board.getArea("greece")));
-            this.player.addCompetencesPointsOrKnowledge(new ExcavationAuthorizationCard("warsaw", 2));
+            this.player.addCompetencesPointsOrKnowledge(new ExcavationAuthorizationCard(0,"warsaw", 2));
             assertFalse(this.player.canExcavate(this.board.getArea("warsaw")));
             assertFalse(this.player.canExcavate(this.board.getArea("egypt")));
             assertTrue(this.player.canExcavate(this.board.getArea("greece")));
@@ -227,11 +245,11 @@ public class TestPlayer {
 	public void testDiscardCard(){
 		
 		this.deck = new Deck();		
-		this.deck.addCard(new AssistantCard("london", 2));
-		this.deck.addCard(new CarCard("berlin", 2));
-		this.deck.addCard(new AssistantCard("roma", 2));
-		this.deck.addCard(new AssistantCard("vienna", 2));
-		this.deck.addCard(new ZeppelinCard("paris", 2));
+		this.deck.addCard(new AssistantCard(0,"london", 2));
+		this.deck.addCard(new CarCard(0,"berlin", 2));
+		this.deck.addCard(new AssistantCard(0,"roma", 2));
+		this.deck.addCard(new AssistantCard(0,"vienna", 2));
+		this.deck.addCard(new ZeppelinCard(0,"paris", 2));
 		
 		this.board.setDeck(this.deck);
 		

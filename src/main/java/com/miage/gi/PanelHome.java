@@ -1,6 +1,7 @@
-
 package com.miage.gi;
 
+import com.miage.areas.Area;
+import com.miage.config.ConfigManager;
 import com.miage.game.Board;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
@@ -11,6 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * Class Home Panel
+ *
  * @author Anne-Sophie
  */
 public class PanelHome extends javax.swing.JPanel {
@@ -38,18 +40,18 @@ public class PanelHome extends javax.swing.JPanel {
         playPanel.setVisible(false);
 
         newGamePanel.setVisible(false);
-        
+
         backRedNewGamePanelLabel.setVisible(false);
         newPlayRedLabel.setVisible(false);
-        
+
         player1TextField.setText("");
         player2TextField.setText("");
         player3TextField.setText("");
         player4TextField.setText("");
-        
+
         player1TextField.setFocusable(true);
         
-        
+        warningInternalFrame.setVisible(false);
 
     }
 
@@ -62,6 +64,11 @@ public class PanelHome extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        warningInternalFrame = new javax.swing.JInternalFrame();
+        jPanel1 = new javax.swing.JPanel();
+        writingLabel = new javax.swing.JLabel();
+        warningLabel = new javax.swing.JLabel();
+        backgroundInternalFrameLabel = new javax.swing.JLabel();
         newGamePanel = new javax.swing.JPanel();
         newPlayRedLabel = new javax.swing.JLabel();
         newPlayLabel = new javax.swing.JLabel();
@@ -107,6 +114,28 @@ public class PanelHome extends javax.swing.JPanel {
 
         setMaximumSize(new java.awt.Dimension(1366, 768));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        warningInternalFrame.setClosable(true);
+        warningInternalFrame.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        warningInternalFrame.setOpaque(true);
+        warningInternalFrame.setVisible(true);
+        warningInternalFrame.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        writingLabel.setFont(new java.awt.Font("Tempus Sans ITC", 1, 18)); // NOI18N
+        writingLabel.setText("<html>Veuillez renseigner les pseudonymes des joueurs !<br>Les couleurs ne doivent être sélectionnées qu'une seule fois !");
+        jPanel1.add(writingLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 290, 120));
+
+        warningLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logo-warning.png"))); // NOI18N
+        jPanel1.add(warningLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 80, 80));
+
+        backgroundInternalFrameLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/backgroundWarning.jpg"))); // NOI18N
+        jPanel1.add(backgroundInternalFrameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 290));
+
+        warningInternalFrame.getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        add(warningInternalFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 200, 580, 320));
 
         newGamePanel.setOpaque(false);
         newGamePanel.setPreferredSize(new java.awt.Dimension(450, 480));
@@ -446,7 +475,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * Quit application
-     * @param evt 
+     *
+     * @param evt
      */
     private void crossLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_crossLabelMouseClicked
         System.exit(0);
@@ -454,7 +484,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse enter into play label
-     * @param evt 
+     *
+     * @param evt
      */
     private void playLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playLabelMouseEntered
         playLabel.setVisible(false);
@@ -463,7 +494,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse exit from quit label
-     * @param evt 
+     *
+     * @param evt
      */
     private void quitRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quitRedLabelMouseExited
         quitRedLabel.setVisible(false);
@@ -472,7 +504,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse enter into quit label
-     * @param evt 
+     *
+     * @param evt
      */
     private void quitLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quitLabelMouseEntered
         quitLabel.setVisible(false);
@@ -481,7 +514,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse exit from play label
-     * @param evt 
+     *
+     * @param evt
      */
     private void playRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playRedLabelMouseExited
         playLabel.setVisible(true);
@@ -492,7 +526,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse enter into parameter label
-     * @param evt 
+     *
+     * @param evt
      */
     private void parameterLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parameterLabelMouseEntered
         parameterLabel.setVisible(false);
@@ -501,7 +536,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse exit from parameter label
-     * @param evt 
+     *
+     * @param evt
      */
     private void parameterRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parameterRedLabelMouseExited
         parameterLabel.setVisible(true);
@@ -510,7 +546,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse enter into rules label
-     * @param evt 
+     *
+     * @param evt
      */
     private void rulesLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rulesLabelMouseEntered
         rulesLabel.setVisible(false);
@@ -519,7 +556,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse exit from rules label
-     * @param evt 
+     *
+     * @param evt
      */
     private void rulesRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rulesRedLabelMouseExited
         rulesLabel.setVisible(true);
@@ -528,7 +566,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse click on play label
-     * @param evt 
+     *
+     * @param evt
      */
     private void playRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playRedLabelMouseClicked
         MenuPanel.setVisible(false);
@@ -537,7 +576,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse enter into new game label
-     * @param evt 
+     *
+     * @param evt
      */
     private void newGameLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameLabelMouseEntered
         newGameLabel.setVisible(false);
@@ -546,7 +586,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse exit from new game label
-     * @param evt 
+     *
+     * @param evt
      */
     private void newGameRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameRedLabelMouseExited
         newGameLabel.setVisible(true);
@@ -555,7 +596,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse exit from load game label
-     * @param evt 
+     *
+     * @param evt
      */
     private void loadGameRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadGameRedLabelMouseExited
         loadGameLabel.setVisible(true);
@@ -564,7 +606,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse enter into load game label
-     * @param evt 
+     *
+     * @param evt
      */
     private void loadGameLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadGameLabelMouseEntered
         loadGameLabel.setVisible(false);
@@ -573,7 +616,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse enter into back label
-     * @param evt 
+     *
+     * @param evt
      */
     private void backLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backLabelMouseEntered
         backLabel.setVisible(false);
@@ -582,7 +626,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse exit from back label
-     * @param evt 
+     *
+     * @param evt
      */
     private void backRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backRedLabelMouseExited
         backLabel.setVisible(true);
@@ -592,7 +637,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse click on back label
-     * @param evt 
+     *
+     * @param evt
      */
     private void backRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backRedLabelMouseClicked
         MenuPanel.setVisible(true);
@@ -606,7 +652,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse click on new game label
-     * @param evt 
+     *
+     * @param evt
      */
     private void newGameRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameRedLabelMouseClicked
         newGamePanel.setVisible(true);
@@ -616,7 +663,7 @@ public class PanelHome extends javax.swing.JPanel {
         player4TextField.setVisible(false);
         colorPlayer3ComboBox.setVisible(false);
         colorPlayer4ComboBox.setVisible(false);
-        
+
         player1TextField.requestFocus();
     }//GEN-LAST:event_newGameRedLabelMouseClicked
 
@@ -638,7 +685,7 @@ public class PanelHome extends javax.swing.JPanel {
 
     //show elements according to number of players
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        nbPlayers =  (String)jComboBox1.getSelectedItem();
+        nbPlayers = (String) jComboBox1.getSelectedItem();
         if (nbPlayers.compareTo("3") == 0) {
             player3Label.setVisible(true);
             player3TextField.setVisible(true);
@@ -646,14 +693,14 @@ public class PanelHome extends javax.swing.JPanel {
             player4Label.setVisible(false);
             player4TextField.setVisible(false);
             colorPlayer4ComboBox.setVisible(false);
-        }else if(nbPlayers.compareTo("4") == 0){
+        } else if (nbPlayers.compareTo("4") == 0) {
             player3Label.setVisible(true);
             player3TextField.setVisible(true);
             colorPlayer3ComboBox.setVisible(true);
             player4Label.setVisible(true);
             player4TextField.setVisible(true);
             colorPlayer4ComboBox.setVisible(true);
-        }else if(nbPlayers.compareTo("2") == 0){
+        } else if (nbPlayers.compareTo("2") == 0) {
             player3Label.setVisible(false);
             player3TextField.setVisible(false);
             colorPlayer3ComboBox.setVisible(false);
@@ -665,7 +712,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse exit from back label
-     * @param evt 
+     *
+     * @param evt
      */
     private void backRedNewGamePanelLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backRedNewGamePanelLabelMouseExited
         backRedNewGamePanelLabel.setVisible(false);
@@ -674,7 +722,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse enter into back label
-     * @param evt 
+     *
+     * @param evt
      */
     private void backNewGamePanelLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backNewGamePanelLabelMouseEntered
         backRedNewGamePanelLabel.setVisible(true);
@@ -683,7 +732,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse click on back label
-     * @param evt 
+     *
+     * @param evt
      */
     private void backRedNewGamePanelLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backRedNewGamePanelLabelMouseClicked
         newGamePanel.setVisible(false);
@@ -692,7 +742,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse enter into play label(run map)
-     * @param evt 
+     *
+     * @param evt
      */
     private void newPlayLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newPlayLabelMouseEntered
         newPlayLabel.setVisible(false);
@@ -701,7 +752,8 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse exit from play label
-     * @param evt 
+     *
+     * @param evt
      */
     private void newPlayRedLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newPlayRedLabelMouseExited
         newPlayLabel.setVisible(true);
@@ -710,10 +762,10 @@ public class PanelHome extends javax.swing.JPanel {
 
     /**
      * When mouse click on play label(run map and create board)
-     * @param evt 
+     *
+     * @param evt
      */
-    
-    //définir area position et localdate pour chaque playerToken
+    //d�finir area position et localdate pour chaque playerToken
     private void newPlayRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newPlayRedLabelMouseClicked
         int nbPlayer = Integer.parseInt(nbPlayers);
         PlayerToken playerToken1 = null;
@@ -724,44 +776,64 @@ public class PanelHome extends javax.swing.JPanel {
         Player player2 = null;
         Player player3 = null;
         Player player4 = null;
-        String colorPlayer1 =(String)colorPlayer1ComboBox.getSelectedItem();
-        String colorPlayer2 =(String)colorPlayer2ComboBox.getSelectedItem();
-        String colorPlayer3 =(String)colorPlayer3ComboBox.getSelectedItem();
-        String colorPlayer4 =(String)colorPlayer4ComboBox.getSelectedItem();
+        String colorPlayer1 = (String) colorPlayer1ComboBox.getSelectedItem();
+        String colorPlayer2 = (String) colorPlayer2ComboBox.getSelectedItem();
+        String colorPlayer3 = (String) colorPlayer3ComboBox.getSelectedItem();
+        String colorPlayer4 = (String) colorPlayer4ComboBox.getSelectedItem();
         String logPlayer1 = player1TextField.getText();
         String logPlayer2 = player2TextField.getText();
         String logPlayer3 = player3TextField.getText();
         String logPlayer4 = player4TextField.getText();
-        HashMap<PlayerToken,Player> hashMapPlayerTokenPlayer;
-        
-        if(checkColors() && checkLogin()){
-            if(nbPlayers.compareTo("2")==0){
-                //annee 1901 case 0
-                playerToken1 = new PlayerToken(colorPlayer1);
-                player1 = new Player(logPlayer1);
-                //playerToken1.setTimeState(new LocalDate(31,12,1901));
-                playerToken2 = new PlayerToken(colorPlayer2);
-                player2 = new Player(logPlayer2);
-            }else if(nbPlayers.compareTo("3")==0){
-                //annee 1901 case 16
-                playerToken1 = new PlayerToken(colorPlayer1);
-                player1 = new Player(logPlayer1);
-                playerToken2 = new PlayerToken(colorPlayer2);
-                player2 = new Player(logPlayer2);
-                playerToken3 = new PlayerToken(colorPlayer3);
-                player3 = new Player(logPlayer3);
-            }else if(nbPlayers.compareTo("4")==0){
-                //annee 1902 case 0
-                playerToken1 = new PlayerToken(colorPlayer1);
-                player1 = new Player(logPlayer1);
-                playerToken2 = new PlayerToken(colorPlayer2);
-                player2 = new Player(logPlayer2);
-                playerToken3 = new PlayerToken(colorPlayer3);
-                player3 = new Player(logPlayer3);
-                playerToken4 = new PlayerToken(colorPlayer4);
-                player4 = new Player(logPlayer4);
+        HashMap<PlayerToken, Player> hashMapPlayerTokenPlayer;
+        String idStartString;
+        try {
+            idStartString = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME).getProperty("area.warsaw.id");
+            int idStartInt = Integer.parseInt(idStartString);
+            String areaStart = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME).getProperty("area.warsaw.name");
+            Area start = new Area(idStartInt, areaStart) {};
+
+            if (checkColors() && checkLogin()) {
+                
+                if (nbPlayers.compareTo("2") == 0) {
+                    //annee 1901 case 0
+                    playerToken1 = new PlayerToken(colorPlayer1);
+                    playerToken1.setPosition(start);
+                    player1 = new Player(logPlayer1);
+                    //playerToken1.setTimeState(new LocalDate(31,12,1901));
+                    playerToken2 = new PlayerToken(colorPlayer2);
+                    playerToken2.setPosition(start);
+                    player2 = new Player(logPlayer2);
+                } else if (nbPlayers.compareTo("3") == 0) {
+                    //annee 1901 case 16
+                    playerToken1 = new PlayerToken(colorPlayer1);
+                    playerToken1.setPosition(start);
+                    player1 = new Player(logPlayer1);
+                    playerToken2 = new PlayerToken(colorPlayer2);
+                    playerToken2.setPosition(start);
+                    player2 = new Player(logPlayer2);
+                    playerToken3 = new PlayerToken(colorPlayer3);
+                    playerToken3.setPosition(start);
+                    player3 = new Player(logPlayer3);
+                } else if (nbPlayers.compareTo("4") == 0) {
+                    //annee 1902 case 0
+                    playerToken1 = new PlayerToken(colorPlayer1);
+                    playerToken1.setPosition(start);
+                    player1 = new Player(logPlayer1);
+                    playerToken2 = new PlayerToken(colorPlayer2);
+                    playerToken2.setPosition(start);
+                    player2 = new Player(logPlayer2);
+                    playerToken3 = new PlayerToken(colorPlayer3);
+                    playerToken3.setPosition(start);
+                    player3 = new Player(logPlayer3);
+                    playerToken4 = new PlayerToken(colorPlayer4);
+                    playerToken4.setPosition(start);
+                    player4 = new Player(logPlayer4);
+                }
+            }else{
+                //fenêtre interne pour avertir qu'il faut donner des noms aux joueurs et une seule couleur par joueur
+                warningInternalFrame.setVisible(true);
             }
-            try { 
+
                 Board board = new Board(nbPlayer);
                 hashMapPlayerTokenPlayer = board.getPlayerTokensAndPlayers();
                 hashMapPlayerTokenPlayer.put(playerToken1, player1);
@@ -769,64 +841,73 @@ public class PanelHome extends javax.swing.JPanel {
                 hashMapPlayerTokenPlayer.put(playerToken3, player3);
                 hashMapPlayerTokenPlayer.put(playerToken4, player4);
                 board.setPlayerTokensAndPlayers(hashMapPlayerTokenPlayer);
-                
-            } catch (IOException ex) {
+
+            }catch (IOException ex) {
                 Logger.getLogger(PanelHome.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+
+        
+
     }//GEN-LAST:event_newPlayRedLabelMouseClicked
 
     /**
      * check color players
-     * @return ok 
+     *
+     * @return ok
      */
-    public boolean checkColors(){
-        nbPlayers =  (String)jComboBox1.getSelectedItem();
+    public boolean checkColors() {
+        nbPlayers = (String) jComboBox1.getSelectedItem();
         boolean ok = true;
-        String colorPlayer1 = (String)colorPlayer1ComboBox.getSelectedItem();
-        String colorPlayer2 = (String)colorPlayer2ComboBox.getSelectedItem();
-        String colorPlayer3 = (String)colorPlayer3ComboBox.getSelectedItem();
-        String colorPlayer4 = (String)colorPlayer4ComboBox.getSelectedItem();
-        if(nbPlayers.compareTo("2")==0){
-            if(colorPlayer1.compareTo(colorPlayer2)==0)
+        String colorPlayer1 = (String) colorPlayer1ComboBox.getSelectedItem();
+        String colorPlayer2 = (String) colorPlayer2ComboBox.getSelectedItem();
+        String colorPlayer3 = (String) colorPlayer3ComboBox.getSelectedItem();
+        String colorPlayer4 = (String) colorPlayer4ComboBox.getSelectedItem();
+        if (nbPlayers.compareTo("2") == 0) {
+            if (colorPlayer1.compareTo(colorPlayer2) == 0) {
                 ok = false;
-            
-        }else if(nbPlayers.compareTo("3")==0){
-            if(colorPlayer1.compareTo(colorPlayer2)==0 || colorPlayer1.compareTo(colorPlayer3)==0 || colorPlayer2.compareTo(colorPlayer3)==0)
+            }
+
+        } else if (nbPlayers.compareTo("3") == 0) {
+            if (colorPlayer1.compareTo(colorPlayer2) == 0 || colorPlayer1.compareTo(colorPlayer3) == 0 || colorPlayer2.compareTo(colorPlayer3) == 0) {
                 ok = false;
-        }else if(nbPlayers.compareTo("4")==0){
-            if(colorPlayer1.compareTo(colorPlayer2)==0 || colorPlayer1.compareTo(colorPlayer3)==0 || colorPlayer2.compareTo(colorPlayer3)==0
-               || colorPlayer1.compareTo(colorPlayer4)==0 || colorPlayer2.compareTo(colorPlayer4)==0 || colorPlayer3.compareTo(colorPlayer4)==0)
+            }
+        } else if (nbPlayers.compareTo("4") == 0) {
+            if (colorPlayer1.compareTo(colorPlayer2) == 0 || colorPlayer1.compareTo(colorPlayer3) == 0 || colorPlayer2.compareTo(colorPlayer3) == 0
+                    || colorPlayer1.compareTo(colorPlayer4) == 0 || colorPlayer2.compareTo(colorPlayer4) == 0 || colorPlayer3.compareTo(colorPlayer4) == 0) {
                 ok = false;
+            }
         }
         return ok;
     }
-    
+
     /**
      * check login players
+     *
      * @return ok
      */
-    public boolean checkLogin(){
+    public boolean checkLogin() {
         boolean ok = false;
         String logPlayer1 = player1TextField.getText();
         String logPlayer2 = player2TextField.getText();
         String logPlayer3 = player3TextField.getText();
         String logPlayer4 = player4TextField.getText();
-        if(nbPlayers.compareTo("2")==0){
-            if(logPlayer1.compareTo("")!=0 && logPlayer2.compareTo("")!=0 && logPlayer1.compareTo(logPlayer2)!=0)
+        if (nbPlayers.compareTo("2") == 0) {
+            if (logPlayer1.compareTo("") != 0 && logPlayer2.compareTo("") != 0 && logPlayer1.compareTo(logPlayer2) != 0) {
                 ok = true;
-        }else if(nbPlayers.compareTo("3")==0){
-            if(logPlayer1.compareTo("")!=0 && logPlayer2.compareTo("")!=0 && logPlayer3.compareTo("")!=0 
-              && logPlayer1.compareTo(logPlayer2)!=0 && logPlayer1.compareTo(logPlayer3)!=0 && logPlayer2.compareTo(logPlayer3)!=0)
+            }
+        } else if (nbPlayers.compareTo("3") == 0) {
+            if (logPlayer1.compareTo("") != 0 && logPlayer2.compareTo("") != 0 && logPlayer3.compareTo("") != 0
+                    && logPlayer1.compareTo(logPlayer2) != 0 && logPlayer1.compareTo(logPlayer3) != 0 && logPlayer2.compareTo(logPlayer3) != 0) {
                 ok = true;
-        }else if(nbPlayers.compareTo("4")==0){
-            if(logPlayer1.compareTo("")!=0 && logPlayer2.compareTo("")!=0 && logPlayer3.compareTo("")!=0 
-               && logPlayer4.compareTo("")!=0 && logPlayer1.compareTo(logPlayer2)!=0 
-               && logPlayer1.compareTo(logPlayer3)!=0 && logPlayer2.compareTo(logPlayer3)!=0
-               && logPlayer1.compareTo(logPlayer4)!=0 && logPlayer2.compareTo(logPlayer4)!=0
-               && logPlayer3.compareTo(logPlayer4)!=0)
-                
-               ok = true;
+            }
+        } else if (nbPlayers.compareTo("4") == 0) {
+            if (logPlayer1.compareTo("") != 0 && logPlayer2.compareTo("") != 0 && logPlayer3.compareTo("") != 0
+                    && logPlayer4.compareTo("") != 0 && logPlayer1.compareTo(logPlayer2) != 0
+                    && logPlayer1.compareTo(logPlayer3) != 0 && logPlayer2.compareTo(logPlayer3) != 0
+                    && logPlayer1.compareTo(logPlayer4) != 0 && logPlayer2.compareTo(logPlayer4) != 0
+                    && logPlayer3.compareTo(logPlayer4) != 0) {
+                ok = true;
+            }
         }
         return ok;
     }
@@ -836,6 +917,7 @@ public class PanelHome extends javax.swing.JPanel {
     private javax.swing.JLabel backNewGamePanelLabel;
     private javax.swing.JLabel backRedLabel;
     private javax.swing.JLabel backRedNewGamePanelLabel;
+    private javax.swing.JLabel backgroundInternalFrameLabel;
     private javax.swing.JLabel backgroundLabel;
     private javax.swing.JComboBox colorPlayer1ComboBox;
     private javax.swing.JComboBox colorPlayer2ComboBox;
@@ -844,6 +926,7 @@ public class PanelHome extends javax.swing.JPanel {
     private javax.swing.JLabel couleurLabel;
     private javax.swing.JLabel crossLabel;
     private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel loadGameLabel;
     private javax.swing.JLabel loadGameRedLabel;
     private javax.swing.JLabel menuLabel;
@@ -873,5 +956,8 @@ public class PanelHome extends javax.swing.JPanel {
     private javax.swing.JLabel quitRedLabel;
     private javax.swing.JLabel rulesLabel;
     private javax.swing.JLabel rulesRedLabel;
+    private javax.swing.JInternalFrame warningInternalFrame;
+    private javax.swing.JLabel warningLabel;
+    private javax.swing.JLabel writingLabel;
     // End of variables declaration//GEN-END:variables
 }

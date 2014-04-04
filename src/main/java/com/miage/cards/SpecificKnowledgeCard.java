@@ -21,8 +21,8 @@ public class SpecificKnowledgeCard extends Card{
     private String codeColor;
     
 
-    public SpecificKnowledgeCard(String areaName, int weekCost, int value, String paramExcavationAreaName) throws IOException {
-            super("specificKnowledge",areaName,weekCost);
+    public SpecificKnowledgeCard(int id, String areaName, int weekCost, int value, String paramExcavationAreaName) throws IOException {
+            super(id, "specificKnowledge",areaName,weekCost);
             this.value = value;
             this.excavationAreaName = paramExcavationAreaName;
             
