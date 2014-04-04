@@ -15,6 +15,7 @@ import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.cards.ZeppelinCard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -328,24 +329,7 @@ public class Player {
         }
         
         
-        /**
-        * 
-        * method which returns the number of tokens that a player can pick in a Area
-        * 
-        * @param area where excavate
-        * @param ethnologicKnowledge if the player use his ethnologic knowledge
-        * @param uniqueShovel if the player use an unique shovel
-        * @param uniqueAssistant if the player use an unique assistant
-        * @return
-        */
-        public void numberOfTokensPickable(Area area, boolean ethnologicKnowledge, boolean uniqueShovel, boolean uniqueAssistant){
-        	
-        	int numberOfTokens = 0;
-        	
-        	
-        	
-        	
-        }
+        
     
     
     
