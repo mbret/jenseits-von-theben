@@ -49,7 +49,7 @@ public class TestPlayerToken {
 	
 		
 		Player player1 = new Player("Gael");
-		player1.updateCompetencesPointsOrKnowledge(new CarCard("berlin",1), 1);
+		player1.updateCompetencesPointsOrKnowledge(new CarCard(0,"car", "berlin",1), 1);
 		
 		HashMap<PlayerToken, Player> playerTokensAndPlayers = new HashMap<PlayerToken, Player>();
 		playerTokensAndPlayers.put(playerToken1, player1);
@@ -165,9 +165,9 @@ public class TestPlayerToken {
 	@Test
 	public void testAddWeeksPlayerToken(){
 		
-		GeneralKnowledgeCard generalKnowledgeCard = new GeneralKnowledgeCard("berlin",3,1);
-		GeneralKnowledgeCard generalKnowledgeCard2 = new GeneralKnowledgeCard("berlin",6,1);
-		ShovelCard shovelCard = new ShovelCard("paris", 3);
+		GeneralKnowledgeCard generalKnowledgeCard = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin",3,1);
+		GeneralKnowledgeCard generalKnowledgeCard2 = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin",6,1);
+		ShovelCard shovelCard = new ShovelCard(0,"shovel", "paris", 3);
 		
 		
 		this.playerToken1.addWeeksPlayerToken(generalKnowledgeCard);

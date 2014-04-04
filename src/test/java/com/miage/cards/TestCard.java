@@ -26,12 +26,12 @@ public class TestCard {
 	public void setUp() throws Exception {
 		
 		this.deck = new Deck();
-		this.deck.addCard(new GeneralKnowledgeCard("berlin", 2, 2));
-		this.deck.addCard(new SpecificKnowledgeCard("paris", 2, 2, "code"));
-		this.deck.addCard(new GeneralKnowledgeCard("vienna", 3, 3));
-		this.deck.addCard(new GeneralKnowledgeCard("rome", 4, 4));
-		this.deck.addCard(new GeneralKnowledgeCard("moscow", 3, 2));
-		this.deck.addCard(new GeneralKnowledgeCard("warsaw", 2, 3));
+		this.deck.addCard(new GeneralKnowledgeCard(0, "generalKnowledge", "berlin", 2, 2));
+		this.deck.addCard(new SpecificKnowledgeCard(0, "generalKnowledge", "paris", 2, 2, "code"));
+		this.deck.addCard(new GeneralKnowledgeCard(0, "generalKnowledge", "vienna", 3, 3));
+		this.deck.addCard(new GeneralKnowledgeCard(0, "generalKnowledge", "rome", 4, 4));
+		this.deck.addCard(new GeneralKnowledgeCard(0, "generalKnowledge", "moscow", 3, 2));
+		this.deck.addCard(new GeneralKnowledgeCard(0, "generalKnowledge", "warsaw", 2, 3));
 	}
 
 	@After
@@ -46,11 +46,9 @@ public class TestCard {
 	@Test
 	public void testCastCards() {
 		
-		Card card = this.deck.pick();
-		card = card.downCastCard();
-		
-		assertEquals(card.toString(), "generalKnowledge,berlin,2,2");
-		
+		GeneralKnowledgeCard card = (GeneralKnowledgeCard)this.deck.pick();
+                
+		assertEquals(card.getDisplayName() + "," + card.getAreaName() + "," + card.getWeekCost()+ "," + card.getValue(), "generalKnowledge,berlin,2,2");
 		
 	}
 

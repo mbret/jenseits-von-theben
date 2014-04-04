@@ -45,12 +45,12 @@ public class ConfigLoaderTest {
     /**
      * Test of getProperties method, of class ConfigLoader.
      */
-    @Test
-    public void testGetConfig() throws Exception{
-        System.out.println("getProperties");
-        String expResult = "16";
-        assertEquals(expResult, ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty("nbEmptyTokenPoint"));
-    }
+//    @Test
+//    public void testGetConfig() throws Exception{
+//        System.out.println("getProperties");
+//        String expResult = "16";
+//        assertEquals(expResult, ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty("nbEmptyTokenPoint"));
+//    }
 
     
     @Test
