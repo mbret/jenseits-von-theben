@@ -31,7 +31,13 @@ import java.util.logging.Logger;
  */
 public class LogDisplay {
     
-    
+    /**
+     * Display logs, depending of the action executed by the player
+     * @param b 
+     * @param action action which 'played' by current player
+     * @param o object used byy player (area,card,integer,token)
+     * @return string which will display
+     */
     public static String displayAction(Board b,String action,Object o){
         Date date = new Date(); 
         SimpleDateFormat dateFormat;
