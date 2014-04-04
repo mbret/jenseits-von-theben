@@ -23,24 +23,53 @@ package com.miage.cards;
  */
 public class GeneralKnowledgeCard extends Card{
 	
-    private int value;
+    /**
+     * 
+     */
+    private final int value;
 
-    public GeneralKnowledgeCard(String areaName, int weekCost, int value) {
-            super("generalKnowledge",areaName,weekCost);
+    public GeneralKnowledgeCard(int id, String displayName, String areaName, int weekCost, int value) {
+            super(id, displayName, areaName, weekCost);
             this.value = value;
     }
+    
+    
+    
 
-    public int getValue() {
-            return value;
-    }
-
+    /***********************************************************************************************
+     *
+     *                                  Methods
+     * 
+     ***********************************************************************************************/
+    
+    /**
+     * 
+     * @return 
+     */
     @Override
     public boolean isDiscardable() {
         return false;
     }
     
+    @Override
     public String toString(){
     	return super.toString()+","+value;
     }
+    
+    /***********************************************************************************************
+     *
+     *                                  Getter & Setter
+     * 
+     ***********************************************************************************************/
+    
+    /**
+     * 
+     * @return 
+     */
+    public int getValue() {
+        return value;
+    }
 
+
+    
 }
