@@ -386,7 +386,6 @@ public class Board {
      * @author david
      */
     public void changeFourCurrentCards(){
-        //if(this.currentPlayerToken.getPosition().getName() == "warsaw"){
             this.sideDeck.add(this.fourCurrentCards[0]);
             this.sideDeck.add(this.fourCurrentCards[1]);
             this.sideDeck.add(this.fourCurrentCards[2]);
@@ -400,7 +399,6 @@ public class Board {
                 }
             }
             this.setFourCurrentCards(fourCurrentCards);
-       //}
     }
     
    /**
