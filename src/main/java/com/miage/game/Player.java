@@ -14,7 +14,9 @@ import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.cards.ZeppelinCard;
+import com.miage.tokens.Token;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +34,7 @@ public class Player {
     private ArrayList<Card> cards;
 
 
-    private Map<String, Integer> tokens; 
+    private ArrayList<Token> tokens; 
 
     /*
      * Structure stocking competences :
@@ -56,7 +58,7 @@ public class Player {
             this.name = name;
             this.points = 0;
             
-            this.tokens = new HashMap<String, Integer>();
+            this.tokens = new ArrayList<Token>();
             this.competences = new HashMap<String, Integer>(); 
             this.playerKnowledges = new PlayerKnowledges();
             this.cards = new ArrayList<Card>();
@@ -117,7 +119,7 @@ public class Player {
      */
     public void pickCard(Board board, int index){
     	
-    	Card cardPicked = board.pickCardOnBoard(index).downCastCard();
+    	Card cardPicked = board.pickCardOnBoard(index);
     	this.cards.add(cardPicked);
     	updateCompetencesPointsOrKnowledge(cardPicked, 1);
     	board.getCurrentPlayerToken().addWeeksPlayerToken(cardPicked);
@@ -296,6 +298,40 @@ public class Player {
         		this.updateCompetencesPointsOrKnowledge(card, -1);
         	}
         }
+        
+        
+        
+        /**
+         * 
+         * Return the total of knowledge points for excavate in the area
+         * 
+         * @param area 
+         * @param ethnologicalKnowledge
+         * @return the number of knowledge points
+         */
+        public int totalKnowledgePoints(Area area, boolean ethnologicalKnowledge){
+        	
+        	int numberOfPoints = 0;
+        	
+        	int numberOfGeneralKnowledgePoints = this.playerKnowledges.getGeneralKnowledge();
+        	int numberOfSpecificKnowledgePoints = this.playerKnowledges.getSpecificKnowledges().get(area.getName());
+        	
+        	if(ethnologicalKnowledge){
+        		numberOfSpecificKnowledgePoints += this.playerKnowledges.getEthnologicalKnowledges().get(area.getName());
+        	}
+        	
+        	if(numberOfGeneralKnowledgePoints > numberOfSpecificKnowledgePoints)
+        		numberOfPoints = numberOfSpecificKnowledgePoints*2;
+        	else
+        		numberOfPoints = numberOfGeneralKnowledgePoints + numberOfSpecificKnowledgePoints;
+        		
+        	return numberOfPoints;
+        	
+        }
+        
+        
+    
+        
     
     
     
@@ -329,6 +365,18 @@ public class Player {
 	public PlayerKnowledges getPlayerKnowledges() {
 		return playerKnowledges;
 	}
+
+
+	public ArrayList<Token> getTokens() {
+		return tokens;
+	}
+
+
+	public void setTokens(ArrayList<Token> tokens) {
+		this.tokens = tokens;
+	}
+	
+	
     
     
     

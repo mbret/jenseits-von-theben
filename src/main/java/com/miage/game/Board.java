@@ -199,7 +199,7 @@ public class Board {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new PointToken(id, "undefined", ((ExcavationArea)newArea).getCodeColor(), 0)); // assign empty point
+                            ((ExcavationArea)newArea).addToken( new PointToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), 0)); // assign empty point
                         }
                     }
                     
@@ -213,7 +213,7 @@ public class Board {
                         id = subSet[0];
                         int value = Integer.parseInt(subSet[1]);
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new PointToken(id, "undefined", ((ExcavationArea)newArea).getCodeColor(), value ) ); 
+                            ((ExcavationArea)newArea).addToken( new PointToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), value ) ); 
                         }
                     }
 
@@ -225,7 +225,7 @@ public class Board {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken(id, "undefined", ((ExcavationArea)newArea).getCodeColor() ) );
+                            ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor() ) );
                         }
                     }
                     
@@ -237,7 +237,7 @@ public class Board {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken(id, "undefined", ((ExcavationArea)newArea).getCodeColor() ) );
+                            ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor() ) );
                         }
                     }
                 }

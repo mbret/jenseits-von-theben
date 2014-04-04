@@ -2,7 +2,7 @@ package com.miage.tokens;
 
 public abstract class Token {
 
-	private String name;
+	private String areaName;
 	private String color;
         
         /**
@@ -11,9 +11,9 @@ public abstract class Token {
          */
 	private String id;
         
-	public Token(String id, String name, String color){
+	public Token(String id, String areaName, String color){
             this.id = id;
-		this.name = name;
+		this.areaName = areaName;
 		this.color = color;
 	}
 
@@ -21,12 +21,12 @@ public abstract class Token {
 		return color;
 	}
 	
-	public String getName() {
-		return name;
+	public String getAreaName() {
+		return areaName;
 	}
 
 	public String toString(){
-		return this.getName()+","+this.getColor();
+		return this.getAreaName()+","+this.getColor();
 	}
 	
 	
