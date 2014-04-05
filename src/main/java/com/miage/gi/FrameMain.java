@@ -1,10 +1,15 @@
 
 package com.miage.gi;
 
-import com.miage.gi.Audio2;
+import com.miage.areas.Area;
+import com.miage.config.ConfigManager;
+import com.miage.game.Board;
+import com.miage.game.Player;
+import com.miage.game.PlayerToken;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,6 +19,8 @@ import java.util.logging.Logger;
  */
 public class FrameMain extends javax.swing.JFrame {
 
+    // number of players
+    private String nbPlayers;
     /**
      * Creates new form FrameMain
      */
@@ -28,6 +35,8 @@ public class FrameMain extends javax.swing.JFrame {
         } else {
             System.err.println("Le mode plein écran n'est pas disponible");
         }
+        
+        
        // Audio2 a = new Audio2("C:\\Users\\Anne-Sophie\\Documents\\NetBeansProjects\\Thebes\\src\\main\\java\\musich.wav");
         //a.play();
         
@@ -57,18 +66,19 @@ public class FrameMain extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1366, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 768, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     /**
      * @param args the command line arguments
      */
