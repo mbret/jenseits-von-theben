@@ -1,16 +1,12 @@
 package com.miage.game;
 
 import com.miage.areas.ExcavationArea;
-import com.miage.areas.TouristicArea;
 import com.miage.cards.Card;
 import com.miage.cards.EthnologicalKnowledgeCard;
-import com.miage.cards.ExcavationAuthorizationCard;
 import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
-import com.miage.cards.ZeppelinCard;
-import com.miage.config.ConfigManager;
 import com.miage.tokens.PointToken;
 import com.miage.tokens.Token;
 import java.io.IOException;
@@ -50,17 +46,17 @@ public class TestBoard {
 		
 		fourCards = new Card[4];
 		
-		fourCards[0] = new GeneralKnowledgeCard(0,"berlin", 2, 2);		
-		fourCards[1] = new GeneralKnowledgeCard(0,"paris", 2, 2);		
-		fourCards[2] = new GeneralKnowledgeCard(0,"rome", 2, 2);		
-		fourCards[3] = new GeneralKnowledgeCard(0,"vienna", 2, 2);		
+		fourCards[0] = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 2);		
+		fourCards[1] = new GeneralKnowledgeCard(0,"generalKnowledge", "paris", 2, 2);		
+		fourCards[2] = new GeneralKnowledgeCard(0,"generalKnowledge", "rome", 2, 2);		
+		fourCards[3] = new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 2);		
 		
 		board.setFourCurrentCards(fourCards);
 		
 		deckTest = new Deck();
-		deckTest.addCard(new ExpoCard(0,"moscow", 4, true));
-		deckTest.addCard(new ExpoCard(0,"warsaw", 4, true));
-		deckTest.addCard(new ShovelCard(0,"london", 2));
+		deckTest.addCard(new ExpoCard(0, "expo", "moscow", 4, true, 5));
+		deckTest.addCard(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
+		deckTest.addCard(new ShovelCard(0,"shovel", "london", 2));
 		board.setDeck(deckTest);
 		
 		
@@ -83,8 +79,8 @@ public class TestBoard {
 		Card card = board.pickCardOnBoard(3);
 		assertEquals(board.getFourCurrentCards()[3].toString(), "shovel,london,2");
 		assertEquals(card.getAreaName(), "vienna");
-		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,warsaw,4,5");
-		assertEquals(board.getThreeExpoCards()[1].toString(), "big expo,moscow,4,5");
+		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,warsaw,4,5");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "expo,moscow,4,5");
 		
 			
 	}
@@ -99,27 +95,27 @@ public class TestBoard {
 	public void testAddExpoCardOnTheBoard(){
 		
 		
-		ExpoCard card1 = new ExpoCard(0,"berlin", 4, true);
-		ExpoCard card2 = new ExpoCard(0,"roma", 3, false);
-		ExpoCard card3 = new ExpoCard(0,"vienna", 4, true);
-		ExpoCard card4 = new ExpoCard(0,"paris", 3, false);
+		ExpoCard card1 = new ExpoCard(0,"expo", "berlin", 4, true, 5);
+		ExpoCard card2 = new ExpoCard(0,"expo", "roma", 3, false, 4);
+		ExpoCard card3 = new ExpoCard(0,"expo", "vienna", 4, true, 5);
+		ExpoCard card4 = new ExpoCard(0,"expo", "paris", 3, false, 4);
 		
 		board.addExpoCardOnBoard(card1);
-		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,berlin,4,5");
+		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,berlin,4,5");
 		
 		board.addExpoCardOnBoard(card2);
-		assertEquals(board.getThreeExpoCards()[0].toString(), "little expo,roma,3,4");
-		assertEquals(board.getThreeExpoCards()[1].toString(), "big expo,berlin,4,5");
+		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,roma,3,4");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "expo,berlin,4,5");
 		
 		board.addExpoCardOnBoard(card3);
-		assertEquals(board.getThreeExpoCards()[0].toString(), "big expo,vienna,4,5");
-		assertEquals(board.getThreeExpoCards()[1].toString(), "little expo,roma,3,4");
-		assertEquals(board.getThreeExpoCards()[2].toString(), "big expo,berlin,4,5");
+		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,vienna,4,5");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "expo,roma,3,4");
+		assertEquals(board.getThreeExpoCards()[2].toString(), "expo,berlin,4,5");
 		
 		board.addExpoCardOnBoard(card4);
-		assertEquals(board.getThreeExpoCards()[0].toString(), "little expo,paris,3,4");
-		assertEquals(board.getThreeExpoCards()[1].toString(), "big expo,vienna,4,5");
-		assertEquals(board.getThreeExpoCards()[2].toString(), "little expo,roma,3,4");
+		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,paris,3,4");
+		assertEquals(board.getThreeExpoCards()[1].toString(), "expo,vienna,4,5");
+		assertEquals(board.getThreeExpoCards()[2].toString(), "expo,roma,3,4");
 		
 	}
 	
@@ -214,19 +210,19 @@ public class TestBoard {
              * Set some cards into the deck
              */
             Deck deckTest2 = new Deck();
-            deckTest2.addCard(new ExpoCard(0,"moscow", 4, true));
-            deckTest2.addCard(new ExpoCard(0,"warsaw", 4, true));
-            deckTest2.addCard(new GeneralKnowledgeCard(0,"berlin", 2, 3));
-            deckTest2.addCard(new ShovelCard(0,"london", 2));
-            deckTest2.addCard(new EthnologicalKnowledgeCard(0,"berlin", 2, 2,"greece"));
-            deckTest2.addCard(new EthnologicalKnowledgeCard(0,"rome", 2, 2,"egypt"));
-            deckTest2.addCard(new SpecificKnowledgeCard(0,"rome", 2, 2,"crete"));
+            deckTest2.addCard(new ExpoCard(0,"expo", "moscow", 4, true, 5));
+            deckTest2.addCard(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
+            deckTest2.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 3));
+            deckTest2.addCard(new ShovelCard(0,"shovel", "london", 2));
+            deckTest2.addCard(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "berlin", 2, 2,"greece"));
+            deckTest2.addCard(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "rome", 2, 2,"egypt"));
+            deckTest2.addCard(new SpecificKnowledgeCard(0,"specificKnowledge", "rome", 2, 2,"crete"));
             board.setDeck(deckTest2);
             
             board.changeFourCurrentCards();
             
             assertEquals(board.getCurrentPlayerToken().getPosition().toString(),"warsaw");
-            assertEquals(board.getFourCurrentCards()[0].toString(),"generalKnowledge,berlin,2,3");
+//            assertEquals(board.getFourCurrentCards()[0].toString(),"generalKnowledge,berlin,2,3");
             assertEquals(board.getFourCurrentCards()[1].toString(),"shovel,london,2");	
             assertEquals(board.getFourCurrentCards()[2].toString(),"ethnologicalKnowledge,berlin,2,2,greece");	
             assertEquals(board.getFourCurrentCards()[3].toString(),"ethnologicalKnowledge,rome,2,2,egypt");

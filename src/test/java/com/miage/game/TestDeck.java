@@ -27,12 +27,12 @@ public class TestDeck {
 	public void setUp() throws Exception {
 		
 		this.deck = new Deck();
-		this.deck.addCard(new GeneralKnowledgeCard(0, "berlin", 2, 2));
-		this.deck.addCard(new SpecificKnowledgeCard(0, "paris", 2, 2, "greece"));
-		this.deck.addCard(new GeneralKnowledgeCard(0, "vienna", 3, 3));
-		this.deck.addCard(new GeneralKnowledgeCard(0, "rome", 4, 4));
-		this.deck.addCard(new GeneralKnowledgeCard(0, "moscow", 3, 2));
-		this.deck.addCard(new GeneralKnowledgeCard(0, "warsaw", 2, 3));
+		this.deck.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 2));
+		this.deck.addCard(new SpecificKnowledgeCard(0,"specificKnowledge", "paris", 2, 2, "greece"));
+		this.deck.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 3, 3));
+		this.deck.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "rome", 4, 4));
+		this.deck.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "moscow", 3, 2));
+		this.deck.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "warsaw", 2, 3));
 		
 		
 	}
