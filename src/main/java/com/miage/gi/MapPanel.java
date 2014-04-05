@@ -6,6 +6,7 @@ package com.miage.gi;
 
 import com.miage.cards.*;
 import com.miage.game.*;
+import com.miage.tokens.Token;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class MapPanel extends javax.swing.JPanel {
     private Player currentP;
     private Deck d;
     private ArrayList<Card> ar;
+    private ArrayList<Token> art;
 
     /**
      * Creates new form MapPanel
@@ -37,102 +39,127 @@ public class MapPanel extends javax.swing.JPanel {
         p1 = new Player("Rouch");
         d = b.getDeck();
         ar = new ArrayList<Card>();
-        ar.add(new AssistantCard(16, "paris", 2));
-        ar.add(new AssistantCard(21, "roma", 2));
-        ar.add(new AssistantCard(19, "vienna", 2));
-        ar.add(new AssistantCard(17, "paris", 2));
-        ar.add(new AssistantCard(18, "roma", 2));
-        ar.add(new AssistantCard(20, "vienna", 2));
-        ar.add(new CarCard(5, "moscow", 1));
-        ar.add(new CarCard(6, "roma", 1));
-        ar.add(new ZeppelinCard(3, "roma", 1));
-        ar.add(new ZeppelinCard(4, "vienna", 1));
-        ar.add(new CongressCard(7, "london", 2));
-        ar.add(new CongressCard(8, "paris", 2));
-        ar.add(new CongressCard(9, "berlin", 2));
-        ar.add(new CongressCard(10, "vienna", 2));
-        ar.add(new CongressCard(11, "moscow", 2));
-        ar.add(new CongressCard(12, "paris", 2));
-        ar.add(new CongressCard(13, "berlin", 2));
-        ar.add(new CongressCard(14, "vienna", 2));
-        ar.add(new CongressCard(15, "moscow", 2));
-        ar.add(new EthnologicalKnowledgeCard(81, "moscow", 1, 2, "greece"));
-        ar.add(new EthnologicalKnowledgeCard(82, "paris", 1, 2, "crete"));
-        ar.add(new EthnologicalKnowledgeCard(83, "rom", 1, 2, "egypt"));
-        ar.add(new EthnologicalKnowledgeCard(84, "vienna", 1, 2, "palestine"));
-        ar.add(new EthnologicalKnowledgeCard(85, "berlin", 1, 2, "mesopotamia"));
-        ar.add(new ExcavationAuthorizationCard(1, "london", 3));
-        ar.add(new ExcavationAuthorizationCard(2, "moscow", 3));
-        ar.add(new ExpoCard(86, "london", 4, true));
-        ar.add(new ExpoCard(91, "london", 3, false));
-        ar.add(new ExpoCard(87, "paris", 4, true));
-        ar.add(new ExpoCard(92, "paris", 3, false));
-        ar.add(new ExpoCard(88, "berlin", 4, true));
-        ar.add(new ExpoCard(93, "berlin", 3, false));
-        ar.add(new ExpoCard(89, "vienna", 4, true));
-        ar.add(new ExpoCard(94, "vienna", 3, false));
-        ar.add(new ExpoCard(90, "moscow", 4, true));
-        ar.add(new ExpoCard(95, "moscow", 3, false));
-        ar.add(new ShovelCard(22, "london", 3));
-        ar.add(new ShovelCard(23, "rom", 3));
-        ar.add(new ShovelCard(24, "moscow", 3));
-        ar.add(new ShovelCard(25, "london", 3));
-        ar.add(new ShovelCard(26, "roma", 3));
-        ar.add(new ShovelCard(27, "moscow", 3));
-        ar.add(new GeneralKnowledgeCard(28, "paris", 3, 1));
-        ar.add(new GeneralKnowledgeCard(29, "paris", 3, 1));
-        ar.add(new GeneralKnowledgeCard(30, "roma", 3, 1));
-        ar.add(new GeneralKnowledgeCard(31, "berlin", 3, 1));
-        ar.add(new GeneralKnowledgeCard(32, "berlin", 6, 2));
-        ar.add(new GeneralKnowledgeCard(33, "vienna", 6, 2));
-        ar.add(new GeneralKnowledgeCard(34, "roma", 6, 2));
-        ar.add(new GeneralKnowledgeCard(35, "moscow", 6, 2));
-        ar.add(new SpecificKnowledgeCard(36, "roma", 1, 1, "greece"));
-        ar.add(new SpecificKnowledgeCard(37, "roma", 2, 2, "greece"));
+        ar.add(new AssistantCard(16, "assistant", "paris", 2));
+        ar.add(new AssistantCard(21, "assistant", "roma", 2));
+        ar.add(new AssistantCard(19, "assistant", "vienna", 2));
+        ar.add(new AssistantCard(17, "assistant", "paris", 2));
+        ar.add(new AssistantCard(18, "assistant", "roma", 2));
+        ar.add(new AssistantCard(20, "assistant", "vienna", 2));
+        ar.add(new CarCard(5, "car", "moscow", 1));
+        ar.add(new CarCard(6, "car", "roma", 1));
+        ar.add(new ZeppelinCard(3, "zeppelin", "roma", 1));
+        ar.add(new ZeppelinCard(4, "zeppelin", "vienna", 1));
+        ar.add(new CongressCard(7, "congress", "london", 2));
+        ar.add(new CongressCard(8, "congress", "paris", 2));
+        ar.add(new CongressCard(9, "congress", "berlin", 2));
+        ar.add(new CongressCard(10, "congress", "vienna", 2));
+        ar.add(new CongressCard(11, "congress", "moscow", 2));
+        ar.add(new CongressCard(12, "congress", "paris", 2));
+        ar.add(new CongressCard(13, "congress", "berlin", 2));
+        ar.add(new CongressCard(14, "congress", "vienna", 2));
+        ar.add(new CongressCard(15, "congress", "moscow", 2));
+        ar.add(new EthnologicalKnowledgeCard(81, "ethno", "moscow", 1, 2, "greece"));
+        ar.add(new EthnologicalKnowledgeCard(82, "ethno", "paris", 1, 2, "crete"));
+        ar.add(new EthnologicalKnowledgeCard(83, "ethno", "rom", 1, 2, "egypt"));
+        ar.add(new EthnologicalKnowledgeCard(84, "ethno", "vienna", 1, 2, "palestine"));
+        ar.add(new EthnologicalKnowledgeCard(85, "ethno", "berlin", 1, 2, "mesopotamia"));
+        ar.add(new ExcavationAuthorizationCard(1, "excavation", "london", 3));
+        ar.add(new ExcavationAuthorizationCard(2, "excavation", "moscow", 3));
+        ar.add(new ExpoCard(86, "expo", "london", 4, true, 5));
+        ar.add(new ExpoCard(91, "expo", "london", 3, false, 4));
+        ar.add(new ExpoCard(87, "expo", "paris", 4, true, 5));
+        ar.add(new ExpoCard(92, "expo", "paris", 3, false, 4));
+        ar.add(new ExpoCard(88, "expo", "berlin", 4, true, 5));
+        ar.add(new ExpoCard(93, "expo", "berlin", 3, false, 4));
+        ar.add(new ExpoCard(89, "expo", "vienna", 4, true, 5));
+        ar.add(new ExpoCard(94, "expo", "vienna", 3, false, 4));
+        ar.add(new ExpoCard(90, "expo", "moscow", 4, true, 5));
+        ar.add(new ExpoCard(95, "expo", "moscow", 3, false, 4));
+        ar.add(new ShovelCard(22, "shovel", "london", 3));
+        ar.add(new ShovelCard(23, "shovel", "rom", 3));
+        ar.add(new ShovelCard(24, "shovel", "moscow", 3));
+        ar.add(new ShovelCard(25, "shovel", "london", 3));
+        ar.add(new ShovelCard(26, "shovel", "roma", 3));
+        ar.add(new ShovelCard(27, "shovel", "moscow", 3));
+        ar.add(new GeneralKnowledgeCard(28, "genKnow", "paris", 3, 1));
+        ar.add(new GeneralKnowledgeCard(29, "genKnow", "paris", 3, 1));
+        ar.add(new GeneralKnowledgeCard(30, "genKnow", "roma", 3, 1));
+        ar.add(new GeneralKnowledgeCard(31, "genKnow", "berlin", 3, 1));
+        ar.add(new GeneralKnowledgeCard(32, "genKnow", "berlin", 6, 2));
+        ar.add(new GeneralKnowledgeCard(33, "genKnow", "vienna", 6, 2));
+        ar.add(new GeneralKnowledgeCard(34, "genKnow", "roma", 6, 2));
+        ar.add(new GeneralKnowledgeCard(35, "genKnow", "moscow", 6, 2));
+        ar.add(new SpecificKnowledgeCard(36, "specKnow", "roma", 1, 1, "greece"));
+        ar.add(new SpecificKnowledgeCard(37, "specKnow", "roma", 2, 2, "greece"));
 //        ar.add(new SpecificKnowledgeCard(38, "roma", 2, 2, "greece"));
 //        ar.add(new SpecificKnowledgeCard(39, "berlin", 1, 1, "greece"));
 //        ar.add(new SpecificKnowledgeCard(40, "berlin", 4, 3, "greece"));
 //        ar.add(new SpecificKnowledgeCard(41, "vienna", 1, 1, "greece"));
 //        ar.add(new SpecificKnowledgeCard(42, "moscow", 1, 1, "greece"));
-        ar.add(new SpecificKnowledgeCard(43, "london", 2, 2, "greece"));
-        ar.add(new SpecificKnowledgeCard(44, "london", 4, 3, "greece"));
-        ar.add(new SpecificKnowledgeCard(45, "berlin", 1, 1, "crete"));
+        ar.add(new SpecificKnowledgeCard(43, "specKnow", "london", 2, 2, "greece"));
+//        ar.add(new SpecificKnowledgeCard(44, "specKnow", "london", 4, 3, "greece"));
+        ar.add(new SpecificKnowledgeCard(45, "specKnow", "berlin", 1, 1, "crete"));
 //        ar.add(new SpecificKnowledgeCard(46, "berlin", 1, 1, "crete"));
 //        ar.add(new SpecificKnowledgeCard(47, "paris", 1, 1, "crete"));
 //        ar.add(new SpecificKnowledgeCard(48, "vienna", 1, 1, "crete"));
 //        ar.add(new SpecificKnowledgeCard(49, "paris", 2, 2, "crete"));
-        ar.add(new SpecificKnowledgeCard(50, "vienna", 2, 2, "crete"));
-        ar.add(new SpecificKnowledgeCard(51, "roma", 2, 2, "crete"));
-        ar.add(new SpecificKnowledgeCard(52, "moscow", 4, 3, "crete"));
-        ar.add(new SpecificKnowledgeCard(53, "moscow", 4, 3, "crete"));
-        ar.add(new SpecificKnowledgeCard(54, "roma", 1, 1, "egypt"));
-        ar.add(new SpecificKnowledgeCard(55, "paris", 1, 1, "egypt"));
+        ar.add(new SpecificKnowledgeCard(50, "specKnow", "vienna", 2, 2, "crete"));
+//        ar.add(new SpecificKnowledgeCard(51, "specKnow", "roma", 2, 2, "crete"));
+        ar.add(new SpecificKnowledgeCard(52, "specKnow", "moscow", 4, 3, "crete"));
+        ar.add(new SpecificKnowledgeCard(53, "specKnow", "moscow", 4, 3, "crete"));
+        ar.add(new SpecificKnowledgeCard(54, "specKnow", "roma", 1, 1, "egypt"));
+        ar.add(new SpecificKnowledgeCard(55, "specKnow", "paris", 1, 1, "egypt"));
 //        ar.add(new SpecificKnowledgeCard(56, "paris", 1, 1, "egypt"));
 //        ar.add(new SpecificKnowledgeCard(57, "moscow", 1, 1, "egypt"));
 //        ar.add(new SpecificKnowledgeCard(58, "berlin", 2, 2, "egypt"));
 //        ar.add(new SpecificKnowledgeCard(59, "berlin", 2, 2, "egypt"));
-        ar.add(new SpecificKnowledgeCard(60, "london", 2, 2, "egypt"));
-        ar.add(new SpecificKnowledgeCard(61, "london", 4, 3, "egypt"));
-        ar.add(new SpecificKnowledgeCard(62, "moscow", 4, 3, "egypt"));
-        ar.add(new SpecificKnowledgeCard(63, "vienna", 1, 1, "palestine"));
+        ar.add(new SpecificKnowledgeCard(60, "specKnow", "london", 2, 2, "egypt"));
+//        ar.add(new SpecificKnowledgeCard(61, "specKnow", "london", 4, 3, "egypt"));
+        ar.add(new SpecificKnowledgeCard(62, "specKnow", "moscow", 4, 3, "egypt"));
+        ar.add(new SpecificKnowledgeCard(63, "specKnow", "vienna", 1, 1, "palestine"));
 //        ar.add(new SpecificKnowledgeCard(64, "vienna", 1, 1, "palestine"));
 //        ar.add(new SpecificKnowledgeCard(65, "vienna", 1, 1, "palestine"));
 //        ar.add(new SpecificKnowledgeCard(66, "roma", 1, 1, "palestine"));
-        ar.add(new SpecificKnowledgeCard(67, "paris", 2, 2, "palestine"));
-        ar.add(new SpecificKnowledgeCard(68, "berlin", 2, 2, "palestine"));
-        ar.add(new SpecificKnowledgeCard(69, "london", 2, 2, "palestine"));
-        ar.add(new SpecificKnowledgeCard(70, "london", 4, 3, "palestine"));
-        ar.add(new SpecificKnowledgeCard(71, "paris", 4, 3, "palestine"));
-        ar.add(new SpecificKnowledgeCard(72, "paris", 1, 1, "mesopotamia"));
-        ar.add(new SpecificKnowledgeCard(73, "roma", 1, 1, "mesopotamia"));
+        ar.add(new SpecificKnowledgeCard(67, "specKnow", "paris", 2, 2, "palestine"));
+        ar.add(new SpecificKnowledgeCard(68, "specKnow", "berlin", 2, 2, "palestine"));
+//        ar.add(new SpecificKnowledgeCard(69, "specKnow", "london", 2, 2, "palestine"));
+        ar.add(new SpecificKnowledgeCard(70, "specKnow", "london", 4, 3, "palestine"));
+        ar.add(new SpecificKnowledgeCard(71, "specKnow", "paris", 4, 3, "palestine"));
+        ar.add(new SpecificKnowledgeCard(72, "specKnow", "paris", 1, 1, "mesopotamia"));
+        ar.add(new SpecificKnowledgeCard(73, "specKnow", "roma", 1, 1, "mesopotamia"));
 //        ar.add(new SpecificKnowledgeCard(74, "moscow", 1, 1, "mesopotamia"));
 //        ar.add(new SpecificKnowledgeCard(75, "moscow", 1, 1, "mesopotamia"));
 //        ar.add(new SpecificKnowledgeCard(76, "london", 2, 2, "mesopotamia"));
 //        ar.add(new SpecificKnowledgeCard(77, "london", 2, 2, "mesopotamia"));
-        ar.add(new SpecificKnowledgeCard(78, "vienna", 2, 2, "mesopotamia"));
-        ar.add(new SpecificKnowledgeCard(79, "moscow", 4, 3, "mesopotamia"));
-        ar.add(new SpecificKnowledgeCard(80, "london", 4, 3, "mesopotamia"));
+        ar.add(new SpecificKnowledgeCard(78, "specKnow", "vienna", 2, 2, "mesopotamia"));
+        ar.add(new SpecificKnowledgeCard(79, "specKnow", "moscow", 4, 3, "mesopotamia"));
+//        ar.add(new SpecificKnowledgeCard(80, "specKnow", "london", 4, 3, "mesopotamia"));
+        art = new ArrayList<Token>();
+        art.add(new Token("1A", "crete", "purple") {});
+        art.add(new Token("1B", "crete", "purple") {});
+        art.add(new Token("1C", "crete", "purple") {});
+        art.add(new Token("2A", "crete", "purple") {});
+        art.add(new Token("2B", "crete", "purple") {});
+        art.add(new Token("3A", "crete", "purple") {});
+        art.add(new Token("3B", "crete", "purple") {});
+        art.add(new Token("3C", "crete", "purple") {});
+        art.add(new Token("3D", "crete", "purple") {});
+        art.add(new Token("4A", "crete", "purple") {});
+        art.add(new Token("4B", "crete", "purple") {});
+        art.add(new Token("4C", "crete", "purple") {});
+        art.add(new Token("5A", "crete", "purple") {});
+        art.add(new Token("genKnow", "crete", "purple") {});
+        art.add(new Token("scienKnow", "crete", "purple") {});
+        art.add(new Token("2B", "egypt", "yellow") {});
+        art.add(new Token("genKnow", "egypt", "yellow") {});
+        art.add(new Token("3A", "greece", "orange") {});
+        art.add(new Token("scienKnow", "greece", "orange") {});
+        art.add(new Token("4C", "mesopotamia", "blue") {});
+        art.add(new Token("1E", "mesopotamia", "blue") {});
+        art.add(new Token("6A", "palestine", "green") {});
+        art.add(new Token("7A", "palestine", "green") {});
         p1.setCards(ar);
+        p1.setTokens(art);
         menuCardsPlayer.setSelectedIndex(0);
         menuCardsPlayer.setTitleAt(0, p1.getName());
         playerPanel.setVisible(false);
@@ -327,18 +354,58 @@ public class MapPanel extends javax.swing.JPanel {
         playerPanel.add(greeceExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
 
         mesopotamiaNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/blueNull.png"))); // NOI18N
+        mesopotamiaNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                mesopotamiaNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                mesopotamiaNullTokenLabelMouseExited(evt);
+            }
+        });
         playerPanel.add(mesopotamiaNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
 
         palestineNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/palestine/greenNull.png"))); // NOI18N
+        palestineNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                palestineNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                palestineNullTokenLabelMouseExited(evt);
+            }
+        });
         playerPanel.add(palestineNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
 
         greeceNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/greece/orangeNull.png"))); // NOI18N
+        greeceNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                greeceNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                greeceNullTokenLabelMouseExited(evt);
+            }
+        });
         playerPanel.add(greeceNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
 
         creteNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/crete/purpleNull.png"))); // NOI18N
+        creteNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                creteNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                creteNullTokenLabelMouseExited(evt);
+            }
+        });
         playerPanel.add(creteNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
 
         egyptNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/egypt/yellowNull.png"))); // NOI18N
+        egyptNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                egyptNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                egyptNullTokenLabelMouseExited(evt);
+            }
+        });
         playerPanel.add(egyptNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
 
         playerBackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/playerBackground.jpg"))); // NOI18N
@@ -401,14 +468,14 @@ public class MapPanel extends javax.swing.JPanel {
         }
         displayedCardTokenPanel.updateUI();
     }
-    
-        private void displayPlayerAreaToken(Class cl) {
+
+    private void displayPlayerAreaToken(String color) {
         displayedCardTokenPanel.setVisible(true);
-        for (Card c : getPlayerTab(menuCardsPlayer).getCards()) {
-            if (c.getClass().getName().equals(cl.getName())) {
-                javax.swing.JLabel imageCard = new javax.swing.JLabel();
-                imageCard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
-                displayedCardTokenPanel.add(imageCard);
+        for (Token t : getPlayerTab(menuCardsPlayer).getTokens()) {
+            if (t.getColor().equals(color)) {
+                javax.swing.JLabel imageToken = new javax.swing.JLabel();
+                imageToken.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/" + t.getAreaName()+ "/"+t.getId() +".png")));
+                displayedCardTokenPanel.add(imageToken);
             }
         }
         displayedCardTokenPanel.updateUI();
@@ -525,6 +592,47 @@ public class MapPanel extends javax.swing.JPanel {
             backgroundLabel.setEnabled(true);
         }
     }//GEN-LAST:event_playerPanelMouseExited
+
+    private void creteNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_creteNullTokenLabelMouseEntered
+        displayPlayerAreaToken("purple");
+    }//GEN-LAST:event_creteNullTokenLabelMouseEntered
+
+    private void creteNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_creteNullTokenLabelMouseExited
+        this.clearDiplayedCardPlayer();
+    }//GEN-LAST:event_creteNullTokenLabelMouseExited
+
+    private void palestineNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_palestineNullTokenLabelMouseEntered
+        displayPlayerAreaToken("green");
+    }//GEN-LAST:event_palestineNullTokenLabelMouseEntered
+
+    private void palestineNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_palestineNullTokenLabelMouseExited
+         this.clearDiplayedCardPlayer();
+    }//GEN-LAST:event_palestineNullTokenLabelMouseExited
+
+    private void mesopotamiaNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mesopotamiaNullTokenLabelMouseEntered
+        displayPlayerAreaToken("blue");
+    }//GEN-LAST:event_mesopotamiaNullTokenLabelMouseEntered
+
+    private void mesopotamiaNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mesopotamiaNullTokenLabelMouseExited
+         this.clearDiplayedCardPlayer();
+    }//GEN-LAST:event_mesopotamiaNullTokenLabelMouseExited
+
+    private void greeceNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_greeceNullTokenLabelMouseEntered
+        displayPlayerAreaToken("orange");
+    }//GEN-LAST:event_greeceNullTokenLabelMouseEntered
+
+    private void greeceNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_greeceNullTokenLabelMouseExited
+         this.clearDiplayedCardPlayer();
+    }//GEN-LAST:event_greeceNullTokenLabelMouseExited
+
+    private void egyptNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_egyptNullTokenLabelMouseEntered
+        displayPlayerAreaToken("yellow");
+    }//GEN-LAST:event_egyptNullTokenLabelMouseEntered
+
+    private void egyptNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_egyptNullTokenLabelMouseExited
+         this.clearDiplayedCardPlayer();
+    }//GEN-LAST:event_egyptNullTokenLabelMouseExited
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowMenuLabel;
     private javax.swing.JLabel backgroundLabel;

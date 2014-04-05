@@ -79,7 +79,7 @@ public class LogDisplay {
                 break;
             case "pickToken":
                 Token t = (Token)o;
-                message += "pioche un jeton "+t.getName()+".";
+                message += "pioche un jeton "+t.getAreaName()+".";
                 break;
             case "discard":
                 Card c3 = (Card)o;
