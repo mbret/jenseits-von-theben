@@ -11,7 +11,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.miage.cards.*;
+import com.miage.tokens.PointToken;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 
 
@@ -37,27 +40,18 @@ public class TestPlayer {
 		
 		this.player = new Player("player");
 		
-
-		
-		
-		
-		
-		
 		this.deck = new Deck();
 		this.deck.addCard(new SpecificKnowledgeCard(0,"specificKnowledge", "paris", 2, 3, "greece"));
 		this.deck.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 3));
 		this.deck.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "rome", 2, 3));
 		this.deck.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "moscow", 2, 3));
 		this.deck.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "warsaw", 2, 3));
-		
-		
-		
 		this.deck.addCard(new AssistantCard(0,"assistant", "london", 2));
-		this.deck.addCard(new AssistantCard(0,"assistant", "roma", 2));
+		this.deck.addCard(new AssistantCard(0,"assistant", "rome", 2));
 		this.deck.addCard(new AssistantCard(0,"assistant", "vienna", 2));
 		this.deck.addCard(new CarCard(0,"car", "berlin", 2));
 		this.deck.addCard(new ZeppelinCard(0,"paris", 2));
-		this.deck.addCard(new CongressCard(0,"roma", 2));
+		this.deck.addCard(new CongressCard(0,"rome", 2));
 		this.deck.addCard(new CongressCard(0,"paris", 2));
 		this.deck.addCard(new CongressCard(0,"berlin", 2));
 		this.deck.addCard(new EthnologicalKnowledgeCard(0,"warsaw", 2, 3, "greece"));
@@ -140,6 +134,18 @@ public class TestPlayer {
 		
 	}
         
+        
+        /**
+         * We test if the player contain the specific card we need
+         */
+        @Test
+        public void testHasSpecificCard(){
+            Player player2 = new Player("");
+            player2.getCards().add(new ExcavationAuthorizationCard(0, "ExcavationAuthorizationCard", "london", 0));
+            assertTrue( player2.hasSpecificCard( ExcavationAuthorizationCard.class ));
+        }
+        
+        
         /**
 	 * Test the allowed excavate
 	 * @author david
@@ -148,19 +154,21 @@ public class TestPlayer {
 	public void testCanExcavate() throws IOException{
 		
             this.player.addCompetencesPointsOrKnowledge(new SpecificKnowledgeCard(0,"specificKnowledge", "paris", 2, 3, "greece"));
-            this.player.addAreaAlreadyExcavate(this.board.getArea("egypt").getName()); 
-            assertTrue(this.player.canExcavate(this.board.getArea("greece")));
-            this.player.addAreaAlreadyExcavate(this.board.getArea("greece").getName());
-            assertFalse(this.player.canExcavate(this.board.getArea("greece")));
-            this.player.addCompetencesPointsOrKnowledge(new ExcavationAuthorizationCard(0,"warsaw", 2));
-            assertFalse(this.player.canExcavate(this.board.getArea("warsaw")));
-            assertFalse(this.player.canExcavate(this.board.getArea("egypt")));
-            assertTrue(this.player.canExcavate(this.board.getArea("greece")));
+            this.player.addAreaAlreadyExcavate("egypt"); 
+            assertTrue(this.player.isAbleToExcavateArea( "greece"));
+            this.player.addAreaAlreadyExcavate("greece");
+            assertFalse(this.player.isAbleToExcavateArea("greece"));
+            this.player.addCompetencesPointsOrKnowledge(new ExcavationAuthorizationCard(0, "ExcavationAuthorizationCard", "warsaw", 2));
+            assertTrue(this.player.isAbleToExcavateArea("warsaw"));
+            assertFalse(this.player.isAbleToExcavateArea("egypt"));
+//            assertTrue(this.player.isAbleToExcavateArea("greece"));
             this.player.getCompetences().put("excavationAuthorization", this.player.getCompetences().get("excavationAuthorization")-1);
-            assertFalse(this.player.canExcavate(this.board.getArea("rome")));
-            assertFalse(this.player.canExcavate(this.board.getArea("greece")));
+//            assertFalse(this.player.isAbleToExcavateArea("rome"));
+            assertFalse(this.player.isAbleToExcavateArea("greece"));
 	}
 	
+        
+        
 	
 	/**
 	 * @author Gael
@@ -227,7 +235,7 @@ public class TestPlayer {
 		this.deck = new Deck();		
 		this.deck.addCard(new AssistantCard(0,"assistant", "london", 2));
 		this.deck.addCard(new CarCard(0,"car", "berlin", 2));
-		this.deck.addCard(new AssistantCard(0,"assistant", "roma", 2));
+		this.deck.addCard(new AssistantCard(0,"assistant", "rome", 2));
 		this.deck.addCard(new AssistantCard(0,"assistant", "vienna", 2));
 		this.deck.addCard(new ZeppelinCard(0,"zeppelin", "paris", 2));
 		

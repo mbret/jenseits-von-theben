@@ -16,6 +16,7 @@ public class PlayerTokenStack extends LinkedList<PlayerToken> implements Iterabl
 	/**
 	 * Add a piece into the stack depending on its timeStatus
 	 * @param p Piece to add in the stack
+         * @deprecated 
 	 */
 	public void addPlayerToken(PlayerToken playerToken){
 		
@@ -41,7 +42,6 @@ public class PlayerTokenStack extends LinkedList<PlayerToken> implements Iterabl
             PlayerToken firstPiece = this.removeFirst();
             return firstPiece;
 	}
-	
 	
 	public String toString(){
 		String result = "";

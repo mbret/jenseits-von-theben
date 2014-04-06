@@ -2,16 +2,18 @@
 
 package com.miage.tokens;
 
+import java.util.Objects;
+
 /**
  * A point token can be empty or with a value
  * @author maxime
  */
 public class PointToken extends Token{
 
-    private Integer value;
+    private final Integer value;
     
-    public PointToken(String id, String name, String color, Integer value) {
-        super(id, name, color);
+    public PointToken(String id, String areaName, String color, Integer value) {
+        super(id, areaName, color);
         this.value = value;
     }
 
@@ -23,5 +25,7 @@ public class PointToken extends Token{
     public String toString(){
     	return super.toString()+","+value;
     }
+
+    
     
 }
