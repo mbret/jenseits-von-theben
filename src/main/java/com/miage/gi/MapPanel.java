@@ -9,6 +9,7 @@ import com.miage.game.*;
 import com.miage.tokens.Token;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -22,8 +23,13 @@ public class MapPanel extends javax.swing.JPanel {
     private Player p3;
     private Player p4;
     private Player currentP;
+    private PlayerToken pt1;
+    private PlayerToken pt2;
+    private PlayerToken pt3;
+    private PlayerToken pt4;
     private ArrayList<Card> ar;
     private ArrayList<Token> art;
+
     /**
      * Creates new form MapPanel
      */
@@ -31,10 +37,7 @@ public class MapPanel extends javax.swing.JPanel {
         initComponents();
         menuCardsPlayer.setVisible(false);
         displayedCardTokenPanel.setVisible(false);
-        menuCardsPlayer.remove(3);
-        menuCardsPlayer.remove(2);
-        b = new Board(2);
-        p1 = new Player("Rouch");
+        initialiseBoard(2);
         ar = new ArrayList<Card>();
 //        ar.add(new AssistantCard(16, "assistant", "paris", 2));
 //        ar.add(new AssistantCard(21, "assistant", "roma", 2));
@@ -131,34 +134,32 @@ public class MapPanel extends javax.swing.JPanel {
 //        ar.add(new SpecificKnowledgeCard(78, "specKnow", "vienna", 2, 2, "mesopotamia"));
 //        ar.add(new SpecificKnowledgeCard(79, "specKnow", "moscow", 4, 3, "mesopotamia"));
 //        ar.add(new SpecificKnowledgeCard(80, "specKnow", "london", 4, 3, "mesopotamia"));
-        art = new ArrayList<Token>();
-        art.add(new Token("1A", "crete", "purple") {});
-        art.add(new Token("1B", "crete", "purple") {});
-        art.add(new Token("1C", "crete", "purple") {});
-        art.add(new Token("2A", "crete", "purple") {});
-        art.add(new Token("2B", "crete", "purple") {});
-        art.add(new Token("3A", "crete", "purple") {});
-        art.add(new Token("3B", "crete", "purple") {});
-        art.add(new Token("3C", "crete", "purple") {});
-        art.add(new Token("3D", "crete", "purple") {});
-        art.add(new Token("4A", "crete", "purple") {});
-        art.add(new Token("4B", "crete", "purple") {});
-        art.add(new Token("4C", "crete", "purple") {});
-        art.add(new Token("5A", "crete", "purple") {});
-        art.add(new Token("genKnow", "crete", "purple") {});
-        art.add(new Token("scienKnow", "crete", "purple") {});
-        art.add(new Token("2B", "egypt", "yellow") {});
-        art.add(new Token("genKnow", "egypt", "yellow") {});
-        art.add(new Token("3A", "greece", "orange") {});
-        art.add(new Token("scienKnow", "greece", "orange") {});
-        art.add(new Token("4C", "mesopotamia", "blue") {});
-        art.add(new Token("1E", "mesopotamia", "blue") {});
-        art.add(new Token("6A", "palestine", "green") {});
-        art.add(new Token("7A", "palestine", "green") {});
-        p1.setCards(ar);
-        p1.setTokens(art);
-        menuCardsPlayer.setSelectedIndex(0);
-        menuCardsPlayer.setTitleAt(0, p1.getName());
+//        art = new ArrayList<Token>();
+//        art.add(new Token("1A", "crete", "purple") {});
+//        art.add(new Token("1B", "crete", "purple") {});
+//        art.add(new Token("1C", "crete", "purple") {});
+//        art.add(new Token("2A", "crete", "purple") {});
+//        art.add(new Token("2B", "crete", "purple") {});
+//        art.add(new Token("3A", "crete", "purple") {});
+//        art.add(new Token("3B", "crete", "purple") {});
+//        art.add(new Token("3C", "crete", "purple") {});
+//        art.add(new Token("3D", "crete", "purple") {});
+//        art.add(new Token("4A", "crete", "purple") {});
+//        art.add(new Token("4B", "crete", "purple") {});
+//        art.add(new Token("4C", "crete", "purple") {});
+//        art.add(new Token("5A", "crete", "purple") {});
+//        art.add(new Token("genKnow", "crete", "purple") {});
+//        art.add(new Token("scienKnow", "crete", "purple") {});
+//        art.add(new Token("2B", "egypt", "yellow") {});
+//        art.add(new Token("genKnow", "egypt", "yellow") {});
+//        art.add(new Token("3A", "greece", "orange") {});
+//        art.add(new Token("scienKnow", "greece", "orange") {});
+//        art.add(new Token("4C", "mesopotamia", "blue") {});
+//        art.add(new Token("1E", "mesopotamia", "blue") {});
+//        art.add(new Token("6A", "palestine", "green") {});
+//        art.add(new Token("7A", "palestine", "green") {});
+//        p1.setCards(ar);
+//        p1.setTokens(art);
         playerPanel.setVisible(false);
         boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + b.getFourCurrentCards()[0].getId() + ".jpg")));
 //        boardCard1Label.setName(""+b.getFourCurrentCards()[0].getId());
@@ -419,6 +420,12 @@ public class MapPanel extends javax.swing.JPanel {
 
         add(playerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 25, -1, -1));
 
+        menuCardsPlayer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuCardsPlayerMouseClicked(evt);
+            }
+        });
+
         player1Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         menuCardsPlayer.addTab("Joueur 1", player1Panel);
 
@@ -480,6 +487,32 @@ public class MapPanel extends javax.swing.JPanel {
         backgroundLabel.setEnabled(false);
     }//GEN-LAST:event_arrowMenuLabelMouseEntered
 
+    private void initialiseBoard(int nbJoueur) throws IOException {
+        b = new Board(nbJoueur);
+        if (nbJoueur < menuCardsPlayer.getTabCount()) {
+            for (int i = menuCardsPlayer.getTabCount() - 1; i >= nbJoueur; i--) {
+                menuCardsPlayer.remove(i);
+            }
+        }
+        p1 = new Player("Rouch");
+        pt1 = new PlayerToken("Blue");
+        p2 = new Player("Gal");
+        pt2 = new PlayerToken("Green");
+        HashMap<PlayerToken, Player> players = new HashMap<>(nbJoueur);
+        players.put(pt1, p1);
+        players.put(pt2, p2);
+        b.setPlayerTokensAndPlayers(players);
+        b.setCurrentPlayerToken(pt1);
+        int curNb = 0;
+        for (PlayerToken tok : b.getPlayerTokensAndPlayers().keySet()) {
+            menuCardsPlayer.setSelectedIndex(curNb);
+            menuCardsPlayer.setTitleAt(curNb, b.getPlayerTokensAndPlayers().get(tok).getName());
+            curNb++;
+        }
+        menuCardsPlayer.setSelectedIndex(0);
+        this.getPlayerTab(menuCardsPlayer);
+    }
+
     private void displayPlayerCard(Class cl) {
         displayedCardTokenPanel.setVisible(true);
         for (Card c : getPlayerTab(menuCardsPlayer).getCards()) {
@@ -497,7 +530,7 @@ public class MapPanel extends javax.swing.JPanel {
         for (Token t : getPlayerTab(menuCardsPlayer).getTokens()) {
             if (t.getColor().equals(color)) {
                 javax.swing.JLabel imageToken = new javax.swing.JLabel();
-                imageToken.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/" + t.getAreaName()+ "/"+t.getId() +".png")));
+                imageToken.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/" + t.getAreaName() + "/" + t.getId() + ".png")));
                 displayedCardTokenPanel.add(imageToken);
             }
         }
@@ -507,16 +540,20 @@ public class MapPanel extends javax.swing.JPanel {
     private Player getPlayerTab(javax.swing.JTabbedPane tp) {
         switch (tp.getSelectedIndex()) {
             case 0:
-                currentP = p1;
+                b.setCurrentPlayerToken(pt1);
+                currentP = b.getPlayerByToken(pt1);
                 break;
             case 1:
-                currentP = p2;
+                b.setCurrentPlayerToken(pt2);
+                currentP = b.getPlayerByToken(pt2);
                 break;
             case 2:
-                currentP = p3;
+                b.setCurrentPlayerToken(pt3);
+                currentP = b.getPlayerByToken(pt3);
                 break;
             case 3:
-                currentP = p4;
+                b.setCurrentPlayerToken(pt4);
+                currentP = b.getPlayerByToken(pt4);
                 break;
         }
         return currentP;
@@ -629,7 +666,7 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_palestineNullTokenLabelMouseEntered
 
     private void palestineNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_palestineNullTokenLabelMouseExited
-         this.clearDiplayedCardPlayer();
+        this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_palestineNullTokenLabelMouseExited
 
     private void mesopotamiaNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mesopotamiaNullTokenLabelMouseEntered
@@ -637,7 +674,7 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_mesopotamiaNullTokenLabelMouseEntered
 
     private void mesopotamiaNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mesopotamiaNullTokenLabelMouseExited
-         this.clearDiplayedCardPlayer();
+        this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_mesopotamiaNullTokenLabelMouseExited
 
     private void greeceNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_greeceNullTokenLabelMouseEntered
@@ -645,7 +682,7 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_greeceNullTokenLabelMouseEntered
 
     private void greeceNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_greeceNullTokenLabelMouseExited
-         this.clearDiplayedCardPlayer();
+        this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_greeceNullTokenLabelMouseExited
 
     private void egyptNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_egyptNullTokenLabelMouseEntered
@@ -653,14 +690,18 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_egyptNullTokenLabelMouseEntered
 
     private void egyptNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_egyptNullTokenLabelMouseExited
-         this.clearDiplayedCardPlayer();
+        this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
     private void boardCard1LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard1LabelMouseClicked
+        System.out.println(" " + currentP.toString());
         currentP.pickCard(b, 0);
         boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + b.getFourCurrentCards()[0].getId() + ".jpg")));
     }//GEN-LAST:event_boardCard1LabelMouseClicked
 
+    private void menuCardsPlayerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuCardsPlayerMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuCardsPlayerMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowMenuLabel;
     private javax.swing.JLabel backgroundLabel;
