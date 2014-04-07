@@ -2,6 +2,7 @@ package com.miage.game;
 
 
 import com.miage.areas.Area;
+import com.miage.areas.ExcavationArea;
 import com.miage.cards.AssistantCard;
 import com.miage.cards.CarCard;
 import com.miage.cards.Card;
@@ -17,6 +18,7 @@ import com.miage.tokens.SpecificKnowledgeToken;
 import com.miage.tokens.Token;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -126,22 +128,50 @@ public class Player {
     }
     
     /**
-     * Check if the player is able to excavated the provided area
-     * @param areaName
+     * Check if the player is authorized to excavated the provided area
+     * Conditions:
+     *  - has a specific knowledge about this area
+     *  - has a specific knowledge token about this area
+     *  - is authorized to excavate
+     * @author maxime
+     * @param excavationArea
      * @return 
      */
-    public boolean isAbleToExcavateArea( String areaName ){
-        return ( ! this.hasAlreadyExcavateArea( areaName ) || ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty() );
+    public boolean isAuthorizedToExcavateArea( Area excavationArea ){
+        boolean hasExcavationAuthorization = ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty();
+        if( (! this.hasAlreadyExcavateArea( excavationArea.getName() ) || hasExcavationAuthorization ) // authorized
+                && ( this.hasSpecificKnowledgeCardForThisExcavationArea( excavationArea.getName() )  // enough knowledge
+                     || this.hasSpecificKnowledgeTokenForThisExcavationArea( excavationArea.getName() ) 
+                ) 
+          ){ 
+            return true;
+        }
+        return false;
     }
     
     /**
-     * Check if the user can excavate at least one area (any of them)
-     * 
-     * @param areasName (we need this set to avoid dependencies with any extern information)
+     * Check if the user is authorized to excavate at least one area (any of them)
+     * Conditions:
+     *  - is authorized to excavate one area
+     *  - has specific knowledge for the area selected
+     *  - has a specific knowledge token about this area
+     * @author maxime
+     * @param excavationAreas (we need this set to avoid dependencies with any extern information)
      * @return 
      */
-    public boolean isAbleToExcavateOneArea( Set<String> areasName ){
-        return( this.areasAlreadyExcavate.size() < areasName.size() || ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty() ); // we also check the number of area already excavated
+    public boolean isAuthorizedToExcavateOneArea( Collection<Area> excavationAreas ){
+        boolean hasExcavationAuthorization = ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty();
+        // we iterate and check all area (we break the loop when we find the first area which is okay to excavate)
+        for (Area area : excavationAreas ) {
+            if( area instanceof ExcavationArea ){
+               if( (! this.hasAlreadyExcavateArea( area.getName() ) || hasExcavationAuthorization ) // authorized
+                    && ( this.hasSpecificKnowledgeCardForThisExcavationArea( area.getName() ) 
+                         || this.hasSpecificKnowledgeTokenForThisExcavationArea( area.getName() ) ) ){ // enough knowledge
+                    return true;
+                } 
+            }
+        }
+        return false;
     }
     
     /**
@@ -157,6 +187,7 @@ public class Player {
     
     /**
      * Check if the player has the given type of card inside his hand
+     * @author maxime
      * @param <T>
      * @param typeOfCard
      * @return 
@@ -167,6 +198,7 @@ public class Player {
     
     /**
      * Retrieve the asked type of cards
+     * @author
      * @param <T>
      * @param typeOfCard
      * @return 
@@ -183,6 +215,7 @@ public class Player {
     
     /**
      * Retrieve the asked type of tokens 
+     * @author
      * @param <T>
      * @param typeOfToken
      * @return 
@@ -391,8 +424,9 @@ public class Player {
     
     /**
      * 
-     * 	add competence points using the card in parameters
+     * Add competence points using the card in parameters
      * @author Gael
+     * @deprecated 
      * @param card
      */
     public void addCompetencesPointsOrKnowledge(Card card){
@@ -454,17 +488,6 @@ public class Player {
 
     }
          
-    /**
-     * Check if the playerToken has enough time to go in the asked place before the end of game
-     * @param areaName
-     * @param endGameDatePosition
-     * @return 
-     */
-    public boolean hasEnoughTimeToGoInThisArea( String areaName, LocalDate endGameDatePosition ){
-       int weekCost = this.playerToken.getPosition().getDistanceWeekCostTo( areaName ); // weekcost from current place to area
-       return Board.hasEnoughTimeBeforeEndGame( this.playerToken.getTimeState(), weekCost, endGameDatePosition);
-   }
-    
     
     
     
@@ -501,6 +524,10 @@ public class Player {
         this.cards = cards;
     }
 
+    /**
+     * @deprecated 
+     * @return 
+     */
     public Map<String, Integer> getCompetences() {
         return competences;
     }

@@ -249,6 +249,7 @@ public class Board {
      * Do a player round action
      * - update the state of the game
      * @param actionPattern 
+     * @param player 
      */
     public void doPlayerRoundAction( int actionPattern, Player player ){
         switch(actionPattern){
@@ -266,6 +267,7 @@ public class Board {
     /**
      * Check if the player is able to do the demanded action. Use player action Constant to provide an action key
      * @param actionPattern player constant (exemple: player.ACTION...)
+     * @param player
      * @return 
      */
     public boolean isPlayerAbleToMakeRoundAction( int actionPattern, Player player ){
@@ -282,7 +284,16 @@ public class Board {
         throw new UnsupportedOperationException();
     }
     
-    
+    /**
+     * Check if the playerToken has enough time to go in the asked place before the end of game
+     * @param area
+     * @param playerToken
+     * @return 
+     */
+    public boolean hasEnoughTimeToGoInThisArea( Area area, PlayerToken playerToken ){
+       int weekCost = playerToken.getPosition().getDistanceWeekCostTo( area.getName() ); // weekcost from current place to area
+       return Board.hasEnoughTimeBeforeEndGame( playerToken.getTimeState(), weekCost, this.endGameDatePosition);
+    }
     
     
     /***********************************************************************************************
@@ -290,7 +301,6 @@ public class Board {
      *                                  Private Methods
      * 
      ***********************************************************************************************/
-    
     
     
     /**
@@ -322,8 +332,8 @@ public class Board {
         // We check for all area (if one is able then we break the loop (no need to test others))
         for (Area area : this.areas.values()) {
             if( area instanceof ExcavationArea ){
-                if ( player.isAbleToExcavateArea( area.getName() ) // 
-                        && player.hasEnoughTimeToGoInThisArea( area.getName(), endGameDatePosition)
+                if ( player.isAuthorizedToExcavateArea( area ) // 
+                        && this.hasEnoughTimeToGoInThisArea( area, player.getPlayerToken() )
                         && (player.hasKnowledgeCardForThisExcavationArea( area.getName() ) || player.hasKnowledgeTokenForThisExcavationArea( area.getName() )) ){
                     return true;
                 }
@@ -703,6 +713,16 @@ public class Board {
 
     public HashMap<String, Area> getAreas() {
         return areas;
+    }
+    
+    public <T extends Area> HashMap<String, Area> getAreas( Class<T> typeOfArea ) {
+        HashMap<String, Area> areasToReturn = new HashMap();
+        for (Area area : this.areas.values()) {
+            if( area.getClass() == typeOfArea ){
+                areasToReturn.put( area.getName(), area);
+            }
+        }
+        return areasToReturn;
     }
 
     public Card[] getFourCurrentCards() {

@@ -270,8 +270,12 @@ public class TestBoard {
             player.getCards().add( new ExcavationAuthorizationCard(0, "ExcavationAuthorizationCard", "berlin", 0));
             assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player));
             
-            // player have special authorization to excavate and enough point
+            // player have special authorization to excavate and general point
             player.getCards().add( new GeneralKnowledgeCard(0, null, null, 0, 0));
+            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player));
+            
+            // player have special authorization to excavate and general point and specific knowledge point
+            player.getCards().add( new SpecificKnowledgeCard(0, "SpecificKnowledgeCard", "berlin", 0, 1, "egypt") );
             assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player));
             
             // player have not enough point to make expo in berlin
