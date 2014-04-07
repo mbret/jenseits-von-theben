@@ -2,19 +2,24 @@ package com.miage.tokens;
 
 public abstract class Token {
 
-	private String areaName;
-	private String color;
+
+	private final String color;
+        
+        /**
+         * Name of area where the token can be pick up
+         */
+        protected final String areaName;
         
         /**
          * Use the id inside .properties
          * Used to retrieve the image file
          */
-	private String id;
+	private final String id;
         
-	public Token(String id, String areaName, String color){
+        public Token(String id, String areaName, String color){
             this.id = id;
-		this.areaName = areaName;
-		this.color = color;
+            this.color = color;
+            this.areaName = areaName;
 	}
 
 	public String getColor() {

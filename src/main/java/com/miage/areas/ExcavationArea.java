@@ -26,14 +26,14 @@ public class ExcavationArea extends Area {
 
     /**
      * 
-     * @param num
+     * @param id
      * @param name
      * @param codeColor
      */
-    public ExcavationArea(int num, String name, String codeColor){
-        super(num, name);
+    public ExcavationArea(int id, String name, String codeColor){
+        super(id, name);
         this.codeColor = codeColor;
-        this.tokenList = new LinkedList<Token>();
+        this.tokenList = new LinkedList<>();
     }
     
     /**

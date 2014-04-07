@@ -3,21 +3,25 @@ package com.miage.game;
 import com.miage.areas.*;
 import com.miage.cards.*;
 import com.miage.config.ConfigManager;
+import com.miage.main.Main;
 import com.miage.tokens.*;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 /**
  * 
  * note :
- * action du joueur :   - piocher une carte des quatres cartes
- *                      - piocher une carte expo
- *                      - se déplacer à varsovie pour changer les quatre cartes
- *                      - aller dans une zone de fouille
+ * 
  * 
  * @author maxime
  */
@@ -30,6 +34,16 @@ public class Board {
      */
     private final int nbPlayers;
 
+    /**
+     * Represent the end date position for all player (when all player arrive at this date the game is over)
+     */
+    private  LocalDate endGameDatePosition;
+    
+    /**
+     * Represent the start date position for all players depending of their numbers
+     */
+    private  LocalDate startGameDatePosition;
+    
     /**
      * 
      */
@@ -61,7 +75,7 @@ public class Board {
     private Deck sideDeck;
 
     private Card fourCurrentCards[];
-    private ExpoCard threeExpoCards[];
+    private List<ExpoCard> expoCards;
 
     /**
      * HashMap used to determine how many token of each points are present in each excavation point
@@ -70,20 +84,42 @@ public class Board {
     private HashMap<String, HashMap<Integer, Integer>> areasTokensConfiguration;
 
     
-    public Board(int nbPlayers) throws IOException{
-        
+    public Board(int nbPlayers, Set<Player> players) throws IOException{
         this.nbPlayers = nbPlayers;
-        this.playerTokenStack = new PlayerTokenStack();
-        this.areas = new HashMap<String, Area>();
+        this.areas = new HashMap<>();
+        this._initAreas();
         this.chrono = new Chrono();
         this.chrono.initializationValues();
+        this.expoCards = new LinkedList();
         this.deck = new Deck();
         this.sideDeck = new Deck();
         this.fourCurrentCards = new Card[4];
-        this.threeExpoCards = new ExpoCard[3];
-        this.playerTokensAndPlayers = new HashMap<PlayerToken, Player>();
-        this.initAreas();
-        this.initDecks();
+        this._initDecks();
+        this.playerTokenStack = new PlayerTokenStack();
+        this.playerTokensAndPlayers = new HashMap();
+
+        // Init date of end game
+        String[] tmp = ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("game.endGameDatePosition").split("\\|")[0].split("\\-");
+        this.endGameDatePosition = LocalDate.of(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), Integer.parseInt(tmp[2]));
+        tmp = ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("game.startGameDatePosition").split("\\|")[this.nbPlayers-1].split("\\-");
+        this.startGameDatePosition = LocalDate.of(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), Integer.parseInt(tmp[2]));
+        
+        for (Player player : players){
+            player.getPlayerToken().setPosition( this.areas.get("warsaw")); // set started area for playertoken
+            player.getPlayerToken().setTimeState( this.startGameDatePosition ); // init date of token
+            this.playerTokenStack.addPlayerToken(player.getPlayerToken() ); // set stack of playertoken
+            this.playerTokensAndPlayers.put( player.getPlayerToken(), player); // set the link between player and playerTokens
+        }
+    }
+    
+    /**
+     * Still here for compatibilities
+     * @param nbPlayers
+     * @deprecated  
+     */
+    public Board(int nbPlayers) throws IOException{
+        this(nbPlayers, new HashSet<Player>());
+
     }
     
     
@@ -91,7 +127,7 @@ public class Board {
     
     /***********************************************************************************************
      *
-     *                                  Methods
+     *                                  Public Methods
      * 
      ***********************************************************************************************/
     
@@ -131,23 +167,264 @@ public class Board {
      * @param expoCard
      */
     public void addExpoCardOnBoard(ExpoCard expoCard){
-    	
-    	for(int i = 2; i > 0; i--){
-    		this.getThreeExpoCards()[i] = this.getThreeExpoCards()[i-1];
-    	}
-    	
-    	this.getThreeExpoCards()[0] = expoCard;
-    	
+    	this.expoCards.add(0, expoCard); // insert new
+        if( this.expoCards.size() > 3 ){
+            this.expoCards.remove( 3 ); // remove the old third element
+        }
     }
     
+    /**
+     * 
+     * @author david
+     */
+    public void changeFourCurrentCards(){
+            this.sideDeck.add(this.fourCurrentCards[0]);
+            this.sideDeck.add(this.fourCurrentCards[1]);
+            this.sideDeck.add(this.fourCurrentCards[2]);
+            this.sideDeck.add(this.fourCurrentCards[3]);
+            
+            for(int i=0;i<4;i++){
+                this.fourCurrentCards[i] = this.deck.pick();
+                while(this.fourCurrentCards[i] instanceof ExpoCard){
+                    this.addExpoCardOnBoard((ExpoCard)this.fourCurrentCards[i]);
+                    this.fourCurrentCards[i] = this.deck.pick();
+                }
+            }
+            this.setFourCurrentCards(fourCurrentCards);
+    }
+    
+    /**
+    * Take a number of knowledge points and return the number of tokens related to the week cost
+    * @param knowledgePoints (mix of all knowledge points)
+    * @param weekCost
+    * @return int, the number of tokens the player can pick up
+    * @throws IOException 
+    */
+    public static int getNbTokensFromChronotime( int knowledgePoints, int weekCost) throws IOException{
+        String[] values = ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty( "chronotime." + knowledgePoints).split("\\|");
+        try{
+            return Integer.parseInt(values[ weekCost ]);
+        }
+        catch( ArrayIndexOutOfBoundsException e){
+            throw new ArrayIndexOutOfBoundsException("The knowledge points provided is not setted in configuration file");
+        }
+    }
 
+    /**
+     * Check if a player token has enough time before end game
+     * @param currentDatePosition
+     * @param weekCost
+     * @param endGameDatePosition
+     * @return 
+     */
+    public static boolean hasEnoughTimeBeforeEndGame( LocalDate currentDatePosition, int weekCost, LocalDate endGameDatePosition){
+        LocalDate dateAfterTravel = currentDatePosition.plusWeeks( weekCost );
+        return ( ( Main.getWeek( dateAfterTravel )) <= Main.getWeek( endGameDatePosition ) && Main.getYear( dateAfterTravel ) <= Main.getYear( endGameDatePosition ) ); // test if enough time
+    }
+    
+    /**
+     * Return the player who must play on this current round
+     * @return 
+     */
+    public Player getCurrentPlayer(){
+        return this.playerTokensAndPlayers.get( this.playerTokenStack.getFirstPlayerToken() );
+    }
+    
+    /**
+     * Check if there are still some players which are able to play (not end game)
+     * @return 
+     */
+    public boolean hasUpcomingPlayer(){
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+    
+    /**
+     * Calculate and set the point of each player
+     */
+    public void calculatePoint(){
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    /**
+     * Do a player round action
+     * - update the state of the game
+     * @param actionPattern 
+     * @param player 
+     */
+    public void doPlayerRoundAction( int actionPattern, Player player ){
+        switch(actionPattern){
+            case Player.ACTION_CHANGE_FOUR_CARDS:
+                this._actionPlayerDoChangeFourCards( player );
+            case Player.ACTION_EXCAVATE:
+                this._actionPlayerDoExcavateArea( player );
+            case Player.ACTION_ORGANIZE_EXPO:
+                this._actionPlayerDoOrganizeExpo( player );
+            case Player.ACTION_PICK_CARD:
+                this._actionPlayerDoPickCard( player );
+        }
+    }
+    
+    /**
+     * Check if the player is able to do the demanded action. Use player action Constant to provide an action key
+     * @param actionPattern player constant (exemple: player.ACTION...)
+     * @param player
+     * @return 
+     */
+    public boolean isPlayerAbleToMakeRoundAction( int actionPattern, Player player ){
+        switch(actionPattern){
+            case Player.ACTION_CHANGE_FOUR_CARDS:
+                return this._actionPlayerAbleToChangeFourCards( player );
+            case Player.ACTION_EXCAVATE:
+                return this._actionPlayerAbleToExcavateArea( player );
+            case Player.ACTION_ORGANIZE_EXPO:
+                return this._actionPlayerAbleToOrganizeExpo(player );
+            case Player.ACTION_PICK_CARD:
+                return this._actionPlayerAbleToPickCard(player );
+        }
+        throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * Check if the playerToken has enough time to go in the asked place before the end of game
+     * @param area
+     * @param playerToken
+     * @return 
+     */
+    public boolean hasEnoughTimeToGoInThisArea( Area area, PlayerToken playerToken ){
+       int weekCost = playerToken.getPosition().getDistanceWeekCostTo( area.getName() ); // weekcost from current place to area
+       return Board.hasEnoughTimeBeforeEndGame( playerToken.getTimeState(), weekCost, this.endGameDatePosition);
+    }
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Private Methods
+     * 
+     ***********************************************************************************************/
+    
+    
+    /**
+     * Check if the player is able now to move in Warschau and change all four current cards
+     * Conditions :
+     *  - must have enough time to go there (move + cost of operation)
+     * 
+     * @param endGameDatePosition 
+     * @param playerToken 
+     * @return  
+     */
+    private boolean _actionPlayerAbleToChangeFourCards( Player player ){
+        int costOfOperation = player.getNbRoundStillPlaying(); // the cost of this operation is depending of how long time the player is still playing (only him)
+        return Board.hasEnoughTimeBeforeEndGame( player.getPlayerToken().getTimeState(), player.getPlayerToken().getPosition().getDistanceWeekCostTo( "warsaw" ) + costOfOperation, endGameDatePosition);
+    }
+    
+    /**
+     * Check if the player is able to move inside an excavation area
+     * Conditions :
+     *  - must have enough time to go there (move)
+     *  - must have authorization to excavate in this area
+     *  - must have at least 1 specific knowledge point about this area (dev, token)
+     * 
+     * @param player
+     * @param playerToken 
+     * @return  
+     */
+    private boolean _actionPlayerAbleToExcavateArea( Player player  ){
+        // We check for all area (if one is able then we break the loop (no need to test others))
+        for (Area area : this.areas.values()) {
+            if( area instanceof ExcavationArea ){
+                if ( player.isAuthorizedToExcavateArea( area ) // 
+                        && this.hasEnoughTimeToGoInThisArea( area, player.getPlayerToken() )
+                        && (player.hasKnowledgeCardForThisExcavationArea( area.getName() ) || player.hasKnowledgeTokenForThisExcavationArea( area.getName() )) ){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if the player is able to organize an exposition
+     * Conditions :
+     *  - must have enough time to go there (mve + weekcost of card)
+     *  - must have the required number of tokens and these tokens must be matchable with the colot (area)
+     * @param expoCards
+     * @return 
+     */
+    private boolean _actionPlayerAbleToOrganizeExpo( Player player ){
+        Set<PointToken> playerTokens = player.getSpecificTokens( PointToken.class );
+        
+        // iterate over all expo card (if one is possible then we break the loop)
+        for (ExpoCard expoCard : expoCards){
+
+            // iterate over all expo token to check if the user has one token 
+            for (Token token : ((ExpoCard)expoCard).getTokens()) {
+                int valueNeededForThisKindOfToken = ((PointToken)token).getValue();
+                
+                for (PointToken playerToken : playerTokens) {
+                    if( playerToken.getAreaName().equals( token.getAreaName() )){
+                        valueNeededForThisKindOfToken--; // if the player has one token of this area we reduce this variable 
+                    }
+                }
+                
+                // if the player didn't has enough point token about this current token then he is not able to continue
+                if( valueNeededForThisKindOfToken > 0){
+                    return false;
+                }
+            }
+            
+            // We test if the player has enough time to do all this operation
+            if( Board.hasEnoughTimeBeforeEndGame(  
+                    player.getPlayerToken().getTimeState(), 
+                    player.getPlayerToken().getPosition().getDistanceWeekCostTo( expoCard.getAreaName() ) + ((ExpoCard)expoCard).getWeekCost(), 
+                    endGameDatePosition) // check if enought time to go there + week cost of the card
+                    ){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if the player is able to pick up a card
+     * Condition:
+     *  - must have enough time to go there (move + cost of card)
+     * @return 
+     */
+    private boolean _actionPlayerAbleToPickCard( Player player ){
+        for (Card card : this.fourCurrentCards) {
+            if( Board.hasEnoughTimeBeforeEndGame( 
+                        player.getPlayerToken().getTimeState(),
+                        player.getPlayerToken().getPosition().getDistanceWeekCostTo( card.getAreaName() ) + card.getWeekCost(), 
+                        endGameDatePosition) ){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void _actionPlayerDoChangeFourCards( Player player ) {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+    
+    private void _actionPlayerDoExcavateArea( Player player  ) {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+    
+    private void _actionPlayerDoOrganizeExpo( Player player ){
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+    
+    private void _actionPlayerDoPickCard( Player player ){
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+    
     /**
      * Initialization of areas
      * - use configManager to get some informations
      * @author maxime
      */
-    private void initAreas() throws IOException{
-       
+    private void _initAreas() throws IOException{
+        
         /**
          * Init areas
          * - We get only keys beginning with 'areas'
@@ -271,7 +548,6 @@ public class Board {
             }
         }
     }
-    
 	
     /**
      * Initialization of the decks
@@ -280,11 +556,10 @@ public class Board {
      * - we run process to finish deck (cute, mix, etc)
      * @author maxime
      */
-    private void initDecks() throws IOException{
+    private void _initDecks() throws IOException{
 
-        ArrayList<ExpoCard> expoCards = new ArrayList<ExpoCard>(); // used to retain apart expo cards
+        ArrayList<ExpoCard> expoCards = new ArrayList<>(); // used to retain apart expo cards
         Deck firstDeck = new Deck();
-                
 
         // Main loop to init cards, and add to the decks
         HashMap<String, String> cardsEntriesFromConfig = ConfigManager.getInstance().getConfigEntriesWithKeysBeginningBy(ConfigManager.CARDS_CONFIG_NAME, "card");
@@ -294,7 +569,7 @@ public class Board {
              * Here we get basic information from the key and the values
              */
 //            String cardNumberString = entry.getKey().substring( "card.".length() );  // get only the number of the card (card.x) -> x
-            String[] values = entry.getValue().split("\\,"); // split values line
+            String[] values = entry.getValue().split("\\|")[0].split("\\,"); // split values line
             String area = values[0];
             String type = values[1];
             Integer weekCost = Integer.parseInt( values[2] );
@@ -305,42 +580,62 @@ public class Board {
             /**
              * Here we instantiate the card relating to the specified type in config file (the values)
              */
-            if( type.equals("excavationAuthorization") ){
-                newCard = new ExcavationAuthorizationCard(id, "displayName", area, weekCost);
-            }
-            else if( type.equals("zeppelin") ){
-                newCard = new ZeppelinCard(id, "displayName", area, weekCost);
-            }
-            else if( type.equals("car") ){
-                newCard = new CarCard(id, "displayName", area, weekCost);
-            }
-            else if( type.equals("congress") ){
-                newCard = new CongressCard(id, "displayName", area, weekCost);
-            }
-            else if( type.equals("assistant") ){
-                newCard = new AssistantCard(id, "displayName", area, weekCost);
-            }
-            else if( type.equals("shovel") ){
-                newCard = new ShovelCard(id, "displayName", area, weekCost);
-            }
-            else if( type.equals("generalKnowledge") ){
-                int value = Integer.parseInt(values[3]); // check pattern in .properties
-                newCard = new GeneralKnowledgeCard(id, "displayName", area, weekCost, value);
-            }
-            else if (type.equals("specificKnowledge")){
-                int value = Integer.parseInt(values[3]); // check pattern in .properties
-                String excavationArea = values[4];
-                newCard = new SpecificKnowledgeCard(id, "displayName", area, weekCost, value, excavationArea);
-            }
-            else if (type.equals("ethnologicalKnowledge")){
-                int value = Integer.parseInt(values[3]); // check pattern in .properties
-                String excavationArea = values[4];
-                newCard = new EthnologicalKnowledgeCard(id, "displayName", area, weekCost, value, excavationArea);
-            }
-            else if(type.equals("expo")){
-                boolean bigExpo = Boolean.parseBoolean(values[3]); // check pattern in .properties
-                int value = Integer.parseInt(values[4]);
-                newCard = new ExpoCard(id, "displayName", area, weekCost, bigExpo, value);
+            switch (type) {
+                case "excavationAuthorization":
+                    newCard = new ExcavationAuthorizationCard(id, "displayName", area, weekCost);
+                    break;
+                case "zeppelin":
+                    newCard = new ZeppelinCard(id, "displayName", area, weekCost);
+                    break;
+                case "car":
+                    newCard = new CarCard(id, "displayName", area, weekCost);
+                    break;
+                case "congress":
+                    newCard = new CongressCard(id, "displayName", area, weekCost);
+                    break;
+                case "assistant":
+                    newCard = new AssistantCard(id, "displayName", area, weekCost);
+                    break;
+                case "shovel":
+                    newCard = new ShovelCard(id, "displayName", area, weekCost);
+                    break;
+                case "generalKnowledge":
+                    {
+                        int value = Integer.parseInt(values[3]); // check pattern in .properties
+                        newCard = new GeneralKnowledgeCard(id, "displayName", area, weekCost, value);
+                        break;
+                    }
+                case "specificKnowledge":
+                    {
+                        int value = Integer.parseInt(values[3]); // check pattern in .properties
+                        String excavationArea = values[4];
+                        newCard = new SpecificKnowledgeCard(id, "displayName", area, weekCost, value, excavationArea);
+                        break;
+                    }
+                case "ethnologicalKnowledge":
+                    {
+                        int value = Integer.parseInt(values[3]); // check pattern in .properties
+                        String excavationArea = values[4];
+                        newCard = new EthnologicalKnowledgeCard(id, "displayName", area, weekCost, value, excavationArea);
+                        break;
+                    }
+                case "expo":
+                    {
+                        boolean bigExpo = Boolean.parseBoolean(values[3]); // check pattern in .properties
+                        int value = Integer.parseInt(values[4]);
+                        newCard = new ExpoCard(id, "displayName", area, weekCost, bigExpo, value);
+                        String[] secondValuePart = entry.getValue().split("\\|")[1].split("\\,"); // crete:1,greece:2,egypt:3
+                        
+                        // we add the token point
+                        for (int i = 0; i < secondValuePart.length; i++) {
+                            String expoTokenAreaName    = secondValuePart[i].split("\\:")[0];
+                            int expoTokenValue          = Integer.parseInt( secondValuePart[i].split("\\:")[1] );
+                            String expoTokenId          = ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("expoCardTokens.id");
+                            String expoTokenColor       = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME).getProperty("area."+expoTokenAreaName+".color");
+                            ((ExpoCard)newCard).getTokens().add( new PointToken( expoTokenId,  expoTokenAreaName, expoTokenColor, expoTokenValue) );
+                        }
+                        break;
+                    }
             }
             
             // We add the card inside deck but we retain expo card
@@ -356,6 +651,7 @@ public class Board {
         firstDeck.mix(); // We mix the big deck
 //        LOGGER.debug("initDecks : sizeof firsDeck : " + firstDeck.size());
         this.fourCurrentCards = firstDeck.pickFourFirstCards(); // We Pick the four first cards from the main deck
+        
         Deck[] dividedDecks;
 
         if(nbPlayers <= 2){
@@ -380,45 +676,6 @@ public class Board {
         dividedDecks[1].addAll( dividedDecks[0] ); // we put deck1 on deck2
         this.deck = new Deck( dividedDecks[1] ); // tmp deck 1 & 2 become main deck
     }
-    
-    /**
-     * 
-     * @author david
-     */
-    public void changeFourCurrentCards(){
-            this.sideDeck.add(this.fourCurrentCards[0]);
-            this.sideDeck.add(this.fourCurrentCards[1]);
-            this.sideDeck.add(this.fourCurrentCards[2]);
-            this.sideDeck.add(this.fourCurrentCards[3]);
-            
-            for(int i=0;i<4;i++){
-                this.fourCurrentCards[i] = this.deck.pick();
-                while(this.fourCurrentCards[i] instanceof ExpoCard){
-                    this.addExpoCardOnBoard((ExpoCard)this.fourCurrentCards[i]);
-                    this.fourCurrentCards[i] = this.deck.pick();
-                }
-            }
-            this.setFourCurrentCards(fourCurrentCards);
-    }
-    
-   /**
-    * Take a number of knowledge points and return the number of tokens related to the week cost
-    * @param knowledgePoints (mix of all knowledge points)
-    * @param weekCost
-    * @return int, the number of tokens the player can pick up
-    * @throws IOException 
-    */
-    public static int getNbTokensFromChronotime( int knowledgePoints, int weekCost) throws IOException{
-        String[] values = ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty( "chronotime." + knowledgePoints).split("\\|");
-        try{
-            return Integer.parseInt(values[ weekCost ]);
-        }
-        catch( ArrayIndexOutOfBoundsException e){
-            throw new ArrayIndexOutOfBoundsException("The knowledge points provided is not setted in configuration file");
-        }
-    }
-
-
     
     
     
@@ -446,7 +703,6 @@ public class Board {
         this.currentPlayerToken = currentPlayerToken;
     }
 
-
     public Deck getDeck() {
         return deck;
     }
@@ -458,6 +714,16 @@ public class Board {
     public HashMap<String, Area> getAreas() {
         return areas;
     }
+    
+    public <T extends Area> HashMap<String, Area> getAreas( Class<T> typeOfArea ) {
+        HashMap<String, Area> areasToReturn = new HashMap();
+        for (Area area : this.areas.values()) {
+            if( area.getClass() == typeOfArea ){
+                areasToReturn.put( area.getName(), area);
+            }
+        }
+        return areasToReturn;
+    }
 
     public Card[] getFourCurrentCards() {
         return fourCurrentCards;
@@ -467,12 +733,12 @@ public class Board {
         this.fourCurrentCards = fourCurrentCards;
     }
 
-    public ExpoCard[] getThreeExpoCards() {
-        return threeExpoCards;
+    public List<ExpoCard> getExpoCards() {
+        return expoCards;
     }
 
-    public void setThreeExpoCards(ExpoCard[] threeExpoCards) {
-        this.threeExpoCards = threeExpoCards;
+    public void setExpoCards(List<ExpoCard> expoCards) {
+        this.expoCards = expoCards;
     }
 
     public Area getArea(String areaName){
@@ -494,5 +760,15 @@ public class Board {
     public void setSideDeck(Deck sideDeck) {
         this.sideDeck = sideDeck;
     }
+
+    public LocalDate getEndGameDatePosition() {
+        return endGameDatePosition;
+    }
+
+    public LocalDate getStartGameDatePosition() {
+        return startGameDatePosition;
+    }
+    
+    
     
 }

@@ -3,6 +3,7 @@ package com.miage.game;
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.Card;
 import com.miage.cards.EthnologicalKnowledgeCard;
+import com.miage.cards.ExcavationAuthorizationCard;
 import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
@@ -10,7 +11,12 @@ import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.tokens.PointToken;
 import com.miage.tokens.Token;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -79,8 +85,8 @@ public class TestBoard {
 		Card card = board.pickCardOnBoard(3);
 		assertEquals(board.getFourCurrentCards()[3].toString(), "shovel,london,2");
 		assertEquals(card.getAreaName(), "vienna");
-		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,warsaw,4,5");
-		assertEquals(board.getThreeExpoCards()[1].toString(), "expo,moscow,4,5");
+		assertEquals(board.getExpoCards().get(0).toString(), "expo,warsaw,4,5");
+		assertEquals(board.getExpoCards().get(1).toString(), "expo,moscow,4,5");
 		
 			
 	}
@@ -96,26 +102,26 @@ public class TestBoard {
 		
 		
 		ExpoCard card1 = new ExpoCard(0,"expo", "berlin", 4, true, 5);
-		ExpoCard card2 = new ExpoCard(0,"expo", "roma", 3, false, 4);
+		ExpoCard card2 = new ExpoCard(0,"expo", "rome", 3, false, 4);
 		ExpoCard card3 = new ExpoCard(0,"expo", "vienna", 4, true, 5);
 		ExpoCard card4 = new ExpoCard(0,"expo", "paris", 3, false, 4);
 		
 		board.addExpoCardOnBoard(card1);
-		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,berlin,4,5");
+		assertEquals(board.getExpoCards().get(0).toString(), "expo,berlin,4,5");
 		
 		board.addExpoCardOnBoard(card2);
-		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,roma,3,4");
-		assertEquals(board.getThreeExpoCards()[1].toString(), "expo,berlin,4,5");
+		assertEquals(board.getExpoCards().get(0).toString(), "expo,rome,3,4");
+		assertEquals(board.getExpoCards().get(1).toString(), "expo,berlin,4,5");
 		
 		board.addExpoCardOnBoard(card3);
-		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,vienna,4,5");
-		assertEquals(board.getThreeExpoCards()[1].toString(), "expo,roma,3,4");
-		assertEquals(board.getThreeExpoCards()[2].toString(), "expo,berlin,4,5");
+		assertEquals(board.getExpoCards().get(0).toString(), "expo,vienna,4,5");
+		assertEquals(board.getExpoCards().get(1).toString(), "expo,rome,3,4");
+		assertEquals(board.getExpoCards().get(2).toString(), "expo,berlin,4,5");
 		
 		board.addExpoCardOnBoard(card4);
-		assertEquals(board.getThreeExpoCards()[0].toString(), "expo,paris,3,4");
-		assertEquals(board.getThreeExpoCards()[1].toString(), "expo,vienna,4,5");
-		assertEquals(board.getThreeExpoCards()[2].toString(), "expo,roma,3,4");
+		assertEquals(board.getExpoCards().get(0).toString(), "expo,paris,3,4");
+		assertEquals(board.getExpoCards().get(1).toString(), "expo,vienna,4,5");
+		assertEquals(board.getExpoCards().get(2).toString(), "expo,rome,3,4");
 		
 	}
 	
@@ -137,7 +143,7 @@ public class TestBoard {
             assertEquals( "#ff5b2b" , ((ExcavationArea)b.getAreas().get("greece")).getCodeColor()); 
             
             // test distance
-            String[] londonToPalestine = {"paris","roma","crete"};
+            String[] londonToPalestine = {"paris","rome","crete"};
             assertArrayEquals(londonToPalestine, b.getAreas().get("london").getDistances().get("palestine"));
             
             // test total point token 
@@ -229,5 +235,73 @@ public class TestBoard {
            
         }
 	
+        
+        /**
+         * Test if a player has enough time before end game
+         */
+        @Test
+        public void testHasEnoughTimeBeforeEndGame(){
+            LocalDate startDate = LocalDate.of(1900, 1, 1);
+            assertTrue( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(10))); // time for 10 supplementary weeks
+            assertFalse( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(9))); // time for 10 supplementary weeks
+        }
+        
+        
+        
+        /**
+         * Test all method to check if a player can make a round action
+         * @throws IOException 
+         */
+        @Test
+        public void testIsPlayerAbleToMakeRoundAction() throws IOException{
+            final Player player = new Player("maxime", new PlayerToken("color"));
+            HashSet<Player> players = new HashSet(){{
+                this.add( player );
+            }};
+            Board board = new Board(4, players);
+            
+            // test all 4 actions
+            assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, player));
+            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player));
+            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, player));
+            assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, player));
+            
+            // player have special authorization to excavate but not enough point
+            player.getCards().add( new ExcavationAuthorizationCard(0, "ExcavationAuthorizationCard", "berlin", 0));
+            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player));
+            
+            // player have special authorization to excavate and general point
+            player.getCards().add( new GeneralKnowledgeCard(0, null, null, 0, 0));
+            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player));
+            
+            // player have special authorization to excavate and general point and specific knowledge point
+            player.getCards().add( new SpecificKnowledgeCard(0, "SpecificKnowledgeCard", "berlin", 0, 1, "egypt") );
+            assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player));
+            
+            // player have not enough point to make expo in berlin
+            player.getTokens().add( new PointToken(null, "egypt", null, 2));
+            ExpoCard card = new ExpoCard(0, null, "berlin", 0, true, 5);
+            card.setTokens(
+                new ArrayList<PointToken>(){{
+                    this.add(new PointToken(null, "egypt", null, 1));
+                    this.add(new PointToken(null, "crete", null, 2));
+                }}
+            );
+            board.addExpoCardOnBoard( card );
+            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, player));
+            
+            // player have enough point to make this expo in berlin
+            player.getTokens().add( new PointToken(null, "crete", null, 1));
+            player.getTokens().add( new PointToken(null, "crete", null, 1));
+            assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, player));
+            
+            // player is on the end of the board position so he is not able to do anything anymore
+            player.getPlayerToken().setTimeState( board.getEndGameDatePosition() );
+            player.getPlayerToken().setPosition( board.getArea("egypt") ); // we need it in case of the player is on an touristic city and one of the fourcurrentcard is about this area
+            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, player));
+            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, player));
+            
+            
+        }
 
 }

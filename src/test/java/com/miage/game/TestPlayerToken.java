@@ -46,8 +46,6 @@ public class TestPlayerToken {
 		playerToken1.setPosition(board.getArea("warsaw"));
 		playerToken2.setPosition(board.getArea("warsaw"));
 		
-	
-		
 		Player player1 = new Player("Gael");
 		player1.updateCompetencesPointsOrKnowledge(new CarCard(0,"car", "berlin",1), 1);
 		
@@ -121,14 +119,12 @@ public class TestPlayerToken {
 		 * Test of the cost of move
 		 */
 		assertEquals(playerToken1.getCurrentWeek(), 2);
-		
-		
-		
+
 		
 		String[] moveLondonToPalestine = this.playerToken1.move("palestine", board, false);
 		
 		assertEquals(moveLondonToPalestine[0], "paris");
-		assertEquals(moveLondonToPalestine[1], "roma");
+		assertEquals(moveLondonToPalestine[1], "rome");
 		assertEquals(moveLondonToPalestine[2], "crete");
 		assertEquals(this.playerToken1.getPosition().toString(), "palestine");
 		
