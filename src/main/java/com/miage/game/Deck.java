@@ -115,7 +115,7 @@ public class Deck extends LinkedList<Card>{
                 from = to;
                 if (i == nbPart - 1) to = this.size(); // case of we are in the last part we get the size - 1 in order to cover unpair number of (nbPart) (because of int to = this.size() / nbPart;)
                 else to = to + indexRatio;
-                LOGGER.debug("getDividedDeck : from " + from + ", to " + to + " of a deck sizeof : " + this.size());
+//                LOGGER.debug("getDividedDeck : from " + from + ", to " + to + " of a deck sizeof : " + this.size());
                 decksReturn[i] = new Deck( this.subList(from, to) );
             }
             return decksReturn;
@@ -147,7 +147,10 @@ public class Deck extends LinkedList<Card>{
             return cardsInsideDeck;
         }
 	
-        
+        /**
+         * Return an array of first 4 cards
+         * @return 
+         */
         public Card[] pickFourFirstCards(){
             return new Card[]{ this.pick(), this.pick(), this.pick(), this.pick()};
         }

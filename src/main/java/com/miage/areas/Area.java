@@ -72,9 +72,18 @@ public abstract class Area {
      * @return
      */
     public String[] getDistanceAreasSteps(String nameOfDestinationArea){
-    	
     	return this.distances.get(nameOfDestinationArea);
-    	
+    }
+    
+    /**
+     * Return the weekcost between this area and the provided area
+     * 
+     * @param destinationAreaName
+     * @return 
+     */
+    public int getDistanceWeekCostTo( String destinationAreaName ){
+        if(destinationAreaName.equals(this.name)) return 0;
+        return this.distances.get( destinationAreaName ).length + 1; // lengh of steps + the last (destinationAreaName)
     }
     
     
