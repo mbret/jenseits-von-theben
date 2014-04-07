@@ -20,7 +20,7 @@ public class ExpoCard extends Card {
     private final int value;
     
     /**
-     * 
+     * The expo card contain only pointToken. Eeach pointToken correspond to one city and its value determine how many of this token the expo card contain
      */
     private List<PointToken> tokens;
 
@@ -28,7 +28,7 @@ public class ExpoCard extends Card {
     public ExpoCard(int id, String displayName, String areaName, int weekCost,  boolean bigExpo, int value) {
         super(displayName, areaName, id, weekCost);
         this.bigExpo = bigExpo;
-        this.tokens = new ArrayList<PointToken>();
+        this.tokens = new ArrayList();
         this.value = value;
     }
 
