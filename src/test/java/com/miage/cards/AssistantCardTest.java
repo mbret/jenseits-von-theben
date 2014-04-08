@@ -43,7 +43,6 @@ public class AssistantCardTest {
      */
     @Test
     public void testGetKnowLedgePointsWhenCombinated() {
-        System.out.println("getKnowLedgePointsWhenCombinated");
         int nb = 7;
         int expResult = 4;
         int result = AssistantCard.getKnowLedgePointsWhenCombinated(nb);

@@ -5,9 +5,7 @@ package com.miage.cards;
 import Interface.CombinableElement;
 import Interface.KnowledgeElement;
 import Interface.UsableElement;
-import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *
@@ -16,7 +14,7 @@ import java.util.List;
 public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, UsableElement{
 
     
-    private static HashMap<Integer, Integer> values = new HashMap(){{
+    private static final HashMap<Integer, Integer> values = new HashMap(){{
         this.put(2, 1); // two assistants
         this.put(3, 2); // three assistants
     }};
@@ -52,44 +50,24 @@ public class AssistantCard extends Card implements KnowledgeElement, CombinableE
      * // 6 -> 3 + 3        6%3 = 0
      * // 7 -> 3 + 2 + 2    7%3 = 1
      * // 8 -> 3 + 3 + 2    8%3 = 2
-     * @param nb
-     * @param nbCombinatedElement
+     * @param nbOfThisElementCombined
      * @return 
      */
-//    public static int getKnowLedgePointsWhenCombinated( int nbCombinatedElement ){
-//        if( nbCombinatedElement == 1) return 1;
-//        int result = 0;
-//        int nbPartOf2 = 0;
-//        switch( nbCombinatedElement % 3){
-//            case 0:
-//                break;
-//            case 1:
-//                nbPartOf2 = 2;
-//                break;
-//            case 2:
-//                nbPartOf2 = 1;
-//                break;
-//        }
-//        for (int i = 0; i < (nbCombinatedElement - (nbPartOf2*2) ); i++) result += AssistantCard.values.get(3);
-//        for (int i = 0; i < nbPartOf2; i++) result += AssistantCard.values.get(2);
-//        return result;
-//    }
-    
-    public static int getKnowLedgePointsWhenCombinated( int nb ){
-        if( nb == 0){
+    public static int getKnowLedgePointsWhenCombinated( int nbOfThisElementCombined ){
+        if( nbOfThisElementCombined == 0){
             return 0;
         }
         // no 2
-        else if( nb%3 == 0 ){
-            return AssistantCard.values.get(3) + AssistantCard.getKnowLedgePointsWhenCombinated( nb - 3);
+        else if( nbOfThisElementCombined%3 == 0 ){
+            return AssistantCard.values.get(3) + AssistantCard.getKnowLedgePointsWhenCombinated( nbOfThisElementCombined - 3);
         }
         // two 2 left or one left but there is no more place for piece of 3
-        else if( (nb%3 == 1 && nb-4 == 0) || (nb%3 == 2 && nb-2 == 0) ){
-            return AssistantCard.values.get(2) + AssistantCard.getKnowLedgePointsWhenCombinated( nb - 2 );
+        else if( (nbOfThisElementCombined%3 == 1 && nbOfThisElementCombined-4 == 0) || (nbOfThisElementCombined%3 == 2 && nbOfThisElementCombined-2 == 0) ){
+            return AssistantCard.values.get(2) + AssistantCard.getKnowLedgePointsWhenCombinated( nbOfThisElementCombined - 2 );
         }
         // one or two 2 left but still have place to divide in piece of 3
         else{
-            return AssistantCard.values.get(3) + AssistantCard.getKnowLedgePointsWhenCombinated( nb - 3);
+            return AssistantCard.values.get(3) + AssistantCard.getKnowLedgePointsWhenCombinated( nbOfThisElementCombined - 3);
         }
     }
     

@@ -1,6 +1,5 @@
 package com.miage.game;
 
-import Interface.CombinableElement;
 import Interface.DiscardableElement;
 import Interface.KnowledgeElement;
 import Interface.UsableElement;
@@ -11,7 +10,6 @@ import com.miage.main.Main;
 import com.miage.tokens.*;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,11 +45,6 @@ public class Board {
      * Represent the start date position for all players depending of their numbers
      */
     private  LocalDate startGameDatePosition;
-    
-    /**
-     * 
-     */
-    private final Chrono chrono;
     
     /**
      * Stack of player's token
@@ -99,8 +92,6 @@ public class Board {
         this.nbPlayers = nbPlayers;
         this.areas = new HashMap<>();
         this._initAreas();
-        this.chrono = new Chrono();
-        this.chrono.initializationValues();
         this.expoCards = new LinkedList();
         this.deck = new Deck();
         this.sideDeck = new Deck();
@@ -333,6 +324,7 @@ public class Board {
         player.setNbRoundStillPlaying( player.getNbRoundStillPlaying() + 1);
     }
     
+    public void salut(){}
     /**
      * Check if the player is able to do the demanded action. Use player action Constant to provide an action key
      * @param actionPattern player constant (exemple: player.ACTION...)

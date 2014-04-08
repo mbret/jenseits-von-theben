@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package com.miage.game;
 
@@ -21,7 +16,6 @@ public class Chronotime {
 
     /**
      * <br/>- Init the inner chronotimes values with the config manager
-     * @param values
      * @throws IOException 
      */
     public Chronotime() throws IOException {
@@ -45,7 +39,6 @@ public class Chronotime {
             // We put all the weeks with their associated tokens inside the current knowledge range
             this.values.put( numberOfKnowledge, subValues);
         }
-        this.values = values;
     }
     
     /**

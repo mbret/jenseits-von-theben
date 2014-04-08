@@ -136,7 +136,6 @@ public class TestBoard {
          */
         @Test
         public void testInitArea() throws IOException{
-            System.out.println("testInitArea");
             Board b = new Board(3);
             
             // test name
@@ -180,7 +179,6 @@ public class TestBoard {
          */
         @Test
         public void testInitCards() throws IOException{
-            System.out.println("testInitCards");
             
             Board b = new Board(2);
             assertEquals( 95 - 4, b.getDeck().size()); // 95 cards - four cards
