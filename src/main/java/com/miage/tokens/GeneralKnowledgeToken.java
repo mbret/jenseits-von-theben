@@ -17,14 +17,24 @@
 
 package com.miage.tokens;
 
+import Interface.KnowledgeElement;
+
 /**
  *
  * @author maxime
  */
-public class GeneralKnowledgeToken extends Token{
+public class GeneralKnowledgeToken extends Token implements KnowledgeElement{
 
-    public GeneralKnowledgeToken(String id, String name, String color) {
+    private final int value;
+    
+    public GeneralKnowledgeToken(String id, String name, String color, int value) {
         super(id, name, color);
+        this.value = value;
     }
+
+    public int getValue() {
+        return value;
+    }
+    
     
 }

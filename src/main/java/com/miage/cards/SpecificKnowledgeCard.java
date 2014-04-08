@@ -1,13 +1,14 @@
 package com.miage.cards;
 
 import com.miage.config.ConfigManager;
+import Interface.KnowledgeElement;
 import java.io.IOException;
 
 /**
  * 
  * @author maxime
  */
-public class SpecificKnowledgeCard extends Card{
+public class SpecificKnowledgeCard extends Card implements KnowledgeElement{
 	
     /**
      * 

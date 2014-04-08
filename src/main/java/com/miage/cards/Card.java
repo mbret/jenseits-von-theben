@@ -128,9 +128,10 @@ public abstract class Card {
      * 
      * @author Gael
      * @param sideDeck
+     * @deprecated 
      */
     public void discardCard(Deck sideDeck){
-        sideDeck.addCard(this);
+        sideDeck.add(this);
     }
 
     

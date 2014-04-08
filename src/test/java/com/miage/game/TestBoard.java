@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -33,7 +34,7 @@ import org.junit.Test;
 public class TestBoard {
 	
 	private Board board;
-	private Card[] fourCards;
+	private List<Card> fourCards;
 	private Deck deckTest;
 
 	@BeforeClass
@@ -47,23 +48,22 @@ public class TestBoard {
 	@Before
 	public void setUp() throws Exception {
 		
-		board = new Board(3);
-		
-		
-		fourCards = new Card[4];
-		
-		fourCards[0] = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 2);		
-		fourCards[1] = new GeneralKnowledgeCard(0,"generalKnowledge", "paris", 2, 2);		
-		fourCards[2] = new GeneralKnowledgeCard(0,"generalKnowledge", "rome", 2, 2);		
-		fourCards[3] = new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 2);		
-		
-		board.setFourCurrentCards(fourCards);
-		
-		deckTest = new Deck();
-		deckTest.addCard(new ExpoCard(0, "expo", "moscow", 4, true, 5));
-		deckTest.addCard(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
-		deckTest.addCard(new ShovelCard(0,"shovel", "london", 2));
-		board.setDeck(deckTest);
+
+            board = new Board(3);
+            fourCards = new LinkedList();
+
+            fourCards.add( new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 2) );		
+            fourCards.add( new GeneralKnowledgeCard(0,"generalKnowledge", "paris", 2, 2) );		
+            fourCards.add( new GeneralKnowledgeCard(0,"generalKnowledge", "rome", 2, 2) );		
+            fourCards.add( new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 2) );		
+
+            board.setFourCurrentCards(fourCards);
+
+            deckTest = new Deck();
+            deckTest.add(new ExpoCard(0, "expo", "moscow", 4, true, 5));
+            deckTest.add(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
+            deckTest.add(new ShovelCard(0,"shovel", "london", 2));
+            board.setDeck(deckTest);
 		
 		
 	
@@ -75,23 +75,25 @@ public class TestBoard {
 
 	
 	/**
-	 * @author Gael
+	 * @author maxime
 	 * Test of the method pickCardOnBoard
 	 * 
 	 */
 	@Test
-	public void testPickCardOnBoard() {
-		
-		Card card = board.pickCardOnBoard(3);
-		assertEquals(board.getFourCurrentCards()[3].toString(), "shovel,london,2");
-		assertEquals(card.getAreaName(), "vienna");
-		assertEquals(board.getExpoCards().get(0).toString(), "expo,warsaw,4,5");
-		assertEquals(board.getExpoCards().get(1).toString(), "expo,moscow,4,5");
-		
-			
+	public void testPickCardOnBoard() throws IOException {
+            final Player player = new Player("maxime", new PlayerToken("color"));
+            Board board = new Board(2, new HashSet<Player>(){{ this.add( player ); }} );
+            
+            // we check the fourth card 
+            Card card4 = board.getFourCurrentCards().get( 3 );
+            assertEquals( card4, board.pickCardOnBoard( 3 ) );
+            
+            // now the fourth card should be different
+            assertNotSame( card4, board.pickCardOnBoard( 3 ) );
 	}
 	
-	
+        
+        
 	/**
 	 * @author Gael
 	 * 
@@ -216,22 +218,22 @@ public class TestBoard {
              * Set some cards into the deck
              */
             Deck deckTest2 = new Deck();
-            deckTest2.addCard(new ExpoCard(0,"expo", "moscow", 4, true, 5));
-            deckTest2.addCard(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
-            deckTest2.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 3));
-            deckTest2.addCard(new ShovelCard(0,"shovel", "london", 2));
-            deckTest2.addCard(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "berlin", 2, 2,"greece"));
-            deckTest2.addCard(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "rome", 2, 2,"egypt"));
-            deckTest2.addCard(new SpecificKnowledgeCard(0,"specificKnowledge", "rome", 2, 2,"crete"));
+            deckTest2.add(new ExpoCard(0,"expo", "moscow", 4, true, 5));
+            deckTest2.add(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
+            deckTest2.add(new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 3));
+            deckTest2.add(new ShovelCard(0,"shovel", "london", 2));
+            deckTest2.add(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "berlin", 2, 2,"greece"));
+            deckTest2.add(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "rome", 2, 2,"egypt"));
+            deckTest2.add(new SpecificKnowledgeCard(0,"specificKnowledge", "rome", 2, 2,"crete"));
             board.setDeck(deckTest2);
             
             board.changeFourCurrentCards();
             
             assertEquals(board.getCurrentPlayerToken().getPosition().toString(),"warsaw");
 //            assertEquals(board.getFourCurrentCards()[0].toString(),"generalKnowledge,berlin,2,3");
-            assertEquals(board.getFourCurrentCards()[1].toString(),"shovel,london,2");	
-            assertEquals(board.getFourCurrentCards()[2].toString(),"ethnologicalKnowledge,berlin,2,2,greece");	
-            assertEquals(board.getFourCurrentCards()[3].toString(),"ethnologicalKnowledge,rome,2,2,egypt");
+            assertEquals(board.getFourCurrentCards().get(1).toString(),"shovel,london,2");	
+            assertEquals(board.getFourCurrentCards().get(2).toString(),"ethnologicalKnowledge,berlin,2,2,greece");	
+            assertEquals(board.getFourCurrentCards().get(3).toString(),"ethnologicalKnowledge,rome,2,2,egypt");
            
         }
 	

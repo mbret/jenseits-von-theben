@@ -1,5 +1,6 @@
 package com.miage.cards;
 
+import Interface.KnowledgeElement;
 import com.miage.config.ConfigManager;
 import java.io.IOException;
 
@@ -7,7 +8,7 @@ import java.io.IOException;
  *
  * @author maxime
  */
-public class EthnologicalKnowledgeCard extends Card{
+public class EthnologicalKnowledgeCard extends Card implements KnowledgeElement{
     
     /**
      * 

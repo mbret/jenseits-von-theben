@@ -68,15 +68,6 @@ public class Deck extends LinkedList<Card>{
 	}
 	
 	
-	/**
-	 * add a card in the deck
-	 * @param card Card to add in the deck
-	 */
-	public void addCard(Card card){
-		this.add(card);
-	}
-	
-	
 	public String toString(){
 		String result = "";
 		
@@ -97,7 +88,7 @@ public class Deck extends LinkedList<Card>{
 	public Deck getPartOfDeck(int fromIndex, int toIndex){
             Deck result = new Deck();
             for(int i = fromIndex; i <= toIndex; i++){
-                    result.addCard(this.get(i));
+                    result.add(this.get(i));
             }
             return result;
 	}
@@ -146,13 +137,6 @@ public class Deck extends LinkedList<Card>{
             }
             return cardsInsideDeck;
         }
-	
-        /**
-         * Return an array of first 4 cards
-         * @return 
-         */
-        public Card[] pickFourFirstCards(){
-            return new Card[]{ this.pick(), this.pick(), this.pick(), this.pick()};
-        }
+
         
 }

@@ -1,5 +1,6 @@
 package com.miage.game;
 
+import Interface.KnowledgeElement;
 import com.miage.areas.*;
 import com.miage.cards.*;
 import com.miage.config.ConfigManager;
@@ -67,23 +68,25 @@ public class Board {
     
     private PlayerToken currentPlayerToken;
 
+    /**
+     * Normal and first used deck
+     */
     private Deck deck;
     
     /**
-     * défausse 
+     * Side deck used in case of the deck become empty
      */
     private Deck sideDeck;
+    
+    /**
+     * Deck used to discard card
+     */
+    private Deck discardingDeck;
 
-    private Card fourCurrentCards[];
+    private List<Card> fourCurrentCards;
+    
     private List<ExpoCard> expoCards;
 
-    /**
-     * HashMap used to determine how many token of each points are present in each excavation point
-     * Init from extern configuration
-     */
-    private HashMap<String, HashMap<Integer, Integer>> areasTokensConfiguration;
-
-    
     public Board(int nbPlayers, Set<Player> players) throws IOException{
         this.nbPlayers = nbPlayers;
         this.areas = new HashMap<>();
@@ -93,7 +96,8 @@ public class Board {
         this.expoCards = new LinkedList();
         this.deck = new Deck();
         this.sideDeck = new Deck();
-        this.fourCurrentCards = new Card[4];
+        this.discardingDeck = new Deck();
+        this.fourCurrentCards = new LinkedList();
         this._initDecks();
         this.playerTokenStack = new PlayerTokenStack();
         this.playerTokensAndPlayers = new HashMap();
@@ -104,6 +108,7 @@ public class Board {
         tmp = ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("game.startGameDatePosition").split("\\|")[this.nbPlayers-1].split("\\-");
         this.startGameDatePosition = LocalDate.of(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), Integer.parseInt(tmp[2]));
         
+        // Init all about players and player tokens
         for (Player player : players){
             player.getPlayerToken().setPosition( this.areas.get("warsaw")); // set started area for playertoken
             player.getPlayerToken().setTimeState( this.startGameDatePosition ); // init date of token
@@ -119,8 +124,8 @@ public class Board {
      */
     public Board(int nbPlayers) throws IOException{
         this(nbPlayers, new HashSet<Player>());
-
     }
+    
     
     
     
@@ -131,30 +136,38 @@ public class Board {
      * 
      ***********************************************************************************************/
     
-    
-    
     /**
      * Returns the card picked
-     * 
-     * @author Gael
-     * @param index of the card picked in the table
+     * <br/>Effect:
+     * <br/>- pick desired card on the board
+     * <br/>- replace new card from deck on the same place
+     * <br/>- update expoCard in case of we pick this kind of card untill we get a non expo card
+     * @author maxime
+     * @param indexOf
      * @return card picked
      */
-    public Card pickCardOnBoard(int index){
+    public Card pickCardOnBoard( int indexOf ){
+    	Card cardToReturn = this.fourCurrentCards.remove( indexOf );
     	
-    	Card cardToReturn = this.fourCurrentCards[index];
+    	Card cardToAddOnTheBoard = null;
+    	do{
+            // If deck is empty we mix discardingDeck and sideDeck together
+            // and we add tese two deck inside the main deck
+            if( this.deck.isEmpty() ){
+                this.discardingDeck.addAll( this.sideDeck );
+                this.sideDeck.clear();
+                this.discardingDeck.mix();
+                this.deck.addAll( this.discardingDeck );
+                this.discardingDeck.clear();
+            }
+            cardToAddOnTheBoard = this.deck.pick();
+            if( cardToAddOnTheBoard instanceof ExpoCard ){
+                addExpoCardOnBoard( (ExpoCard) cardToAddOnTheBoard );
+            }
+        }
+    	while(cardToAddOnTheBoard instanceof ExpoCard);
     	
-    	Card cardToAddOnTheBoard = this.deck.pick();
-    	
-    	while(cardToAddOnTheBoard instanceof ExpoCard){
-    		
-    		ExpoCard expoCard = (ExpoCard) cardToAddOnTheBoard;
-    		addExpoCardOnBoard(expoCard);
-    		cardToAddOnTheBoard = this.deck.pick();
-    	}
-    	
-    	this.fourCurrentCards[index] = cardToAddOnTheBoard;
-    	
+    	this.fourCurrentCards.add( indexOf , cardToAddOnTheBoard); // here we got card or null
     	
     	return cardToReturn;
     }
@@ -174,23 +187,15 @@ public class Board {
     }
     
     /**
-     * 
+     * Change the fourth current card on the board
+     * <br/>Effect:
+     * <br/>- put the fourth current card on the deck
+     * <br/>- replace 4 new cards on the board
+     * <br/>- update expo in case of we pick this kind of card
      * @author david
      */
     public void changeFourCurrentCards(){
-            this.sideDeck.add(this.fourCurrentCards[0]);
-            this.sideDeck.add(this.fourCurrentCards[1]);
-            this.sideDeck.add(this.fourCurrentCards[2]);
-            this.sideDeck.add(this.fourCurrentCards[3]);
-            
-            for(int i=0;i<4;i++){
-                this.fourCurrentCards[i] = this.deck.pick();
-                while(this.fourCurrentCards[i] instanceof ExpoCard){
-                    this.addExpoCardOnBoard((ExpoCard)this.fourCurrentCards[i]);
-                    this.fourCurrentCards[i] = this.deck.pick();
-                }
-            }
-            this.setFourCurrentCards(fourCurrentCards);
+        for(int i=0;i<4;i++) this.discardingDeck.add( this.pickCardOnBoard( i ) );
     }
     
     /**
@@ -239,47 +244,66 @@ public class Board {
     }
     
     /**
-     * Calculate and set the point of each player
-     */
-    public void calculatePoint(){
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-
-    /**
      * Do a player round action
      * - update the state of the game
+     * - check and discard used cards
+     * - increment the round a player is still playing
      * @param actionPattern 
      * @param player 
+     * @param usedCards 
+     * @param areaToExcavate 
+     * @param cardToPickUp 
+     * @param expoCardToDo 
+     * @param usedKnowledgePointElements 
+     * @param cardsUsed 
      */
-    public void doPlayerRoundAction( int actionPattern, Player player ){
+    public void doPlayerRoundAction( int actionPattern, Player player, List<Card> usedCards, ExcavationArea areaToExcavate, Card cardToPickUp, ExpoCard expoCardToDo, List<KnowledgeElement> usedKnowledgePointElements){
+        // We check if player is using some special cards
+        boolean useZeppelin = false;
+        for (Card card : usedCards){
+            if( card instanceof ZeppelinCard ){
+                useZeppelin = true;
+            }
+        }
+        boolean useCarCard = player.hasCarCard();
         switch(actionPattern){
             case Player.ACTION_CHANGE_FOUR_CARDS:
-                this._actionPlayerDoChangeFourCards( player );
+                this._actionPlayerDoChangeFourCards( player, useZeppelin, useCarCard );
             case Player.ACTION_EXCAVATE:
-                this._actionPlayerDoExcavateArea( player );
+                this._actionPlayerDoExcavateArea( player, areaToExcavate, usedKnowledgePointElements, useZeppelin, useCarCard );
             case Player.ACTION_ORGANIZE_EXPO:
-                this._actionPlayerDoOrganizeExpo( player );
+                this._actionPlayerDoOrganizeExpo( player, expoCardToDo, useZeppelin, useCarCard );
             case Player.ACTION_PICK_CARD:
-                this._actionPlayerDoPickCard( player );
+                this._actionPlayerDoPickCard( player, cardToPickUp, useZeppelin, useCarCard );
         }
+        // After all operations we check used discardable cards
+        for (Card card : usedCards){
+            if( card.isDiscardable() ){
+                this.discardingDeck.add( card );
+            }
+        }
+        // We increment the number of round this player is still playing
+        player.setNbRoundStillPlaying( player.getNbRoundStillPlaying() + 1);
     }
     
     /**
      * Check if the player is able to do the demanded action. Use player action Constant to provide an action key
      * @param actionPattern player constant (exemple: player.ACTION...)
      * @param player
+     * @param areaToExcavate
+     * @param indexOfCardToPickUp
      * @return 
      */
-    public boolean isPlayerAbleToMakeRoundAction( int actionPattern, Player player ){
+    public boolean isPlayerAbleToMakeRoundAction( int actionPattern, Player player, ExcavationArea areaToExcavate, Integer indexOfCardToPickUp, ExpoCard expoCardToDo ){
         switch(actionPattern){
             case Player.ACTION_CHANGE_FOUR_CARDS:
                 return this._actionPlayerAbleToChangeFourCards( player );
             case Player.ACTION_EXCAVATE:
-                return this._actionPlayerAbleToExcavateArea( player );
+                return this._actionPlayerAbleToExcavateArea( player, areaToExcavate );
             case Player.ACTION_ORGANIZE_EXPO:
-                return this._actionPlayerAbleToOrganizeExpo(player );
+                return this._actionPlayerAbleToOrganizeExpo( player, expoCardToDo );
             case Player.ACTION_PICK_CARD:
-                return this._actionPlayerAbleToPickCard(player );
+                return this._actionPlayerAbleToPickCard(player , indexOfCardToPickUp);
         }
         throw new UnsupportedOperationException();
     }
@@ -318,7 +342,7 @@ public class Board {
     }
     
     /**
-     * Check if the player is able to move inside an excavation area
+     * Check if the player is able to move inside the specified area
      * Conditions :
      *  - must have enough time to go there (move)
      *  - must have authorization to excavate in this area
@@ -328,16 +352,11 @@ public class Board {
      * @param playerToken 
      * @return  
      */
-    private boolean _actionPlayerAbleToExcavateArea( Player player  ){
-        // We check for all area (if one is able then we break the loop (no need to test others))
-        for (Area area : this.areas.values()) {
-            if( area instanceof ExcavationArea ){
-                if ( player.isAuthorizedToExcavateArea( area ) // 
-                        && this.hasEnoughTimeToGoInThisArea( area, player.getPlayerToken() )
-                        && (player.hasKnowledgeCardForThisExcavationArea( area.getName() ) || player.hasKnowledgeTokenForThisExcavationArea( area.getName() )) ){
-                    return true;
-                }
-            }
+    private boolean _actionPlayerAbleToExcavateArea( Player player, ExcavationArea areaToExcavate ){
+        if ( player.isAuthorizedToExcavateArea( areaToExcavate ) // 
+                && this.hasEnoughTimeToGoInThisArea( areaToExcavate, player.getPlayerToken() )
+                && (player.hasSpecificKnowledgeCardForThisExcavationArea( areaToExcavate.getName() ) || player.hasSpecificKnowledgeTokenForThisExcavationArea( areaToExcavate.getName() )) ){
+            return true;
         }
         return false;
     }
@@ -350,72 +369,109 @@ public class Board {
      * @param expoCards
      * @return 
      */
-    private boolean _actionPlayerAbleToOrganizeExpo( Player player ){
-        Set<PointToken> playerTokens = player.getSpecificTokens( PointToken.class );
+    private boolean _actionPlayerAbleToOrganizeExpo( Player player, ExpoCard expoCard ){
+        List<PointToken> playerTokens = player.getSpecificTokens( PointToken.class );
         
-        // iterate over all expo card (if one is possible then we break the loop)
-        for (ExpoCard expoCard : expoCards){
+        // iterate over all expo token to check if the user has one token 
+        for (Token token : expoCard.getTokens()) {
+            int valueNeededForThisKindOfToken = ((PointToken)token).getValue();
 
-            // iterate over all expo token to check if the user has one token 
-            for (Token token : ((ExpoCard)expoCard).getTokens()) {
-                int valueNeededForThisKindOfToken = ((PointToken)token).getValue();
-                
-                for (PointToken playerToken : playerTokens) {
-                    if( playerToken.getAreaName().equals( token.getAreaName() )){
-                        valueNeededForThisKindOfToken--; // if the player has one token of this area we reduce this variable 
-                    }
-                }
-                
-                // if the player didn't has enough point token about this current token then he is not able to continue
-                if( valueNeededForThisKindOfToken > 0){
-                    return false;
+            for (PointToken playerToken : playerTokens) {
+                if( playerToken.getAreaName().equals( token.getAreaName() )){
+                    valueNeededForThisKindOfToken--; // if the player has one token of this area we reduce this variable 
                 }
             }
-            
-            // We test if the player has enough time to do all this operation
-            if( Board.hasEnoughTimeBeforeEndGame(  
-                    player.getPlayerToken().getTimeState(), 
-                    player.getPlayerToken().getPosition().getDistanceWeekCostTo( expoCard.getAreaName() ) + ((ExpoCard)expoCard).getWeekCost(), 
-                    endGameDatePosition) // check if enought time to go there + week cost of the card
-                    ){
-                return true;
+
+            // if the player didn't has enough point token about this current token then he is not able to continue
+            if( valueNeededForThisKindOfToken > 0){
+                return false;
             }
+        }
+
+        // We test if the player has enough time to do all this operation
+        if( Board.hasEnoughTimeBeforeEndGame(  
+                player.getPlayerToken().getTimeState(), 
+                player.getPlayerToken().getPosition().getDistanceWeekCostTo( expoCard.getAreaName() ) + expoCard.getWeekCost(), 
+                endGameDatePosition) // check if enought time to go there + week cost of the card
+                ){
+            return true;
         }
         return false;
     }
     
     /**
-     * Check if the player is able to pick up a card
+     * Check if the player is able to pick up the speciefied card
      * Condition:
      *  - must have enough time to go there (move + cost of card)
      * @return 
      */
-    private boolean _actionPlayerAbleToPickCard( Player player ){
-        for (Card card : this.fourCurrentCards) {
-            if( Board.hasEnoughTimeBeforeEndGame( 
-                        player.getPlayerToken().getTimeState(),
-                        player.getPlayerToken().getPosition().getDistanceWeekCostTo( card.getAreaName() ) + card.getWeekCost(), 
-                        endGameDatePosition) ){
-                return true;
-            }
+    private boolean _actionPlayerAbleToPickCard( Player player, int indexOfCardToPickTup ){
+        Card card = this.fourCurrentCards.get( indexOfCardToPickTup );
+        if( Board.hasEnoughTimeBeforeEndGame( 
+                    player.getPlayerToken().getTimeState(),
+                    player.getPlayerToken().getPosition().getDistanceWeekCostTo( card.getAreaName() ) + card.getWeekCost(), 
+                    endGameDatePosition) ){
+            return true;
         }
         return false;
     }
     
-    private void _actionPlayerDoChangeFourCards( Player player ) {
+    /**
+     * Do a round action: change four current cards
+     * <br/>- move the player to warsaw
+     * <br/>- change the four current cards on boards
+     * @param player 
+     * @param useZeppelinCard 
+     * @param useCarCard 
+     */
+    private void _actionPlayerDoChangeFourCards( Player player, boolean useZeppelinCard, boolean useCarCard ) {
+        player.getPlayerToken().movePlayerToken( this.areas.get("warsaw"), useZeppelinCard, useCarCard);
+        this.changeFourCurrentCards();
+    }
+    
+    /**
+     * Do a round action: excavate area
+     * <br/>- move the player to the area
+     * <br/>- get all 
+     * @param player
+     * @param areaToExcavate
+     * @param knowledgePointElements 
+     */
+    private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, List<KnowledgeElement> usedKnowledgePointElements, boolean useZeppelinCard, boolean useCarCard  ) {
+        player.getPlayerToken().movePlayerToken( areaToExcavate , useZeppelinCard, useCarCard);
+        
         throw new UnsupportedOperationException("not implemented yet");
     }
     
-    private void _actionPlayerDoExcavateArea( Player player  ) {
-        throw new UnsupportedOperationException("not implemented yet");
+    /**
+     * Do player round action: organize an exposition
+     * <br/>Effect :
+     * <br/>- move the player to expo area
+     * <br/>- add weekcost from expocard to player
+     * <br/>- put the expo in the player hand
+     * @param expoCards 
+     */
+    private void _actionPlayerDoOrganizeExpo( Player player, ExpoCard expoCardToDo, boolean useZeppelinCard, boolean useCarCard ){
+        player.getPlayerToken().movePlayerToken( this.areas.get(expoCardToDo.getAreaName()) , useZeppelinCard, useCarCard);
+        player.getPlayerToken().addWeeks( expoCardToDo.getWeekCost() );
+        player.getCards().add( expoCardToDo );
+        this.getExpoCards().remove( expoCardToDo );
     }
     
-    private void _actionPlayerDoOrganizeExpo( Player player ){
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-    
-    private void _actionPlayerDoPickCard( Player player ){
-        throw new UnsupportedOperationException("not implemented yet");
+    /**
+     * Do Player round action pick up
+     * <br/>Effect:
+     * <br/>- move to the area written on the card
+     * <br/>- pick the wanted card on the fourCards
+     * <br/>- add weekcost from expocard to player
+     * <br/>- add the card to the player hand
+     * @param player 
+     */
+    private void _actionPlayerDoPickCard( Player player, Card cardToPickUp, boolean useZeppelinCard, boolean useCarCard ){
+        player.getPlayerToken().movePlayerToken( this.getArea( cardToPickUp.getAreaName() ) , useZeppelinCard, useCarCard); // move
+        Card pickedCard = this.pickCardOnBoard( this.fourCurrentCards.indexOf( cardToPickUp ) );
+        player.getPlayerToken().addWeeks( pickedCard.getWeekCost() );
+        player.getCards().add( pickedCard ); // update player hand
     }
     
     /**
@@ -502,7 +558,7 @@ public class Board {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor() ) );
+                            ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), 1 ) );
                         }
                     }
                     
@@ -514,7 +570,7 @@ public class Board {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor() ) );
+                            ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), 1 ) );
                         }
                     }
                 }
@@ -543,7 +599,6 @@ public class Board {
                     
                     newArea.getDistances().put( to, stepsAreasSplitted ); // We set the distance
                 }
-                
                 areas.put( areaName, newArea ); // We put this area inside list of areas
             }
         }
@@ -650,7 +705,10 @@ public class Board {
 
         firstDeck.mix(); // We mix the big deck
 //        LOGGER.debug("initDecks : sizeof firsDeck : " + firstDeck.size());
-        this.fourCurrentCards = firstDeck.pickFourFirstCards(); // We Pick the four first cards from the main deck
+        this.fourCurrentCards.add( firstDeck.pick() ); // We Pick the four first cards from the main deck
+        this.fourCurrentCards.add( firstDeck.pick() );
+        this.fourCurrentCards.add( firstDeck.pick() );
+        this.fourCurrentCards.add( firstDeck.pick() );
         
         Deck[] dividedDecks;
 
@@ -676,6 +734,7 @@ public class Board {
         dividedDecks[1].addAll( dividedDecks[0] ); // we put deck1 on deck2
         this.deck = new Deck( dividedDecks[1] ); // tmp deck 1 & 2 become main deck
     }
+    
     
     
     
@@ -715,21 +774,21 @@ public class Board {
         return areas;
     }
     
-    public <T extends Area> HashMap<String, Area> getAreas( Class<T> typeOfArea ) {
-        HashMap<String, Area> areasToReturn = new HashMap();
+    public <T extends Area> HashMap<String, T> getAreas( Class<T> typeOfArea ) {
+        HashMap<String, T> areasToReturn = new HashMap();
         for (Area area : this.areas.values()) {
             if( area.getClass() == typeOfArea ){
-                areasToReturn.put( area.getName(), area);
+                areasToReturn.put( area.getName(), typeOfArea.cast( area ) );
             }
         }
         return areasToReturn;
     }
 
-    public Card[] getFourCurrentCards() {
+    public List<Card> getFourCurrentCards() {
         return fourCurrentCards;
     }
 
-    public void setFourCurrentCards(Card[] fourCurrentCards) {
+    public void setFourCurrentCards(List<Card> fourCurrentCards) {
         this.fourCurrentCards = fourCurrentCards;
     }
 

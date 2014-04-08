@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -64,19 +65,19 @@ public class TestLogDisplay {
 	public void testDisplayAction() throws IOException {
             
             Board board = new Board(3);
-            Card[] fourCards = new Card[4];
+            List<Card> fourCards = new LinkedList();
 		
-            fourCards[0] = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 2);		
-            fourCards[1] = new GeneralKnowledgeCard(0,"generalKnowledge", "paris", 2, 2);		
-            fourCards[2] = new GeneralKnowledgeCard(0,"generalKnowledge", "rome", 2, 2);		
-            fourCards[3] = new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 2);		
+            fourCards.add( new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 2) );		
+            fourCards.add( new GeneralKnowledgeCard(0,"generalKnowledge", "paris", 2, 2) );		
+            fourCards.add( new GeneralKnowledgeCard(0,"generalKnowledge", "rome", 2, 2) );		
+            fourCards.add( new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 2) );		
 
             board.setFourCurrentCards(fourCards);
 
             Deck deckTest = new Deck();
-            deckTest.addCard(new ExpoCard(0, "expo", "moscow", 4, true, 5));
-            deckTest.addCard(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
-            deckTest.addCard(new ShovelCard(0,"shovel", "london", 2));
+            deckTest.add(new ExpoCard(0, "expo", "moscow", 4, true, 5));
+            deckTest.add(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
+            deckTest.add(new ShovelCard(0,"shovel", "london", 2));
             board.setDeck(deckTest);
             
             Player p = new Player("player");
