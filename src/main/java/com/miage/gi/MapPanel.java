@@ -10,6 +10,8 @@ import com.miage.tokens.Token;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -37,8 +39,16 @@ public class MapPanel extends javax.swing.JPanel {
         initComponents();
         menuCardsPlayer.setVisible(false);
         displayedCardTokenPanel.setVisible(false);
-        initialiseBoard(2);
         ar = new ArrayList<Card>();
+        pt1 = new PlayerToken("Blue");
+        p1 = new Player("Rouch", pt1);
+        pt2 = new PlayerToken("Green");
+        p2 = new Player("Gal", pt2);
+        Set<Player> player = new HashSet<Player>();
+        player.add(p1);
+        player.add(p2);
+        initialiseBoard(2, player);
+        
 //        ar.add(new AssistantCard(16, "assistant", "paris", 2));
 //        ar.add(new AssistantCard(21, "assistant", "roma", 2));
 //        ar.add(new AssistantCard(19, "assistant", "vienna", 2));
@@ -420,12 +430,6 @@ public class MapPanel extends javax.swing.JPanel {
 
         add(playerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 25, -1, -1));
 
-        menuCardsPlayer.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                menuCardsPlayerMouseClicked(evt);
-            }
-        });
-
         player1Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         menuCardsPlayer.addTab("Joueur 1", player1Panel);
 
@@ -487,21 +491,13 @@ public class MapPanel extends javax.swing.JPanel {
         backgroundLabel.setEnabled(false);
     }//GEN-LAST:event_arrowMenuLabelMouseEntered
 
-    private void initialiseBoard(int nbJoueur) throws IOException {
-        b = new Board(nbJoueur);
+    private void initialiseBoard(int nbJoueur,Set<Player> p ) throws IOException {
+        b = new Board(nbJoueur, p);
         if (nbJoueur < menuCardsPlayer.getTabCount()) {
             for (int i = menuCardsPlayer.getTabCount() - 1; i >= nbJoueur; i--) {
                 menuCardsPlayer.remove(i);
             }
         }
-        p1 = new Player("Rouch");
-        pt1 = new PlayerToken("Blue");
-        p2 = new Player("Gal");
-        pt2 = new PlayerToken("Green");
-        HashMap<PlayerToken, Player> players = new HashMap<>(nbJoueur);
-        players.put(pt1, p1);
-        players.put(pt2, p2);
-        b.setPlayerTokensAndPlayers(players);
         b.setCurrentPlayerToken(pt1);
         int curNb = 0;
         for (PlayerToken tok : b.getPlayerTokensAndPlayers().keySet()) {
@@ -695,13 +691,11 @@ public class MapPanel extends javax.swing.JPanel {
 
     private void boardCard1LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard1LabelMouseClicked
         System.out.println(" " + currentP.toString());
+        ar.add(b.getFourCurrentCards()[0]);
         currentP.pickCard(b, 0);
         boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + b.getFourCurrentCards()[0].getId() + ".jpg")));
     }//GEN-LAST:event_boardCard1LabelMouseClicked
 
-    private void menuCardsPlayerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuCardsPlayerMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuCardsPlayerMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowMenuLabel;
     private javax.swing.JLabel backgroundLabel;
