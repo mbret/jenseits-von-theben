@@ -241,7 +241,7 @@ public class Board {
     /**
      * Calculate and set the point of each player
      */
-    public void calculatePoint(){
+    public void calculatePoints(){
         throw new UnsupportedOperationException("not implemented yet");
     }
 

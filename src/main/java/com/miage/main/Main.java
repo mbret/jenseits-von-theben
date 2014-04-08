@@ -46,7 +46,7 @@ public class Main {
                 
             }
             
-            board.calculatePoint();
+            board.calculatePoints();
             for (Player player : board.getPlayerTokensAndPlayers().values()) {
                 // Display players with oints
             }
