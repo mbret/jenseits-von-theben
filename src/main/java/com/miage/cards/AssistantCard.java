@@ -2,11 +2,13 @@
 
 package com.miage.cards;
 
+import java.io.Serializable;
+
 /**
  *
  * @author maxime
  */
-public class AssistantCard extends Card{
+public class AssistantCard extends Card implements Serializable{
 
     
     public AssistantCard(int id, String displayName, String areaName, int weekCost) {

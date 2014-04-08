@@ -18,6 +18,7 @@ import com.miage.tokens.PointToken;
 import com.miage.tokens.SpecificKnowledgeToken;
 import com.miage.tokens.Token;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
  *
  * @author David
  */
-public class LogDisplay {
+public class LogDisplay implements Serializable {
     
     
     /**
@@ -99,11 +100,23 @@ public class LogDisplay {
     }
     
     /**
-     * 
-     * @param logAAjouter @author david
+     * @author david
+     * @param logToAdd 
      */
-    public static void setLogBackup(String logAAjouter){
-        LogDisplay.logBackup += logAAjouter;
+    public static void setLogBackup(String logToAdd){
+        LogDisplay.logBackup += logToAdd;
+    }
+    
+    /**
+     * @author david
+     * @return logSave 
+     */
+    public static String getLogBackup(){
+        return LogDisplay.logBackup;
+    }
+    
+    public static void cleanLogBackup(){
+        LogDisplay.logBackup = "";
     }
     
 }

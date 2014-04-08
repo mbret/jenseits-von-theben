@@ -17,11 +17,13 @@
 
 package com.miage.game;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author maxime
  */
-public class Chrono {
+public class Chrono implements Serializable {
 	
 	private int values[][];
 	

@@ -16,6 +16,7 @@ import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.tokens.GeneralKnowledgeToken;
 import com.miage.tokens.SpecificKnowledgeToken;
 import com.miage.tokens.Token;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +29,7 @@ import org.apache.log4j.Logger;
 
 
 
-public class Player {
+public class Player implements Serializable {
 	
     private final static Logger LOGGER = LogManager.getLogger(Board.class.getName());
     

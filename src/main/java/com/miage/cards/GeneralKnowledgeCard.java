@@ -17,11 +17,13 @@
 
 package com.miage.cards;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author maxime
  */
-public class GeneralKnowledgeCard extends Card{
+public class GeneralKnowledgeCard extends Card implements Serializable{
 	
     /**
      * 

@@ -306,22 +306,5 @@ public class TestBoard {
         }
         
         
-        /**
-         * Test the save of a game
-         * @throws IOException 
-         */
-        public void testSaveGame() throws IOException{
-            HashSet<Player> listOfPlayers = new HashSet<Player>();
-            PlayerToken playerToken1 = new PlayerToken("red");
-            PlayerToken playerToken2 = new PlayerToken("blue");
-            PlayerToken playerToken3 = new PlayerToken("green");
-            Player player1 = new Player("Maxime",playerToken1);
-            Player player2 = new Player("Richard",playerToken2);
-            Player player3 = new Player("Anne-Sophie",playerToken3);
-            listOfPlayers.add(player1);
-            listOfPlayers.add(player2);
-            listOfPlayers.add(player3);
-            Board board = new Board(3,listOfPlayers);
-        }
 
 }

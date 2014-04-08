@@ -17,11 +17,13 @@
 
 package com.miage.tokens;
 
+import java.io.Serializable;
+
 /**
  *
  * @author maxime
  */
-public class SpecificKnowledgeToken extends Token{
+public class SpecificKnowledgeToken extends Token implements Serializable{
 
     public SpecificKnowledgeToken(String id, String name, String color) {
         super(id, name, color);

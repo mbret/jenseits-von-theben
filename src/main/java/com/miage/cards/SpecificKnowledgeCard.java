@@ -2,12 +2,13 @@ package com.miage.cards;
 
 import com.miage.config.ConfigManager;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * 
  * @author maxime
  */
-public class SpecificKnowledgeCard extends Card{
+public class SpecificKnowledgeCard extends Card implements Serializable{
 	
     /**
      * 

@@ -86,6 +86,10 @@ public class Board implements Serializable {
      */
     private HashMap<String, HashMap<Integer, Integer>> areasTokensConfiguration;
 
+    /**
+     * String who store all log which display before the save.
+     */
+    private String logDisplay;
     
     public Board(int nbPlayers, Set<Player> players) throws IOException{
         this.nbPlayers = nbPlayers;
@@ -770,6 +774,14 @@ public class Board implements Serializable {
 
     public LocalDate getStartGameDatePosition() {
         return startGameDatePosition;
+    }
+    
+    public String getLogDisplay(){
+        return this.logDisplay;
+    }
+    
+    public void setLogDisplay(String logDisplay){
+        this.logDisplay = logDisplay;
     }
     
     
