@@ -88,6 +88,8 @@ public class Board {
     List<Player> playersWhoFinished = new ArrayList();
     
     
+    private List<ExpoCard> expoCards;
+
     public Board(int nbPlayers, Set<Player> players) throws IOException{
         this.nbPlayers = nbPlayers;
         this.areas = new HashMap<>();
