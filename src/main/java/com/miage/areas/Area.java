@@ -42,7 +42,7 @@ public abstract class Area {
     public Area(int id, String name){
         this.name = name;
         this.id = id;
-        this.distances = new HashMap<String, String[]>();
+        this.distances = new HashMap();
     }
 
     

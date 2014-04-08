@@ -17,11 +17,14 @@
 
 package com.miage.cards;
 
+import Interface.KnowledgeElement;
+import Interface.UsableElement;
+
 /**
  * 
  * @author maxime
  */
-public class GeneralKnowledgeCard extends Card{
+public class GeneralKnowledgeCard extends Card implements KnowledgeElement, UsableElement{
 	
     /**
      * 
@@ -68,6 +71,11 @@ public class GeneralKnowledgeCard extends Card{
      */
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public int getKnowledgePoints() {
+        return this.value;
     }
 
 

@@ -1,5 +1,4 @@
 
-
 package com.miage.areas;
 
 /**
@@ -10,11 +9,8 @@ package com.miage.areas;
 public class TouristicArea extends Area {
 	
 	
-    public TouristicArea(Integer num, String name){
-        super(num,name);
+    public TouristicArea(Integer id, String name){
+        super(id,name);
     }
 
-   
-
-    
 }
