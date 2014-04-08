@@ -1,26 +1,6 @@
-/*
- * Copyright (C) 2014 maxime
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.miage.game;
 
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import com.miage.areas.Area;
 import com.miage.cards.Card;
@@ -45,7 +25,7 @@ public class PlayerToken implements Comparable{
 	
         
 	public PlayerToken(String color){
-		this.color = color;
+            this.color = color; 
 	}
 
         /**
@@ -121,8 +101,7 @@ public class PlayerToken implements Comparable{
 	 * @return
 	 */
 	public int getCurrentWeek(){
-		
-		return (int) (Math.ceil(this.timeState.getDayOfYear()/7));
+            return (int) (Math.ceil(this.timeState.getDayOfYear()/7));
 	}
 	
 	
@@ -132,8 +111,7 @@ public class PlayerToken implements Comparable{
 	 * @return
 	 */
 	public int getCurrentYear(){
-		
-		return this.timeState.getYear();
+            return this.timeState.getYear();
 	}
 	
 	
@@ -188,6 +166,8 @@ public class PlayerToken implements Comparable{
 		addWeeks(card.getWeekCost());
 		
 	}
+        
+        
 	
 	
 	

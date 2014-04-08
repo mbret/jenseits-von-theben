@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2014 maxime
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 
 package com.miage.areas;
 
@@ -41,21 +26,21 @@ public class ExcavationArea extends Area {
 
     /**
      * 
-     * @param num
+     * @param id
      * @param name
-     * @param color 
+     * @param codeColor
      */
-    public ExcavationArea(int num, String name, String codeColor){
-        super(num, name);
+    public ExcavationArea(int id, String name, String codeColor){
+        super(id, name);
         this.codeColor = codeColor;
-        this.tokenList = new LinkedList<Token>();
+        this.tokenList = new LinkedList<>();
     }
     
     /**
      * 
      * @param num
      * @param name
-     * @param color
+     * @param codeColor
      * @param tokenList 
      */
     public ExcavationArea(int num, String name, String codeColor, LinkedList<Token> tokenList){
@@ -65,12 +50,22 @@ public class ExcavationArea extends Area {
     }
 
 
+    /***********************************************************************************************
+     *
+     *                                  Methods
+     * 
+     ***********************************************************************************************/
+    
+    /**
+     * Add a new token inside this area
+     * @param token 
+     */
     public void addToken(Token token){
         this.tokenList.add(token);
     }
 
     /**
-     * Pick a token in the list
+     * Pick the first token in the list
      * @return 
      */
     public Token pickToken(){
@@ -78,23 +73,34 @@ public class ExcavationArea extends Area {
     }
 
     /**
-     * Mix the list randomly
+     * Mix the token list randomly
      */
     public void mixTokenList(){
         Collections.shuffle(this.tokenList);
     }
 
+    
+    /***********************************************************************************************
+     *
+     *                                  Getter & Setter
+     * 
+     ***********************************************************************************************/
+    
     public String getCodeColor() {
         return codeColor;
+    }
+
+    public void setCodeColor(String codeColor) {
+        this.codeColor = codeColor;
     }
 
     public LinkedList<Token> getTokenList() {
         return tokenList;
     }
 
-    
-   
-	
-    
+    public void setTokenList(LinkedList<Token> tokenList) {
+        this.tokenList = tokenList;
+    }
+
     
 }

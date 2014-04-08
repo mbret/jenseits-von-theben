@@ -13,26 +13,43 @@ import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
-import com.miage.cards.ZeppelinCard;
-
+import com.miage.tokens.GeneralKnowledgeToken;
+import com.miage.tokens.SpecificKnowledgeToken;
+import com.miage.tokens.Token;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 
 
 public class Player {
 	
-    private String name;
+    private final static Logger LOGGER = LogManager.getLogger(Board.class.getName());
+    
+    private final String name;
+    
     private int points;
+    
+    public final static int ACTION_CHANGE_FOUR_CARDS = 0;
+    public final static int ACTION_EXCAVATE = 1;
+    public final static int ACTION_ORGANIZE_EXPO = 2;
+    public final static int ACTION_PICK_CARD = 3;
 
+    private final PlayerToken playerToken;
+    
     /**
      * 
      */
     private ArrayList<Card> cards;
 
 
-    private Map<String, Integer> tokens; 
+    private ArrayList<Token> tokens; 
 
     /*
      * Structure stocking competences :
@@ -51,16 +68,22 @@ public class Player {
      */
     private ArrayList<String> areasAlreadyExcavate; 
 
-
-    public Player(String name){
+    /**
+     * Define for how many round the player is playing (because we can play again after played depending of the position)
+     * Must count the current round
+     */
+    private int nbRoundStillPlaying;
+    
+    public Player(String name, PlayerToken playerToken){
             this.name = name;
             this.points = 0;
-            
-            this.tokens = new HashMap<String, Integer>();
-            this.competences = new HashMap<String, Integer>(); 
+            this.playerToken = playerToken;
+            this.tokens = new ArrayList();
+            this.competences = new HashMap(); 
             this.playerKnowledges = new PlayerKnowledges();
-            this.cards = new ArrayList<Card>();
-            this.areasAlreadyExcavate = new ArrayList<String>();
+            this.cards = new ArrayList();
+            this.areasAlreadyExcavate = new ArrayList();
+            this.nbRoundStillPlaying = 0;
             
             /*
              * Initialization of competences
@@ -74,7 +97,24 @@ public class Player {
             this.competences.put("excavationAuthorization", 0);
     }
     
+    /**
+     * @deprecated 
+     * @param name 
+     */
+    public Player(String name){
+        this(name, new PlayerToken("color"));
+    }
     
+    
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Public Methods
+     * 
+     ***********************************************************************************************/
+    
+        
     /**
      * @author Gael
      * 
@@ -84,12 +124,57 @@ public class Player {
      * @return
      */
     public boolean hasAlreadyExcavateArea(String nameOfArea){
-    	
-    	if(this.areasAlreadyExcavate.contains(nameOfArea))
-    		return true;
-    	else
-    		return false;
+        return this.areasAlreadyExcavate.contains(nameOfArea);
     }
+    
+    /**
+     * Check if the player is authorized to excavated the provided area
+     * Conditions:
+     *  - has a specific knowledge about this area
+     *  - has a specific knowledge token about this area
+     *  - is authorized to excavate
+     * @author maxime
+     * @param excavationArea
+     * @return 
+     */
+    public boolean isAuthorizedToExcavateArea( Area excavationArea ){
+        boolean hasExcavationAuthorization = ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty();
+        if( (! this.hasAlreadyExcavateArea( excavationArea.getName() ) || hasExcavationAuthorization ) // authorized
+                && ( this.hasSpecificKnowledgeCardForThisExcavationArea( excavationArea.getName() )  // enough knowledge
+                     || this.hasSpecificKnowledgeTokenForThisExcavationArea( excavationArea.getName() ) 
+                ) 
+          ){ 
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Check if the user is authorized to excavate at least one area (any of them)
+     * Conditions:
+     *  - is authorized to excavate one area
+     *  - has specific knowledge for the area selected
+     *  - has a specific knowledge token about this area
+     * @author maxime
+     * @param excavationAreas (we need this set to avoid dependencies with any extern information)
+     * @return 
+     */
+    public boolean isAuthorizedToExcavateOneArea( Collection<Area> excavationAreas ){
+        boolean hasExcavationAuthorization = ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty();
+        // we iterate and check all area (we break the loop when we find the first area which is okay to excavate)
+        for (Area area : excavationAreas ) {
+            if( area instanceof ExcavationArea ){
+               if( (! this.hasAlreadyExcavateArea( area.getName() ) || hasExcavationAuthorization ) // authorized
+                    && ( this.hasSpecificKnowledgeCardForThisExcavationArea( area.getName() ) 
+                         || this.hasSpecificKnowledgeTokenForThisExcavationArea( area.getName() ) ) ){ // enough knowledge
+                    return true;
+                } 
+            }
+        }
+        return false;
+    }
+    
+    
     
     
     /**
@@ -100,30 +185,139 @@ public class Player {
      * @param nameOfArea
      */
     public void addAreaAlreadyExcavate(String nameOfArea){
-    	
     	this.areasAlreadyExcavate.add(nameOfArea);
     }
     
+    /**
+     * Check if the player has the given type of card inside his hand
+     * @author maxime
+     * @param <T>
+     * @param typeOfCard
+     * @return 
+     */
+    public <T extends Card> boolean hasSpecificCard( Class<T> typeOfCard ){
+        return ! this.getSpecificCards(typeOfCard).isEmpty();
+    }
     
+    /**
+     * Retrieve the asked type of cards
+     * @author
+     * @param <T>
+     * @param typeOfCard
+     * @return 
+     */
+    public <T extends Card> Set<T> getSpecificCards( Class<T> typeOfCard ){
+        Set cardsToReturn = new HashSet<>();
+        for (Card card : this.cards) {
+            if( card.getClass() == typeOfCard ){
+                cardsToReturn.add( typeOfCard.cast( card ) );
+            }
+        }
+        return cardsToReturn;
+    }
     
+    /**
+     * Retrieve the asked type of tokens 
+     * @author
+     * @param <T>
+     * @param typeOfToken
+     * @return 
+     */
+    public <T extends Token> Set<T> getSpecificTokens( Class<T> typeOfToken ){
+        Set tokensToReturn = new HashSet<>();
+        for (Token token : this.tokens) {
+            if( token.getClass() == typeOfToken ){
+                tokensToReturn.add( typeOfToken.cast( token ) );
+            }
+        }
+        return tokensToReturn;
+    }
+    
+    /**
+     * Check if the player has at least one SpecificKnowledgeCard about the given area
+     * @author maxime
+     * @param areaName
+     * @return 
+     */
+    public boolean hasSpecificKnowledgeCardForThisExcavationArea( String areaName ){
+        for (SpecificKnowledgeCard card : this.getSpecificCards( SpecificKnowledgeCard.class )) {
+            if( ((SpecificKnowledgeCard)card).getExcavationAreaName().equals( areaName )  ){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if the player has at least one SpecificKnowledgeCard about the given area or any generalKnowledgeCard 
+     * @author maxime
+     * @param areaName
+     * @return 
+     */
+    public boolean hasKnowledgeCardForThisExcavationArea( String areaName ){
+        for (Card card : this.cards) {
+            if( card instanceof GeneralKnowledgeCard){
+                return true;
+            }
+            if( card instanceof SpecificKnowledgeCard){
+                if( ((SpecificKnowledgeCard)card).getExcavationAreaName().equals( areaName )  ){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if the player has at least one SpecificKnowledgeToken about the given area
+     * @param areaName
+     * @return 
+     */
+    public boolean hasSpecificKnowledgeTokenForThisExcavationArea( String areaName ){
+        for (Token token : this.getSpecificTokens( SpecificKnowledgeToken.class )) {
+            if( ((SpecificKnowledgeToken)token).getAreaName().equals( areaName )  ){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if the player has at least one SpecificKnowledgeToken about the given area or any generalKnowledgeToken
+     * @author maxime
+     * @param areaName
+     * @return 
+     */
+    public boolean hasKnowledgeTokenForThisExcavationArea( String areaName ){
+        for (Token token : this.tokens) {
+            if( token instanceof GeneralKnowledgeToken){
+                return true;
+            }
+            if( token instanceof SpecificKnowledgeToken){
+                if( ((SpecificKnowledgeToken)token).getAreaName().equals( areaName )  ){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     
     /**
      * @author Gael
      * 
      * pick a card on the board
-     * 
+     * @deprecated 
      * @param board board of the game
      * @param index index of the table which corresponds to the card
      */
     public void pickCard(Board board, int index){
     	
-    	Card cardPicked = board.pickCardOnBoard(index).downCastCard();
+    	Card cardPicked = board.pickCardOnBoard(index);
     	this.cards.add(cardPicked);
     	updateCompetencesPointsOrKnowledge(cardPicked, 1);
     	board.getCurrentPlayerToken().addWeeksPlayerToken(cardPicked);
     	
     }
-    
     
     /**
      * 
@@ -231,18 +425,16 @@ public class Player {
     	}
     }
     
-    
     /**
      * 
-     * 	add competence points using the card in parameters
+     * Add competence points using the card in parameters
      * @author Gael
+     * @deprecated 
      * @param card
      */
     public void addCompetencesPointsOrKnowledge(Card card){
     	updateCompetencesPointsOrKnowledge(card, 1);
     }
-    
-    
     
     /**
      * 
@@ -254,63 +446,77 @@ public class Player {
     	updateCompetencesPointsOrKnowledge(card, -1);
     }
     
-    
-    
-    
     /**
-         * @author david
-         * return a boolean means if the player can excavate in this area
-         */
-        public boolean canExcavate(Area a){
-            boolean allowed = false;
-            if(a instanceof ExcavationArea){
-                if(this.hasAlreadyExcavateArea(a.getName())){
-                        if(this.competences.get("excavationAuthorization")>0){
-                             if(this.playerKnowledges.getSpecificKnowledges().get(a.getName())>0){
-                                 allowed = true;
-                            }
-                        }
-                }else{
-                    if(this.playerKnowledges.getSpecificKnowledges().get(a.getName())>0){
-                        allowed = true;
-                    }
-                }
+     * When a player use a zeppelin, unique assistant or unique shovel or ethnological knowledge, the card is discard
+     * 
+     * @author Gael
+     * @param card
+     * @param sideDeck
+     */
+    public void useCard(Card card, Deck sideDeck){
+
+
+            if(card.isDiscardable()){
+                    this.cards.remove(card);
+                    card.discardCard(sideDeck);
+                    this.updateCompetencesPointsOrKnowledge(card, -1);
             }
-            return allowed;
-        }
+    }
         
-        
-        /**
-         * When a player use a zeppelin, unique assistant or unique shovel or ethnological knowledge, the card is discard
-         * 
-         * @author Gael
-         * @param card
-         * @param sideDeck
-         */
-        public void useCard(Card card, Deck sideDeck){
-        	
-        		
-        	if(card.isDiscardable()){
-        		this.cards.remove(card);
-        		card.discardCard(sideDeck);
-        		this.updateCompetencesPointsOrKnowledge(card, -1);
-        	}
-        }
-    
-    
-    
+    /**
+     * 
+     * Return the total of knowledge points for excavate in the area
+     * 
+     * @param area 
+     * @param ethnologicalKnowledge
+     * @return the number of knowledge points
+     */
+    public int totalKnowledgePoints(Area area, boolean ethnologicalKnowledge){
 
+            int numberOfPoints = 0;
 
+            int numberOfGeneralKnowledgePoints = this.playerKnowledges.getGeneralKnowledge();
+            int numberOfSpecificKnowledgePoints = this.playerKnowledges.getSpecificKnowledges().get(area.getName());
+
+            if(ethnologicalKnowledge){
+                    numberOfSpecificKnowledgePoints += this.playerKnowledges.getEthnologicalKnowledges().get(area.getName());
+            }
+
+            if(numberOfGeneralKnowledgePoints > numberOfSpecificKnowledgePoints)
+                    numberOfPoints = numberOfSpecificKnowledgePoints*2;
+            else
+                    numberOfPoints = numberOfGeneralKnowledgePoints + numberOfSpecificKnowledgePoints;
+
+            return numberOfPoints;
+
+    }
+         
     
     
-    //************************************ GETTERS & SETTERS ****************************************************
+    
+    /***********************************************************************************************
+     *
+     *                                  Private Methods
+     * 
+     ***********************************************************************************************/
+    
+    
+    
+    
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Getter & Setter
+     * 
+     ***********************************************************************************************/
 
     public String getName() {
-            return name;
+        return name;
     }
 
     public int getPoints(){
-            return points;
+        return points;
     }
 
     public ArrayList<Card> getCards() {
@@ -321,14 +527,38 @@ public class Player {
         this.cards = cards;
     }
 
-	public Map<String, Integer> getCompetences() {
-		return competences;
-	}
+    /**
+     * @deprecated 
+     * @return 
+     */
+    public Map<String, Integer> getCompetences() {
+        return competences;
+    }
 
 
-	public PlayerKnowledges getPlayerKnowledges() {
-		return playerKnowledges;
-	}
+    public PlayerKnowledges getPlayerKnowledges() {
+        return playerKnowledges;
+    }
+
+
+    public ArrayList<Token> getTokens() {
+        return tokens;
+    }
+
+
+    public void setTokens(ArrayList<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+    public PlayerToken getPlayerToken() {
+        return playerToken;
+    }
+
+    public int getNbRoundStillPlaying() {
+        return nbRoundStillPlaying;
+    }
+	
+	
     
     
     

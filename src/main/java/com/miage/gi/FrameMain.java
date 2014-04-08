@@ -1,17 +1,13 @@
 
 package com.miage.gi;
 
-import com.miage.areas.Area;
-import com.miage.config.ConfigManager;
-import com.miage.game.Board;
-import com.miage.game.Player;
-import com.miage.game.PlayerToken;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.AudioInputStream;
 
 /**
  * Class Main Frame 
@@ -36,9 +32,8 @@ public class FrameMain extends javax.swing.JFrame {
             System.err.println("Le mode plein écran n'est pas disponible");
         }
         
-        
-       // Audio2 a = new Audio2("C:\\Users\\Anne-Sophie\\Documents\\NetBeansProjects\\Thebes\\src\\main\\java\\musich.wav");
-        //a.play();
+       Audio2 a = new Audio2("C:\\Users\\Anne-Sophie\\Documents\\NetBeansProjects\\Thebes\\src\\main\\java\\musich.wav");
+       a.play();
         
         // add home panel to main frame
         PanelContainer.add(new PanelHome(), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));

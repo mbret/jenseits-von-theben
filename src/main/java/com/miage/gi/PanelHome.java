@@ -7,6 +7,8 @@ import com.miage.game.Player;
 import com.miage.game.PlayerToken;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -805,55 +807,29 @@ public class PanelHome extends javax.swing.JPanel {
         String colorPlayer2 = (String) colorPlayer2ComboBox.getSelectedItem();
         String colorPlayer3 = (String) colorPlayer3ComboBox.getSelectedItem();
         String colorPlayer4 = (String) colorPlayer4ComboBox.getSelectedItem();
-        String logPlayer1 = player1TextField.getText();
-        String logPlayer2 = player2TextField.getText();
-        String logPlayer3 = player3TextField.getText();
-        String logPlayer4 = player4TextField.getText();
-        HashMap<PlayerToken, Player> hashMapPlayerTokenPlayer;
-        String idStartString;
+        String loginPlayer1 = player1TextField.getText();
+        String loginPlayer2 = player2TextField.getText();
+        String loginPlayer3 = player3TextField.getText();
+        String loginPlayer4 = player4TextField.getText();
+        Set<Player> players = new HashSet();
         try {
-            idStartString = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME).getProperty("area.warsaw.id");
-            int idStartInt = Integer.parseInt(idStartString);
-            String areaStart = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME).getProperty("area.warsaw.name");
-            Area start = new Area(idStartInt, areaStart) {
-            };
 
             if (checkColors() && checkLogin()) {
 
                 if (nbPlayers.compareTo("2") == 0) {
-                    //annee 1901 case 0
-                    playerToken1 = new PlayerToken(colorPlayer1);
-                    playerToken1.setPosition(start);
-                    player1 = new Player(logPlayer1);
-                    //playerToken1.setTimeState(new LocalDate(31,12,1901));
-                    playerToken2 = new PlayerToken(colorPlayer2);
-                    playerToken2.setPosition(start);
-                    player2 = new Player(logPlayer2);
+                    players.add(new Player(loginPlayer1, new PlayerToken(colorPlayer1)));
+                    players.add(new Player(loginPlayer2, new PlayerToken(colorPlayer2)));
+
                 } else if (nbPlayers.compareTo("3") == 0) {
-                    //annee 1901 case 16
-                    playerToken1 = new PlayerToken(colorPlayer1);
-                    playerToken1.setPosition(start);
-                    player1 = new Player(logPlayer1);
-                    playerToken2 = new PlayerToken(colorPlayer2);
-                    playerToken2.setPosition(start);
-                    player2 = new Player(logPlayer2);
-                    playerToken3 = new PlayerToken(colorPlayer3);
-                    playerToken3.setPosition(start);
-                    player3 = new Player(logPlayer3);
+                    players.add(new Player(loginPlayer1, new PlayerToken(colorPlayer1)));
+                    players.add(new Player(loginPlayer2, new PlayerToken(colorPlayer2)));
+                    players.add(new Player(loginPlayer3, new PlayerToken(colorPlayer3)));
+
                 } else if (nbPlayers.compareTo("4") == 0) {
-                    //annee 1902 case 0
-                    playerToken1 = new PlayerToken(colorPlayer1);
-                    playerToken1.setPosition(start);
-                    player1 = new Player(logPlayer1);
-                    playerToken2 = new PlayerToken(colorPlayer2);
-                    playerToken2.setPosition(start);
-                    player2 = new Player(logPlayer2);
-                    playerToken3 = new PlayerToken(colorPlayer3);
-                    playerToken3.setPosition(start);
-                    player3 = new Player(logPlayer3);
-                    playerToken4 = new PlayerToken(colorPlayer4);
-                    playerToken4.setPosition(start);
-                    player4 = new Player(logPlayer4);
+                    players.add(new Player(loginPlayer1, new PlayerToken(colorPlayer1)));
+                    players.add(new Player(loginPlayer2, new PlayerToken(colorPlayer2)));
+                    players.add(new Player(loginPlayer3, new PlayerToken(colorPlayer3)));
+                    players.add(new Player(loginPlayer4, new PlayerToken(colorPlayer4)));
                 }
             } else {
                 //fenêtre interne pour avertir qu'il faut donner des noms aux joueurs et une seule couleur par joueur
@@ -861,13 +837,8 @@ public class PanelHome extends javax.swing.JPanel {
                 newGamePanel.setEnabled(false);
             }
 
-            Board board = new Board(nbPlayer);
-            hashMapPlayerTokenPlayer = board.getPlayerTokensAndPlayers();
-            hashMapPlayerTokenPlayer.put(playerToken1, player1);
-            hashMapPlayerTokenPlayer.put(playerToken2, player2);
-            hashMapPlayerTokenPlayer.put(playerToken3, player3);
-            hashMapPlayerTokenPlayer.put(playerToken4, player4);
-            board.setPlayerTokensAndPlayers(hashMapPlayerTokenPlayer);
+            Board board = new Board(nbPlayer, players);
+            //ajout de MapPanel
 
         } catch (IOException ex) {
             Logger.getLogger(PanelHome.class.getName()).log(Level.SEVERE, null, ex);

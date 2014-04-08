@@ -46,10 +46,8 @@ public class TestPlayerToken {
 		playerToken1.setPosition(board.getArea("warsaw"));
 		playerToken2.setPosition(board.getArea("warsaw"));
 		
-	
-		
 		Player player1 = new Player("Gael");
-		player1.updateCompetencesPointsOrKnowledge(new CarCard(0,"berlin",1), 1);
+		player1.updateCompetencesPointsOrKnowledge(new CarCard(0,"car", "berlin",1), 1);
 		
 		HashMap<PlayerToken, Player> playerTokensAndPlayers = new HashMap<PlayerToken, Player>();
 		playerTokensAndPlayers.put(playerToken1, player1);
@@ -121,14 +119,12 @@ public class TestPlayerToken {
 		 * Test of the cost of move
 		 */
 		assertEquals(playerToken1.getCurrentWeek(), 2);
-		
-		
-		
+
 		
 		String[] moveLondonToPalestine = this.playerToken1.move("palestine", board, false);
 		
 		assertEquals(moveLondonToPalestine[0], "paris");
-		assertEquals(moveLondonToPalestine[1], "roma");
+		assertEquals(moveLondonToPalestine[1], "rome");
 		assertEquals(moveLondonToPalestine[2], "crete");
 		assertEquals(this.playerToken1.getPosition().toString(), "palestine");
 		
@@ -165,9 +161,9 @@ public class TestPlayerToken {
 	@Test
 	public void testAddWeeksPlayerToken(){
 		
-		GeneralKnowledgeCard generalKnowledgeCard = new GeneralKnowledgeCard(0,"berlin",3,1);
-		GeneralKnowledgeCard generalKnowledgeCard2 = new GeneralKnowledgeCard(0,"berlin",6,1);
-		ShovelCard shovelCard = new ShovelCard(0,"paris", 3);
+		GeneralKnowledgeCard generalKnowledgeCard = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin",3,1);
+		GeneralKnowledgeCard generalKnowledgeCard2 = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin",6,1);
+		ShovelCard shovelCard = new ShovelCard(0,"shovel", "paris", 3);
 		
 		
 		this.playerToken1.addWeeksPlayerToken(generalKnowledgeCard);

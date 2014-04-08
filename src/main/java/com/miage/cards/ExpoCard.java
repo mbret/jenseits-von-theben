@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2014 maxime
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.miage.cards;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,43 +9,78 @@ import com.miage.tokens.PointToken;
  */
 public class ExpoCard extends Card {
 	
-    private boolean bigExpo;
-    private int value;
+    /**
+     * Define wheter the exposition is big or not
+     */
+    private final boolean bigExpo;
+    
+    /**
+     * 
+     */
+    private final int value;
+    
+    /**
+     * The expo card contain only pointToken. Eeach pointToken correspond to one city and its value determine how many of this token the expo card contain
+     */
     private List<PointToken> tokens;
 
-    public ExpoCard(int id, String areaName, int cost,  boolean bigExpo) {
-        super(id, "expo", areaName, cost);
+    
+    public ExpoCard(int id, String displayName, String areaName, int weekCost,  boolean bigExpo, int value) {
+        super(displayName, areaName, id, weekCost);
         this.bigExpo = bigExpo;
-        this.tokens = new ArrayList<PointToken>();
-        if(bigExpo)
-        	this.value = 5;
-        else
-        	this.value = 4;
+        this.tokens = new ArrayList();
+        this.value = value;
     }
 
-    public int getValue(){
-        return value;
-    }
 
-    public boolean getBigExpo(){
-        return bigExpo;
-    }
-
+    /***********************************************************************************************
+     *
+     *                                  Methods
+     * 
+     ***********************************************************************************************/
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
     public String toString(){
-       if(bigExpo)
-    	   return "big "+super.toString()+","+value;
-       else
-    	   return "little "+super.toString()+","+value;
+       return super.toString()+","+value;
     }
+    
+    
 
     @Override
     public boolean isDiscardable() {
         return false;
     }
 
+    
+    /***********************************************************************************************
+     *
+     *                                  Getter & Setter
+     * 
+     ***********************************************************************************************/
+   
+    /**
+     * 
+     * @return 
+     */
+    public List<PointToken> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(List<PointToken> tokens) {
+        this.tokens = tokens;
+    }
+
     public boolean isBigExpo() {
         return bigExpo;
     }
-    
+
+    public int getValue() {
+        return value;
+    }
+
     
 }

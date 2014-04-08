@@ -23,7 +23,7 @@ public class Audio2  {
  
   public Audio2(String filename) throws java.io.IOException {
        
-        url = new URL("file:musich.wav");
+        URL u = getClass().getResource(filename);
 	FileInputStream in = new FileInputStream(filename);
 	as = new AudioStream(in);   
         pause = false;
