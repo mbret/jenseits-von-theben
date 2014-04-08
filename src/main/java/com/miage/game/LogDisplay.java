@@ -31,6 +31,11 @@ import java.util.logging.Logger;
  */
 public class LogDisplay {
     
+    
+    /**
+     * string which store all logs of the game.
+     */
+    private static String logBackup = "";
     /**
      * Display logs, depending of the action executed by the player
      * @param b 
@@ -89,7 +94,16 @@ public class LogDisplay {
                 message = "Erreur : l'action "+action+" n'est pas reconnue ...";
                 break;
         }
+        LogDisplay.setLogBackup(message);
         return message;
+    }
+    
+    /**
+     * 
+     * @param logAAjouter @author david
+     */
+    public static void setLogBackup(String logAAjouter){
+        LogDisplay.logBackup += logAAjouter;
     }
     
 }

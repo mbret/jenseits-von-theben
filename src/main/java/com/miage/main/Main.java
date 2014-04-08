@@ -3,7 +3,9 @@ package com.miage.main;
 import com.miage.game.Board;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,4 +72,25 @@ public class Main {
        public static int getYear( LocalDate date ){
            return date.getYear();
        }
+       
+       /**
+     * Save the game (the board into a file).
+     * @author david
+     * @param boardToSave board to be save
+     * @param fileToSave file where the board will be saved
+     */
+    public void saveGame(Board boardToSave, String fileToSave){
+        try {
+            FileOutputStream backupFile = new FileOutputStream(fileToSave);
+            ObjectOutputStream oos = new ObjectOutputStream(backupFile);
+            oos.writeObject(boardToSave);
+            oos.flush();
+            oos.close();
+         }catch (IOException e) {
+             /*
+              * Changer l'action de l'exception
+              */
+            e.printStackTrace();
+         }
+    }
 }
