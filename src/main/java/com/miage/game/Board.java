@@ -87,8 +87,6 @@ public class Board {
     
     List<Player> playersWhoFinished = new ArrayList();
     
-    
-    private List<ExpoCard> expoCards;
 
     public Board(int nbPlayers, Set<Player> players) throws IOException{
         this.nbPlayers = nbPlayers;
@@ -320,10 +318,14 @@ public class Board {
                     this.discardingDeck.add( (Card)element );
                 }
             }
+            
+            // Case of combinable cards
+            // ....
         }
         
         // We increment the number of round this player is still playing
         player.setNbRoundStillPlaying( player.getNbRoundStillPlaying() + 1);
+        throw new UnsupportedOperationException("some operations are missing");
     }
     
     public void salut(){}
@@ -360,6 +362,8 @@ public class Board {
        int weekCost = playerToken.getPosition().getDistanceWeekCostTo( area.getName() ); // weekcost from current place to area
        return Board.hasEnoughTimeBeforeEndGame( playerToken.getTimeState(), weekCost, this.endGameDatePosition);
     }
+    
+    
     
     
     /***********************************************************************************************
