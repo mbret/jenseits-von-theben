@@ -838,7 +838,11 @@ public class PanelHome extends javax.swing.JPanel {
             }
 
             Board board = new Board(nbPlayer, players);
-            //ajout de MapPanel
+            //add de MapPanel
+            removeAll();
+            MapPanel map = new MapPanel(board);
+            add(map, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+            updateUI();
 
         } catch (IOException ex) {
             Logger.getLogger(PanelHome.class.getName()).log(Level.SEVERE, null, ex);

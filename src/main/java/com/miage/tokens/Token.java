@@ -33,6 +33,10 @@ public abstract class Token {
 	public String toString(){
 		return this.getAreaName()+","+this.getColor();
 	}
+        
+        public String getId(){
+            return id;
+        }
 	
 	
 }
