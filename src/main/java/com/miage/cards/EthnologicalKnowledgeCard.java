@@ -1,7 +1,9 @@
 package com.miage.cards;
 
-import Interface.KnowledgeElement;
-import Interface.UsableElement;
+import com.miage.interfaces.CombinableElement;
+import com.miage.interfaces.DiscardableElement;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.interfaces.UsableElement;
 import com.miage.config.ConfigManager;
 import java.io.IOException;
 import java.io.Serializable;

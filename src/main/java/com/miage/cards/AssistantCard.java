@@ -2,10 +2,10 @@
 
 package com.miage.cards;
 
-import Interface.CombinableElement;
-import Interface.DiscardableElement;
-import Interface.KnowledgeElement;
-import Interface.UsableElement;
+import com.miage.interfaces.CombinableElement;
+import com.miage.interfaces.DiscardableElement;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.interfaces.UsableElement;
 import java.util.HashMap;
 
 /**

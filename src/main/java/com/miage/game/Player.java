@@ -1,8 +1,6 @@
 package com.miage.game;
 
 
-import Interface.CombinableElement;
-import Interface.KnowledgeElement;
 import com.miage.areas.Area;
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.AssistantCard;
@@ -15,6 +13,7 @@ import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
+import com.miage.interfaces.KnowledgeElement;
 import com.miage.tokens.GeneralKnowledgeToken;
 import com.miage.tokens.SpecificKnowledgeToken;
 import com.miage.tokens.Token;

@@ -1,6 +1,6 @@
 package com.miage.game;
 
-import Interface.UsableElement;
+import com.miage.interfaces.UsableElement;
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.Card;
 import com.miage.cards.EthnologicalKnowledgeCard;

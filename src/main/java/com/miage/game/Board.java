@@ -1,8 +1,8 @@
 package com.miage.game;
 
-import Interface.DiscardableElement;
-import Interface.KnowledgeElement;
-import Interface.UsableElement;
+import com.miage.interfaces.DiscardableElement;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.interfaces.UsableElement;
 import com.miage.areas.*;
 import com.miage.cards.*;
 import com.miage.config.ConfigManager;

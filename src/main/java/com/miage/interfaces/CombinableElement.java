@@ -1,6 +1,6 @@
 
 
-package Interface;
+package com.miage.interfaces;
 
 import java.lang.reflect.Method;
 import java.util.List;

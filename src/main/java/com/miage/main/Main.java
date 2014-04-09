@@ -1,7 +1,7 @@
 package com.miage.main;
 
-import Interface.KnowledgeElement;
-import Interface.UsableElement;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.interfaces.UsableElement;
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.AssistantCard;
 import com.miage.cards.Card;

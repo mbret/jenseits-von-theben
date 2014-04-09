@@ -2,9 +2,9 @@
 
 package com.miage.cards;
 
-import Interface.CombinableElement;
-import Interface.DiscardableElement;
-import Interface.UsableElement;
+import com.miage.interfaces.CombinableElement;
+import com.miage.interfaces.DiscardableElement;
+import com.miage.interfaces.UsableElement;
 import java.util.HashMap;
 
 /**

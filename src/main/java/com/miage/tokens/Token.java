@@ -49,6 +49,11 @@ public abstract class Token implements Serializable{
     public String toString(){
             return this.getAreaName()+","+this.getColor();
     }
+
+    public String getId() {
+        return id;
+    }
 	
+    
 	
 }
