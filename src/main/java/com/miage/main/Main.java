@@ -62,131 +62,131 @@ public class Main {
         m.saveGame(board);
 
         
-//        /**
-//         * Main loop
-//         * - we got the upcoming player
-//         * - if there is no upcoming player it means that the game is over
-//         */
-//        while( (currentPlayer = board.getUpcomingPlayer()) != null ){
-//            
-//            // player actions parameters, defined dynamically depending of what the game need in specific action case
-//            HashMap<String, Object> playerActionParams = new HashMap();
-//            playerActionParams.put("player", currentPlayer); // wet set the current player
-//            playerActionParams.put("usedElements", new ArrayList<UsableElement>());
-//            playerActionParams.put("areaToExcavate", null);
-//            playerActionParams.put("cardToPickUp", null);
-//            playerActionParams.put("expoCardToDo", null);
-//            playerActionParams.put("nbWeeksForExcavation", null);
-//        
-//            /**
-//             * The player round actions are tested
-//             *  - If there are no action available this player end the game
-//             */
-//            boolean hasOneActionPossible = false;
-//            
-//            if( currentPlayer.hasCarCard() ){
-//                // add active card GUI
-//            }
-//
-//            /**
-//             * We test here all available actions for the user
-//             * 
-//             */
-//            // TEST ACTION_CHANGE_FOUR_CARDS
-//            if( ! board.isPlayerAbleToMakeRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams) ){
-//                // deactivate gui function
-//            }
-//            else{
-//                hasOneActionPossible = true;
-//            }
-//            // TEST ACTION_EXCAVATE
-//            for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
-//                playerActionParams.put("areaToExcavate", area);
-//                if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams)){
-//                    // deactivate gui function
-//                }
-//                else{
-//                    hasOneActionPossible = true;
-//                }
-//            }
-//            // TEST ACTION_ORGANIZE_EXPO
-//            for (ExpoCard card : board.getExpoCards()) {
-//                playerActionParams.put("expoCardToDo", card);
-//                if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams)){
-//                    // deactivate gui function
-//                }
-//                else{
-//                    hasOneActionPossible = true;
-//                }
-//            }
-//            // TEST ACTION_PICK_CARD
-//            for (Card card : board.getFourCurrentCards()) {
-//                playerActionParams.put("cardToPickUp", card);
-//                if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, playerActionParams)){
-//                    // deactivate gui function
-//                }
-//                else{
-//                    hasOneActionPossible = true;
-//                }
-//            }
-//
-//            /**
-//             * NOW WE DO THE PLAYER ACTION
-//             * 
-//             * Here if the player can make one action then we do his selected action
-//             */
-//            if( hasOneActionPossible ){
-//                
-//                // Here we set some action parmaeters exemple 
-//                playerActionParams.put("player", currentPlayer); // we pass the current player
-//                playerActionParams.put("cardToPickUp", board.getFourCurrentCards().get( 2 )); // the player clicked on carte 3
-//                playerActionParams.put("expoCard", board.getExpoCards().get( 1 )); // the player do the second expo card
-//                playerActionParams.put("areaToExcavate", (ExcavationArea)board.getAreas().get( "egypt" )); // the player decide to excavate egypt area
-//                // Because the player want to excavate we set some active cards
-//                currentPlayer.getCards().add( new GeneralKnowledgeCard(0, null, null, 0, 0) );
-//                currentPlayer.getTokens().add( new GeneralKnowledgeToken(null, null, null, 1) );
-//                ((List<UsableElement>)playerActionParams.get("usedElements")).addAll(Arrays.asList(
-//                       new AssistantCard(0, null, null, 0),
-//                       new AssistantCard(0, null, null, 0),
-//                       new EthnologicalKnowledgeCard(0, null, null, 0, 0, null)
-//                ));
-//                // Other cards the player could want to use
-//                ((List<UsableElement>)playerActionParams.get("usedElements")).addAll(Arrays.asList(
-//                       currentPlayer.getSpecificCards( ZeppelinCard.class ).get(0) // player use his zeppelin card
-//                ));
-//
-//                
-//               /**
-//                * Here we get the wanted player's action (GUI function)
-//                * - we do this action
-//                */
-//               // CASE OF ACTION_CHANGE_FOUR_CARDS
-//               board.doPlayerRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams);
-//
-//               // CASE OF ACTION_PICK_CARD
-//               board.doPlayerRoundAction(  Player.ACTION_PICK_CARD, playerActionParams);
-//
-//               // CASE OF ACTION_ORGANIZE_EXPO
-//               board.doPlayerRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams);
-//
-//               // CASE OF ACTION_EXCAVATE
-//               board.doPlayerRoundAction(  Player.ACTION_EXCAVATE, playerActionParams);
-//            }
-//            else{
-//                // If the player cannot do anything more then we move his playerToken to the endGame position
-//                board.movePlayerToEndGamePosition( currentPlayer );
-//            }
-//        }
-//
-//        /**
-//         * This is the end game
-//         */
-//        for (Player player : board.getPlayerTokensAndPlayers().values()) {
-//            player.calculatePoint();
-//        }
-//        
-//        // blabla ...
-//        
+        /**
+         * Main loop
+         * - we got the upcoming player
+         * - if there is no upcoming player it means that the game is over
+         */
+        while( (currentPlayer = board.getUpcomingPlayer()) != null ){
+            
+            // player actions parameters, defined dynamically depending of what the game need in specific action case
+            HashMap<String, Object> playerActionParams = new HashMap();
+            playerActionParams.put("player", currentPlayer); // wet set the current player
+            playerActionParams.put("usedElements", new ArrayList<UsableElement>());
+            playerActionParams.put("areaToExcavate", null);
+            playerActionParams.put("cardToPickUp", null);
+            playerActionParams.put("expoCardToDo", null);
+            playerActionParams.put("nbWeeksForExcavation", null);
+        
+            /**
+             * The player round actions are tested
+             *  - If there are no action available this player end the game
+             */
+            boolean hasOneActionPossible = false;
+            
+            if( currentPlayer.hasCarCard() ){
+                // add active card GUI
+            }
+
+            /**
+             * We test here all available actions for the user
+             * 
+             */
+            // TEST ACTION_CHANGE_FOUR_CARDS
+            if( ! board.isPlayerAbleToMakeRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams) ){
+                // deactivate gui function
+            }
+            else{
+                hasOneActionPossible = true;
+            }
+            // TEST ACTION_EXCAVATE
+            for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
+                playerActionParams.put("areaToExcavate", area);
+                if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams)){
+                    // deactivate gui function
+                }
+                else{
+                    hasOneActionPossible = true;
+                }
+            }
+            // TEST ACTION_ORGANIZE_EXPO
+            for (ExpoCard card : board.getExpoCards()) {
+                playerActionParams.put("expoCardToDo", card);
+                if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams)){
+                    // deactivate gui function
+                }
+                else{
+                    hasOneActionPossible = true;
+                }
+            }
+            // TEST ACTION_PICK_CARD
+            for (Card card : board.getFourCurrentCards()) {
+                playerActionParams.put("cardToPickUp", card);
+                if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, playerActionParams)){
+                    // deactivate gui function
+                }
+                else{
+                    hasOneActionPossible = true;
+                }
+            }
+
+            /**
+             * NOW WE DO THE PLAYER ACTION
+             * 
+             * Here if the player can make one action then we do his selected action
+             */
+            if( hasOneActionPossible ){
+                
+                // Here we set some action parmaeters exemple 
+                playerActionParams.put("player", currentPlayer); // we pass the current player
+                playerActionParams.put("cardToPickUp", board.getFourCurrentCards().get( 2 )); // the player clicked on carte 3
+                playerActionParams.put("expoCard", board.getExpoCards().get( 1 )); // the player do the second expo card
+                playerActionParams.put("areaToExcavate", (ExcavationArea)board.getAreas().get( "egypt" )); // the player decide to excavate egypt area
+                // Because the player want to excavate we set some active cards
+                currentPlayer.getCards().add( new GeneralKnowledgeCard(0, null, null, 0, 0) );
+                currentPlayer.getTokens().add( new GeneralKnowledgeToken(null, null, null, 1) );
+                ((List<UsableElement>)playerActionParams.get("usedElements")).addAll(Arrays.asList(
+                       new AssistantCard(0, null, null, 0),
+                       new AssistantCard(0, null, null, 0),
+                       new EthnologicalKnowledgeCard(0, null, null, 0, 0, null)
+                ));
+                // Other cards the player could want to use
+                ((List<UsableElement>)playerActionParams.get("usedElements")).addAll(Arrays.asList(
+                       currentPlayer.getSpecificCards( ZeppelinCard.class ).get(0) // player use his zeppelin card
+                ));
+
+                
+               /**
+                * Here we get the wanted player's action (GUI function)
+                * - we do this action
+                */
+               // CASE OF ACTION_CHANGE_FOUR_CARDS
+               board.doPlayerRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams);
+
+               // CASE OF ACTION_PICK_CARD
+               board.doPlayerRoundAction(  Player.ACTION_PICK_CARD, playerActionParams);
+
+               // CASE OF ACTION_ORGANIZE_EXPO
+               board.doPlayerRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams);
+
+               // CASE OF ACTION_EXCAVATE
+               board.doPlayerRoundAction(  Player.ACTION_EXCAVATE, playerActionParams);
+            }
+            else{
+                // If the player cannot do anything more then we move his playerToken to the endGame position
+                board.movePlayerToEndGamePosition( currentPlayer );
+            }
+        }
+
+        /**
+         * This is the end game
+         */
+        for (Player player : board.getPlayerTokensAndPlayers().values()) {
+            player.calculatePoint();
+        }
+        
+        // blabla ...
+        
     }
 
     /**
