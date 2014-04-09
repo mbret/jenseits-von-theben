@@ -18,13 +18,14 @@
 package com.miage.tokens;
 
 import Interface.KnowledgeElement;
+import Interface.UsableElement;
 import java.io.Serializable;
 
 /**
  *
  * @author maxime
  */
-public class GeneralKnowledgeToken extends Token implements KnowledgeElement, Serializable{
+public class GeneralKnowledgeToken extends Token implements KnowledgeElement, Serializable, UsableElement{
 
     private final int value;
     
@@ -34,6 +35,11 @@ public class GeneralKnowledgeToken extends Token implements KnowledgeElement, Se
     }
 
     public int getValue() {
+        return value;
+    }
+
+    @Override
+    public int getKnowledgePoints() {
         return value;
     }
     

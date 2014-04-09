@@ -2,6 +2,7 @@
 
 package com.miage.cards;
 
+import Interface.UsableElement;
 import java.io.Serializable;
 
 /**
@@ -10,6 +11,13 @@ import java.io.Serializable;
  */
 public class CarCard extends Card implements Serializable{
 
+    /**
+     * 
+     * @param id
+     * @param displayName
+     * @param areaName
+     * @param weekCost 
+     */
     public CarCard(int id, String displayName, String areaName, int weekCost) {
         super(displayName, areaName, id, weekCost);
     }

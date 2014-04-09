@@ -27,6 +27,8 @@ public class PointToken extends Token implements Serializable{
     	return super.toString()+","+value;
     }
 
-    
+    public boolean isBlank(){
+        return this.value == 0;
+    }
     
 }

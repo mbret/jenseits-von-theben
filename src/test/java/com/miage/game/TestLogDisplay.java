@@ -96,8 +96,8 @@ public class TestLogDisplay {
             TouristicArea ta = new TouristicArea(1,"paris");
             
             LinkedList<Token> lt = new LinkedList<Token>();
-            GeneralKnowledgeToken gkt = new GeneralKnowledgeToken("1","generalKnowledgeToken","red");
-            SpecificKnowledgeToken skt = new SpecificKnowledgeToken("1","specificKnowledgeToken","red");
+            GeneralKnowledgeToken gkt = new GeneralKnowledgeToken("1","generalKnowledgeToken","red", 1);
+            SpecificKnowledgeToken skt = new SpecificKnowledgeToken("1","specificKnowledgeToken","red", 1);
             PointToken ptoken = new PointToken("1","pointToken","red",1);
             lt.add(gkt);
             lt.add(skt);

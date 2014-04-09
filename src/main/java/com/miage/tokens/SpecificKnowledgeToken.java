@@ -36,6 +36,11 @@ public class SpecificKnowledgeToken extends Token implements KnowledgeElement, S
     public int getValue() {
         return value;
     }
+
+    @Override
+    public int getKnowledgePoints() {
+        return value;
+    }
     
     
 }

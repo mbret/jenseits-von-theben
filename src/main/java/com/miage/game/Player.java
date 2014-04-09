@@ -1,6 +1,7 @@
 package com.miage.game;
 
 
+import Interface.CombinableElement;
 import Interface.KnowledgeElement;
 import com.miage.areas.Area;
 import com.miage.areas.ExcavationArea;
@@ -54,6 +55,11 @@ public class Player implements Serializable {
 
     private ArrayList<Token> tokens; 
 
+    /**
+     * Contain all tokens which are just picked up from last round
+     */
+    private ArrayList<Token> tokensJustPickedUp;
+    
     /*
      * Structure stocking competences :
      *  "car"
@@ -162,7 +168,7 @@ public class Player implements Serializable {
      * @param excavationAreas (we need this set to avoid dependencies with any extern information)
      * @return 
      */
-    public boolean isAuthorizedToExcavateOneArea( Collection<Area> excavationAreas ){
+    public boolean isAuthorizedToExcavateOneArea( Collection<ExcavationArea> excavationAreas ){
         boolean hasExcavationAuthorization = ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty();
         // we iterate and check all area (we break the loop when we find the first area which is okay to excavate)
         for (Area area : excavationAreas ) {
@@ -446,7 +452,7 @@ public class Player implements Serializable {
                     this.updateCompetencesPointsOrKnowledge(card, -1);
             }
     }
-        
+    
     /**
      * Return the maximum of available knowledge point a player can use to excavate the given area
      *  - count 
@@ -477,22 +483,35 @@ public class Player implements Serializable {
     
     /**
      * Return the maximum of knowledge point the player can use to excavate this area.
+     * <br/>Effect:
+     * <br/>- get all knowledge from specific knowledge card and tokens
+     * <br/>- get all knowledge from ethnologic cards
+     * <br/>- get all points from assistants
      * @param areaToExcavate
      * @param usedKnowledgeElements List of everything except general knowledge the player want to use
      * @return 
      */
-    public int totalAskedKnowledgePoint( Area areaToExcavate, List<KnowledgeElement> usedKnowledgeElements){
+    public int getTotalAskedKnowledgePoint( Area areaToExcavate, List<KnowledgeElement> usedKnowledgeElements){
+        
+        int nbAssistantCards = 0;
+        for (KnowledgeElement element : usedKnowledgeElements){
+            if( element instanceof AssistantCard ){
+                nbAssistantCards++;
+                usedKnowledgeElements.remove( element );
+            }
+        }
         int pointsForExcavation = 0;
+        
         // Get all points from specific cards
-        for (SpecificKnowledgeCard card : this.getSpecificCards( SpecificKnowledgeCard.class )) {
+        for (SpecificKnowledgeCard card : this.getSpecificCards( SpecificKnowledgeCard.class  )) {
             if(card.getAreaName().equals( areaToExcavate.getName() )){
-                pointsForExcavation += card.getValue();
+                pointsForExcavation += ((KnowledgeElement)card).getKnowledgePoints();
             }
         }
         // Get all points from specific tokens
         for (SpecificKnowledgeToken token : this.getSpecificTokens( SpecificKnowledgeToken.class )) {
             if(token.getAreaName().equals( areaToExcavate.getName() )){
-                pointsForExcavation += token.getValue();
+                pointsForExcavation += ((KnowledgeElement)token).getKnowledgePoints();
             }
         }
         
@@ -508,6 +527,10 @@ public class Player implements Serializable {
             }
             // ...
         }
+        
+        // Get all assistant points
+        pointsForExcavation += AssistantCard.getKnowLedgePointsWhenCombinated( nbAssistantCards );
+
         throw new UnsupportedOperationException("not implemented yet");
 //        return pointsForExcavation;
     }
@@ -596,6 +619,18 @@ public class Player implements Serializable {
 
     public void setNbRoundStillPlaying(int nbRoundStillPlaying) {
         this.nbRoundStillPlaying = nbRoundStillPlaying;
+    }
+
+    public ArrayList<Token> getTokensJustPickedUp() {
+        return tokensJustPickedUp;
+    }
+
+    public void setTokensJustPickedUp(ArrayList<Token> tokensJustPickedUp) {
+        this.tokensJustPickedUp = tokensJustPickedUp;
+    }
+
+    public int getPoints() {
+        return points;
     }
 	
     

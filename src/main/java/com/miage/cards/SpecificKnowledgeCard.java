@@ -86,4 +86,9 @@ public class SpecificKnowledgeCard extends Card implements Serializable, Knowled
         return excavationAreaName;
     }
 
+    @Override
+    public int getKnowledgePoints() {
+        return value;
+    }
+
 }

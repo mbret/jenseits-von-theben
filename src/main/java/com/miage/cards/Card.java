@@ -1,4 +1,5 @@
 package com.miage.cards;
+import Interface.DiscardableElement;
 import com.miage.game.Deck;
 import java.io.Serializable;
 
@@ -7,7 +8,7 @@ import java.io.Serializable;
  * 
  * @author maxime
  */
-public abstract class Card implements Serializable{
+public abstract class Card implements Serializable, DiscardableElement{
 
     /**
      * name: used as key inside program
@@ -115,11 +116,6 @@ public abstract class Card implements Serializable{
     public String toString(){
             return displayName+","+areaName+","+weekCost;
     }
-
-    
-    abstract public boolean isDiscardable();
-
-
    
 
 	

@@ -1,6 +1,8 @@
 package com.miage.game;
 
+import Interface.DiscardableElement;
 import Interface.KnowledgeElement;
+import Interface.UsableElement;
 import com.miage.areas.*;
 import com.miage.cards.*;
 import com.miage.config.ConfigManager;
@@ -11,7 +13,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,11 +48,6 @@ public class Board implements Serializable {
      * Represent the start date position for all players depending of their numbers
      */
     private  LocalDate startGameDatePosition;
-    
-    /**
-     * 
-     */
-    private final Chrono chrono;
     
     /**
      * Stack of player's token
@@ -94,12 +90,14 @@ public class Board implements Serializable {
     
     private List<ExpoCard> expoCards;
 
+    private Chronotime chronotime;
+    
+    List<Player> playersWhoFinished = new ArrayList();
+
     public Board(int nbPlayers, Set<Player> players) throws IOException{
         this.nbPlayers = nbPlayers;
         this.areas = new HashMap<>();
         this._initAreas();
-        this.chrono = new Chrono();
-        this.chrono.initializationValues();
         this.expoCards = new LinkedList();
         this.deck = new Deck();
         this.sideDeck = new Deck();
@@ -108,7 +106,8 @@ public class Board implements Serializable {
         this._initDecks();
         this.playerTokenStack = new PlayerTokenStack();
         this.playerTokensAndPlayers = new HashMap();
-
+        this.chronotime = new Chronotime();
+        
         // Init date of end game
         String[] tmp = ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("game.endGameDatePosition").split("\\|")[0].split("\\-");
         this.endGameDatePosition = LocalDate.of(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), Integer.parseInt(tmp[2]));
@@ -204,23 +203,6 @@ public class Board implements Serializable {
     public void changeFourCurrentCards(){
         for(int i=0;i<4;i++) this.discardingDeck.add( this.pickCardOnBoard( i ) );
     }
-    
-    /**
-    * Take a number of knowledge points and return the number of tokens related to the week cost
-    * @param knowledgePoints (mix of all knowledge points)
-    * @param weekCost
-    * @return int, the number of tokens the player can pick up
-    * @throws IOException 
-    */
-    public static int getNbTokensFromChronotime( int knowledgePoints, int weekCost) throws IOException{
-        String[] values = ConfigManager.getInstance().getConfig( ConfigManager.GENERAL_CONFIG_NAME ).getProperty( "chronotime." + knowledgePoints).split("\\|");
-        try{
-            return Integer.parseInt(values[ weekCost ]);
-        }
-        catch( ArrayIndexOutOfBoundsException e){
-            throw new ArrayIndexOutOfBoundsException("The knowledge points provided is not setted in configuration file");
-        }
-    }
 
     /**
      * Check if a player token has enough time before end game
@@ -235,19 +217,47 @@ public class Board implements Serializable {
     }
     
     /**
-     * Return the player who must play on this current round
+     * Return the player who must play on this current round.
+     * <br/>- If the player is on the list of players who finished the game : the game is over
+     * <br/>- If the player is on the end game position : the game is over
      * @return 
      */
-    public Player getCurrentPlayer(){
-        return this.playerTokensAndPlayers.get( this.playerTokenStack.getFirstPlayerToken() );
+    public Player getUpcomingPlayer(){
+        Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get( this.playerTokenStack.getFirstPlayerToken() );
+        if( this.playersWhoFinished.contains( playerWhoShouldPlayFirst )
+                || this.isPlayerOnTheEndGamePosition( playerWhoShouldPlayFirst )){
+            return null;
+        }
+        else{
+            return playerWhoShouldPlayFirst;
+        }
+    }
+    
+    /**
+     * Check if a player is on the last position, the end game. He is not able to play anymore
+     * @param player
+     * @return 
+     */
+    public boolean isPlayerOnTheEndGamePosition( Player player ){
+        return player.getPlayerToken().getTimeState().equals( this.endGameDatePosition );
     }
     
     /**
      * Check if there are still some players which are able to play (not end game)
+     * <br/>Effect:
+     * <br/>- check if the last player still have some movements possible
      * @return 
      */
     public boolean hasUpcomingPlayer(){
         throw new UnsupportedOperationException("not implemented yet");
+    }
+    
+    /**
+     * Move a player to the endGame position, typically when a player cannot do any more actions
+     * @param player
+     */
+    public void movePlayerToEndGamePosition( Player player ){
+        player.getPlayerToken().setTimeState( this.endGameDatePosition );
     }
     
     /**
@@ -262,43 +272,77 @@ public class Board implements Serializable {
      * @param cardToPickUp 
      * @param expoCardToDo 
      * @param usedKnowledgePointElements 
-     * @param cardsUsed 
      */
-    public void doPlayerRoundAction( int actionPattern, Player player, List<Card> usedCards, ExcavationArea areaToExcavate, Card cardToPickUp, ExpoCard expoCardToDo, List<KnowledgeElement> usedKnowledgePointElements){
-        // We check if player is using some special cards
-        boolean useZeppelin = false;
-        for (Card card : usedCards){
-            if( card instanceof ZeppelinCard ){
+    public void doPlayerRoundAction( int actionPattern, Player player, List<UsableElement> usedElements, ExcavationArea areaToExcavate, Card cardToPickUp, ExpoCard expoCardToDo, Integer nbWeeksForExcavation){
+        
+        boolean useZeppelin = false;                                // Does the player is using zeppelin cards ?
+        boolean useCarCard = player.hasCarCard();                   // Does the player is using car cards ?
+        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
+        List<ShovelCard> shovelCards = new ArrayList();             // list of ised shovel cards
+        
+        // We iterate over all used elements to get some informations and make more precise list
+        for (UsableElement element : usedElements){
+            
+            if( element instanceof ZeppelinCard ){
                 useZeppelin = true;
             }
-        }
-        boolean useCarCard = player.hasCarCard();
-        switch(actionPattern){
-            case Player.ACTION_CHANGE_FOUR_CARDS:
-                this._actionPlayerDoChangeFourCards( player, useZeppelin, useCarCard );
-            case Player.ACTION_EXCAVATE:
-                this._actionPlayerDoExcavateArea( player, areaToExcavate, usedKnowledgePointElements, useZeppelin, useCarCard );
-            case Player.ACTION_ORGANIZE_EXPO:
-                this._actionPlayerDoOrganizeExpo( player, expoCardToDo, useZeppelin, useCarCard );
-            case Player.ACTION_PICK_CARD:
-                this._actionPlayerDoPickCard( player, cardToPickUp, useZeppelin, useCarCard );
-        }
-        // After all operations we check used discardable cards
-        for (Card card : usedCards){
-            if( card.isDiscardable() ){
-                this.discardingDeck.add( card );
+            
+            if( element instanceof KnowledgeElement ){
+                knowledgeElements.add( (KnowledgeElement)element );
+            }
+            
+            if( element instanceof ShovelCard ){
+                shovelCards.add( (ShovelCard)element );
             }
         }
+        
+        // Do the main action 
+        switch(actionPattern){
+            
+            case Player.ACTION_CHANGE_FOUR_CARDS:
+                this._actionPlayerDoChangeFourCards( player, useZeppelin, useCarCard );
+                break;
+                
+            case Player.ACTION_EXCAVATE:
+                this._actionPlayerDoExcavateArea( player, areaToExcavate, knowledgeElements, nbWeeksForExcavation, useZeppelin, useCarCard, shovelCards);
+                break;
+                
+            case Player.ACTION_ORGANIZE_EXPO:
+                this._actionPlayerDoOrganizeExpo( player, expoCardToDo, useZeppelin, useCarCard );
+                break;
+                
+            case Player.ACTION_PICK_CARD:
+                this._actionPlayerDoPickCard( player, cardToPickUp, useZeppelin, useCarCard );
+                break;
+        }
+        
+        // Check all elements to eventually discard them
+        for (UsableElement element : usedElements){
+            
+            // Case of card
+            if( element instanceof DiscardableElement && element instanceof Card){
+                if( ((DiscardableElement)element).isDiscardable() ){
+                    this.discardingDeck.add( (Card)element );
+                }
+            }
+            
+            // Case of combinable cards
+            // ....
+        }
+        
         // We increment the number of round this player is still playing
         player.setNbRoundStillPlaying( player.getNbRoundStillPlaying() + 1);
+        throw new UnsupportedOperationException("some operations are missing");
     }
     
+    public void salut(){}
     /**
      * Check if the player is able to do the demanded action. Use player action Constant to provide an action key
      * @param actionPattern player constant (exemple: player.ACTION...)
      * @param player
      * @param areaToExcavate
      * @param indexOfCardToPickUp
+     * @param expoCardToDo
      * @return 
      */
     public boolean isPlayerAbleToMakeRoundAction( int actionPattern, Player player, ExcavationArea areaToExcavate, Integer indexOfCardToPickUp, ExpoCard expoCardToDo ){
@@ -325,6 +369,8 @@ public class Board implements Serializable {
        int weekCost = playerToken.getPosition().getDistanceWeekCostTo( area.getName() ); // weekcost from current place to area
        return Board.hasEnoughTimeBeforeEndGame( playerToken.getTimeState(), weekCost, this.endGameDatePosition);
     }
+    
+    
     
     
     /***********************************************************************************************
@@ -438,15 +484,37 @@ public class Board implements Serializable {
     
     /**
      * Do a round action: excavate area
+     * <br/>Effect:
      * <br/>- move the player to the area
-     * <br/>- get all 
+     * <br/>- get all knowledge point available
+     * <br/>- get the number of token the chronotime gives
+     * <br/>- Pick the tokens and put in player's hand
+     * <br/>- Add excavation cost to the player token
+     * <br/><b>Use player.getTokensJustPickedUp() to know which tokens has been picked up</b>
      * @param player
      * @param areaToExcavate
      * @param knowledgePointElements 
      */
-    private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, List<KnowledgeElement> usedKnowledgePointElements, boolean useZeppelinCard, boolean useCarCard  ) {
+    private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, List<KnowledgeElement> usedKnowledgeElements, int nbWeeks, boolean useZeppelinCard, boolean useCarCard, List<ShovelCard> shovelCards  ) {
+        // Moving process
         player.getPlayerToken().movePlayerToken( areaToExcavate , useZeppelinCard, useCarCard);
         
+        // Get all the knowledge points the user want AND is able to use
+        int nbKnowledge = player.getTotalAskedKnowledgePoint(areaToExcavate, usedKnowledgeElements);
+        
+        // Picking token process
+        int nbTokenToPickUp = this.chronotime.getNbTokensToPickUp( nbKnowledge, nbWeeks); // nb tokens the player can Pick Up
+        nbTokenToPickUp += ShovelCard.getTokensPointsWhenCombinated( shovelCards.size() ); // get supplementary tokens thanks to the used shovels
+        
+        player.getTokensJustPickedUp().clear(); // clear the previous round picked tokens
+        for (int i = 0; i < nbTokenToPickUp; i++){
+            Token pickedToken = areaToExcavate.getTokenList().get(0);
+            // If the player pick a none blank token we add it and we remove it from the area token list
+            if( ! (pickedToken instanceof BlankToken) ){
+                player.getTokensJustPickedUp().add( pickedToken ); // add to player
+                areaToExcavate.getTokenList().remove( pickedToken ); // remove from area
+            }
+        }
         throw new UnsupportedOperationException("not implemented yet");
     }
     
@@ -531,15 +599,15 @@ public class Board implements Serializable {
                     int nbTokens; // nb different tokens
                     String[] set; // contain the token id or id,value and its occurence
                     
-                    // Set empty tokens
-                    String[] emptyTokens = ((String)entries.get("area." + areaName + ".emptyTokens" )).split("\\|");
-                    nbTokens = emptyTokens.length;
+                    // Set blank tokens
+                    String[] blankTokens = ((String)entries.get("area." + areaName + ".emptyTokens" )).split("\\|");
+                    nbTokens = blankTokens.length;
                     for (int i = 0; i < nbTokens; i++) {
-                        set = emptyTokens[i].split("\\:");
+                        set = blankTokens[i].split("\\:");
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new PointToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), 0)); // assign empty point
+                            ((ExcavationArea)newArea).addToken( new BlankToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor())); // assign empty point
                         }
                     }
                     
@@ -642,7 +710,7 @@ public class Board implements Serializable {
             /**
              * Here we instantiate the card relating to the specified type in config file (the values)
              */
-            switch (type) {
+            switch (type){
                 case "excavationAuthorization":
                     newCard = new ExcavationAuthorizationCard(id, "displayName", area, weekCost);
                     break;
@@ -833,6 +901,10 @@ public class Board implements Serializable {
 
     public LocalDate getStartGameDatePosition() {
         return startGameDatePosition;
+    }
+
+    public List<Player> getPlayersWhoFinished() {
+        return playersWhoFinished;
     }
     
     public String getLogDisplay(){

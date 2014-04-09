@@ -1,6 +1,7 @@
 package com.miage.main;
 
 import Interface.KnowledgeElement;
+import Interface.UsableElement;
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.AssistantCard;
 import com.miage.cards.Card;
@@ -13,6 +14,7 @@ import com.miage.game.Board;
 import com.miage.game.LogDisplay;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
+import com.miage.tokens.GeneralKnowledgeToken;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,23 +55,27 @@ public class Main {
         }};
 
         Board board = new Board(4, players);
-        
-        List<Card> usedCards; // list of card a player want to use during his round
-        List<KnowledgeElement> usedKnowledgePointElements; // list of knowledge element a player want to use during his round
-        
-        
+        List<UsableElement> usedElements; // list of knowledge element a player want to use during his round
         Player currentPlayer;
-        while( board.hasUpcomingPlayer() ){
-
-            currentPlayer = board.getCurrentPlayer();
-
+        boolean endGame = false;
+        HashMap<String, Object> playerActionsParams = new HashMap(); // player actions parameters, defined dynamically depending of what the game need in specific action case
+        
+        /**
+         * Main loop
+         * - we got the upcoming player
+         * - if there is no upcoming player it means that the game is over
+         */
+        while( (currentPlayer = board.getUpcomingPlayer()) != null ){
+            
             /**
-             * We set the graphical settings
+             * The player round actions are tested
+             *  - If there are no action available this player end the game
              */
+            boolean hasOneActionPossible = false;
+            
             if( currentPlayer.hasCarCard() ){
                 // add active card GUI
             }
-
 
             /**
              * We test here all available actions for the user
@@ -78,16 +85,26 @@ public class Main {
             if( ! board.isPlayerAbleToMakeRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, currentPlayer, null, null, null) ){
                 // deactivate gui function
             }
+            else{
+                hasOneActionPossible = true;
+            }
             // TEST ACTION_EXCAVATE
             for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
                 if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, currentPlayer, area, null, null)){
                     // deactivate gui function
+                }
+                else{
+                    hasOneActionPossible = true;
                 }
             }
             // TEST ACTION_ORGANIZE_EXPO
             for (ExpoCard card : board.getExpoCards()) {
                 if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, currentPlayer, null, null, card)){
                     // deactivate gui function
+                    hasOneActionPossible = true;
+                }
+                else{
+                    hasOneActionPossible = true;
                 }
             }
             // TEST ACTION_PICK_CARD
@@ -95,75 +112,106 @@ public class Main {
                 if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, currentPlayer, null, i, null)){
                     // deactivate gui function
                 }
+                else{
+                    hasOneActionPossible = true;
+                }
+            }
+
+            /**
+             * Here if the player can make one action then we do his selected action
+             */
+            if( hasOneActionPossible ){
+                
+               /**
+                * Here we get the wanted player's action (GUI function)
+                * - we do this action
+                */
+                
+               // List of cards the user will use for this current round
+               usedElements = new ArrayList( Arrays.asList(
+                       currentPlayer.getSpecificCards( ZeppelinCard.class ).get(0) // player use his zeppelin card
+               ) );
+
+               // CASE OF ACTION_CHANGE_FOUR_CARDS
+               board.doPlayerRoundAction( 
+                       Player.ACTION_CHANGE_FOUR_CARDS, 
+                       currentPlayer, 
+                       usedElements, 
+                       /* areaToExcavate */ null, 
+                       /* cardToPickUp */ null, 
+                       /* expoCardToDo */ null,
+                       /* nbWeekForExcavation */ null);
+
+               // CASE OF ACTION_PICK_CARD
+               Card cardToPickUp = board.getFourCurrentCards().get( 2 ); // the player clicked on carte 3
+               board.doPlayerRoundAction( 
+                       Player.ACTION_PICK_CARD, 
+                       currentPlayer, 
+                       usedElements, 
+                       /* areaToExcavate */ null, 
+                       cardToPickUp, 
+                       /* expoCardToDo */ null,
+                       /* nbWeekForExcavation */ null);
+
+               // CASE OF ACTION_ORGANIZE_EXPO
+               ExpoCard expoCardToDo = board.getExpoCards().get( 1 );
+               board.doPlayerRoundAction(
+                       Player.ACTION_ORGANIZE_EXPO, 
+                       currentPlayer, 
+                       usedElements, 
+                       /* areaToExcavate */ null, 
+                       /* cardToPickUp */ null, 
+                       expoCardToDo,
+                       /* nbWeekForExcavation */ null);
+
+               // CASE OF ACTION_EXCAVATE
+               ExcavationArea areaToExcavate = (ExcavationArea)board.getAreas().get( "egypt" );
+               usedElements.addAll(Arrays.asList(
+                       new GeneralKnowledgeCard(0, null, null, 0, 0), // player use some specific knowledge card
+                       new GeneralKnowledgeToken(null, null, null, 1), // player use some specific knowledge token
+                       new AssistantCard(0, null, null, 0),
+                       new EthnologicalKnowledgeCard(0, null, null, 0, 0, null)
+               ));
+               board.doPlayerRoundAction( 
+                       Player.ACTION_EXCAVATE, 
+                       currentPlayer, 
+                       usedElements, 
+                       areaToExcavate, 
+                       /* cardToPickUp */ null, 
+                       /* expoCardToDo */ null,
+                       /* nbWeekForExcavation */ null);
+            }
+            else{
+                // If the player cannot do anything more then we move his playerToken to the endGame position
+                board.movePlayerToEndGamePosition( currentPlayer );
             }
         }
-    }
-        
-        
-        /**
-         * Return the week number of the provided date
-         * @param date
-         * @return 
-         */
-       public static int getWeek( LocalDate date ){
-           return (int) (Math.ceil(date.getDayOfYear()/7));
-       }
 
-       /**
-        * Return the year number of the provided date
-        * @return 
-        */
-       public static int getYear( LocalDate date ){
-           return date.getYear();
-       }
-       
-       /**
-        * Save the game (the board into a file).
-        * @author david
-        * @param boardToSave board to be save
-        * @param fileToSave file where the board will be saved
-        */
-       public void saveGame(Board boardToSave, String fileToSave){
-           try {
-               FileOutputStream backupFile = new FileOutputStream(fileToSave+".boobs");
-               ObjectOutputStream oos = new ObjectOutputStream(backupFile);
-               boardToSave.setLogDisplay(LogDisplay.getLogBackup());
-               oos.writeObject(boardToSave);
-               oos.flush();
-               oos.close();
-            }catch (IOException e) {
-                /*
-                 * Changer l'action de l'exception
-                 */
-               e.printStackTrace();
-            }
-       }
-       
-         /**
-        * Load the game (the board into a file).
-        * @author david
-        * @param fileToLoad file where the board will be loaded
-        * @return boardToSave board to be save
-        */
-       public Board loadGame(String fileToLoad){
-           Board boardLoaded = null;
-           try {
-                FileInputStream fis = new FileInputStream(fileToLoad);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                boardLoaded = (Board) ois.readObject();
-                LogDisplay.setLogBackup(boardLoaded.getLogDisplay());
-                return boardLoaded;
-            }catch (IOException e) {
-                /*
-                 * Changer l'action de l'exception
-                 */
-                e.printStackTrace();
-            }catch (ClassNotFoundException e) {
-                /*
-                 * Changer l'action de l'exception
-                 */
-                e.printStackTrace();
-            }
-           return boardLoaded;
-       }
+        /**
+         * This is the end game
+         */
+        for (Player player : board.getPlayerTokensAndPlayers().values()) {
+            player.calculatePoint();
+        }
+        
+        // blabla ...
+    }
+
+    /**
+     * Return the week number of the provided date
+     * @param date
+     * @return 
+     */
+    public static int getWeek( LocalDate date ){
+        return (int) (Math.ceil(date.getDayOfYear()/7));
+    }
+
+    /**
+     * Return the year number of the provided date
+     * @param date
+     * @return 
+     */
+    public static int getYear( LocalDate date ){
+        return date.getYear();
+    }
 }

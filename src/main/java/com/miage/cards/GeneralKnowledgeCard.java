@@ -3,13 +3,14 @@
 package com.miage.cards;
 
 import Interface.KnowledgeElement;
+import Interface.UsableElement;
 import java.io.Serializable;
 
 /**
  * 
  * @author maxime
  */
-public class GeneralKnowledgeCard extends Card implements Serializable, KnowledgeElement{
+public class GeneralKnowledgeCard extends Card implements Serializable, KnowledgeElement, UsableElement{
 	
     /**
      * 
@@ -56,6 +57,11 @@ public class GeneralKnowledgeCard extends Card implements Serializable, Knowledg
      */
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public int getKnowledgePoints() {
+        return this.value;
     }
 
 

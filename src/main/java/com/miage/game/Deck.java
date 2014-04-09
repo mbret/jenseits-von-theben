@@ -1,19 +1,4 @@
-/**
- * Copyright (C) 2014 maxime
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 
 package com.miage.game;
 
@@ -35,17 +20,15 @@ import org.apache.log4j.Logger;
 public class Deck extends LinkedList<Card> implements Serializable{
 	
         private final static Logger LOGGER = LogManager.getLogger(Deck.class.getName());
-    
-	
-	public Deck(){
-		
-	}
+
 
         public Deck(Collection<? extends Card> c) {
             super(c);
         }
 
-        
+        public Deck() {
+            
+        }
 
 	
 	/**
@@ -53,30 +36,23 @@ public class Deck extends LinkedList<Card> implements Serializable{
 	 * @return the first Card of the deck
 	 */
 	public Card pick(){
-		
-			
-		return this.removeFirst();
-		
-		
+            return this.removeFirst();	
 	}
 	
 	/**
 	 * mix the deck
 	 */
 	public void mix(){
-			
-		Collections.shuffle(this);
+            Collections.shuffle(this);
 	}
 	
 	
 	public String toString(){
-		String result = "";
-		
-		for(Card card : this){
-			result += card.toString()+"\n";
-		}
-		
-		return result;
+            String result = "";
+            for(Card card : this){
+                    result += card.toString()+"\n";
+            }
+            return result;
 	}
 	
 	/**
@@ -107,7 +83,6 @@ public class Deck extends LinkedList<Card> implements Serializable{
                 from = to;
                 if (i == nbPart - 1) to = this.size(); // case of we are in the last part we get the size - 1 in order to cover unpair number of (nbPart) (because of int to = this.size() / nbPart;)
                 else to = to + indexRatio;
-//                LOGGER.debug("getDividedDeck : from " + from + ", to " + to + " of a deck sizeof : " + this.size());
                 decksReturn[i] = new Deck( this.subList(from, to) );
             }
             return decksReturn;
