@@ -3,12 +3,13 @@ package com.miage.cards;
 import Interface.KnowledgeElement;
 import com.miage.config.ConfigManager;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  *
  * @author maxime
  */
-public class EthnologicalKnowledgeCard extends Card implements KnowledgeElement{
+public class EthnologicalKnowledgeCard extends Card implements Serializable, KnowledgeElement{
     
     /**
      * 

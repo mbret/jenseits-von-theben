@@ -1,12 +1,13 @@
 package com.miage.cards;
 import com.miage.game.Deck;
+import java.io.Serializable;
 
 /**
  * Card
  * 
  * @author maxime
  */
-public abstract class Card {
+public abstract class Card implements Serializable{
 
     /**
      * name: used as key inside program

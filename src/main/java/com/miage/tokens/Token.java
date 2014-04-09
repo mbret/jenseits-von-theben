@@ -1,6 +1,8 @@
 package com.miage.tokens;
 
-public abstract class Token {
+import java.io.Serializable;
+
+public abstract class Token implements Serializable{
 
 
 	private final String color;

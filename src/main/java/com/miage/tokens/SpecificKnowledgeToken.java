@@ -18,12 +18,13 @@
 package com.miage.tokens;
 
 import Interface.KnowledgeElement;
+import java.io.Serializable;
 
 /**
  *
  * @author maxime
  */
-public class SpecificKnowledgeToken extends Token implements KnowledgeElement{
+public class SpecificKnowledgeToken extends Token implements KnowledgeElement, Serializable{
 
     private final int value;
     

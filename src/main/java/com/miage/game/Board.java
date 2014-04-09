@@ -6,7 +6,10 @@ import com.miage.cards.*;
 import com.miage.config.ConfigManager;
 import com.miage.main.Main;
 import com.miage.tokens.*;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ import org.apache.log4j.Logger;
  * 
  * @author maxime
  */
-public class Board {
+public class Board implements Serializable {
     
     private final static Logger LOGGER = LogManager.getLogger(Board.class.getName());
     
@@ -84,6 +87,10 @@ public class Board {
     private Deck discardingDeck;
 
     private List<Card> fourCurrentCards;
+    /**
+     * String who store all log which display before the save.
+     */
+    private String logDisplay;
     
     private List<ExpoCard> expoCards;
 
@@ -826,6 +833,14 @@ public class Board {
 
     public LocalDate getStartGameDatePosition() {
         return startGameDatePosition;
+    }
+    
+    public String getLogDisplay(){
+        return this.logDisplay;
+    }
+    
+    public void setLogDisplay(String logDisplay){
+        this.logDisplay = logDisplay;
     }
     
     

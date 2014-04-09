@@ -10,11 +10,14 @@ import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.cards.ZeppelinCard;
 import com.miage.game.Board;
+import com.miage.game.LogDisplay;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
-import com.miage.tokens.GeneralKnowledgeToken;
-import com.miage.tokens.SpecificKnowledgeToken;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,87 +96,74 @@ public class Main {
                     // deactivate gui function
                 }
             }
-
-            /**
-             * Here we get the wanted player's action
-             * - we do this action
-             */
-            // List of cards the user will use for this current round
-            usedCards = new ArrayList( Arrays.asList(
-                    currentPlayer.getSpecificCards( ZeppelinCard.class ).get(0) // player use his zeppelin card
-            ) );
-            usedKnowledgePointElements = new ArrayList();
-
-            // CASE OF ACTION_CHANGE_FOUR_CARDS
-            board.doPlayerRoundAction( 
-                    Player.ACTION_CHANGE_FOUR_CARDS, 
-                    currentPlayer, 
-                    usedCards, 
-                    /* areaToExcavate */ null, 
-                    /* cardToPickUp */ null, 
-                    /* expoCardToDo */ null,
-                    usedKnowledgePointElements);
-
-            // CASE OF ACTION_PICK_CARD
-            Card cardToPickUp = board.getFourCurrentCards().get( 2 ); // the player clicked on carte 3
-            board.doPlayerRoundAction( 
-                    Player.ACTION_PICK_CARD, 
-                    currentPlayer, 
-                    usedCards, 
-                    /* areaToExcavate */ null, 
-                    cardToPickUp, 
-                    /* expoCardToDo */ null,
-                    usedKnowledgePointElements);
-
-            // CASE OF ACTION_ORGANIZE_EXPO
-            ExpoCard expoCardToDo = board.getExpoCards().get( 1 );
-            board.doPlayerRoundAction(
-                    Player.ACTION_ORGANIZE_EXPO, 
-                    currentPlayer, 
-                    usedCards, 
-                    /* areaToExcavate */ null, 
-                    /* cardToPickUp */ null, 
-                    expoCardToDo,
-                    usedKnowledgePointElements);
-
-            // CASE OF ACTION_EXCAVATE
-            ExcavationArea areaToExcavate = (ExcavationArea)board.getAreas().get( "egypt" );
-            usedKnowledgePointElements.addAll(Arrays.asList(
-                    new GeneralKnowledgeCard(0, null, null, 0, 0), // player use some specific knowledge card
-                    new GeneralKnowledgeToken(null, null, null, 1), // player use some specific knowledge token
-                    new AssistantCard(0, null, null, 0),
-                    new EthnologicalKnowledgeCard(0, null, null, 0, 0, null)
-            ));
-            board.doPlayerRoundAction( 
-                    Player.ACTION_EXCAVATE, 
-                    currentPlayer, 
-                    usedCards, 
-                    areaToExcavate, 
-                    /* cardToPickUp */ null, 
-                    /* expoCardToDo */ null,
-                    usedKnowledgePointElements);
-
-        }
-
-        for (Player player : board.getPlayerTokensAndPlayers().values()) {
-            player.calculatePoint();
         }
     }
+        
+        
+        /**
+         * Return the week number of the provided date
+         * @param date
+         * @return 
+         */
+       public static int getWeek( LocalDate date ){
+           return (int) (Math.ceil(date.getDayOfYear()/7));
+       }
 
-    /**
-     * Return the week number of the provided date
-     * @param date
-     * @return 
-     */
-   public static int getWeek( LocalDate date ){
-       return (int) (Math.ceil(date.getDayOfYear()/7));
-   }
-
-   /**
-    * Return the year number of the provided date
-    * @return 
-    */
-   public static int getYear( LocalDate date ){
-       return date.getYear();
-   }
+       /**
+        * Return the year number of the provided date
+        * @return 
+        */
+       public static int getYear( LocalDate date ){
+           return date.getYear();
+       }
+       
+       /**
+        * Save the game (the board into a file).
+        * @author david
+        * @param boardToSave board to be save
+        * @param fileToSave file where the board will be saved
+        */
+       public void saveGame(Board boardToSave, String fileToSave){
+           try {
+               FileOutputStream backupFile = new FileOutputStream(fileToSave+".boobs");
+               ObjectOutputStream oos = new ObjectOutputStream(backupFile);
+               boardToSave.setLogDisplay(LogDisplay.getLogBackup());
+               oos.writeObject(boardToSave);
+               oos.flush();
+               oos.close();
+            }catch (IOException e) {
+                /*
+                 * Changer l'action de l'exception
+                 */
+               e.printStackTrace();
+            }
+       }
+       
+         /**
+        * Load the game (the board into a file).
+        * @author david
+        * @param fileToLoad file where the board will be loaded
+        * @return boardToSave board to be save
+        */
+       public Board loadGame(String fileToLoad){
+           Board boardLoaded = null;
+           try {
+                FileInputStream fis = new FileInputStream(fileToLoad);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                boardLoaded = (Board) ois.readObject();
+                LogDisplay.setLogBackup(boardLoaded.getLogDisplay());
+                return boardLoaded;
+            }catch (IOException e) {
+                /*
+                 * Changer l'action de l'exception
+                 */
+                e.printStackTrace();
+            }catch (ClassNotFoundException e) {
+                /*
+                 * Changer l'action de l'exception
+                 */
+                e.printStackTrace();
+            }
+           return boardLoaded;
+       }
 }
