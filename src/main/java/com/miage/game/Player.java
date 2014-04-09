@@ -496,7 +496,7 @@ public class Player {
         }
         
         // Get all others knowledge used
-        for (KnowledgeElement knowledgeElement : usedKnowledgeElements) {
+        for (KnowledgeElement knowledgeElement : usedKnowledgeElements){
             // Get general knowledge card
             if( knowledgeElement instanceof GeneralKnowledgeCard){
                 
