@@ -202,4 +202,54 @@ public class Main {
     public static int getYear( LocalDate date ){
         return date.getYear();
     }
+    
+    /**
+        * Save the game (the board into a file).
+        * @author david
+        * @param boardToSave board to be save
+        * @param fileToSave file where the board will be saved
+        */
+       public void saveGame(Board boardToSave, String fileToSave){
+           try {
+               FileOutputStream backupFile = new FileOutputStream(fileToSave+".boobs");
+               ObjectOutputStream oos = new ObjectOutputStream(backupFile);
+               boardToSave.setLogDisplay(LogDisplay.getLogBackup());
+               oos.writeObject(boardToSave);
+               oos.flush();
+               oos.close();
+            }catch (IOException e) {
+                /*
+                 * Changer l'action de l'exception
+                 */
+               e.printStackTrace();
+            }
+       }
+       
+         /**
+        * Load the game (the board into a file).
+        * @author david
+        * @param fileToLoad file where the board will be loaded
+        * @return boardToSave board to be save
+        */
+       public Board loadGame(String fileToLoad){
+           Board boardLoaded = null;
+           try {
+                FileInputStream fis = new FileInputStream(fileToLoad);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                boardLoaded = (Board) ois.readObject();
+                LogDisplay.setLogBackup(boardLoaded.getLogDisplay());
+                return boardLoaded;
+            }catch (IOException e) {
+                /*
+                 * Changer l'action de l'exception
+                 */
+                e.printStackTrace();
+            }catch (ClassNotFoundException e) {
+                /*
+                 * Changer l'action de l'exception
+                 */
+                e.printStackTrace();
+            }
+           return boardLoaded;
+       }
 }
