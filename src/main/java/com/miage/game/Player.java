@@ -35,39 +35,58 @@ public class Player implements Serializable {
 	
     private final static Logger LOGGER = LogManager.getLogger(Board.class.getName());
     
+    /**
+     * Name of player
+     */
     private final String name;
     
+    /**
+     * Number of point the player has
+     * <br/>Some of these points need to be calculated (they are not automatically added)
+     */
     private int points;
     
+    /**
+     * determine one of the four action a player can do
+     * <br/>See Action method in Board for how to use
+     */
     public final static int ACTION_CHANGE_FOUR_CARDS = 0;
     public final static int ACTION_EXCAVATE = 1;
     public final static int ACTION_ORGANIZE_EXPO = 2;
     public final static int ACTION_PICK_CARD = 3;
 
+    
     private final PlayerToken playerToken;
     
     /**
-     * 
+     * Player's cards
      */
     private ArrayList<Card> cards;
 
-
+    /**
+     * Player's token
+     */
     private ArrayList<Token> tokens; 
 
     /**
      * Contain all tokens which are just picked up from last round
+     * <br/>This variable is updated each round automatically
      */
     private ArrayList<Token> tokensJustPickedUp;
     
-    /*
+    /**
      * Structure stocking competences :
      *  "car"
      *  "zeppelin"
      *  "assistant"
      *  "shovel"
+     * @deprecated 
      */
     private Map<String, Integer> competences;
     
+    /**
+     * @deprecated 
+     */
     private PlayerKnowledges playerKnowledges;
     
     
@@ -78,7 +97,7 @@ public class Player implements Serializable {
 
     /**
      * Define for how many round the player is playing (because we can play again after played depending of the position)
-     * Must count the current round
+     * <br/>Must count the current round as well
      */
     private int nbRoundStillPlaying;
     
@@ -137,19 +156,21 @@ public class Player implements Serializable {
     
     /**
      * Check if the player is authorized to excavated the provided area
-     * Conditions:
-     *  - has a specific knowledge about this area
-     *  - has a specific knowledge token about this area
-     *  - is authorized to excavate
+     * <br/>Conditions:
+     * <br/>- has a specific knowledge about this area
+     * <br/>- has a specific knowledge token about this area
+     * <br/>- is authorized to excavate
      * @author maxime
      * @param excavationArea
-     * @return 
+     * @return boolean
      */
     public boolean isAuthorizedToExcavateArea( Area excavationArea ){
-        boolean hasExcavationAuthorization = ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty();
-        if( (! this.hasAlreadyExcavateArea( excavationArea.getName() ) || hasExcavationAuthorization ) // authorized
+        
+        boolean hasExcavationAuthorization = ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty(); // check authorizations
+        
+        if( (! this.hasAlreadyExcavateArea( excavationArea.getName() ) || hasExcavationAuthorization ) // authorized ro unexcavated yet
                 && ( this.hasSpecificKnowledgeCardForThisExcavationArea( excavationArea.getName() )  // enough knowledge
-                     || this.hasSpecificKnowledgeTokenForThisExcavationArea( excavationArea.getName() ) 
+                     || this.hasSpecificKnowledgeTokenForThisExcavationArea( excavationArea.getName() ) // enough tokens
                 ) 
           ){ 
             return true;

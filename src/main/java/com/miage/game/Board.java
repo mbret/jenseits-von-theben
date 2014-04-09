@@ -532,16 +532,19 @@ public class Board implements Serializable {
      * Do a round action: excavate area
      * <br/>Effect:
      * <br/>- move the player to the area
-     * <br/>- get all knowledge point available
+     * <br/>- get all knowledge point available of the player
      * <br/>- get the number of token the chronotime gives
      * <br/>- Pick the tokens and put in player's hand
-     * <br/>- Add excavation cost to the player token
-     * <br/><b>Use player.getTokensJustPickedUp() to know which tokens has been picked up</b>
+     * <br/>- Add excavation cost to the playerToken
+     * <br/>- Update area already excavate for the user
+     * <br/>- Give to player the point if it's the first excavation of this area
+     * <br/><b>Tips: Use player.getTokensJustPickedUp() to know which tokens has been picked up</b>
      * @param player
      * @param areaToExcavate
      * @param knowledgePointElements 
      */
     private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, List<KnowledgeElement> usedKnowledgeElements, int nbWeeks, boolean useZeppelinCard, boolean useCarCard, List<ShovelCard> shovelCards  ) {
+        
         // Moving process
         player.getPlayerToken().movePlayerToken( areaToExcavate , useZeppelinCard, useCarCard);
         Collections.sort( this.playerTokenStack );
@@ -562,7 +565,14 @@ public class Board implements Serializable {
                 areaToExcavate.getTokenList().remove( pickedToken ); // remove from area
             }
         }
-        throw new UnsupportedOperationException("not implemented yet");
+        
+        // Bonus token for first excavation
+        if( ! areaToExcavate.isAlreadyExcavated( ) ){
+            player.getTokens().add( areaToExcavate.getPointTokenFirstExcavation() );
+        }
+        
+        // update area excavated for player
+        player.addAreaAlreadyExcavate( areaToExcavate.getName() );
     }
     
     /**
@@ -695,7 +705,9 @@ public class Board implements Serializable {
                  */
                 else{
                     String color = entries.get("area." + areaName + ".color" );
-                    newArea = new ExcavationArea(0, areaName, color);
+                    
+                    LinkedList<Token> tokens = new LinkedList();
+                    PointToken pointTokenFirstExcavation = null;
                     
                     /**
                      * Lets fill tokens
@@ -713,7 +725,7 @@ public class Board implements Serializable {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new BlankToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor())); // assign empty point
+                            tokens.add( new BlankToken(id, areaName, color)); // assign empty point
                         }
                     }
                     
@@ -727,10 +739,10 @@ public class Board implements Serializable {
                         id = subSet[0];
                         int value = Integer.parseInt(subSet[1]);
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new PointToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), value ) ); 
+                            tokens.add( new PointToken(id, areaName, color, value ) ); 
                         }
                     }
-
+                    
                     // Set general knowledge tokens (one to each excavation area)
                     String[] generalKnowledgesTokens = ((String)entries.get("area." + areaName + ".generalKnowledgeTokens" )).split("\\|");
                     nbTokens = generalKnowledgesTokens.length;
@@ -739,7 +751,7 @@ public class Board implements Serializable {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), 1 ) );
+                            tokens.add( new GeneralKnowledgeToken(id, areaName, color, 1 ) );
                         }
                     }
                     
@@ -751,9 +763,22 @@ public class Board implements Serializable {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), 1 ) );
+                            tokens.add( new SpecificKnowledgeToken(id, areaName, color, 1 ) );
                         }
                     }
+                    
+                    Collections.shuffle( tokens );
+                    
+                    // We take one point token to put as special token for first excavation
+                    for (Token token : tokens) {
+                        if( token instanceof PointToken && ((PointToken)token).getValue().equals(1) ){
+                            pointTokenFirstExcavation = (PointToken)token;
+                            tokens.remove( token );
+                            break;
+                        }
+                    }
+                    
+                    newArea = new ExcavationArea(0, areaName, color, tokens, pointTokenFirstExcavation);
                 }
                 
                 /**
