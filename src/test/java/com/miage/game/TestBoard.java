@@ -230,11 +230,23 @@ public class TestBoard {
             
             board.changeFourCurrentCards();
             
-            assertEquals(board.getCurrentPlayerToken().getPosition().toString(),"warsaw");
-//            assertEquals(board.getFourCurrentCards()[0].toString(),"generalKnowledge,berlin,2,3");
-            assertEquals(board.getFourCurrentCards().get(1).toString(),"shovel,london,2");	
-            assertEquals(board.getFourCurrentCards().get(2).toString(),"ethnologicalKnowledge,berlin,2,2,greece");	
-            assertEquals(board.getFourCurrentCards().get(3).toString(),"ethnologicalKnowledge,rome,2,2,egypt");
+            assertEquals(board.getCurrentPlayerToken().getPosition().getName(),"warsaw");
+            
+            assertEquals(board.getFourCurrentCards().get(1).getDisplayName(),"shovel");
+            assertEquals(board.getFourCurrentCards().get(1).getAreaName(),"london");
+            assertEquals(board.getFourCurrentCards().get(1).getWeekCost(),2);
+            
+            assertEquals(board.getFourCurrentCards().get(2).getDisplayName(),"ethnologicalKnowledge");
+            assertEquals(board.getFourCurrentCards().get(2).getAreaName(),"berlin");
+            assertEquals(((EthnologicalKnowledgeCard)board.getFourCurrentCards().get(2)).getValue(),2);
+            assertEquals(board.getFourCurrentCards().get(2).getWeekCost(),2);
+            assertEquals(((EthnologicalKnowledgeCard)board.getFourCurrentCards().get(2)).getExcavationAreaName(),"greece");
+            
+            assertEquals(board.getFourCurrentCards().get(3).getDisplayName(),"ethnologicalKnowledge");
+            assertEquals(board.getFourCurrentCards().get(3).getAreaName(),"rome");
+            assertEquals(((EthnologicalKnowledgeCard)board.getFourCurrentCards().get(3)).getValue(),2);
+            assertEquals(board.getFourCurrentCards().get(3).getWeekCost(),2);
+            assertEquals(((EthnologicalKnowledgeCard)board.getFourCurrentCards().get(3)).getExcavationAreaName(),"egypt");
            
         }
 	

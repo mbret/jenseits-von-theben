@@ -50,7 +50,6 @@ public class TestMain {
             players.add( new Player( "rouchard coeur de lion, richmont la raclette", new PlayerToken( "#40A100" )));
 
             Board board = new Board(4, players);
-//            System.out.println(board.getPlayerTokensAndPlayers().keySet());
             List<Card> fourCards = new LinkedList<Card>();
             
             fourCards.add(0,new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 2));		
@@ -118,7 +117,6 @@ public class TestMain {
             Main main = new Main();
             LogDisplay.cleanLogBackup();
             board = main.loadGame("save.boobs");
-//            System.out.println(board.getPlayerTokensAndPlayers().keySet());
             Set<PlayerToken> playersTokens =  board.getPlayerTokensAndPlayers().keySet();
             HashMap<PlayerToken, Player> playerTokensAndPlayers = board.getPlayerTokensAndPlayers();
             for(PlayerToken pt : playersTokens){
@@ -138,21 +136,78 @@ public class TestMain {
                 }
             }
             
-            assertEquals(board.getExpoCards().get(0).toString(), "expo,paris,3,4");
-            assertEquals(board.getExpoCards().get(1).toString(), "expo,vienna,4,5");
-            assertEquals(board.getExpoCards().get(2).toString(), "expo,rome,3,4");
-            assertEquals(board.getDeck().get(0).toString(),"expo,moscow,4,5");
-            assertEquals(board.getDeck().get(1).toString(),"expo,warsaw,4,5");
-            assertEquals(board.getDeck().get(2).toString(),"generalKnowledge,berlin,2,3");
-            assertEquals(board.getDeck().get(3).toString(),"shovel,london,2");
-            assertEquals(board.getDeck().get(4).toString(),"ethnologicalKnowledge,berlin,2,2,greece");
-            assertEquals(board.getDeck().get(5).toString(),"ethnologicalKnowledge,rome,2,2,egypt");
-            assertEquals(board.getDeck().get(6).toString(),"specificKnowledge,rome,2,2,crete");
+            assertEquals(board.getExpoCards().get(0).getDisplayName(),"expo");
+            assertEquals(board.getExpoCards().get(0).getAreaName(),"paris");
+            assertEquals(board.getExpoCards().get(0).getValue(),4);
+            assertEquals(board.getExpoCards().get(0).getWeekCost(),3);
             
-            assertEquals(board.getFourCurrentCards().get(0).toString(),"generalKnowledge,berlin,2,2");
-            assertEquals(board.getFourCurrentCards().get(1).toString(),"generalKnowledge,paris,2,2");	
-            assertEquals(board.getFourCurrentCards().get(2).toString(),"generalKnowledge,rome,2,2");	
-            assertEquals(board.getFourCurrentCards().get(3).toString(),"generalKnowledge,vienna,2,2");
+            assertEquals(board.getExpoCards().get(1).getDisplayName(),"expo");
+            assertEquals(board.getExpoCards().get(1).getAreaName(),"vienna");
+            assertEquals(board.getExpoCards().get(1).getValue(),5);
+            assertEquals(board.getExpoCards().get(1).getWeekCost(),4);
+            
+            assertEquals(board.getExpoCards().get(2).getDisplayName(),"expo");
+            assertEquals(board.getExpoCards().get(2).getAreaName(),"rome");
+            assertEquals(board.getExpoCards().get(2).getValue(),4);
+            assertEquals(board.getExpoCards().get(2).getWeekCost(),3);
+            
+            assertEquals(board.getDeck().get(0).getDisplayName(),"expo");
+            assertEquals(board.getDeck().get(0).getAreaName(),"moscow");
+            assertEquals(((ExpoCard)board.getDeck().get(0)).getValue(),5);
+            assertEquals(board.getDeck().get(0).getWeekCost(),4);
+            
+            assertEquals(board.getDeck().get(1).getDisplayName(),"expo");
+            assertEquals(board.getDeck().get(1).getAreaName(),"warsaw");
+            assertEquals(((ExpoCard)board.getDeck().get(1)).getValue(),5);
+            assertEquals(board.getDeck().get(1).getWeekCost(),4);
+            
+            assertEquals(board.getDeck().get(2).getDisplayName(),"generalKnowledge");
+            assertEquals(board.getDeck().get(2).getAreaName(),"berlin");
+            assertEquals(((GeneralKnowledgeCard)board.getDeck().get(2)).getValue(),3);
+            assertEquals(board.getDeck().get(2).getWeekCost(),2);
+            
+            assertEquals(board.getDeck().get(3).getDisplayName(),"shovel");
+            assertEquals(board.getDeck().get(3).getAreaName(),"london");
+            assertEquals(board.getDeck().get(3).getWeekCost(),2);
+            
+            assertEquals(board.getDeck().get(4).getDisplayName(),"ethnologicalKnowledge");
+            assertEquals(board.getDeck().get(4).getAreaName(),"berlin");
+            assertEquals(((EthnologicalKnowledgeCard)board.getDeck().get(4)).getValue(),2);
+            assertEquals(board.getDeck().get(4).getWeekCost(),2);
+            assertEquals(((EthnologicalKnowledgeCard)board.getDeck().get(4)).getExcavationAreaName(),"greece");
+            
+            assertEquals(board.getDeck().get(5).getDisplayName(),"ethnologicalKnowledge");
+            assertEquals(board.getDeck().get(5).getAreaName(),"rome");
+            assertEquals(((EthnologicalKnowledgeCard)board.getDeck().get(5)).getValue(),2);
+            assertEquals(board.getDeck().get(5).getWeekCost(),2);
+            assertEquals(((EthnologicalKnowledgeCard)board.getDeck().get(5)).getExcavationAreaName(),"egypt");
+            
+            assertEquals(board.getDeck().get(6).getDisplayName(),"specificKnowledge");
+            assertEquals(board.getDeck().get(6).getAreaName(),"rome");
+            assertEquals(((SpecificKnowledgeCard)board.getDeck().get(6)).getValue(),2);
+            assertEquals(board.getDeck().get(6).getWeekCost(),2);
+            assertEquals(((SpecificKnowledgeCard)board.getDeck().get(6)).getExcavationAreaName(),"crete");
+            
+            assertEquals(board.getFourCurrentCards().get(0).getDisplayName(),"generalKnowledge");
+            assertEquals(board.getFourCurrentCards().get(0).getAreaName(),"berlin");
+            assertEquals(((GeneralKnowledgeCard)board.getFourCurrentCards().get(0)).getValue(),2);
+            assertEquals(board.getFourCurrentCards().get(0).getWeekCost(),2);
+            
+            assertEquals(board.getFourCurrentCards().get(1).getDisplayName(),"generalKnowledge");
+            assertEquals(board.getFourCurrentCards().get(1).getAreaName(),"paris");
+            assertEquals(((GeneralKnowledgeCard)board.getFourCurrentCards().get(1)).getValue(),2);
+            assertEquals(board.getFourCurrentCards().get(1).getWeekCost(),2);
+            
+            assertEquals(board.getFourCurrentCards().get(2).getDisplayName(),"generalKnowledge");
+            assertEquals(board.getFourCurrentCards().get(2).getAreaName(),"rome");
+            assertEquals(((GeneralKnowledgeCard)board.getFourCurrentCards().get(2)).getValue(),2);
+            assertEquals(board.getFourCurrentCards().get(2).getWeekCost(),2);
+            
+            assertEquals(board.getFourCurrentCards().get(3).getDisplayName(),"generalKnowledge");
+            assertEquals(board.getFourCurrentCards().get(3).getAreaName(),"vienna");
+            assertEquals(((GeneralKnowledgeCard)board.getFourCurrentCards().get(3)).getValue(),2);
+            assertEquals(board.getFourCurrentCards().get(3).getWeekCost(),2);
+            
             assertEquals(LogDisplay.getLogBackup().split("]")[1]," maxime se déplace sur paris.");
         }
 }
