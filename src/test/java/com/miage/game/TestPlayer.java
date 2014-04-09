@@ -5,6 +5,7 @@ import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -140,7 +141,7 @@ public class TestPlayer {
     @Test
     public void testIsAuthorizedToExcavateOneArea() throws IOException{
         final Player player2 = new Player("");
-        Set<Player> players = new HashSet(){{
+        List<Player> players = new ArrayList(){{
            this.add( player2 );
         }};
         Board board = new Board(4, players);
@@ -169,6 +170,7 @@ public class TestPlayer {
     /**
      * Test if player is authorized to excavate one area
      * @author david
+     * @throws java.io.IOException
      */
     @Test
     public void testIsAuthorizedToExcavateArea() throws IOException{

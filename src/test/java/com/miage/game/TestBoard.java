@@ -85,7 +85,7 @@ public class TestBoard {
 	@Test
 	public void testPickCardOnBoard() throws IOException {
             final Player player = new Player("maxime", new PlayerToken("color"));
-            Board board = new Board(2, new HashSet<Player>(){{ this.add( player ); }} );
+            Board board = new Board(2, new ArrayList<Player>(){{ this.add( player ); }} );
             
             // we check the fourth card 
             Card card4 = board.getFourCurrentCards().get( 3 );
@@ -258,7 +258,7 @@ public class TestBoard {
         @Test
         public void testIsPlayerAbleToMakeRoundAction() throws IOException, Exception{
             final Player player = new Player("maxime", new PlayerToken("color"));
-            HashSet<Player> players = new HashSet(){{
+            List<Player> players = new ArrayList(){{
                 this.add( player );
             }};
             Board board = new Board(4, players);

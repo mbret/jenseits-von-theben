@@ -65,6 +65,8 @@ public class Board implements Serializable {
      */
     private HashMap<PlayerToken, Player> playerTokensAndPlayers;
     
+    private List<Player> players;
+    
     private PlayerToken currentPlayerToken;
 
     /**
@@ -94,7 +96,7 @@ public class Board implements Serializable {
     
     List<Player> playersWhoFinished = new ArrayList();
 
-    public Board(int nbPlayers, Set<Player> players) throws IOException{
+    public Board(int nbPlayers, List<Player> players) throws IOException{
         this.nbPlayers = nbPlayers;
         this.areas = new HashMap<>();
         this._initAreas();
@@ -107,6 +109,7 @@ public class Board implements Serializable {
         this.playerTokenStack = new PlayerTokenStack();
         this.playerTokensAndPlayers = new HashMap();
         this.chronotime = new Chronotime();
+        this.players = new ArrayList();
         
         // Init date of end game
         String[] tmp = ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("game.endGameDatePosition").split("\\|")[0].split("\\-");
@@ -121,6 +124,7 @@ public class Board implements Serializable {
             this.playerTokenStack.addPlayerToken(player.getPlayerToken() ); // set stack of playertoken
             this.playerTokensAndPlayers.put( player.getPlayerToken(), player); // set the link between player and playerTokens
         }
+        this.players.addAll( players );
     }
     
     /**
@@ -129,7 +133,7 @@ public class Board implements Serializable {
      * @deprecated  
      */
     public Board(int nbPlayers) throws IOException{
-        this(nbPlayers, new HashSet<Player>());
+        this(nbPlayers, new ArrayList<Player>());
     }
     
     
@@ -980,6 +984,11 @@ public class Board implements Serializable {
     public void setLogDisplay(String logDisplay){
         this.logDisplay = logDisplay;
     }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+    
     
     
     

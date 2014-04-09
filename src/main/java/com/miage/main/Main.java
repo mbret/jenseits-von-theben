@@ -47,12 +47,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException, Exception {
 
-        Set<Player> players = new HashSet(){{
-            this.add( new Player( "maxime", new PlayerToken( "#40A497" )));
-            this.add( new Player( "anne la plus belle <3", new PlayerToken( "#111111" )));
-            this.add( new Player( "gael la pelle", new PlayerToken( "#502222" )));
-            this.add( new Player( "rouchard coeur de lion, richmont la raclette", new PlayerToken( "#40A100" )));
-        }};
+        List<Player> players = new ArrayList();
+        players.add( new Player( "maxime", new PlayerToken( "#40A497" )));
+        players.add( new Player( "anne la plus belle <3", new PlayerToken( "#111111" )));
+        players.add( new Player( "gael la pelle", new PlayerToken( "#502222" )));
+        players.add( new Player( "rouchard coeur de lion, richmont la raclette", new PlayerToken( "#40A100" )));
 
         // New game
         Board board = new Board(4, players);
