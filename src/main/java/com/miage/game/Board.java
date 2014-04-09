@@ -273,27 +273,31 @@ public class Board implements Serializable {
      * @param expoCardToDo 
      * @param usedKnowledgePointElements 
      */
-    public void doPlayerRoundAction( int actionPattern, Player player, List<UsableElement> usedElements, ExcavationArea areaToExcavate, Card cardToPickUp, ExpoCard expoCardToDo, Integer nbWeeksForExcavation){
+    public void doPlayerRoundAction( int actionPattern, HashMap<String, Object> playerActionParams ) throws Exception{
+        
+        // Check player parameter
+        if( ! playerActionParams.containsKey("player") || !(playerActionParams.get("player") instanceof Player) ){
+            throw new Exception("No player provided, please see the parameters details");
+        }
+        Player player = (Player)playerActionParams.get("player");
         
         boolean useZeppelin = false;                                // Does the player is using zeppelin cards ?
         boolean useCarCard = player.hasCarCard();                   // Does the player is using car cards ?
         List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         List<ShovelCard> shovelCards = new ArrayList();             // list of ised shovel cards
         
-        // We iterate over all used elements to get some informations and make more precise list
+        // We check and iterate over all used elements to get some informations and make more precise list
+        List<UsableElement> usedElements;
+        try{
+            usedElements = ((List<UsableElement>)playerActionParams.get("usedElement"));
+        }
+        catch( NullPointerException | ClassCastException e){
+            throw new Exception("No usedElements provided, please see the parameters details");
+        }
         for (UsableElement element : usedElements){
-            
-            if( element instanceof ZeppelinCard ){
-                useZeppelin = true;
-            }
-            
-            if( element instanceof KnowledgeElement ){
-                knowledgeElements.add( (KnowledgeElement)element );
-            }
-            
-            if( element instanceof ShovelCard ){
-                shovelCards.add( (ShovelCard)element );
-            }
+            if( element instanceof ZeppelinCard ) useZeppelin = true;
+            if( element instanceof KnowledgeElement ) knowledgeElements.add( (KnowledgeElement)element );
+            if( element instanceof ShovelCard ) shovelCards.add( (ShovelCard)element );
         }
         
         // Do the main action 
@@ -304,15 +308,42 @@ public class Board implements Serializable {
                 break;
                 
             case Player.ACTION_EXCAVATE:
-                this._actionPlayerDoExcavateArea( player, areaToExcavate, knowledgeElements, nbWeeksForExcavation, useZeppelin, useCarCard, shovelCards);
+                // Check area to excavate parameter
+                if( ! playerActionParams.containsKey("areaToExcavate") || !(playerActionParams.get("areaToExcavate") instanceof ExcavationArea) ){
+                    throw new Exception("No areaToExcavate provided, please see the parameters details");
+                }
+                this._actionPlayerDoExcavateArea( 
+                        player, 
+                        ((ExcavationArea)playerActionParams.get("areaToExcavate")), 
+                        knowledgeElements, 
+                        nbWeeksForExcavation, 
+                        useZeppelin, 
+                        useCarCard, 
+                        shovelCards);
                 break;
                 
             case Player.ACTION_ORGANIZE_EXPO:
-                this._actionPlayerDoOrganizeExpo( player, expoCardToDo, useZeppelin, useCarCard );
+                // Check expoCardToDo parameter
+                if( ! playerActionParams.containsKey("expoCardToDo") || !(playerActionParams.get("expoCardToDo") instanceof ExpoCard) ){
+                    throw new Exception("No expoCardToDo provided, please see the parameters details");
+                }
+                this._actionPlayerDoOrganizeExpo( 
+                        player, 
+                        ((ExpoCard)playerActionParams.get("expoCardToDo")), 
+                        useZeppelin, 
+                        useCarCard );
                 break;
                 
             case Player.ACTION_PICK_CARD:
-                this._actionPlayerDoPickCard( player, cardToPickUp, useZeppelin, useCarCard );
+                // Check cardToPickUp parameter
+                if( ! playerActionParams.containsKey("cardToPickUp") || !(playerActionParams.get("cardToPickUp") instanceof Card) ){
+                    throw new Exception("No cardToPickUp provided, please see the parameters details");
+                }
+                this._actionPlayerDoPickCard( 
+                        player, 
+                        this.getFourCurrentCards().indexOf( ((Card)playerActionParams.get("cardToPickUp")) ), 
+                        useZeppelin, 
+                        useCarCard );
                 break;
         }
         
@@ -335,28 +366,57 @@ public class Board implements Serializable {
         throw new UnsupportedOperationException("some operations are missing");
     }
     
-    public void salut(){}
     /**
      * Check if the player is able to do the demanded action. Use player action Constant to provide an action key
      * @param actionPattern player constant (exemple: player.ACTION...)
-     * @param player
-     * @param areaToExcavate
-     * @param indexOfCardToPickUp
-     * @param expoCardToDo
+     * @param playerActionParams 
+     * <table border="1">
+     * <tr><td>player</td><td>Provide a Player (required)</td></tr>
+     * <tr><td>areaToExcavate</td><td>Provide an ExcavationArea (required ACTION_EXCAVATE)</td></tr>
+     * <tr><td>cardToPickUp</td><td>Provide a Card to pick up (required ACTION_PICK_CARD)</td></tr>
+     * <tr><td>expoCardToDo</td><td>Provide a ExpoCard to do (required ACTION_ORGANIZE_EXPO)</td></tr>
+     * </table>
      * @return 
+     * @throws java.lang.Exception 
      */
-    public boolean isPlayerAbleToMakeRoundAction( int actionPattern, Player player, ExcavationArea areaToExcavate, Integer indexOfCardToPickUp, ExpoCard expoCardToDo ){
+    public boolean isPlayerAbleToMakeRoundAction( int actionPattern, HashMap<String, Object> playerActionParams ) throws Exception{
+        
+        // Check player parameter
+        if( ! playerActionParams.containsKey("player") || !(playerActionParams.get("player") instanceof Player) ){
+            throw new Exception("No player provided, please see the parameters details");
+        }
+        Player player = (Player)playerActionParams.get("player");
+        
+        /**
+         * Main loop
+         * - redirect the asked action to the specified intern method
+         */
         switch(actionPattern){
             case Player.ACTION_CHANGE_FOUR_CARDS:
                 return this._actionPlayerAbleToChangeFourCards( player );
+                
             case Player.ACTION_EXCAVATE:
-                return this._actionPlayerAbleToExcavateArea( player, areaToExcavate );
+                // Check area to excavate parameter
+                if( ! playerActionParams.containsKey("areaToExcavate") || !(playerActionParams.get("areaToExcavate") instanceof ExcavationArea) ){
+                    throw new Exception("No areaToExcavate provided, please see the parameters details");
+                }
+                return this._actionPlayerAbleToExcavateArea( player, ((ExcavationArea)playerActionParams.get("areaToExcavate")) );
+            
             case Player.ACTION_ORGANIZE_EXPO:
-                return this._actionPlayerAbleToOrganizeExpo( player, expoCardToDo );
+                // Check expoCardToDo parameter
+                if( ! playerActionParams.containsKey("expoCardToDo") || !(playerActionParams.get("expoCardToDo") instanceof ExpoCard) ){
+                    throw new Exception("No expoCardToDo provided, please see the parameters details");
+                }
+                return this._actionPlayerAbleToOrganizeExpo( player, ((ExpoCard)playerActionParams.get("expoCardToDo")) );
+            
             case Player.ACTION_PICK_CARD:
-                return this._actionPlayerAbleToPickCard(player , indexOfCardToPickUp);
+                // Check cardToPickUp parameter
+                if( ! playerActionParams.containsKey("cardToPickUp") || !(playerActionParams.get("cardToPickUp") instanceof Card) ){
+                    throw new Exception("No cardToPickUp provided, please see the parameters details");
+                }
+                return this._actionPlayerAbleToPickCard( player , this.getFourCurrentCards().indexOf( ((Card)playerActionParams.get("cardToPickUp")) ) );
         }
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Please provide an existing action pattern");
     }
     
     /**
