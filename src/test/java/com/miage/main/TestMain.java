@@ -20,9 +20,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -47,23 +50,23 @@ public class TestMain {
             }};
             Board board = new Board(4, players);
             
-            Card[] fourCards = new Card[4];
+            List<Card> fourCards = new LinkedList<Card>();
             
-            fourCards[0] = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 2);		
-            fourCards[1] = new GeneralKnowledgeCard(0,"generalKnowledge", "paris", 2, 2);		
-            fourCards[2] = new GeneralKnowledgeCard(0,"generalKnowledge", "rome", 2, 2);		
-            fourCards[3] = new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 2);
+            fourCards.add(0,new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 2));		
+            fourCards.add(1,new GeneralKnowledgeCard(0,"generalKnowledge", "paris", 2, 2));		
+            fourCards.add(2,new GeneralKnowledgeCard(0,"generalKnowledge", "rome", 2, 2));		
+            fourCards.add(3,new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 2));
             
             board.setFourCurrentCards(fourCards);
             
             Deck deckTest = new Deck();
-            deckTest.addCard(new ExpoCard(0,"expo", "moscow", 4, true, 5));
-            deckTest.addCard(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
-            deckTest.addCard(new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 3));
-            deckTest.addCard(new ShovelCard(0,"shovel", "london", 2));
-            deckTest.addCard(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "berlin", 2, 2,"greece"));
-            deckTest.addCard(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "rome", 2, 2,"egypt"));
-            deckTest.addCard(new SpecificKnowledgeCard(0,"specificKnowledge", "rome", 2, 2,"crete"));
+            deckTest.add(new ExpoCard(0,"expo", "moscow", 4, true, 5));
+            deckTest.add(new ExpoCard(0,"expo", "warsaw", 4, true, 5));
+            deckTest.add(new GeneralKnowledgeCard(0,"generalKnowledge", "berlin", 2, 3));
+            deckTest.add(new ShovelCard(0,"shovel", "london", 2));
+            deckTest.add(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "berlin", 2, 2,"greece"));
+            deckTest.add(new EthnologicalKnowledgeCard(0,"ethnologicalKnowledge", "rome", 2, 2,"egypt"));
+            deckTest.add(new SpecificKnowledgeCard(0,"specificKnowledge", "rome", 2, 2,"crete"));
             
             ExpoCard card1 = new ExpoCard(0,"expo", "berlin", 4, true, 5);
             ExpoCard card2 = new ExpoCard(0,"expo", "rome", 3, false, 4);
