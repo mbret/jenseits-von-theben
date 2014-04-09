@@ -1,4 +1,5 @@
 package com.miage.cards;
+import Interface.DiscardableElement;
 import com.miage.game.Deck;
 
 /**
@@ -6,7 +7,7 @@ import com.miage.game.Deck;
  * 
  * @author maxime
  */
-public abstract class Card {
+public abstract class Card implements DiscardableElement{
 
     /**
      * name: used as key inside program
@@ -114,11 +115,6 @@ public abstract class Card {
     public String toString(){
             return displayName+","+areaName+","+weekCost;
     }
-
-    
-    abstract public boolean isDiscardable();
-
-
    
 
 	
@@ -128,9 +124,10 @@ public abstract class Card {
      * 
      * @author Gael
      * @param sideDeck
+     * @deprecated 
      */
     public void discardCard(Deck sideDeck){
-        sideDeck.addCard(this);
+        sideDeck.add(this);
     }
 
     

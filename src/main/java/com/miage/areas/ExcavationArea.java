@@ -31,20 +31,18 @@ public class ExcavationArea extends Area {
      * @param codeColor
      */
     public ExcavationArea(int id, String name, String codeColor){
-        super(id, name);
-        this.codeColor = codeColor;
-        this.tokenList = new LinkedList<>();
+        this(id, name, codeColor, new LinkedList<Token>());
     }
     
     /**
      * 
-     * @param num
+     * @param id
      * @param name
      * @param codeColor
      * @param tokenList 
      */
-    public ExcavationArea(int num, String name, String codeColor, LinkedList<Token> tokenList){
-        super(num, name);
+    public ExcavationArea(int id, String name, String codeColor, LinkedList<Token> tokenList){
+        super(id, name);
         this.codeColor = codeColor;
         this.tokenList = tokenList;
     }

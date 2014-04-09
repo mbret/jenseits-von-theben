@@ -125,6 +125,7 @@ public class PlayerToken implements Comparable{
 	 * @param board
 	 * @param useZeppelin
 	 * @return the table of steps
+         * @deprecated 
 	 */
 	public String[] move(String destinationArea, Board board, boolean useZeppelin){
 		
@@ -153,7 +154,34 @@ public class PlayerToken implements Comparable{
 		
 	}
 	
-	
+    /**
+     * Move the position of the token
+     * Effect:
+     *  - update position
+     *  - update timeStage relating to (zepellin and car)
+     * @param destinationArea
+     * @param useZeppelin
+     * @return 
+     */
+    public String[] movePlayerToken(Area destinationArea, boolean useZeppelin, boolean useCardCard){
+
+        String[] steps = this.getPosition().getDistanceAreasSteps( destinationArea.getName() );
+
+        this.setPosition( destinationArea );
+
+        if(!useZeppelin){
+            if(steps.length+1 >= 3){
+                if( useCardCard )
+                    this.addWeeks(steps.length);
+                else
+                    this.addWeeks(steps.length+1);
+            }
+            else
+                this.addWeeks(steps.length+1);
+        }
+        return steps;
+    }
+    
 	/**
 	 * @author Gael
 	 * 

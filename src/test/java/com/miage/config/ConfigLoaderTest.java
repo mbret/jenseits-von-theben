@@ -55,7 +55,6 @@ public class ConfigLoaderTest {
     
     @Test
     public void testGetOption() throws Exception{
-        System.out.println("getOption");
         String expResult = "tata";
         Ini options = ConfigManager.getInstance().getOptions();
         assertEquals(expResult, options.get("test", "testGet") );
@@ -63,7 +62,6 @@ public class ConfigLoaderTest {
     
     @Test
     public void testSetOption() throws Exception{
-        System.out.println("setOption");
         String oldValue = ConfigManager.getInstance().getOptionValue( "test" , "testSet", String.class); // we keep old value to dont have any conflict with git
         Double expResult = (Math.random() * ( 5000 - 1 ));
         ConfigManager.getInstance().setOption("test", "testSet", expResult.toString());
@@ -72,7 +70,6 @@ public class ConfigLoaderTest {
     }
     
     public void testInitArrea() throws Exception{
-        System.out.println("initArea");
         
     }
 }

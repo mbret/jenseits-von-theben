@@ -8,6 +8,13 @@ package com.miage.cards;
  */
 public class CarCard extends Card{
 
+    /**
+     * 
+     * @param id
+     * @param displayName
+     * @param areaName
+     * @param weekCost 
+     */
     public CarCard(int id, String displayName, String areaName, int weekCost) {
         super(displayName, areaName, id, weekCost);
     }

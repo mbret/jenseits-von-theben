@@ -14,7 +14,9 @@ Group can add note here...
 	Max
 
 -----------------------
-
+- gérer les assistant de manière .properties et correct
+- revoir les initArea et initDeck pour faire plus classe
+- revoir la génération de point de connaissance à partir des assistants (combinable)
 
 -----------------------
 
