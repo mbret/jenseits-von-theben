@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -56,10 +57,10 @@ public class MapPanel extends javax.swing.JPanel {
         menuCardsPlayer.setSelectedIndex(0);
         this.getPlayerTab(menuCardsPlayer);
         playerPanel.setVisible(false);
-        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[0].getId() + ".jpg")));
-        boardCard2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[1].getId() + ".jpg")));
-        boardCard3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[2].getId() + ".jpg")));
-        boardCard4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[3].getId() + ".jpg")));
+        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(0).getId() + ".jpg")));
+        boardCard2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(1).getId() + ".jpg")));
+        boardCard3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(2).getId() + ".jpg")));
+        boardCard4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(3).getId() + ".jpg")));
     }
 
     /**
@@ -376,8 +377,8 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_arrowMenuLabelMouseEntered
 
     private void setPlayerAndPlayerToken(Board board) {
-        ArrayList<Player>  allPlayer = (ArrayList<Player>) currentBoard.getPlayerTokensAndPlayers().values();
-        ArrayList<PlayerToken> allPlayerToken = (ArrayList<PlayerToken>) currentBoard.getPlayerTokensAndPlayers().keySet();
+//        ArrayList<Player>  allPlayer = currentBoard.getPlayerTokensAndPlayers().values();
+        List<PlayerToken> allPlayerToken = (List<PlayerToken>) currentBoard.getPlayerTokensAndPlayers().keySet();
         player1 = allPlayer.get(0);
         player2 = allPlayer.get(1);
         playerToken1 = allPlayerToken.get(0);
@@ -577,10 +578,9 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
     private void boardCard1LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard1LabelMouseClicked
-        System.out.println(" " + currentPlayer.toString());
-        ar.add(currentBoard.getFourCurrentCards()[0]);
-        currentPlayer.pickCard(currentBoard, 0);
-        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[0].getId() + ".jpg")));
+//        System.out.println(" " + currentPlayer.toString());
+//        currentPlayer.pickCard(currentBoard, 0);
+//        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(0).getId() + ".jpg")));
     }//GEN-LAST:event_boardCard1LabelMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowMenuLabel;
