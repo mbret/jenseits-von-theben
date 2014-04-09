@@ -8,10 +8,12 @@ import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
+import com.miage.interfaces.UsableElement;
 import com.miage.tokens.BlankToken;
 import com.miage.tokens.PointToken;
 import com.miage.tokens.Token;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -24,7 +26,7 @@ import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
-
+import java.lang.reflect.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -39,6 +41,9 @@ public class TestBoard {
 	private List<Card> fourCards;
 	private Deck deckTest;
 
+        Method method_pickCardOnBoard;
+        Method method_addExpoCardOnBoard;
+        
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -68,7 +73,18 @@ public class TestBoard {
             board.setDeck(deckTest);
 		
 		
+            // As board._addExpoCardOnBoard is private we need to set as accessible
+            Class c = board.getClass();
+            Class[] cArg = new Class[1];
+            cArg[0] = ExpoCard.class;
+            method_addExpoCardOnBoard = c.getDeclaredMethod("_addExpoCardOnBoard", cArg);
+            method_addExpoCardOnBoard.setAccessible(true);
 	
+            // As board._pickCardOnBoard is private we need to set as accessible
+            cArg = new Class[1];
+            cArg[0] = Integer.class;
+            method_pickCardOnBoard = c.getDeclaredMethod("_pickCardOnBoard", cArg);
+            method_pickCardOnBoard.setAccessible(true);
 	}
 
 	@After
@@ -82,16 +98,19 @@ public class TestBoard {
 	 * 
 	 */
 	@Test
-	public void testPickCardOnBoard() throws IOException {
-            final Player player = new Player("maxime", new PlayerToken("color"));
-            Board board = new Board(2, new HashSet<Player>(){{ this.add( player ); }} );
+	public void test_PickCardOnBoard() throws IOException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
             
+            final Player player = new Player("maxime", new PlayerToken("color"));
+            Board board = new Board(2, new ArrayList<Player>(){{ this.add( player ); }} );
+
+            
+
             // we check the fourth card 
             Card card4 = board.getFourCurrentCards().get( 3 );
-            assertEquals( card4, board.pickCardOnBoard( 3 ) );
+            assertEquals( card4, method_pickCardOnBoard.invoke( board, 3) );
             
             // now the fourth card should be different
-            assertNotSame( card4, board.pickCardOnBoard( 3 ) );
+            assertNotSame( card4, method_pickCardOnBoard.invoke( board, 3) );
 	}
 	
         
@@ -102,7 +121,7 @@ public class TestBoard {
 	 * Test of the method to add an expo card on the board
 	 */
 	@Test
-	public void testAddExpoCardOnTheBoard(){
+	public void testAddExpoCardOnTheBoard() throws IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException{
 		
 		
 		ExpoCard card1 = new ExpoCard(0,"expo", "berlin", 4, true, 5);
@@ -110,19 +129,20 @@ public class TestBoard {
 		ExpoCard card3 = new ExpoCard(0,"expo", "vienna", 4, true, 5);
 		ExpoCard card4 = new ExpoCard(0,"expo", "paris", 3, false, 4);
 		
-		board.addExpoCardOnBoard(card1);
+
+		method_addExpoCardOnBoard.invoke( board, card1);
 		assertEquals(board.getExpoCards().get(0).toString(), "expo,berlin,4,5");
 		
-		board.addExpoCardOnBoard(card2);
+		method_addExpoCardOnBoard.invoke( board, card2);
 		assertEquals(board.getExpoCards().get(0).toString(), "expo,rome,3,4");
 		assertEquals(board.getExpoCards().get(1).toString(), "expo,berlin,4,5");
 		
-		board.addExpoCardOnBoard(card3);
+		method_addExpoCardOnBoard.invoke( board, card3);
 		assertEquals(board.getExpoCards().get(0).toString(), "expo,vienna,4,5");
 		assertEquals(board.getExpoCards().get(1).toString(), "expo,rome,3,4");
 		assertEquals(board.getExpoCards().get(2).toString(), "expo,berlin,4,5");
 		
-		board.addExpoCardOnBoard(card4);
+		method_addExpoCardOnBoard.invoke( board, card4);
 		assertEquals(board.getExpoCards().get(0).toString(), "expo,paris,3,4");
 		assertEquals(board.getExpoCards().get(1).toString(), "expo,vienna,4,5");
 		assertEquals(board.getExpoCards().get(2).toString(), "expo,rome,3,4");
@@ -229,11 +249,23 @@ public class TestBoard {
             
             board.changeFourCurrentCards();
             
-            assertEquals(board.getCurrentPlayerToken().getPosition().toString(),"warsaw");
-//            assertEquals(board.getFourCurrentCards()[0].toString(),"generalKnowledge,berlin,2,3");
-            assertEquals(board.getFourCurrentCards().get(1).toString(),"shovel,london,2");	
-            assertEquals(board.getFourCurrentCards().get(2).toString(),"ethnologicalKnowledge,berlin,2,2,greece");	
-            assertEquals(board.getFourCurrentCards().get(3).toString(),"ethnologicalKnowledge,rome,2,2,egypt");
+            assertEquals(board.getCurrentPlayerToken().getPosition().getName(),"warsaw");
+            
+            assertEquals(board.getFourCurrentCards().get(1).getDisplayName(),"shovel");
+            assertEquals(board.getFourCurrentCards().get(1).getAreaName(),"london");
+            assertEquals(board.getFourCurrentCards().get(1).getWeekCost(),2);
+            
+            assertEquals(board.getFourCurrentCards().get(2).getDisplayName(),"ethnologicalKnowledge");
+            assertEquals(board.getFourCurrentCards().get(2).getAreaName(),"berlin");
+            assertEquals(((EthnologicalKnowledgeCard)board.getFourCurrentCards().get(2)).getValue(),2);
+            assertEquals(board.getFourCurrentCards().get(2).getWeekCost(),2);
+            assertEquals(((EthnologicalKnowledgeCard)board.getFourCurrentCards().get(2)).getExcavationAreaName(),"greece");
+            
+            assertEquals(board.getFourCurrentCards().get(3).getDisplayName(),"ethnologicalKnowledge");
+            assertEquals(board.getFourCurrentCards().get(3).getAreaName(),"rome");
+            assertEquals(((EthnologicalKnowledgeCard)board.getFourCurrentCards().get(3)).getValue(),2);
+            assertEquals(board.getFourCurrentCards().get(3).getWeekCost(),2);
+            assertEquals(((EthnologicalKnowledgeCard)board.getFourCurrentCards().get(3)).getExcavationAreaName(),"egypt");
            
         }
 	
@@ -255,40 +287,54 @@ public class TestBoard {
          * @throws IOException 
          */
         @Test
-        public void testIsPlayerAbleToMakeRoundAction() throws IOException{
+        public void testIsPlayerAbleToMakeRoundAction() throws IOException, Exception{
             final Player player = new Player("maxime", new PlayerToken("color"));
-            HashSet<Player> players = new HashSet(){{
+            List<Player> players = new ArrayList(){{
                 this.add( player );
             }};
             Board board = new Board(4, players);
             
+            HashMap<String, Object> playerActionParams = new HashMap();
+            playerActionParams.put("player", player); // wet set the current player
+            playerActionParams.put("usedElements", new ArrayList<UsableElement>());
+            playerActionParams.put("areaToExcavate", null);
+            playerActionParams.put("cardToPickUp", null);
+            playerActionParams.put("expoCardToDo", null);
+            playerActionParams.put("nbWeeksForExcavation", null);
+            
             // test all 4 actions
-            assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, player, null, null, null));
+            assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams));
             for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
-                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player, area, null, null) );
+                playerActionParams.put("areaToExcavate", area);
+                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams) );
             }
             for (ExpoCard card : board.getExpoCards()) {
-                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, player, null, null, card) );
+                playerActionParams.put("expoCardToDo", card);
+                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams) );
             }
-            for (int i = 0; i < 4; i++) {
-                assertTrue( board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, player, null, i, null) );
+            for (Card card : board.getFourCurrentCards()) {
+                playerActionParams.put("cardToPickUp", card);
+                assertTrue( board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, playerActionParams) );
             }
             
             // player have special authorization to excavate but not enough point
             player.getCards().add( new ExcavationAuthorizationCard(0, "ExcavationAuthorizationCard", "berlin", 0));
             for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
-                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player, area, null, null) );
+                playerActionParams.put("areaToExcavate", area);
+                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams) );
             }
             
             // player have special authorization to excavate and general point
             player.getCards().add( new GeneralKnowledgeCard(0, null, null, 0, 0));
             for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
-                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player, area, null, null) );
+                playerActionParams.put("areaToExcavate", area);
+                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams) );
             }
             
             // player have special authorization to excavate and general point and specific knowledge point
             player.getCards().add( new SpecificKnowledgeCard(0, "SpecificKnowledgeCard", "berlin", 0, 1, "egypt") );
-            assertTrue( board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, player, (ExcavationArea)board.getArea("egypt"), null, null) );
+            playerActionParams.put("areaToExcavate", (ExcavationArea)board.getArea("egypt"));
+            assertTrue( board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams) );
             
             // player have not enough point to make expo in berlin
             player.getTokens().add( new PointToken(null, "egypt", null, 2));
@@ -299,21 +345,23 @@ public class TestBoard {
                     this.add(new PointToken(null, "crete", null, 2));
                 }}
             );
-            board.addExpoCardOnBoard( card );
-            assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, player, null, null, card) );
+            method_addExpoCardOnBoard.invoke( board, card );
+            playerActionParams.put("expoCardToDo", card);
+            assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams) );
             
             // player have enough point to make this expo in berlin
             player.getTokens().add( new PointToken(null, "crete", null, 1));
             player.getTokens().add( new PointToken(null, "crete", null, 1));
-            assertTrue( board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, player, null, null, card) );
+            assertTrue( board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams) );
             
             // player is on the end of the board position so he is not able to do anything anymore
             player.getPlayerToken().setTimeState( board.getEndGameDatePosition() );
             player.getPlayerToken().setPosition( board.getArea("egypt") ); // we need it in case of the player is on an touristic city and one of the fourcurrentcard is about this area
-            for (int i = 0; i < 4; i++) {
-                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, player, null, i, null) );
+            for (Card card2 : board.getFourCurrentCards()) {
+                playerActionParams.put("cardToPickUp", card2);
+                assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, playerActionParams) );
             }
-            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, player, null, null, null));
+            assertFalse(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams));
             
             
         }

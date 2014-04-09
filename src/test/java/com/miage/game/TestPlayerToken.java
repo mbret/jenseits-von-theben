@@ -61,45 +61,6 @@ public class TestPlayerToken {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	
-	/**
-	 * Test of the method compareTo() for pieces
-	 */
-	@Test
-	public void testCompareTo() {
-		
-		
-
-		
-		assertEquals(-1, playerToken1.compareTo(playerToken2));
-		assertEquals(-1, playerToken2.compareTo(playerToken1));
-		
-			
-		playerToken2.addWeeks(1);
-		
-
-
-		assertEquals(-1, playerToken1.compareTo(playerToken2));
-		assertEquals(1, playerToken2.compareTo(playerToken1));
-		
-		
-		
-		playerToken1.addWeeks(2);
-
-		
-		assertEquals(1, playerToken1.compareTo(playerToken2));
-		assertEquals(-1, playerToken2.compareTo(playerToken1));
-		
-
-		
-		playerToken2.addWeeks(1);
-		
-		
-		assertEquals(-1, playerToken1.compareTo(playerToken2));
-		assertEquals(-1, playerToken2.compareTo(playerToken1));
-		
-	}
 	
 	
 	

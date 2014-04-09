@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 
  * @author maxime
  */
-public class PlayerToken implements Comparable,Serializable{
+public class PlayerToken implements Comparable, Serializable{
 	
 	private String color;
         
@@ -24,10 +24,21 @@ public class PlayerToken implements Comparable,Serializable{
          */
 	private LocalDate timeState;
 	
-        
+        /**
+         * Use this constructeur when you do not need the complete init of the token
+         * @param color 
+         */
 	public PlayerToken(String color){
             this.color = color; 
 	}
+
+        public PlayerToken(String color, Area position, LocalDate timeState) {
+            this.color = color;
+            this.position = position;
+            this.timeState = timeState;
+        }
+        
+        
 
         /**
          * @author maxime
@@ -55,32 +66,36 @@ public class PlayerToken implements Comparable,Serializable{
 	public void setTimeState(LocalDate timeState) {
 		this.timeState = timeState;
 	}
+
+        @Override
+        public String toString() {
+            return "PlayerToken{" + "color=" + color + ", position=" + position + ", timeState=" + timeState + '}';
+        }
 	
 
 
-	public String toString(){
-		return "Piece coloured "+this.getColor()+" positioned in "+this.getPosition().toString();
-	}
+	
 
 	/**
 	 * @author Gael
 	 * Compare 2 pieces depending on their timeState
+         * <br/>If the coming token has the same position no token move
+         * <br/>If the coming token has a upper position then it move after this token
+         * <br/>If the coming token has a lower position it move before
 	 * @param o Object to compare
 	 * @return -1 if the timeState of this is <= timeState of p, else 1
 	 */
 	public int compareTo(Object o) {
-		
 		int result;
-		
 		PlayerToken p = (PlayerToken) o;
-		
 		if(this.getTimeState().isAfter(p.getTimeState()))
-			result = 1;
-		else
-			result = -1;
-			
-		
-		
+                    result = 1;
+                else if(this.getTimeState().equals( p.getTimeState() )){
+                    result = 0;
+                }
+                else{
+                    result = -1;
+                }
 		return result;
 	}
 	

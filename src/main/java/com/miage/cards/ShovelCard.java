@@ -2,18 +2,17 @@
 
 package com.miage.cards;
 
-import Interface.CombinableElement;
-import Interface.DiscardableElement;
-import Interface.UsableElement;
-import java.util.HashMap;
+import com.miage.interfaces.CombinableElement;
+import com.miage.interfaces.DiscardableElement;
+import com.miage.interfaces.UsableElement;
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  *
  * @author maxime
  */
-public class ShovelCard extends Card implements UsableElement, CombinableElement, DiscardableElement{
-public class ShovelCard extends Card implements Serializable{
+public class ShovelCard extends Card implements UsableElement, CombinableElement, DiscardableElement, Serializable{
 
     
     private static HashMap<Integer, Integer> values = new HashMap(){{

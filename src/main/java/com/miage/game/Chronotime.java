@@ -3,6 +3,7 @@ package com.miage.game;
 
 import com.miage.config.ConfigManager;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -10,9 +11,9 @@ import java.util.Properties;
  *
  * @author Maxime
  */
-public class Chronotime {
+public class Chronotime implements Serializable{
     
-    private HashMap<Integer, HashMap<Integer, Integer>> values;
+    private HashMap<Integer, HashMap<Integer, Integer>> values ;
 
     /**
      * <br/>- Init the inner chronotimes values with the config manager

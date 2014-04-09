@@ -2,32 +2,50 @@
 
 package com.miage.cards;
 
-import Interface.CombinableElement;
-import Interface.KnowledgeElement;
-import Interface.UsableElement;
-import java.util.HashMap;
+import com.miage.areas.Area;
+import com.miage.interfaces.CombinableElement;
+import com.miage.interfaces.DiscardableElement;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.interfaces.UsableElement;
 import java.io.Serializable;
+import java.util.HashMap;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
- *
+ * AssistantCard represent the cards assistant. These cards are combinable. It means that the user can use several of this card simultaneously.
+ * 
+ * <p><b>Please note that this card is combinable, it means that it has some special behaviors. Check all method rigorously</b></p>
+ * 
  * @author maxime
+ * 
  */
-public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, UsableElement{
-public class AssistantCard extends Card implements Serializable{
+public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, UsableElement, Serializable{
 
+    private final static Logger LOGGER = LogManager.getLogger(AssistantCard.class.getName());
     
+    /**
+     * Represent the values earned depending of how many of this card are combinated
+     */
     private static final HashMap<Integer, Integer> values = new HashMap(){{
         this.put(2, 1); // two assistants
         this.put(3, 2); // three assistants
     }};
     
+    /**
+     * 
+     * @param id
+     * @param displayName
+     * @param areaName
+     * @param weekCost 
+     */
     public AssistantCard(int id, String displayName, String areaName, int weekCost) {
         super(displayName, areaName, id, weekCost);
     }
 
     
     /**
-     * Special behavior here
+     * 
      * @return 
      */
     @Override
@@ -35,8 +53,13 @@ public class AssistantCard extends Card implements Serializable{
         return true;
     }
     
+    /**
+     * Check if the card is discardable when this card is combinated with x of itself
+     * @param nbCombinatedElement
+     * @return boolean
+     */
     public boolean isDiscardableWhenCombinated( int nbCombinatedElement ) {
-        return nbCombinatedElement <= 1;
+        return nbCombinatedElement <= 1; // if <= 1 then discardable otherwise, never !
     }
 
     @Override
@@ -45,17 +68,20 @@ public class AssistantCard extends Card implements Serializable{
     }
 
     /**
-     * // 2 -> 2            2%3 = 2
-     * // 3 -> 3
-     * // 4 -> 2 + 2        4%3 = 1
-     * // 5 -> 3 + 2        5%3 = 2
-     * // 6 -> 3 + 3        6%3 = 0
-     * // 7 -> 3 + 2 + 2    7%3 = 1
-     * // 8 -> 3 + 3 + 2    8%3 = 2
+     * Return the number of knowledge the combinate assistant cards allow the player to use
+     * <br/>Effect:
+     * <br/>- Check the number of combinate cards and calculate the points with the HashMap values
      * @param nbOfThisElementCombined
-     * @return 
+     * @return int
      */
     public static int getKnowLedgePointsWhenCombinated( int nbOfThisElementCombined ){
+        /**
+         * These calculs are based on the modulo.
+         * If x % 3 give 2 then there is one pair of 2
+         * if x % 3 give 1 then there are two pair of 2
+         * if x % 3 give 0 then there are only pair of 3
+         * The following calcul check this result and calculate how many maximum of pair of 3 we can use
+         */
         if( nbOfThisElementCombined == 0){
             return 0;
         }
