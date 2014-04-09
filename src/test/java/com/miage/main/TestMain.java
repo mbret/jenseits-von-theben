@@ -92,7 +92,7 @@ public class TestMain {
             LogDisplay.cleanLogBackup();
             LogDisplay.displayAction(board,"move",new TouristicArea(1,"paris"));
             
-            main.saveGame(board,"save");
+            main.saveGame(board);
             
             assertEquals(board.getLogDisplay(),tempDate+" maxime se déplace sur paris.");
             boolean testReussi;
@@ -116,7 +116,7 @@ public class TestMain {
             Board board;
             Main main = new Main();
             LogDisplay.cleanLogBackup();
-            board = main.loadGame("save.boobs");
+            board = main.loadGame();
             Set<PlayerToken> playersTokens =  board.getPlayerTokensAndPlayers().keySet();
             HashMap<PlayerToken, Player> playerTokensAndPlayers = board.getPlayerTokensAndPlayers();
             for(PlayerToken pt : playersTokens){
