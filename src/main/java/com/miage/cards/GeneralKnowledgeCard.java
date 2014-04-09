@@ -19,12 +19,14 @@ package com.miage.cards;
 
 import Interface.KnowledgeElement;
 import Interface.UsableElement;
+import java.io.Serializable;
 
 /**
  * 
  * @author maxime
  */
 public class GeneralKnowledgeCard extends Card implements KnowledgeElement, UsableElement{
+public class GeneralKnowledgeCard extends Card implements Serializable{
 	
     /**
      * 

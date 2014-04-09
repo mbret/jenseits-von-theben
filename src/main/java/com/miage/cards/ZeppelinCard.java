@@ -2,11 +2,13 @@
 
 package com.miage.cards; 
 
+import java.io.Serializable;
+
 /**
  * Allow the user to remove cost of one travel
  * @author maxime
  */
-public class ZeppelinCard extends Card{
+public class ZeppelinCard extends Card implements Serializable{
 
     
     public ZeppelinCard(int id, String displayName, String areaName, int weekCost) {

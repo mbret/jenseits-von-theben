@@ -6,12 +6,14 @@ import Interface.CombinableElement;
 import Interface.KnowledgeElement;
 import Interface.UsableElement;
 import java.util.HashMap;
+import java.io.Serializable;
 
 /**
  *
  * @author maxime
  */
 public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, UsableElement{
+public class AssistantCard extends Card implements Serializable{
 
     
     private static final HashMap<Integer, Integer> values = new HashMap(){{

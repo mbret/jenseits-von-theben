@@ -2,6 +2,7 @@
 
 package com.miage.areas;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 
@@ -11,7 +12,7 @@ import java.util.HashMap;
  * @author maxime
  * @version 1.0
  */
-public abstract class Area {
+public abstract class Area implements Serializable {
 
     /**
      * Used as id from .properties

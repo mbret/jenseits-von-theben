@@ -6,12 +6,14 @@ import Interface.CombinableElement;
 import Interface.DiscardableElement;
 import Interface.UsableElement;
 import java.util.HashMap;
+import java.io.Serializable;
 
 /**
  *
  * @author maxime
  */
 public class ShovelCard extends Card implements UsableElement, CombinableElement, DiscardableElement{
+public class ShovelCard extends Card implements Serializable{
 
     
     private static HashMap<Integer, Integer> values = new HashMap(){{
