@@ -105,7 +105,7 @@ public class Board {
         this.startGameDatePosition = LocalDate.of(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), Integer.parseInt(tmp[2]));
         
         for (Player player : players){
-            player.getPlayerToken().setPosition( this.areas.get("warsaw")); // set started area for playertoken
+            player.getPlayerToken().setPosition( this.areas.get("warsaw") ); // set started area for playertoken
             player.getPlayerToken().setTimeState( this.startGameDatePosition ); // init date of token
             this.playerTokenStack.addPlayerToken(player.getPlayerToken() ); // set stack of playertoken
             this.playerTokensAndPlayers.put( player.getPlayerToken(), player); // set the link between player and playerTokens

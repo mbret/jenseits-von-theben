@@ -9,6 +9,7 @@ import com.miage.game.*;
 import com.miage.tokens.Token;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,163 +20,46 @@ import java.util.Set;
  */
 public class MapPanel extends javax.swing.JPanel {
 
-    private Board b;
-    private Player p1;
-    private Player p2;
-    private Player p3;
-    private Player p4;
-    private Player currentP;
-    private PlayerToken pt1;
-    private PlayerToken pt2;
-    private PlayerToken pt3;
-    private PlayerToken pt4;
+    private Board currentBoard;
+    private Player currentPlayer;
+    private Player player1;
+    private Player player2;
+    private Player player3;
+    private Player player4;
+    private PlayerToken playerToken1;
+    private PlayerToken playerToken2;
+    private PlayerToken playerToken3;
+    private PlayerToken playerToken4;
     private ArrayList<Card> ar;
     private ArrayList<Token> art;
 
     /**
      * Creates new form MapPanel
      */
-    public MapPanel() throws IOException {
+    public MapPanel(Board board) throws IOException {
         initComponents();
+        this.currentBoard = board;
+        this.setPlayerAndPlayerToken(board);
         menuCardsPlayer.setVisible(false);
         displayedCardTokenPanel.setVisible(false);
-        ar = new ArrayList<Card>();
-        pt1 = new PlayerToken("Blue");
-        p1 = new Player("Rouch", pt1);
-        pt2 = new PlayerToken("Green");
-        p2 = new Player("Gal", pt2);
-        Set<Player> player = new HashSet<Player>();
-        player.add(p1);
-        player.add(p2);
-        initialiseBoard(2, player);
-        
-//        ar.add(new AssistantCard(16, "assistant", "paris", 2));
-//        ar.add(new AssistantCard(21, "assistant", "roma", 2));
-//        ar.add(new AssistantCard(19, "assistant", "vienna", 2));
-//        ar.add(new AssistantCard(17, "assistant", "paris", 2));
-//        ar.add(new AssistantCard(18, "assistant", "roma", 2));
-//        ar.add(new AssistantCard(20, "assistant", "vienna", 2));
-//        ar.add(new CarCard(5, "car", "moscow", 1));
-//        ar.add(new CarCard(6, "car", "roma", 1));
-//        ar.add(new ZeppelinCard(3, "zeppelin", "roma", 1));
-//        ar.add(new ZeppelinCard(4, "zeppelin", "vienna", 1));
-//        ar.add(new CongressCard(7, "congress", "london", 2));
-//        ar.add(new CongressCard(8, "congress", "paris", 2));
-//        ar.add(new CongressCard(9, "congress", "berlin", 2));
-//        ar.add(new CongressCard(10, "congress", "vienna", 2));
-//        ar.add(new CongressCard(11, "congress", "moscow", 2));
-//        ar.add(new CongressCard(12, "congress", "paris", 2));
-//        ar.add(new CongressCard(13, "congress", "berlin", 2));
-//        ar.add(new CongressCard(14, "congress", "vienna", 2));
-//        ar.add(new CongressCard(15, "congress", "moscow", 2));
-//        ar.add(new EthnologicalKnowledgeCard(81, "ethno", "moscow", 1, 2, "greece"));
-//        ar.add(new EthnologicalKnowledgeCard(82, "ethno", "paris", 1, 2, "crete"));
-//        ar.add(new EthnologicalKnowledgeCard(83, "ethno", "rom", 1, 2, "egypt"));
-//        ar.add(new EthnologicalKnowledgeCard(84, "ethno", "vienna", 1, 2, "palestine"));
-//        ar.add(new EthnologicalKnowledgeCard(85, "ethno", "berlin", 1, 2, "mesopotamia"));
-//        ar.add(new ExcavationAuthorizationCard(1, "excavation", "london", 3));
-//        ar.add(new ExcavationAuthorizationCard(2, "excavation", "moscow", 3));
-//        ar.add(new ExpoCard(86, "expo", "london", 4, true, 5));
-//        ar.add(new ExpoCard(91, "expo", "london", 3, false, 4));
-//        ar.add(new ExpoCard(87, "expo", "paris", 4, true, 5));
-//        ar.add(new ExpoCard(92, "expo", "paris", 3, false, 4));
-//        ar.add(new ExpoCard(88, "expo", "berlin", 4, true, 5));
-//        ar.add(new ExpoCard(93, "expo", "berlin", 3, false, 4));
-//        ar.add(new ExpoCard(89, "expo", "vienna", 4, true, 5));
-//        ar.add(new ExpoCard(94, "expo", "vienna", 3, false, 4));
-//        ar.add(new ExpoCard(90, "expo", "moscow", 4, true, 5));
-//        ar.add(new ExpoCard(95, "expo", "moscow", 3, false, 4));
-//        ar.add(new ShovelCard(22, "shovel", "london", 3));
-//        ar.add(new ShovelCard(23, "shovel", "rom", 3));
-//        ar.add(new ShovelCard(24, "shovel", "moscow", 3));
-//        ar.add(new ShovelCard(25, "shovel", "london", 3));
-//        ar.add(new ShovelCard(26, "shovel", "roma", 3));
-//        ar.add(new ShovelCard(27, "shovel", "moscow", 3));
-//        ar.add(new GeneralKnowledgeCard(28, "genKnow", "paris", 3, 1));
-//        ar.add(new GeneralKnowledgeCard(29, "genKnow", "paris", 3, 1));
-//        ar.add(new GeneralKnowledgeCard(30, "genKnow", "roma", 3, 1));
-//        ar.add(new GeneralKnowledgeCard(31, "genKnow", "berlin", 3, 1));
-//        ar.add(new GeneralKnowledgeCard(32, "genKnow", "berlin", 6, 2));
-//        ar.add(new GeneralKnowledgeCard(33, "genKnow", "vienna", 6, 2));
-//        ar.add(new GeneralKnowledgeCard(34, "genKnow", "roma", 6, 2));
-//        ar.add(new GeneralKnowledgeCard(35, "genKnow", "moscow", 6, 2));
-//        ar.add(new SpecificKnowledgeCard(36, "specKnow", "roma", 1, 1, "greece"));
-//        ar.add(new SpecificKnowledgeCard(37, "specKnow", "roma", 2, 2, "greece"));
-//        ar.add(new SpecificKnowledgeCard(38, "roma", 2, 2, "greece"));
-//        ar.add(new SpecificKnowledgeCard(39, "berlin", 1, 1, "greece"));
-//        ar.add(new SpecificKnowledgeCard(40, "berlin", 4, 3, "greece"));
-//        ar.add(new SpecificKnowledgeCard(41, "vienna", 1, 1, "greece"));
-//        ar.add(new SpecificKnowledgeCard(42, "moscow", 1, 1, "greece"));
-//        ar.add(new SpecificKnowledgeCard(43, "specKnow", "london", 2, 2, "greece"));
-//        ar.add(new SpecificKnowledgeCard(44, "specKnow", "london", 4, 3, "greece"));
-//        ar.add(new SpecificKnowledgeCard(45, "specKnow", "berlin", 1, 1, "crete"));
-//        ar.add(new SpecificKnowledgeCard(46, "berlin", 1, 1, "crete"));
-//        ar.add(new SpecificKnowledgeCard(47, "paris", 1, 1, "crete"));
-//        ar.add(new SpecificKnowledgeCard(48, "vienna", 1, 1, "crete"));
-//        ar.add(new SpecificKnowledgeCard(49, "paris", 2, 2, "crete"));
-//        ar.add(new SpecificKnowledgeCard(50, "specKnow", "vienna", 2, 2, "crete"));
-//        ar.add(new SpecificKnowledgeCard(51, "specKnow", "roma", 2, 2, "crete"));
-//        ar.add(new SpecificKnowledgeCard(52, "specKnow", "moscow", 4, 3, "crete"));
-//        ar.add(new SpecificKnowledgeCard(53, "specKnow", "moscow", 4, 3, "crete"));
-//        ar.add(new SpecificKnowledgeCard(54, "specKnow", "roma", 1, 1, "egypt"));
-//        ar.add(new SpecificKnowledgeCard(55, "specKnow", "paris", 1, 1, "egypt"));
-//        ar.add(new SpecificKnowledgeCard(56, "paris", 1, 1, "egypt"));
-//        ar.add(new SpecificKnowledgeCard(57, "moscow", 1, 1, "egypt"));
-//        ar.add(new SpecificKnowledgeCard(58, "berlin", 2, 2, "egypt"));
-//        ar.add(new SpecificKnowledgeCard(59, "berlin", 2, 2, "egypt"));
-//        ar.add(new SpecificKnowledgeCard(60, "specKnow", "london", 2, 2, "egypt"));
-//        ar.add(new SpecificKnowledgeCard(61, "specKnow", "london", 4, 3, "egypt"));
-//        ar.add(new SpecificKnowledgeCard(62, "specKnow", "moscow", 4, 3, "egypt"));
-//        ar.add(new SpecificKnowledgeCard(63, "specKnow", "vienna", 1, 1, "palestine"));
-//        ar.add(new SpecificKnowledgeCard(64, "vienna", 1, 1, "palestine"));
-//        ar.add(new SpecificKnowledgeCard(65, "vienna", 1, 1, "palestine"));
-//        ar.add(new SpecificKnowledgeCard(66, "roma", 1, 1, "palestine"));
-//        ar.add(new SpecificKnowledgeCard(67, "specKnow", "paris", 2, 2, "palestine"));
-//        ar.add(new SpecificKnowledgeCard(68, "specKnow", "berlin", 2, 2, "palestine"));
-//        ar.add(new SpecificKnowledgeCard(69, "specKnow", "london", 2, 2, "palestine"));
-//        ar.add(new SpecificKnowledgeCard(70, "specKnow", "london", 4, 3, "palestine"));
-//        ar.add(new SpecificKnowledgeCard(71, "specKnow", "paris", 4, 3, "palestine"));
-//        ar.add(new SpecificKnowledgeCard(72, "specKnow", "paris", 1, 1, "mesopotamia"));
-//        ar.add(new SpecificKnowledgeCard(73, "specKnow", "roma", 1, 1, "mesopotamia"));
-//        ar.add(new SpecificKnowledgeCard(74, "moscow", 1, 1, "mesopotamia"));
-//        ar.add(new SpecificKnowledgeCard(75, "moscow", 1, 1, "mesopotamia"));
-//        ar.add(new SpecificKnowledgeCard(76, "london", 2, 2, "mesopotamia"));
-//        ar.add(new SpecificKnowledgeCard(77, "london", 2, 2, "mesopotamia"));
-//        ar.add(new SpecificKnowledgeCard(78, "specKnow", "vienna", 2, 2, "mesopotamia"));
-//        ar.add(new SpecificKnowledgeCard(79, "specKnow", "moscow", 4, 3, "mesopotamia"));
-//        ar.add(new SpecificKnowledgeCard(80, "specKnow", "london", 4, 3, "mesopotamia"));
-//        art = new ArrayList<Token>();
-//        art.add(new Token("1A", "crete", "purple") {});
-//        art.add(new Token("1B", "crete", "purple") {});
-//        art.add(new Token("1C", "crete", "purple") {});
-//        art.add(new Token("2A", "crete", "purple") {});
-//        art.add(new Token("2B", "crete", "purple") {});
-//        art.add(new Token("3A", "crete", "purple") {});
-//        art.add(new Token("3B", "crete", "purple") {});
-//        art.add(new Token("3C", "crete", "purple") {});
-//        art.add(new Token("3D", "crete", "purple") {});
-//        art.add(new Token("4A", "crete", "purple") {});
-//        art.add(new Token("4B", "crete", "purple") {});
-//        art.add(new Token("4C", "crete", "purple") {});
-//        art.add(new Token("5A", "crete", "purple") {});
-//        art.add(new Token("genKnow", "crete", "purple") {});
-//        art.add(new Token("scienKnow", "crete", "purple") {});
-//        art.add(new Token("2B", "egypt", "yellow") {});
-//        art.add(new Token("genKnow", "egypt", "yellow") {});
-//        art.add(new Token("3A", "greece", "orange") {});
-//        art.add(new Token("scienKnow", "greece", "orange") {});
-//        art.add(new Token("4C", "mesopotamia", "blue") {});
-//        art.add(new Token("1E", "mesopotamia", "blue") {});
-//        art.add(new Token("6A", "palestine", "green") {});
-//        art.add(new Token("7A", "palestine", "green") {});
-//        p1.setCards(ar);
-//        p1.setTokens(art);
+        if (currentBoard.getPlayerTokensAndPlayers().size() < menuCardsPlayer.getTabCount()) {
+            for (int i = menuCardsPlayer.getTabCount() - 1; i >= currentBoard.getPlayerTokensAndPlayers().size(); i--) {
+                menuCardsPlayer.remove(i);
+            }
+        }
+        int curNb = 0;
+        for (PlayerToken tok : currentBoard.getPlayerTokensAndPlayers().keySet()) {
+            menuCardsPlayer.setSelectedIndex(curNb);
+            menuCardsPlayer.setTitleAt(curNb, currentBoard.getPlayerTokensAndPlayers().get(tok).getName());
+            curNb++;
+        }
+        menuCardsPlayer.setSelectedIndex(0);
+        this.getPlayerTab(menuCardsPlayer);
         playerPanel.setVisible(false);
-        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + b.getFourCurrentCards()[0].getId() + ".jpg")));
-//        boardCard1Label.setName(""+b.getFourCurrentCards()[0].getId());
-        boardCard2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + b.getFourCurrentCards()[1].getId() + ".jpg")));
-        boardCard3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + b.getFourCurrentCards()[2].getId() + ".jpg")));
-        boardCard4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + b.getFourCurrentCards()[3].getId() + ".jpg")));
+        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[0].getId() + ".jpg")));
+        boardCard2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[1].getId() + ".jpg")));
+        boardCard3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[2].getId() + ".jpg")));
+        boardCard4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[3].getId() + ".jpg")));
     }
 
     /**
@@ -491,68 +375,71 @@ public class MapPanel extends javax.swing.JPanel {
         backgroundLabel.setEnabled(false);
     }//GEN-LAST:event_arrowMenuLabelMouseEntered
 
-    private void initialiseBoard(int nbJoueur,Set<Player> p ) throws IOException {
-        b = new Board(nbJoueur, p);
-        if (nbJoueur < menuCardsPlayer.getTabCount()) {
-            for (int i = menuCardsPlayer.getTabCount() - 1; i >= nbJoueur; i--) {
-                menuCardsPlayer.remove(i);
-            }
+    private void setPlayerAndPlayerToken(Board board) {
+        ArrayList<Player>  allPlayer = (ArrayList<Player>) currentBoard.getPlayerTokensAndPlayers().values();
+        ArrayList<PlayerToken> allPlayerToken = (ArrayList<PlayerToken>) currentBoard.getPlayerTokensAndPlayers().keySet();
+        player1 = allPlayer.get(0);
+        player2 = allPlayer.get(1);
+        playerToken1 = allPlayerToken.get(0);
+        playerToken2 = allPlayerToken.get(1);
+        if (allPlayer.size() == 3 && allPlayerToken.size() == 3) {
+            player3 = allPlayer.get(2);
+            playerToken3 = allPlayerToken.get(2);
         }
-        b.setCurrentPlayerToken(pt1);
-        int curNb = 0;
-        for (PlayerToken tok : b.getPlayerTokensAndPlayers().keySet()) {
-            menuCardsPlayer.setSelectedIndex(curNb);
-            menuCardsPlayer.setTitleAt(curNb, b.getPlayerTokensAndPlayers().get(tok).getName());
-            curNb++;
+        if (allPlayer.size() == 4 && allPlayerToken.size() == 4) {
+            player4 = allPlayer.get(3);
+            playerToken4 = allPlayerToken.get(3);
         }
-        menuCardsPlayer.setSelectedIndex(0);
-        this.getPlayerTab(menuCardsPlayer);
     }
 
     private void displayPlayerCard(Class cl) {
-        displayedCardTokenPanel.setVisible(true);
-        for (Card c : getPlayerTab(menuCardsPlayer).getCards()) {
-            if (c.getClass().getName().equals(cl.getName())) {
-                javax.swing.JLabel imageCard = new javax.swing.JLabel();
-                imageCard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
-                displayedCardTokenPanel.add(imageCard);
+        if (getPlayerTab(menuCardsPlayer).getCards().isEmpty()) {
+            displayedCardTokenPanel.setVisible(true);
+            for (Card c : getPlayerTab(menuCardsPlayer).getCards()) {
+                if (c.getClass().getName().equals(cl.getName())) {
+                    javax.swing.JLabel imageCard = new javax.swing.JLabel();
+                    imageCard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + c.getId() + ".jpg")));
+                    displayedCardTokenPanel.add(imageCard);
+                }
             }
+            displayedCardTokenPanel.updateUI();
         }
-        displayedCardTokenPanel.updateUI();
     }
 
     private void displayPlayerAreaToken(String color) {
-        displayedCardTokenPanel.setVisible(true);
-        for (Token t : getPlayerTab(menuCardsPlayer).getTokens()) {
-            if (t.getColor().equals(color)) {
-                javax.swing.JLabel imageToken = new javax.swing.JLabel();
-                imageToken.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/" + t.getAreaName() + "/" + t.getId() + ".png")));
-                displayedCardTokenPanel.add(imageToken);
+        if (getPlayerTab(menuCardsPlayer).getTokens().size() >0) {
+            displayedCardTokenPanel.setVisible(true);
+            for (Token t : getPlayerTab(menuCardsPlayer).getTokens()) {
+                if (t.getColor().equals(color)) {
+                    javax.swing.JLabel imageToken = new javax.swing.JLabel();
+                    imageToken.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/" + t.getAreaName() + "/" + t.getId() + ".png")));
+                    displayedCardTokenPanel.add(imageToken);
+                }
             }
+            displayedCardTokenPanel.updateUI();
         }
-        displayedCardTokenPanel.updateUI();
     }
 
     private Player getPlayerTab(javax.swing.JTabbedPane tp) {
         switch (tp.getSelectedIndex()) {
             case 0:
-                b.setCurrentPlayerToken(pt1);
-                currentP = b.getPlayerByToken(pt1);
+                currentBoard.setCurrentPlayerToken(playerToken1);
+                currentPlayer = player1;
                 break;
             case 1:
-                b.setCurrentPlayerToken(pt2);
-                currentP = b.getPlayerByToken(pt2);
+                currentBoard.setCurrentPlayerToken(playerToken2);
+                currentPlayer = player2;
                 break;
             case 2:
-                b.setCurrentPlayerToken(pt3);
-                currentP = b.getPlayerByToken(pt3);
+                currentBoard.setCurrentPlayerToken(playerToken3);
+                currentPlayer = player3;
                 break;
             case 3:
-                b.setCurrentPlayerToken(pt4);
-                currentP = b.getPlayerByToken(pt4);
+                currentBoard.setCurrentPlayerToken(playerToken4);
+                currentPlayer = player4;
                 break;
         }
-        return currentP;
+        return currentPlayer;
     }
 
     private void clearDiplayedCardPlayer() {
@@ -690,12 +577,11 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
     private void boardCard1LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard1LabelMouseClicked
-        System.out.println(" " + currentP.toString());
-        ar.add(b.getFourCurrentCards()[0]);
-        currentP.pickCard(b, 0);
-        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + b.getFourCurrentCards()[0].getId() + ".jpg")));
+        System.out.println(" " + currentPlayer.toString());
+        ar.add(currentBoard.getFourCurrentCards()[0]);
+        currentPlayer.pickCard(currentBoard, 0);
+        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards()[0].getId() + ".jpg")));
     }//GEN-LAST:event_boardCard1LabelMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowMenuLabel;
     private javax.swing.JLabel backgroundLabel;

@@ -155,4 +155,6 @@ public class Deck extends LinkedList<Card>{
             return new Card[]{ this.pick(), this.pick(), this.pick(), this.pick()};
         }
         
+       
+        
 }
