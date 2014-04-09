@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 
  * @author maxime
  */
-public class GeneralKnowledgeCard extends Card implements Serializable, KnowledgeElement, UsableElement{
+public class GeneralKnowledgeCard extends Card implements Serializable, KnowledgeElement{
 	
     /**
      * 

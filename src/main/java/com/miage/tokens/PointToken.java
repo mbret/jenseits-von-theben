@@ -7,6 +7,7 @@ import java.util.Objects;
 
 /**
  * A point token can be empty or with a value
+ * 
  * @author maxime
  */
 public class PointToken extends Token implements Serializable{

@@ -141,9 +141,10 @@ public class Main {
                 playerActionParams.put("expoCard", board.getExpoCards().get( 1 )); // the player do the second expo card
                 playerActionParams.put("areaToExcavate", (ExcavationArea)board.getAreas().get( "egypt" )); // the player decide to excavate egypt area
                 // Because the player want to excavate we set some active cards
+                currentPlayer.getCards().add( new GeneralKnowledgeCard(0, null, null, 0, 0) );
+                currentPlayer.getTokens().add( new GeneralKnowledgeToken(null, null, null, 1) );
                 ((List<UsableElement>)playerActionParams.get("usedElements")).addAll(Arrays.asList(
-                       new GeneralKnowledgeCard(0, null, null, 0, 0), // player use some specific knowledge card
-                       new GeneralKnowledgeToken(null, null, null, 1), // player use some specific knowledge token
+                       new AssistantCard(0, null, null, 0),
                        new AssistantCard(0, null, null, 0),
                        new EthnologicalKnowledgeCard(0, null, null, 0, 0, null)
                 ));

@@ -266,12 +266,14 @@ public class Board implements Serializable {
      * - check and discard used cards
      * - increment the round a player is still playing
      * @param actionPattern 
-     * @param player 
-     * @param usedCards 
-     * @param areaToExcavate 
-     * @param cardToPickUp 
-     * @param expoCardToDo 
-     * @param usedKnowledgePointElements 
+     * @param playerActionParams
+     * <table border="1">
+     * <tr><td>player</td><td>Provide a Player (required)</td></tr>
+     * <tr><td>areaToExcavate</td><td>Provide an ExcavationArea (required ACTION_EXCAVATE)</td></tr>
+     * <tr><td>cardToPickUp</td><td>Provide a Card to pick up (required ACTION_PICK_CARD)</td></tr>
+     * <tr><td>expoCardToDo</td><td>Provide a ExpoCard to do (required ACTION_ORGANIZE_EXPO)</td></tr>
+     * <tr><td>nbWeeksForExcavation</td><td>Provide an number of weeks the player want to excavate (required ACTION_EXCAVATE)</td></tr>
+     * </table>
      */
     public void doPlayerRoundAction( int actionPattern, HashMap<String, Object> playerActionParams ) throws Exception{
         
@@ -312,11 +314,15 @@ public class Board implements Serializable {
                 if( ! playerActionParams.containsKey("areaToExcavate") || !(playerActionParams.get("areaToExcavate") instanceof ExcavationArea) ){
                     throw new Exception("No areaToExcavate provided, please see the parameters details");
                 }
+                // Check nbWeeksForExcavation parameter
+                if( ! playerActionParams.containsKey("nbWeeksForExcavation") || !(playerActionParams.get("nbWeeksForExcavation") instanceof Integer) ){
+                    throw new Exception("No nbWeeksForExcavation provided, please see the parameters details");
+                }
                 this._actionPlayerDoExcavateArea( 
                         player, 
                         ((ExcavationArea)playerActionParams.get("areaToExcavate")), 
                         knowledgeElements, 
-                        nbWeeksForExcavation, 
+                        ((Integer)playerActionParams.get("nbWeeksForExcavation")), 
                         useZeppelin, 
                         useCarCard, 
                         shovelCards);
@@ -341,7 +347,7 @@ public class Board implements Serializable {
                 }
                 this._actionPlayerDoPickCard( 
                         player, 
-                        this.getFourCurrentCards().indexOf( ((Card)playerActionParams.get("cardToPickUp")) ), 
+                        ((Card)playerActionParams.get("cardToPickUp")), 
                         useZeppelin, 
                         useCarCard );
                 break;
