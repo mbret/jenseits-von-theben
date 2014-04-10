@@ -61,45 +61,6 @@ public class TestPlayerToken {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	
-	/**
-	 * Test of the method compareTo() for pieces
-	 */
-	@Test
-	public void testCompareTo() {
-		
-		
-
-		
-		assertEquals(-1, playerToken1.compareTo(playerToken2));
-		assertEquals(-1, playerToken2.compareTo(playerToken1));
-		
-			
-		playerToken2.addWeeks(1);
-		
-
-
-		assertEquals(-1, playerToken1.compareTo(playerToken2));
-		assertEquals(1, playerToken2.compareTo(playerToken1));
-		
-		
-		
-		playerToken1.addWeeks(2);
-
-		
-		assertEquals(1, playerToken1.compareTo(playerToken2));
-		assertEquals(-1, playerToken2.compareTo(playerToken1));
-		
-
-		
-		playerToken2.addWeeks(1);
-		
-		
-		assertEquals(-1, playerToken1.compareTo(playerToken2));
-		assertEquals(-1, playerToken2.compareTo(playerToken1));
-		
-	}
 	
 	
 	
@@ -159,16 +120,16 @@ public class TestPlayerToken {
 	 * 
 	 */
 	@Test
-	public void testAddWeeksPlayerToken(){
+	public void testAddWeeks(){
 		
 		GeneralKnowledgeCard generalKnowledgeCard = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin",3,1);
 		GeneralKnowledgeCard generalKnowledgeCard2 = new GeneralKnowledgeCard(0,"generalKnowledge", "berlin",6,1);
 		ShovelCard shovelCard = new ShovelCard(0,"shovel", "paris", 3);
 		
 		
-		this.playerToken1.addWeeksPlayerToken(generalKnowledgeCard);
-		this.playerToken1.addWeeksPlayerToken(generalKnowledgeCard2);
-		this.playerToken1.addWeeksPlayerToken(shovelCard);
+		this.playerToken1.addWeeks(generalKnowledgeCard);
+		this.playerToken1.addWeeks(generalKnowledgeCard2);
+		this.playerToken1.addWeeks(shovelCard);
 		
 		
 		assertEquals(this.playerToken1.getCurrentWeek() , 12);

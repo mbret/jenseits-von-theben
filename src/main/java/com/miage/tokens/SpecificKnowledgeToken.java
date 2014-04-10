@@ -2,7 +2,7 @@
 
 package com.miage.tokens;
 
-import Interface.KnowledgeElement;
+import com.miage.interfaces.KnowledgeElement;
 import java.io.Serializable;
 
 /**

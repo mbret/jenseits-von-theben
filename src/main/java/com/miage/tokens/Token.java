@@ -5,11 +5,6 @@ import java.io.Serializable;
 public abstract class Token implements Serializable{
 
     /**
-     * @deprecated 
-     */
-    private final String color;
-
-    /**
      * Name of area where the token can be pick up
      */
     protected final String areaName;
@@ -25,18 +20,6 @@ public abstract class Token implements Serializable{
         this.areaName = areaName;
         this.color = "color";
     }
-    
-    /**
-     * @deprecated 
-     * @param id
-     * @param areaName
-     * @param color 
-     */
-    public Token(String id, String areaName, String color){
-        this.id = id;
-        this.color = color;
-        this.areaName = areaName;
-    }
 
     public String getColor() {
             return color;
@@ -49,10 +32,36 @@ public abstract class Token implements Serializable{
     public String toString(){
             return this.getAreaName()+","+this.getColor();
     }
-    
-    public String getId(){
-        return this.id;
+
+    public String getId() {
+        return id;
     }
 	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * @deprecated 
+     */
+    private final String color;
+    /**
+     * @deprecated 
+     * @param id
+     * @param areaName
+     * @param color 
+     */
+    public Token(String id, String areaName, String color){
+        this.id = id;
+        this.color = color;
+        this.areaName = areaName;
+    }
 	
 }

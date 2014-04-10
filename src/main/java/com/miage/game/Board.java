@@ -1,11 +1,12 @@
 package com.miage.game;
 
-import Interface.DiscardableElement;
-import Interface.KnowledgeElement;
-import Interface.UsableElement;
 import com.miage.areas.*;
 import com.miage.cards.*;
 import com.miage.config.ConfigManager;
+import com.miage.interfaces.CombinableElement;
+import com.miage.interfaces.DiscardableElement;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.interfaces.UsableElement;
 import com.miage.main.Main;
 import com.miage.tokens.*;
 import java.io.FileOutputStream;
@@ -14,12 +15,14 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -53,7 +56,7 @@ public class Board implements Serializable {
      * Stack of player's token
      * The stack allow to define which player should play before others
      */
-    private PlayerTokenStack playerTokenStack;
+    private LinkedList<PlayerToken> playerTokenStack;
 
     /**
      *  List of areas composing the board
@@ -96,6 +99,8 @@ public class Board implements Serializable {
     
     List<Player> playersWhoFinished = new ArrayList();
 
+    
+
     public Board(int nbPlayers, List<Player> players) throws IOException{
         this.nbPlayers = nbPlayers;
         this.areas = new HashMap<>();
@@ -106,7 +111,7 @@ public class Board implements Serializable {
         this.discardingDeck = new Deck();
         this.fourCurrentCards = new LinkedList();
         this._initDecks();
-        this.playerTokenStack = new PlayerTokenStack();
+        this.playerTokenStack = new LinkedList();
         this.playerTokensAndPlayers = new HashMap();
         this.chronotime = new Chronotime();
         this.players = new ArrayList();
@@ -121,7 +126,7 @@ public class Board implements Serializable {
         for (Player player : players){
             player.getPlayerToken().setPosition( this.areas.get("warsaw")); // set started area for playertoken
             player.getPlayerToken().setTimeState( this.startGameDatePosition ); // init date of token
-            this.playerTokenStack.addPlayerToken(player.getPlayerToken() ); // set stack of playertoken
+            this.playerTokenStack.add(player.getPlayerToken() ); // set stack of playertoken
             this.playerTokensAndPlayers.put( player.getPlayerToken(), player); // set the link between player and playerTokens
         }
         this.players.addAll( players );
@@ -146,55 +151,6 @@ public class Board implements Serializable {
      * 
      ***********************************************************************************************/
     
-    /**
-     * Returns the card picked
-     * <br/>Effect:
-     * <br/>- pick desired card on the board
-     * <br/>- replace new card from deck on the same place
-     * <br/>- update expoCard in case of we pick this kind of card untill we get a non expo card
-     * @author maxime
-     * @param indexOf
-     * @return card picked
-     */
-    public Card pickCardOnBoard( int indexOf ){
-    	Card cardToReturn = this.fourCurrentCards.remove( indexOf );
-    	
-    	Card cardToAddOnTheBoard = null;
-    	do{
-            // If deck is empty we mix discardingDeck and sideDeck together
-            // and we add tese two deck inside the main deck
-            if( this.deck.isEmpty() ){
-                this.discardingDeck.addAll( this.sideDeck );
-                this.sideDeck.clear();
-                this.discardingDeck.mix();
-                this.deck.addAll( this.discardingDeck );
-                this.discardingDeck.clear();
-            }
-            cardToAddOnTheBoard = this.deck.pick();
-            if( cardToAddOnTheBoard instanceof ExpoCard ){
-                addExpoCardOnBoard( (ExpoCard) cardToAddOnTheBoard );
-            }
-        }
-    	while(cardToAddOnTheBoard instanceof ExpoCard);
-    	
-    	this.fourCurrentCards.add( indexOf , cardToAddOnTheBoard); // here we got card or null
-    	
-    	return cardToReturn;
-    }
-    
-    /**
-     * @author Gael
-     * 
-     * when an expo card is picked, this card goes on the expo cards place on the board
-     * 
-     * @param expoCard
-     */
-    public void addExpoCardOnBoard(ExpoCard expoCard){
-    	this.expoCards.add(0, expoCard); // insert new
-        if( this.expoCards.size() > 3 ){
-            this.expoCards.remove( 3 ); // remove the old third element
-        }
-    }
     
     /**
      * Change the fourth current card on the board
@@ -205,7 +161,7 @@ public class Board implements Serializable {
      * @author david
      */
     public void changeFourCurrentCards(){
-        for(int i=0;i<4;i++) this.discardingDeck.add( this.pickCardOnBoard( i ) );
+        for(int i=0;i<4;i++) this.discardingDeck.add( this._pickCardOnBoard( i ) );
     }
 
     /**
@@ -227,7 +183,7 @@ public class Board implements Serializable {
      * @return 
      */
     public Player getUpcomingPlayer(){
-        Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get( this.playerTokenStack.getFirstPlayerToken() );
+        Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get( this.playerTokenStack.getFirst() ); // pop the last player token
         if( this.playersWhoFinished.contains( playerWhoShouldPlayFirst )
                 || this.isPlayerOnTheEndGamePosition( playerWhoShouldPlayFirst )){
             return null;
@@ -266,20 +222,28 @@ public class Board implements Serializable {
     
     /**
      * Do a player round action
-     * - update the state of the game
-     * - check and discard used cards
-     * - increment the round a player is still playing
+     * <br/>Effect:
+     * <br/>- Make the main demanded action
+     * <br/>- Check and discard used combinated cards
+     * <br/>- check and discard other used cards
+     * <br/>- increment the round a player is still playing
      * @param actionPattern 
      * @param playerActionParams
      * <table border="1">
-     * <tr><td>player</td><td>Provide a Player (required)</td></tr>
+     * <tr><td>Player player</td><td>Provide a Player (required)</td></tr>
      * <tr><td>areaToExcavate</td><td>Provide an ExcavationArea (required ACTION_EXCAVATE)</td></tr>
      * <tr><td>cardToPickUp</td><td>Provide a Card to pick up (required ACTION_PICK_CARD)</td></tr>
      * <tr><td>expoCardToDo</td><td>Provide a ExpoCard to do (required ACTION_ORGANIZE_EXPO)</td></tr>
-     * <tr><td>nbWeeksForExcavation</td><td>Provide an number of weeks the player want to excavate (required ACTION_EXCAVATE)</td></tr>
+     * <tr><td>nbTokenToPickUp</td><td>Provide an number of tokens the player can pick up inside area (required ACTION_EXCAVATE)</td></tr>
+     * <tr><td>List<UsableElement> usedElements</td><td>Provide a list of elements the player want to use (not required)</td></tr>
      * </table>
      */
     public void doPlayerRoundAction( int actionPattern, HashMap<String, Object> playerActionParams ) throws Exception{
+        LOGGER.debug("doPlayerRoundAction: pattern="+actionPattern+" playerActionParams="+playerActionParams.toString());
+        /**
+         * Note to developers (find a better way to use discard combinable element
+         * todo ...
+         */
         
         // Check player parameter
         if( ! playerActionParams.containsKey("player") || !(playerActionParams.get("player") instanceof Player) ){
@@ -289,20 +253,22 @@ public class Board implements Serializable {
         
         boolean useZeppelin = false;                                // Does the player is using zeppelin cards ?
         boolean useCarCard = player.hasCarCard();                   // Does the player is using car cards ?
-        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
+//        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         List<ShovelCard> shovelCards = new ArrayList();             // list of ised shovel cards
         
         // We check and iterate over all used elements to get some informations and make more precise list
         List<UsableElement> usedElements;
         try{
-            usedElements = ((List<UsableElement>)playerActionParams.get("usedElement"));
+            usedElements = ((List<UsableElement>)playerActionParams.get("usedElements")); // we verify that the listis ok
+            if( usedElements == null ) usedElements = new ArrayList();
         }
-        catch( NullPointerException | ClassCastException e){
-            throw new Exception("No usedElements provided, please see the parameters details");
+        catch( ClassCastException e){
+            throw new Exception("No usedElements provided or wrong structure, please see the parameters details");
         }
+
         for (UsableElement element : usedElements){
             if( element instanceof ZeppelinCard ) useZeppelin = true;
-            if( element instanceof KnowledgeElement ) knowledgeElements.add( (KnowledgeElement)element );
+//            if( element instanceof KnowledgeElement ) knowledgeElements.add( (KnowledgeElement)element );
             if( element instanceof ShovelCard ) shovelCards.add( (ShovelCard)element );
         }
         
@@ -319,17 +285,16 @@ public class Board implements Serializable {
                     throw new Exception("No areaToExcavate provided, please see the parameters details");
                 }
                 // Check nbWeeksForExcavation parameter
-                if( ! playerActionParams.containsKey("nbWeeksForExcavation") || !(playerActionParams.get("nbWeeksForExcavation") instanceof Integer) ){
-                    throw new Exception("No nbWeeksForExcavation provided, please see the parameters details");
+                if( ! playerActionParams.containsKey("nbTokenToPickUp") || !(playerActionParams.get("nbTokenToPickUp") instanceof Integer) ){
+                    throw new Exception("No nbTokenToPickUp provided, please see the parameters details");
                 }
                 this._actionPlayerDoExcavateArea( 
                         player, 
                         ((ExcavationArea)playerActionParams.get("areaToExcavate")), 
-                        knowledgeElements, 
-                        ((Integer)playerActionParams.get("nbWeeksForExcavation")), 
                         useZeppelin, 
                         useCarCard, 
-                        shovelCards);
+                        shovelCards,
+                        ((Integer)playerActionParams.get("nbTokenToPickUp")));
                 break;
                 
             case Player.ACTION_ORGANIZE_EXPO:
@@ -340,7 +305,7 @@ public class Board implements Serializable {
                 this._actionPlayerDoOrganizeExpo( 
                         player, 
                         ((ExpoCard)playerActionParams.get("expoCardToDo")), 
-                        useZeppelin, 
+                        useZeppelin,
                         useCarCard );
                 break;
                 
@@ -358,22 +323,32 @@ public class Board implements Serializable {
         }
         
         // Check all elements to eventually discard them
-        for (UsableElement element : usedElements){
-            
-            // Case of card
-            if( element instanceof DiscardableElement && element instanceof Card){
-                if( ((DiscardableElement)element).isDiscardable() ){
+        
+        // Because of combinable behaviors we treat assistantCard separatly
+        List<AssistantCard> assistantCards = new ArrayList();
+        for (UsableElement element : usedElements) {
+            if( element instanceof AssistantCard ){
+                assistantCards.add( (AssistantCard)element );
+                usedElements.remove( element );
+            }
+        }
+        // we check the discard of assistant
+        if( assistantCards.size() == 1){
+            player.getCards().remove( assistantCards.get(0) ); // in case we have 1 assistant we discard it
+        }
+        
+        // Discard all other elements
+        for (AssistantCard element : assistantCards) {
+            if( element instanceof DiscardableElement ){
+                // Case of card
+                if( element instanceof Card){
                     this.discardingDeck.add( (Card)element );
                 }
             }
-            
-            // Case of combinable cards
-            // ....
         }
         
         // We increment the number of round this player is still playing
         player.setNbRoundStillPlaying( player.getNbRoundStillPlaying() + 1);
-        throw new UnsupportedOperationException("some operations are missing");
     }
     
     /**
@@ -549,6 +524,7 @@ public class Board implements Serializable {
      */
     private void _actionPlayerDoChangeFourCards( Player player, boolean useZeppelinCard, boolean useCarCard ) {
         player.getPlayerToken().movePlayerToken( this.areas.get("warsaw"), useZeppelinCard, useCarCard);
+        Collections.sort( this.playerTokenStack );
         this.changeFourCurrentCards();
     }
     
@@ -556,24 +532,22 @@ public class Board implements Serializable {
      * Do a round action: excavate area
      * <br/>Effect:
      * <br/>- move the player to the area
-     * <br/>- get all knowledge point available
-     * <br/>- get the number of token the chronotime gives
      * <br/>- Pick the tokens and put in player's hand
-     * <br/>- Add excavation cost to the player token
-     * <br/><b>Use player.getTokensJustPickedUp() to know which tokens has been picked up</b>
+     * <br/>- Add excavation cost to the playerToken
+     * <br/>- Update area already excavate for the user
+     * <br/>- Give to player the point if it's the first excavation of this area
+     * <br/><b>Tips: Use player.getTokensJustPickedUp() to know which tokens has been picked up</b>
      * @param player
      * @param areaToExcavate
      * @param knowledgePointElements 
      */
-    private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, List<KnowledgeElement> usedKnowledgeElements, int nbWeeks, boolean useZeppelinCard, boolean useCarCard, List<ShovelCard> shovelCards  ) {
+    private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, boolean useZeppelinCard, boolean useCarCard, List<ShovelCard> shovelCards, int nbTokenToPickUp  ) {
+        
         // Moving process
         player.getPlayerToken().movePlayerToken( areaToExcavate , useZeppelinCard, useCarCard);
-        
-        // Get all the knowledge points the user want AND is able to use
-        int nbKnowledge = player.getTotalAskedKnowledgePoint(areaToExcavate, usedKnowledgeElements);
-        
+        Collections.sort( this.playerTokenStack );
+
         // Picking token process
-        int nbTokenToPickUp = this.chronotime.getNbTokensToPickUp( nbKnowledge, nbWeeks); // nb tokens the player can Pick Up
         nbTokenToPickUp += ShovelCard.getTokensPointsWhenCombinated( shovelCards.size() ); // get supplementary tokens thanks to the used shovels
         
         player.getTokensJustPickedUp().clear(); // clear the previous round picked tokens
@@ -585,7 +559,14 @@ public class Board implements Serializable {
                 areaToExcavate.getTokenList().remove( pickedToken ); // remove from area
             }
         }
-        throw new UnsupportedOperationException("not implemented yet");
+        
+        // Bonus token for first excavation
+        if( ! areaToExcavate.isAlreadyExcavated( ) ){
+            player.getTokens().add( areaToExcavate.getPointTokenFirstExcavation() );
+        }
+        
+        // update area excavated for player
+        player.addAreaAlreadyExcavate( areaToExcavate.getName() );
     }
     
     /**
@@ -597,7 +578,10 @@ public class Board implements Serializable {
      * @param expoCards 
      */
     private void _actionPlayerDoOrganizeExpo( Player player, ExpoCard expoCardToDo, boolean useZeppelinCard, boolean useCarCard ){
-        player.getPlayerToken().movePlayerToken( this.areas.get(expoCardToDo.getAreaName()) , useZeppelinCard, useCarCard);
+        
+        player.getPlayerToken().movePlayerToken( this.areas.get(expoCardToDo.getAreaName()) , useZeppelinCard, useCarCard );
+        Collections.sort( this.playerTokenStack );
+        
         player.getPlayerToken().addWeeks( expoCardToDo.getWeekCost() );
         player.getCards().add( expoCardToDo );
         this.getExpoCards().remove( expoCardToDo );
@@ -613,10 +597,66 @@ public class Board implements Serializable {
      * @param player 
      */
     private void _actionPlayerDoPickCard( Player player, Card cardToPickUp, boolean useZeppelinCard, boolean useCarCard ){
+        LOGGER.debug("_actionPlayerDoPickCard: cardToPickUp="+cardToPickUp);
+        
         player.getPlayerToken().movePlayerToken( this.getArea( cardToPickUp.getAreaName() ) , useZeppelinCard, useCarCard); // move
-        Card pickedCard = this.pickCardOnBoard( this.fourCurrentCards.indexOf( cardToPickUp ) );
+        Collections.sort( this.playerTokenStack );
+        
+        Card pickedCard = this._pickCardOnBoard( this.fourCurrentCards.indexOf( cardToPickUp ) );
+        
         player.getPlayerToken().addWeeks( pickedCard.getWeekCost() );
         player.getCards().add( pickedCard ); // update player hand
+    }
+    
+    /**
+     * Returns the card picked
+     * <br/>Effect:
+     * <br/>- pick desired card on the board and remove from board
+     * <br/>- replace new card from deck on the same place
+     * <br/>- update expoCard in case of we pick this kind of card untill we get a non expo card
+     * @author maxime
+     * @param indexOf
+     * @return card picked
+     */
+    private Card _pickCardOnBoard( Integer indexOf ){
+        LOGGER.debug("_pickCardOnBoard: indexOf="+indexOf);
+    	Card cardToReturn = this.fourCurrentCards.remove( indexOf.intValue() );
+    	
+    	Card cardToAddOnTheBoard = null;
+    	do{
+            // If deck is empty we mix discardingDeck and sideDeck together
+            // and we add tese two deck inside the main deck
+            if( this.deck.isEmpty() ){
+                this.discardingDeck.addAll( this.sideDeck );
+                this.sideDeck.clear();
+                this.discardingDeck.mix();
+                this.deck.addAll( this.discardingDeck );
+                this.discardingDeck.clear();
+            }
+            cardToAddOnTheBoard = this.deck.pick();
+            if( cardToAddOnTheBoard instanceof ExpoCard ){
+                this._addExpoCardOnBoard( (ExpoCard) cardToAddOnTheBoard );
+            }
+        }
+    	while(cardToAddOnTheBoard instanceof ExpoCard);
+    	
+    	this.fourCurrentCards.add( indexOf , cardToAddOnTheBoard); // here we got card or null
+    	
+    	return cardToReturn;
+    }
+    
+    /**
+     * @author Gael
+     * 
+     * when an expo card is picked, this card goes on the expo cards place on the board
+     * 
+     * @param expoCard
+     */
+    private void _addExpoCardOnBoard( ExpoCard expoCard ){
+    	this.expoCards.add(0, expoCard); // insert new
+        if( this.expoCards.size() > 3 ){
+            this.expoCards.remove( 3 ); // remove the old third element
+        }
     }
     
     /**
@@ -659,7 +699,9 @@ public class Board implements Serializable {
                  */
                 else{
                     String color = entries.get("area." + areaName + ".color" );
-                    newArea = new ExcavationArea(0, areaName, color);
+                    
+                    LinkedList<Token> tokens = new LinkedList();
+                    PointToken pointTokenFirstExcavation = null;
                     
                     /**
                      * Lets fill tokens
@@ -677,7 +719,7 @@ public class Board implements Serializable {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new BlankToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor())); // assign empty point
+                            tokens.add( new BlankToken(id, areaName, color)); // assign empty point
                         }
                     }
                     
@@ -691,10 +733,10 @@ public class Board implements Serializable {
                         id = subSet[0];
                         int value = Integer.parseInt(subSet[1]);
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new PointToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), value ) ); 
+                            tokens.add( new PointToken(id, areaName, color, value ) ); 
                         }
                     }
-
+                    
                     // Set general knowledge tokens (one to each excavation area)
                     String[] generalKnowledgesTokens = ((String)entries.get("area." + areaName + ".generalKnowledgeTokens" )).split("\\|");
                     nbTokens = generalKnowledgesTokens.length;
@@ -703,7 +745,7 @@ public class Board implements Serializable {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new GeneralKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), 1 ) );
+                            tokens.add( new GeneralKnowledgeToken(id, areaName, color, 1 ) );
                         }
                     }
                     
@@ -715,9 +757,22 @@ public class Board implements Serializable {
                         nb = Integer.parseInt(set[1]);
                         id = set[0];
                         for (int j = 0; j < nb; j++) {
-                            ((ExcavationArea)newArea).addToken( new SpecificKnowledgeToken(id, newArea.getName(), ((ExcavationArea)newArea).getCodeColor(), 1 ) );
+                            tokens.add( new SpecificKnowledgeToken(id, areaName, color, 1 ) );
                         }
                     }
+                    
+                    Collections.shuffle( tokens );
+                    
+                    // We take one point token to put as special token for first excavation
+                    for (Token token : tokens) {
+                        if( token instanceof PointToken && ((PointToken)token).getValue().equals(1) ){
+                            pointTokenFirstExcavation = (PointToken)token;
+                            tokens.remove( token );
+                            break;
+                        }
+                    }
+                    
+                    newArea = new ExcavationArea(0, areaName, color, tokens, pointTokenFirstExcavation);
                 }
                 
                 /**
@@ -854,7 +909,8 @@ public class Board implements Serializable {
         this.fourCurrentCards.add( firstDeck.pick() );
         this.fourCurrentCards.add( firstDeck.pick() );
         this.fourCurrentCards.add( firstDeck.pick() );
-        
+        LOGGER.debug("_initDecks: fourCurrentCards="+this.fourCurrentCards);
+                
         Deck[] dividedDecks;
 
         if(nbPlayers <= 2){
@@ -988,6 +1044,11 @@ public class Board implements Serializable {
     public List<Player> getPlayers() {
         return players;
     }
+
+    public Chronotime getChronotime() {
+        return chronotime;
+    }
+    
     
     
     

@@ -4,6 +4,8 @@ package com.miage.areas;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -14,6 +16,8 @@ import java.util.HashMap;
  */
 public abstract class Area implements Serializable {
 
+    private final static Logger LOGGER = LogManager.getLogger(Area.class.getName());
+    
     /**
      * Used as id from .properties
      * used to retrieve the image file
@@ -70,21 +74,32 @@ public abstract class Area implements Serializable {
      * return the table of steps between two areas
      * 
      * @param nameOfDestinationArea
-     * @return
+     * @return String[]
      */
     public String[] getDistanceAreasSteps(String nameOfDestinationArea){
-    	return this.distances.get(nameOfDestinationArea);
+        LOGGER.debug("getDistanceAreasSteps: from " + this.name + " to " + nameOfDestinationArea);
+        String[] steps = this.distances.get(nameOfDestinationArea);
+        LOGGER.debug("getDistanceAreasSteps: nbSteps = " + steps.length);
+    	return steps;
     }
     
     /**
      * Return the weekcost between this area and the provided area
      * 
      * @param destinationAreaName
-     * @return 
+     * @return int
      */
     public int getDistanceWeekCostTo( String destinationAreaName ){
-        if(destinationAreaName.equals(this.name)) return 0;
-        return this.distances.get( destinationAreaName ).length + 1; // lengh of steps + the last (destinationAreaName)
+        LOGGER.debug("getDistanceWeekCostTo: from " + this.name + " to " + destinationAreaName);
+        int value;
+        if(destinationAreaName.equals(this.name)){
+            value = 0;
+        }
+        else{
+            value = this.distances.get( destinationAreaName ).length + 1; // lengh of steps + the last (destinationAreaName)
+        }
+        LOGGER.debug("getDistanceWeekCostTo: cost = " + value);
+        return value;
     }
     
     

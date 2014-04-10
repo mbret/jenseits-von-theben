@@ -3,16 +3,21 @@ package com.miage.game;
 
 import com.miage.config.ConfigManager;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Properties;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author Maxime
  */
-public class Chronotime {
+public class Chronotime implements Serializable{
     
-    private HashMap<Integer, HashMap<Integer, Integer>> values;
+    private final static Logger LOGGER = LogManager.getLogger(Chronotime.class.getName());
+    
+    private HashMap<Integer, HashMap<Integer, Integer>> values ;
 
     /**
      * <br/>- Init the inner chronotimes values with the config manager
@@ -48,6 +53,7 @@ public class Chronotime {
      * @return 
      */
     public int getNbTokensToPickUp( int nbKnowIedgePoint, int nbWeeks){
+        LOGGER.debug("getNbTokensToPickUp: nbKnowIedgePoint="+nbKnowIedgePoint+" nbWeekds="+nbWeeks);
         return this.values.get( nbKnowIedgePoint ).get( nbWeeks );
     }
    

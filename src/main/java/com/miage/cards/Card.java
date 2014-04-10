@@ -1,5 +1,5 @@
 package com.miage.cards;
-import Interface.DiscardableElement;
+import com.miage.interfaces.DiscardableElement;
 import com.miage.game.Deck;
 import java.io.Serializable;
 

@@ -1,6 +1,6 @@
 
 
-package Interface;
+package com.miage.interfaces;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -12,5 +12,7 @@ import java.util.List;
 public interface CombinableElement {
     
 //    public Object processMethod( Method method, List<CombinableElement> otherCombinatedElements );
+    
+//    public List<CombinableElement> getAllCombinatedOfThisElement();
     
 }

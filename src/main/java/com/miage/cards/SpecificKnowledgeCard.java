@@ -1,7 +1,7 @@
 package com.miage.cards;
 
 import com.miage.config.ConfigManager;
-import Interface.KnowledgeElement;
+import com.miage.interfaces.KnowledgeElement;
 import java.io.IOException;
 import java.io.Serializable;
 

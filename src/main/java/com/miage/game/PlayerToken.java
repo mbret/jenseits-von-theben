@@ -10,150 +10,148 @@ import java.io.Serializable;
  * 
  * @author maxime
  */
-public class PlayerToken implements Comparable,Serializable{
+public class PlayerToken implements Comparable, Serializable{
 	
-	private String color;
+    private String color;
+
+    /**
+     * Define the actual position of the player token ( an area )
+     */
+    private Area position;
+
+    /**
+     * Define the current Date (duration of playing) of the player
+     */
+    private LocalDate timeState;
+
+    /**
+     * Use this constructeur when you do not need the complete init of the token
+     * @param color 
+     */
+    public PlayerToken(String color){
+        this(color, null, null);
+    }
+
+    /**
+     * 
+     * @param color
+     * @param position
+     * @param timeState 
+     */
+    public PlayerToken(String color, Area position, LocalDate timeState) {
+        this.color = color;
+        this.position = position;
+        this.timeState = timeState;
+    }
         
-        /**
-         * Define the actual position of the player token ( an area )
-         */
-	private Area position;
-        
-        /**
-         * Define the current Date (duration of playing) of the player
-         */
-	private LocalDate timeState;
-	
-        
-	public PlayerToken(String color){
-            this.color = color; 
-	}
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Public Methods
+     * 
+     ***********************************************************************************************/
 
-        /**
-         * @author maxime
-         * @return 
-         */
-	public Area getPosition() {
-		return position;
-	}
+    @Override
+    public String toString() {
+        return "PlayerToken{" + "color=" + color + ", position=" + position + ", timeState=" + timeState + '}';
+    }
+
+    /**
+     * Compare 2 pieces depending on their timeState.
+     * <br/>If the coming token has the same position no token move
+     * <br/>If the coming token has a upper position then it move after this token
+     * <br/>If the coming token has a lower position it move before
+     * @param o Object to compare
+     * @return int
+     */
+    public int compareTo(Object o) {
+        int result;
+        PlayerToken p = (PlayerToken) o;
+        if(this.getTimeState().isAfter(p.getTimeState()))
+            result = 1;
+        else if(this.getTimeState().equals( p.getTimeState() )){
+            result = 0;
+        }
+        else{
+            result = -1;
+        }
+        return result;
+    }
+	
+    /**
+     * Add some weeks at the timeState.
+     * @param nb number of weeks to add
+     */
+    public void addWeeks(int nb){
+        this.setTimeState(this.timeState.plusDays(nb*7));
+    }
+	
+    /**
+    * add weeks at the playerToken depending on the card picked
+    * @param card 
+    */
+    public void addWeeks(Card card){
+        this.addWeeks(card.getWeekCost());
+    }
+    
+    /**
+     * return the current number of week of the playerToken
+     * @return
+     */
+    public int getCurrentWeek(){
+        return (int) (Math.ceil(this.timeState.getDayOfYear()/7));
+    }
 
 
-	public void setPosition(Area position) {
-		this.position = position;
-	}
+    /**
+     * @author Gael
+     * return the current year of the playerToken
+     * @return
+     */
+    public int getCurrentYear(){
+        return this.timeState.getYear();
+    }
 
 
-	public String getColor() {
-		return color;
-	}
-	
-	public LocalDate getTimeState() {
-		return timeState;
-	}
+    /**
+     * @author Gael
+     * 
+     * Move a playerToken by going in all the steps Area on the pass, add cost of the move depending on zeppelin or car cards
+     * the player owns
+     * 
+     * @param destinationArea 
+     * @param board
+     * @param useZeppelin
+     * @return the table of steps
+     * @deprecated 
+     */
+    public String[] move(String destinationArea, Board board, boolean useZeppelin){
+
+            String[] steps = this.getPosition().getDistanceAreasSteps(destinationArea);
+
+            for(String step : steps){
+                    this.setPosition(board.getArea(step));
+            }
+
+            this.setPosition(board.getArea(destinationArea));
+
+            if(!useZeppelin){
+                    if(steps.length+1 >= 3){
+                            if(board.getPlayerTokensAndPlayers().get(board.getCurrentPlayerToken()).getCompetences().get("car") > 0)
+                                    board.getCurrentPlayerToken().addWeeks(steps.length);
+                            else
+                                    board.getCurrentPlayerToken().addWeeks(steps.length+1);
+                    }
+                    else
+                            board.getCurrentPlayerToken().addWeeks(steps.length+1);
+            }
 
 
-	public void setTimeState(LocalDate timeState) {
-		this.timeState = timeState;
-	}
-	
 
+            return steps;
 
-	public String toString(){
-		return "Piece coloured "+this.getColor()+" positioned in "+this.getPosition().toString();
-	}
-
-	/**
-	 * @author Gael
-	 * Compare 2 pieces depending on their timeState
-	 * @param o Object to compare
-	 * @return -1 if the timeState of this is <= timeState of p, else 1
-	 */
-	public int compareTo(Object o) {
-		
-		int result;
-		
-		PlayerToken p = (PlayerToken) o;
-		
-		if(this.getTimeState().isAfter(p.getTimeState()))
-			result = 1;
-		else
-			result = -1;
-			
-		
-		
-		return result;
-	}
-	
-	
-	/**
-	 * @author Gael
-	 * Add some weeks at the timeState
-	 * @param nb number of weeks to add
-	 */
-	public void addWeeks(int nb){
-		
-		this.setTimeState(this.timeState.plusDays(nb*7));
-		
-	}
-	
-	/**
-	 * @author Gael
-	 * return the current number of week of the playerToken
-	 * @return
-	 */
-	public int getCurrentWeek(){
-            return (int) (Math.ceil(this.timeState.getDayOfYear()/7));
-	}
-	
-	
-	/**
-	 * @author Gael
-	 * return the current year of the playerToken
-	 * @return
-	 */
-	public int getCurrentYear(){
-            return this.timeState.getYear();
-	}
-	
-	
-	/**
-	 * @author Gael
-	 * 
-	 * Move a playerToken by going in all the steps Area on the pass, add cost of the move depending on zeppelin or car cards
-	 * the player owns
-	 * 
-	 * @param destinationArea 
-	 * @param board
-	 * @param useZeppelin
-	 * @return the table of steps
-         * @deprecated 
-	 */
-	public String[] move(String destinationArea, Board board, boolean useZeppelin){
-		
-		String[] steps = this.getPosition().getDistanceAreasSteps(destinationArea);
-		
-		for(String step : steps){
-			this.setPosition(board.getArea(step));
-		}
-		
-		this.setPosition(board.getArea(destinationArea));
-		
-		if(!useZeppelin){
-			if(steps.length+1 >= 3){
-				if(board.getPlayerTokensAndPlayers().get(board.getCurrentPlayerToken()).getCompetences().get("car") > 0)
-					board.getCurrentPlayerToken().addWeeks(steps.length);
-				else
-					board.getCurrentPlayerToken().addWeeks(steps.length+1);
-			}
-			else
-				board.getCurrentPlayerToken().addWeeks(steps.length+1);
-		}
-	
-			
-		
-		return steps;
-		
-	}
+    }
 	
     /**
      * Move the position of the token
@@ -183,24 +181,39 @@ public class PlayerToken implements Comparable,Serializable{
         return steps;
     }
     
-	/**
-	 * @author Gael
-	 * 
-	 * add weeks at the playerToken depending on the card picked
-	 * 
-	 * @param card 
-	 */
-	public void addWeeksPlayerToken(Card card){
-		
-		addWeeks(card.getWeekCost());
-		
-	}
+    
         
         
 	
-	
-	
+    /***********************************************************************************************
+     *
+     *                                  Getter & Setter
+     * 
+     ***********s************************************************************************************/
+        
+    /**
+     * @author maxime
+     * @return 
+     */
+    public Area getPosition() {
+        return position;
+    }
 
+    public void setPosition(Area position) {
+        this.position = position;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public LocalDate getTimeState() {
+        return timeState;
+    }
+
+    public void setTimeState(LocalDate timeState) {
+        this.timeState = timeState;
+    }
 	
 	
 

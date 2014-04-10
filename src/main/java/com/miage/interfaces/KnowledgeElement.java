@@ -1,6 +1,6 @@
 
 
-package Interface;
+package com.miage.interfaces;
 
 /**
  * Define all elements which have some knowledge points
