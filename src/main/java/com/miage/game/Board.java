@@ -230,11 +230,12 @@ public class Board implements Serializable {
      * @param actionPattern 
      * @param playerActionParams
      * <table border="1">
-     * <tr><td>player</td><td>Provide a Player (required)</td></tr>
+     * <tr><td>Player player</td><td>Provide a Player (required)</td></tr>
      * <tr><td>areaToExcavate</td><td>Provide an ExcavationArea (required ACTION_EXCAVATE)</td></tr>
      * <tr><td>cardToPickUp</td><td>Provide a Card to pick up (required ACTION_PICK_CARD)</td></tr>
      * <tr><td>expoCardToDo</td><td>Provide a ExpoCard to do (required ACTION_ORGANIZE_EXPO)</td></tr>
-     * <tr><td>nbWeeksForExcavation</td><td>Provide an number of weeks the player want to excavate (required ACTION_EXCAVATE)</td></tr>
+     * <tr><td>nbTokenToPickUp</td><td>Provide an number of tokens the player can pick up inside area (required ACTION_EXCAVATE)</td></tr>
+     * <tr><td>List<UsableElement> usedElements</td><td>Provide a list of elements the player want to use (not required)</td></tr>
      * </table>
      */
     public void doPlayerRoundAction( int actionPattern, HashMap<String, Object> playerActionParams ) throws Exception{
@@ -252,22 +253,22 @@ public class Board implements Serializable {
         
         boolean useZeppelin = false;                                // Does the player is using zeppelin cards ?
         boolean useCarCard = player.hasCarCard();                   // Does the player is using car cards ?
-        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
+//        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         List<ShovelCard> shovelCards = new ArrayList();             // list of ised shovel cards
         
         // We check and iterate over all used elements to get some informations and make more precise list
         List<UsableElement> usedElements;
         try{
             usedElements = ((List<UsableElement>)playerActionParams.get("usedElements")); // we verify that the listis ok
-            if( usedElements == null ) throw new NullPointerException();
+            if( usedElements == null ) usedElements = new ArrayList();
         }
-        catch( NullPointerException | ClassCastException e){
-            throw new Exception("No usedElements provided, please see the parameters details");
+        catch( ClassCastException e){
+            throw new Exception("No usedElements provided or wrong structure, please see the parameters details");
         }
 
         for (UsableElement element : usedElements){
             if( element instanceof ZeppelinCard ) useZeppelin = true;
-            if( element instanceof KnowledgeElement ) knowledgeElements.add( (KnowledgeElement)element );
+//            if( element instanceof KnowledgeElement ) knowledgeElements.add( (KnowledgeElement)element );
             if( element instanceof ShovelCard ) shovelCards.add( (ShovelCard)element );
         }
         
@@ -284,17 +285,16 @@ public class Board implements Serializable {
                     throw new Exception("No areaToExcavate provided, please see the parameters details");
                 }
                 // Check nbWeeksForExcavation parameter
-                if( ! playerActionParams.containsKey("nbWeeksForExcavation") || !(playerActionParams.get("nbWeeksForExcavation") instanceof Integer) ){
-                    throw new Exception("No nbWeeksForExcavation provided, please see the parameters details");
+                if( ! playerActionParams.containsKey("nbTokenToPickUp") || !(playerActionParams.get("nbTokenToPickUp") instanceof Integer) ){
+                    throw new Exception("No nbTokenToPickUp provided, please see the parameters details");
                 }
                 this._actionPlayerDoExcavateArea( 
                         player, 
                         ((ExcavationArea)playerActionParams.get("areaToExcavate")), 
-                        knowledgeElements, 
-                        ((Integer)playerActionParams.get("nbWeeksForExcavation")), 
                         useZeppelin, 
                         useCarCard, 
-                        shovelCards);
+                        shovelCards,
+                        ((Integer)playerActionParams.get("nbTokenToPickUp")));
                 break;
                 
             case Player.ACTION_ORGANIZE_EXPO:
@@ -532,8 +532,6 @@ public class Board implements Serializable {
      * Do a round action: excavate area
      * <br/>Effect:
      * <br/>- move the player to the area
-     * <br/>- get all knowledge point available of the player
-     * <br/>- get the number of token the chronotime gives
      * <br/>- Pick the tokens and put in player's hand
      * <br/>- Add excavation cost to the playerToken
      * <br/>- Update area already excavate for the user
@@ -543,15 +541,12 @@ public class Board implements Serializable {
      * @param areaToExcavate
      * @param knowledgePointElements 
      */
-    private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, List<KnowledgeElement> usedKnowledgeElements, int nbWeeks, boolean useZeppelinCard, boolean useCarCard, List<ShovelCard> shovelCards, int nbTokenToPickUp  ) {
+    private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, boolean useZeppelinCard, boolean useCarCard, List<ShovelCard> shovelCards, int nbTokenToPickUp  ) {
         
         // Moving process
         player.getPlayerToken().movePlayerToken( areaToExcavate , useZeppelinCard, useCarCard);
         Collections.sort( this.playerTokenStack );
-        
-        // Get all the knowledge points the user want AND is able to use
-        int nbKnowledge = player.getTotalAskedKnowledgePoint(areaToExcavate, usedKnowledgeElements);
-        
+
         // Picking token process
         nbTokenToPickUp += ShovelCard.getTokensPointsWhenCombinated( shovelCards.size() ); // get supplementary tokens thanks to the used shovels
         

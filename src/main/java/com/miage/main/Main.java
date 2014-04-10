@@ -93,7 +93,7 @@ public class Main {
             playerActionParams.put("areaToExcavate", null); // put here one of the board excavationArea the player want to excavate
             playerActionParams.put("cardToPickUp", null); // put here one of the fourCurrentCard the player chose to pick up
             playerActionParams.put("expoCardToDo", null); // put here one of the board expoCard the player chose to do
-            playerActionParams.put("nbWeeksForExcavation", null);
+            playerActionParams.put("nbTokenToPickUp", null); // number of tokens the player is allowed to pick up inside area
         
             /**
              * The player round actions are tested
@@ -162,23 +162,7 @@ public class Main {
              */
             if( hasOneActionPossible ){
                 
-                // Here we set some action parmaeters exemple 
-                playerActionParams.put("areaToExcavate", (ExcavationArea)board.getAreas().get( "egypt" )); // the player decide to excavate egypt area
-                // Because the player want to excavate we set some active cards
-                currentPlayer.getCards().add( new GeneralKnowledgeCard(0, null, null, 0, 0) );
-                currentPlayer.getTokens().add( new GeneralKnowledgeToken(null, null, null, 1) );
-                ((List<UsableElement>)playerActionParams.get("usedElements")).addAll(Arrays.asList(
-                       new AssistantCard(0, null, null, 0),
-                       new AssistantCard(0, null, null, 0),
-                       new EthnologicalKnowledgeCard(0, null, null, 0, 0, null)
-                ));
-
-                // Other cards the player could want to use
-                /*
-                ((List<UsableElement>)playerActionParams.get("usedElements")).addAll(Arrays.asList(
-                       currentPlayer.getSpecificCards( ZeppelinCard.class ).get(0) // player use his zeppelin card
-                ));
-                */
+                // Here we need to get some input
                 
                /**
                 * Here we get the wanted player's action (GUI function)
@@ -188,12 +172,17 @@ public class Main {
                //board.doPlayerRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams);
 
                // CASE OF ACTION_PICK_CARD
+               // Here we need to get which card the player want to pick and put in playerActionParams
                //board.doPlayerRoundAction(  Player.ACTION_PICK_CARD, playerActionParams);
 
                // CASE OF ACTION_ORGANIZE_EXPO
+               // Here we need to get which expo card the player want to do and put in playerActionParams
                //board.doPlayerRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams);
 
                // CASE OF ACTION_EXCAVATE
+               // Here we need to get which area the player want to excavate and put in playerActionParams
+               // We also need to get how many knowledge the player want to use and how many weeks he want 
+               // to excavate in order to finally get the number of tokens he can pick up (given by the chronotime) and put this value in playerActionParams
                //board.doPlayerRoundAction(  Player.ACTION_EXCAVATE, playerActionParams);
             }
             else{

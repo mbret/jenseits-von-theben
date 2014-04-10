@@ -43,7 +43,10 @@ public class TestBoard {
 	private Deck deckTest;
         Player maxime;
         Player richard;
+        List<Card> allCards; // Contain all cards of the board (deck + four cards)
+        List<Player> players;
                 
+        // Method private in board but accessible from these methods below
         Method method_pickCardOnBoard;
         Method method_addExpoCardOnBoard;
         Method method_actionPlayerDoPickCard;
@@ -60,16 +63,22 @@ public class TestBoard {
 	public void setUp() throws Exception {
 		
             // init
-            maxime = new Player("maxime", new PlayerToken("color"));
-            richard = new Player("richard", new PlayerToken("color"));
-            List<Player> players = new ArrayList();
-            players.add( maxime );
-            players.add( richard );
-            board = new Board(2, players);
-		
+            this.maxime = new Player("maxime", new PlayerToken("color"));
+            this.richard = new Player("richard", new PlayerToken("color"));
+            this.players = new ArrayList();
+            this.players.add( maxime );
+            this.players.add( richard );
+            this.board = new Board(2, players);
+            
+            // Get all the cards
+            this.allCards = new ArrayList();
+            this.allCards.addAll( board.getFourCurrentCards() );
+            this.allCards.addAll( board.getDeck() );
+            this.allCards.addAll( board.getSideDeck() );
+
 		
             // As board._addExpoCardOnBoard is private we need to set as accessible
-            Class c = board.getClass();
+            Class c = this.board.getClass();
             Class[] cArg = new Class[1];
             cArg[0] = ExpoCard.class;
             method_addExpoCardOnBoard = c.getDeclaredMethod("_addExpoCardOnBoard", cArg);
@@ -95,9 +104,6 @@ public class TestBoard {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	
-        
         
 	/**
 	 * @author Gael
@@ -185,22 +191,20 @@ public class TestBoard {
         @Test
         public void testInitCards() throws IOException{
             
-
+            // Special decks when 2 players
+            board = new Board(2);
             assertEquals( 95 - 4, board.getDeck().size()); // 95 cards - four cards
             assertTrue( board.getSideDeck().isEmpty());
             
+            // Special deck when > 2 players
             board = new Board(3);
             assertEquals( 27+27 + 5, board.getDeck().size()); // 2 decks + small expo - four cards
             assertEquals( 27 + 5, board.getSideDeck().size() ); // 5 big expo + 1 deck
             
-            boolean found1 = false;
             
             // Now we get all cards of the board (four + deck)
-            List<Card> allCards = new ArrayList();
-            allCards.addAll( board.getFourCurrentCards() );
-            allCards.addAll( board.getDeck() );
-            allCards.addAll( board.getSideDeck() );
             // We test only expo card because there are 4 cards which are picked randomly (so its impossible to test)
+            boolean found1 = false;
             for (Card card : allCards) {
                 // deck must have => card.1 = london,excavationAuthorizationCard,3
                 if( card instanceof ExpoCard && ! ((ExpoCard)card).isBigExpo() && card.getAreaName().equals("berlin")){
@@ -282,11 +286,6 @@ public class TestBoard {
             
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", player); // wet set the current player
-            playerActionParams.put("usedElements", new ArrayList<UsableElement>());
-            playerActionParams.put("areaToExcavate", null);
-            playerActionParams.put("cardToPickUp", null);
-            playerActionParams.put("expoCardToDo", null);
-            playerActionParams.put("nbWeeksForExcavation", null);
             
             // test all 4 actions
             assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams));
@@ -373,13 +372,8 @@ public class TestBoard {
             // do action
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", maxime); 
-            playerActionParams.put("usedElements", new ArrayList<UsableElement>());
-            playerActionParams.put("areaToExcavate", null); 
             playerActionParams.put("cardToPickUp", cardPicked);
-            playerActionParams.put("expoCardToDo", null);
-            playerActionParams.put("nbWeeksForExcavation", null);
             board.doPlayerRoundAction(Player.ACTION_PICK_CARD, playerActionParams);
-//            method_actionPlayerDoPickCard.invoke(board, maxime, board.getFourCurrentCards().get(0), false, false);
             
             // Player go to pick a card, so he should have one card
             assertTrue( maxime.getCards().size() == 1 );
@@ -408,11 +402,6 @@ public class TestBoard {
             // do action
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", maxime); 
-            playerActionParams.put("usedElements", new ArrayList<UsableElement>());
-            playerActionParams.put("areaToExcavate", null); 
-            playerActionParams.put("cardToPickUp", null);
-            playerActionParams.put("expoCardToDo", null);
-            playerActionParams.put("nbWeeksForExcavation", null);
             board.doPlayerRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams);
             
             // Here the four new cards must be different
@@ -429,17 +418,14 @@ public class TestBoard {
             
         }
         
-        
+        /**
+         * Test the player action do excavation
+         * @throws Exception 
+         */
         @Test
         public void test_actionPlayerDoExcavateArea() throws Exception{
             
             // We try to find one specific knowledge card for egypt to allow maxime to excavate
-            List<Card> allCards = new ArrayList();
-            allCards.addAll( board.getFourCurrentCards() );
-            allCards.addAll( board.getDeck() );
-            allCards.addAll( board.getSideDeck() );
-            
-
             for (Card card : allCards) {
                 if( card instanceof SpecificKnowledgeCard && ( (((SpecificKnowledgeCard)card).getExcavationAreaName().equals("egypt"))) ){
                     maxime.getCards().add( card );
@@ -452,20 +438,19 @@ public class TestBoard {
             // do action
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", maxime); 
-            playerActionParams.put("usedElements", new ArrayList<UsableElement>());
             playerActionParams.put("areaToExcavate", board.getArea("egypt")); 
-            playerActionParams.put("cardToPickUp", null);
-            playerActionParams.put("expoCardToDo", null);
             int knowledgePoint = maxime.getTotalAskedKnowledgePoint( board.getArea("egypt"), null); // no special used knowledge except the unique specific added previously
-            playerActionParams.put("nbWeeksForExcavation", board.getChronotime().getNbTokensToPickUp( knowledgePoint, 1));
+            playerActionParams.put("nbTokenToPickUp", board.getChronotime().getNbTokensToPickUp( knowledgePoint, 1));
             board.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams);
 
             // Here maxime should has egypt excavated
             assertTrue( maxime.hasAlreadyExcavateArea("egypt") );
-            // He took the first token on area
+            // He took the first token on area so he has at least 1 point
             assertTrue( maxime.getTokens().size() > 0);
             // Player must be moved on egypt
             assertTrue( maxime.getPlayerToken().getPosition().equals( board.getArea("egypt") ) );
+            // His timestamp must be dfferent from others players (who never moved)
+            assertFalse( maxime.getPlayerToken().getTimeState().equals( richard.getPlayerToken().getTimeState() ) );
         }
 
 }
