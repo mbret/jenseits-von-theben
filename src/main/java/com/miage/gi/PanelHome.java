@@ -6,6 +6,7 @@ import com.miage.game.Board;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -811,9 +812,9 @@ public class PanelHome extends javax.swing.JPanel {
         String loginPlayer2 = player2TextField.getText();
         String loginPlayer3 = player3TextField.getText();
         String loginPlayer4 = player4TextField.getText();
-        Set<Player> players = new HashSet();
+        ArrayList<Player> players = new ArrayList<Player>();
         try {
-
+            
             if (checkColors() && checkLogin()) {
 
                 if (nbPlayers.compareTo("2") == 0) {

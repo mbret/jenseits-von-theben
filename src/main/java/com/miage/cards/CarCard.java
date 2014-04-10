@@ -2,11 +2,14 @@
 
 package com.miage.cards;
 
+import Interface.UsableElement;
+import java.io.Serializable;
+
 /**
  * Allow user to reduce travel cost of 1 week if the travel is longer than 2 weeks
  * @author maxime
  */
-public class CarCard extends Card{
+public class CarCard extends Card implements Serializable{
 
     /**
      * 

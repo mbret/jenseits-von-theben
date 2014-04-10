@@ -1,13 +1,14 @@
 package com.miage.cards;
 import Interface.DiscardableElement;
 import com.miage.game.Deck;
+import java.io.Serializable;
 
 /**
  * Card
  * 
  * @author maxime
  */
-public abstract class Card implements DiscardableElement{
+public abstract class Card implements Serializable, DiscardableElement{
 
     /**
      * name: used as key inside program

@@ -8,7 +8,10 @@ import com.miage.cards.*;
 import com.miage.config.ConfigManager;
 import com.miage.main.Main;
 import com.miage.tokens.*;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +30,7 @@ import org.apache.log4j.Logger;
  * 
  * @author maxime
  */
-public class Board {
+public class Board implements Serializable {
     
     private final static Logger LOGGER = LogManager.getLogger(Board.class.getName());
     
@@ -62,6 +65,8 @@ public class Board {
      */
     private HashMap<PlayerToken, Player> playerTokensAndPlayers;
     
+    private List<Player> players;
+    
     private PlayerToken currentPlayerToken;
 
     /**
@@ -80,15 +85,18 @@ public class Board {
     private Deck discardingDeck;
 
     private List<Card> fourCurrentCards;
+    /**
+     * String who store all log which display before the save.
+     */
+    private String logDisplay;
     
     private List<ExpoCard> expoCards;
 
     private Chronotime chronotime;
     
     List<Player> playersWhoFinished = new ArrayList();
-    
 
-    public Board(int nbPlayers, Set<Player> players) throws IOException{
+    public Board(int nbPlayers, List<Player> players) throws IOException{
         this.nbPlayers = nbPlayers;
         this.areas = new HashMap<>();
         this._initAreas();
@@ -101,6 +109,7 @@ public class Board {
         this.playerTokenStack = new PlayerTokenStack();
         this.playerTokensAndPlayers = new HashMap();
         this.chronotime = new Chronotime();
+        this.players = new ArrayList();
         
         // Init date of end game
         String[] tmp = ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("game.endGameDatePosition").split("\\|")[0].split("\\-");
@@ -115,6 +124,7 @@ public class Board {
             this.playerTokenStack.addPlayerToken(player.getPlayerToken() ); // set stack of playertoken
             this.playerTokensAndPlayers.put( player.getPlayerToken(), player); // set the link between player and playerTokens
         }
+        this.players.addAll( players );
     }
     
     /**
@@ -123,7 +133,7 @@ public class Board {
      * @deprecated  
      */
     public Board(int nbPlayers) throws IOException{
-        this(nbPlayers, new HashSet<Player>());
+        this(nbPlayers, new ArrayList<Player>());
     }
     
     
@@ -248,6 +258,7 @@ public class Board {
     
     /**
      * Move a player to the endGame position, typically when a player cannot do any more actions
+     * @param player
      */
     public void movePlayerToEndGamePosition( Player player ){
         player.getPlayerToken().setTimeState( this.endGameDatePosition );
@@ -259,34 +270,40 @@ public class Board {
      * - check and discard used cards
      * - increment the round a player is still playing
      * @param actionPattern 
-     * @param player 
-     * @param usedCards 
-     * @param areaToExcavate 
-     * @param cardToPickUp 
-     * @param expoCardToDo 
-     * @param usedKnowledgePointElements 
+     * @param playerActionParams
+     * <table border="1">
+     * <tr><td>player</td><td>Provide a Player (required)</td></tr>
+     * <tr><td>areaToExcavate</td><td>Provide an ExcavationArea (required ACTION_EXCAVATE)</td></tr>
+     * <tr><td>cardToPickUp</td><td>Provide a Card to pick up (required ACTION_PICK_CARD)</td></tr>
+     * <tr><td>expoCardToDo</td><td>Provide a ExpoCard to do (required ACTION_ORGANIZE_EXPO)</td></tr>
+     * <tr><td>nbWeeksForExcavation</td><td>Provide an number of weeks the player want to excavate (required ACTION_EXCAVATE)</td></tr>
+     * </table>
      */
-    public void doPlayerRoundAction( int actionPattern, Player player, List<UsableElement> usedElements, ExcavationArea areaToExcavate, Card cardToPickUp, ExpoCard expoCardToDo, Integer nbWeeksForExcavation){
+    public void doPlayerRoundAction( int actionPattern, HashMap<String, Object> playerActionParams ) throws Exception{
+        
+        // Check player parameter
+        if( ! playerActionParams.containsKey("player") || !(playerActionParams.get("player") instanceof Player) ){
+            throw new Exception("No player provided, please see the parameters details");
+        }
+        Player player = (Player)playerActionParams.get("player");
         
         boolean useZeppelin = false;                                // Does the player is using zeppelin cards ?
         boolean useCarCard = player.hasCarCard();                   // Does the player is using car cards ?
         List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         List<ShovelCard> shovelCards = new ArrayList();             // list of ised shovel cards
         
-        // We iterate over all used elements to get some informations and make more precise list
+        // We check and iterate over all used elements to get some informations and make more precise list
+        List<UsableElement> usedElements;
+        try{
+            usedElements = ((List<UsableElement>)playerActionParams.get("usedElement"));
+        }
+        catch( NullPointerException | ClassCastException e){
+            throw new Exception("No usedElements provided, please see the parameters details");
+        }
         for (UsableElement element : usedElements){
-            
-            if( element instanceof ZeppelinCard ){
-                useZeppelin = true;
-            }
-            
-            if( element instanceof KnowledgeElement ){
-                knowledgeElements.add( (KnowledgeElement)element );
-            }
-            
-            if( element instanceof ShovelCard ){
-                shovelCards.add( (ShovelCard)element );
-            }
+            if( element instanceof ZeppelinCard ) useZeppelin = true;
+            if( element instanceof KnowledgeElement ) knowledgeElements.add( (KnowledgeElement)element );
+            if( element instanceof ShovelCard ) shovelCards.add( (ShovelCard)element );
         }
         
         // Do the main action 
@@ -297,15 +314,46 @@ public class Board {
                 break;
                 
             case Player.ACTION_EXCAVATE:
-                this._actionPlayerDoExcavateArea( player, areaToExcavate, knowledgeElements, nbWeeksForExcavation, useZeppelin, useCarCard, shovelCards);
+                // Check area to excavate parameter
+                if( ! playerActionParams.containsKey("areaToExcavate") || !(playerActionParams.get("areaToExcavate") instanceof ExcavationArea) ){
+                    throw new Exception("No areaToExcavate provided, please see the parameters details");
+                }
+                // Check nbWeeksForExcavation parameter
+                if( ! playerActionParams.containsKey("nbWeeksForExcavation") || !(playerActionParams.get("nbWeeksForExcavation") instanceof Integer) ){
+                    throw new Exception("No nbWeeksForExcavation provided, please see the parameters details");
+                }
+                this._actionPlayerDoExcavateArea( 
+                        player, 
+                        ((ExcavationArea)playerActionParams.get("areaToExcavate")), 
+                        knowledgeElements, 
+                        ((Integer)playerActionParams.get("nbWeeksForExcavation")), 
+                        useZeppelin, 
+                        useCarCard, 
+                        shovelCards);
                 break;
                 
             case Player.ACTION_ORGANIZE_EXPO:
-                this._actionPlayerDoOrganizeExpo( player, expoCardToDo, useZeppelin, useCarCard );
+                // Check expoCardToDo parameter
+                if( ! playerActionParams.containsKey("expoCardToDo") || !(playerActionParams.get("expoCardToDo") instanceof ExpoCard) ){
+                    throw new Exception("No expoCardToDo provided, please see the parameters details");
+                }
+                this._actionPlayerDoOrganizeExpo( 
+                        player, 
+                        ((ExpoCard)playerActionParams.get("expoCardToDo")), 
+                        useZeppelin, 
+                        useCarCard );
                 break;
                 
             case Player.ACTION_PICK_CARD:
-                this._actionPlayerDoPickCard( player, cardToPickUp, useZeppelin, useCarCard );
+                // Check cardToPickUp parameter
+                if( ! playerActionParams.containsKey("cardToPickUp") || !(playerActionParams.get("cardToPickUp") instanceof Card) ){
+                    throw new Exception("No cardToPickUp provided, please see the parameters details");
+                }
+                this._actionPlayerDoPickCard( 
+                        player, 
+                        ((Card)playerActionParams.get("cardToPickUp")), 
+                        useZeppelin, 
+                        useCarCard );
                 break;
         }
         
@@ -328,28 +376,57 @@ public class Board {
         throw new UnsupportedOperationException("some operations are missing");
     }
     
-    public void salut(){}
     /**
      * Check if the player is able to do the demanded action. Use player action Constant to provide an action key
      * @param actionPattern player constant (exemple: player.ACTION...)
-     * @param player
-     * @param areaToExcavate
-     * @param indexOfCardToPickUp
-     * @param expoCardToDo
+     * @param playerActionParams 
+     * <table border="1">
+     * <tr><td>player</td><td>Provide a Player (required)</td></tr>
+     * <tr><td>areaToExcavate</td><td>Provide an ExcavationArea (required ACTION_EXCAVATE)</td></tr>
+     * <tr><td>cardToPickUp</td><td>Provide a Card to pick up (required ACTION_PICK_CARD)</td></tr>
+     * <tr><td>expoCardToDo</td><td>Provide a ExpoCard to do (required ACTION_ORGANIZE_EXPO)</td></tr>
+     * </table>
      * @return 
+     * @throws java.lang.Exception 
      */
-    public boolean isPlayerAbleToMakeRoundAction( int actionPattern, Player player, ExcavationArea areaToExcavate, Integer indexOfCardToPickUp, ExpoCard expoCardToDo ){
+    public boolean isPlayerAbleToMakeRoundAction( int actionPattern, HashMap<String, Object> playerActionParams ) throws Exception{
+        
+        // Check player parameter
+        if( ! playerActionParams.containsKey("player") || !(playerActionParams.get("player") instanceof Player) ){
+            throw new Exception("No player provided, please see the parameters details");
+        }
+        Player player = (Player)playerActionParams.get("player");
+        
+        /**
+         * Main loop
+         * - redirect the asked action to the specified intern method
+         */
         switch(actionPattern){
             case Player.ACTION_CHANGE_FOUR_CARDS:
                 return this._actionPlayerAbleToChangeFourCards( player );
+                
             case Player.ACTION_EXCAVATE:
-                return this._actionPlayerAbleToExcavateArea( player, areaToExcavate );
+                // Check area to excavate parameter
+                if( ! playerActionParams.containsKey("areaToExcavate") || !(playerActionParams.get("areaToExcavate") instanceof ExcavationArea) ){
+                    throw new Exception("No areaToExcavate provided, please see the parameters details");
+                }
+                return this._actionPlayerAbleToExcavateArea( player, ((ExcavationArea)playerActionParams.get("areaToExcavate")) );
+            
             case Player.ACTION_ORGANIZE_EXPO:
-                return this._actionPlayerAbleToOrganizeExpo( player, expoCardToDo );
+                // Check expoCardToDo parameter
+                if( ! playerActionParams.containsKey("expoCardToDo") || !(playerActionParams.get("expoCardToDo") instanceof ExpoCard) ){
+                    throw new Exception("No expoCardToDo provided, please see the parameters details");
+                }
+                return this._actionPlayerAbleToOrganizeExpo( player, ((ExpoCard)playerActionParams.get("expoCardToDo")) );
+            
             case Player.ACTION_PICK_CARD:
-                return this._actionPlayerAbleToPickCard(player , indexOfCardToPickUp);
+                // Check cardToPickUp parameter
+                if( ! playerActionParams.containsKey("cardToPickUp") || !(playerActionParams.get("cardToPickUp") instanceof Card) ){
+                    throw new Exception("No cardToPickUp provided, please see the parameters details");
+                }
+                return this._actionPlayerAbleToPickCard( player , this.getFourCurrentCards().indexOf( ((Card)playerActionParams.get("cardToPickUp")) ) );
         }
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Please provide an existing action pattern");
     }
     
     /**
@@ -899,6 +976,19 @@ public class Board {
     public List<Player> getPlayersWhoFinished() {
         return playersWhoFinished;
     }
+    
+    public String getLogDisplay(){
+        return this.logDisplay;
+    }
+    
+    public void setLogDisplay(String logDisplay){
+        this.logDisplay = logDisplay;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+    
     
     
     

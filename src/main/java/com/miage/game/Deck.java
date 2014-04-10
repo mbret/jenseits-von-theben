@@ -3,6 +3,7 @@
 package com.miage.game;
 
 import com.miage.cards.Card;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import org.apache.log4j.Logger;
  * @author maxime
  */
 @SuppressWarnings("serial")
-public class Deck extends LinkedList<Card>{
+public class Deck extends LinkedList<Card> implements Serializable{
 	
         private final static Logger LOGGER = LogManager.getLogger(Deck.class.getName());
 

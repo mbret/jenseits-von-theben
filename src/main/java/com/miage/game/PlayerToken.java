@@ -4,12 +4,13 @@ import java.time.LocalDate;
 
 import com.miage.areas.Area;
 import com.miage.cards.Card;
+import java.io.Serializable;
 
 /**
  * 
  * @author maxime
  */
-public class PlayerToken implements Comparable{
+public class PlayerToken implements Comparable,Serializable{
 	
 	private String color;
         

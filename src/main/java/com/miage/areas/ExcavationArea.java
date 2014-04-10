@@ -5,6 +5,7 @@ package com.miage.areas;
 import java.util.Collections;
 import java.util.LinkedList;
 import com.miage.tokens.Token;
+import java.io.Serializable;
 
 /**
  * Excavation area
@@ -12,7 +13,7 @@ import com.miage.tokens.Token;
  * @author maxime
  * @version 1.0
  */
-public class ExcavationArea extends Area {
+public class ExcavationArea extends Area implements Serializable{
 	
     /**
      * codeColor: easiest than color name. Can be used with graphical api

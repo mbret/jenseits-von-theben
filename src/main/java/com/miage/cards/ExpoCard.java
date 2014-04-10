@@ -2,12 +2,13 @@ package com.miage.cards;
 import java.util.ArrayList;
 import java.util.List;
 import com.miage.tokens.PointToken;
+import java.io.Serializable;
 
 /**
  * 
  * @author maxime
  */
-public class ExpoCard extends Card {
+public class ExpoCard extends Card implements Serializable{
 	
     /**
      * Define wheter the exposition is big or not

@@ -4,12 +4,13 @@ import Interface.KnowledgeElement;
 import Interface.UsableElement;
 import com.miage.config.ConfigManager;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  *
  * @author maxime
  */
-public class EthnologicalKnowledgeCard extends Card implements KnowledgeElement, UsableElement{
+public class EthnologicalKnowledgeCard extends Card implements Serializable, KnowledgeElement, UsableElement{
     
     /**
      * 

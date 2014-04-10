@@ -3,6 +3,7 @@
 package com.miage.cards;
 
 import Interface.CombinableElement;
+import Interface.DiscardableElement;
 import Interface.KnowledgeElement;
 import Interface.UsableElement;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.HashMap;
  *
  * @author maxime
  */
-public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, UsableElement{
+public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, UsableElement, DiscardableElement{
 
     
     private static final HashMap<Integer, Integer> values = new HashMap(){{
@@ -43,17 +44,21 @@ public class AssistantCard extends Card implements KnowledgeElement, CombinableE
     }
 
     /**
-     * // 2 -> 2            2%3 = 2
-     * // 3 -> 3
-     * // 4 -> 2 + 2        4%3 = 1
-     * // 5 -> 3 + 2        5%3 = 2
-     * // 6 -> 3 + 3        6%3 = 0
-     * // 7 -> 3 + 2 + 2    7%3 = 1
-     * // 8 -> 3 + 3 + 2    8%3 = 2
+     * Return the number of knowledge the combinated assistant cards allow the player to use
+     * <br/>Effect:
+     * <br/>- Check the number off combinated cards and calcul the points with the hashmap values
+     * <br/>- check the result of the modulo by 3 to get the maximum of pair of 3 (only pair of 3 and 2 are allowed)
      * @param nbOfThisElementCombined
      * @return 
      */
     public static int getKnowLedgePointsWhenCombinated( int nbOfThisElementCombined ){
+        // 2 -> 2            2%3 = 2
+        // 3 -> 3
+        // 4 -> 2 + 2        4%3 = 1
+        // 5 -> 3 + 2        5%3 = 2
+        // 6 -> 3 + 3        6%3 = 0
+        // 7 -> 3 + 2 + 2    7%3 = 1
+        // 8 -> 3 + 3 + 2    8%3 = 2
         if( nbOfThisElementCombined == 0){
             return 0;
         }

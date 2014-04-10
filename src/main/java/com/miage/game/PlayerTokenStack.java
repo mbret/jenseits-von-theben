@@ -2,6 +2,7 @@
 
 package com.miage.game;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.LinkedList;
  * 
  * @author maxime
  */
-public class PlayerTokenStack extends LinkedList<PlayerToken> implements Iterable<PlayerToken>{
+public class PlayerTokenStack extends LinkedList<PlayerToken> implements Iterable<PlayerToken>, Serializable{
 	
 	
 	/**
