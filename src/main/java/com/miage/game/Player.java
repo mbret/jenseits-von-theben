@@ -111,6 +111,7 @@ public class Player implements Serializable {
             this.cards = new ArrayList();
             this.areasAlreadyExcavate = new ArrayList();
             this.nbRoundStillPlaying = 0;
+            this.tokensJustPickedUp = new ArrayList();
             
             /*
              * Initialization of competences
@@ -512,7 +513,9 @@ public class Player implements Serializable {
      * @return 
      */
     public int getTotalAskedKnowledgePoint( Area areaToExcavate, List<KnowledgeElement> usedKnowledgeElements){
-        
+        if(usedKnowledgeElements == null){
+            usedKnowledgeElements = new ArrayList();
+        }
         int nbAssistantCards = 0;
         for (KnowledgeElement element : usedKnowledgeElements){
             if( element instanceof AssistantCard ){
@@ -524,7 +527,7 @@ public class Player implements Serializable {
         
         // Get all points from specific cards
         for (SpecificKnowledgeCard card : this.getSpecificCards( SpecificKnowledgeCard.class  )) {
-            if(card.getAreaName().equals( areaToExcavate.getName() )){
+            if(card.getExcavationAreaName().equals( areaToExcavate.getName() )){
                 pointsForExcavation += ((KnowledgeElement)card).getKnowledgePoints();
             }
         }
@@ -549,10 +552,12 @@ public class Player implements Serializable {
         }
         
         // Get all assistant points
-        pointsForExcavation += AssistantCard.getKnowLedgePointsWhenCombinated( nbAssistantCards );
-
-        throw new UnsupportedOperationException("not implemented yet");
-//        return pointsForExcavation;
+        if(nbAssistantCards > 0){
+            pointsForExcavation += AssistantCard.getKnowLedgePointsWhenCombinated( nbAssistantCards );
+        }
+        
+//        throw new UnsupportedOperationException("not implemented yet");
+        return pointsForExcavation;
     }
          
     /**
@@ -563,9 +568,9 @@ public class Player implements Serializable {
         return ! this.getSpecificCards( CarCard.class ).isEmpty();
     }
     
-    public void addPoints(int points){
-        this.points += points;
-    }
+//    public void addPoints(int points){
+//        this.points += points;
+//    }
     
     /**
      * Calculate and set the point of each player

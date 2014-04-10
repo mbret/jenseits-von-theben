@@ -543,7 +543,7 @@ public class Board implements Serializable {
      * @param areaToExcavate
      * @param knowledgePointElements 
      */
-    private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, List<KnowledgeElement> usedKnowledgeElements, int nbWeeks, boolean useZeppelinCard, boolean useCarCard, List<ShovelCard> shovelCards  ) {
+    private void _actionPlayerDoExcavateArea( Player player, ExcavationArea areaToExcavate, List<KnowledgeElement> usedKnowledgeElements, int nbWeeks, boolean useZeppelinCard, boolean useCarCard, List<ShovelCard> shovelCards, int nbTokenToPickUp  ) {
         
         // Moving process
         player.getPlayerToken().movePlayerToken( areaToExcavate , useZeppelinCard, useCarCard);
@@ -553,7 +553,6 @@ public class Board implements Serializable {
         int nbKnowledge = player.getTotalAskedKnowledgePoint(areaToExcavate, usedKnowledgeElements);
         
         // Picking token process
-        int nbTokenToPickUp = this.chronotime.getNbTokensToPickUp( nbKnowledge, nbWeeks); // nb tokens the player can Pick Up
         nbTokenToPickUp += ShovelCard.getTokensPointsWhenCombinated( shovelCards.size() ); // get supplementary tokens thanks to the used shovels
         
         player.getTokensJustPickedUp().clear(); // clear the previous round picked tokens
@@ -1050,6 +1049,11 @@ public class Board implements Serializable {
     public List<Player> getPlayers() {
         return players;
     }
+
+    public Chronotime getChronotime() {
+        return chronotime;
+    }
+    
     
     
     

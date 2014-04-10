@@ -10,6 +10,7 @@ import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.cards.ZeppelinCard;
+import com.miage.config.ConfigManager;
 import com.miage.game.Board;
 import com.miage.game.LogDisplay;
 import com.miage.game.Player;
@@ -29,6 +30,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * Map
@@ -47,8 +50,20 @@ import java.util.Set;
 
 public class Main {
 
+    private final static Logger LOGGER = LogManager.getLogger(Main.class.getName());
+    
     public static void main(String[] args) throws IOException, Exception {
 
+        // We try to load all required config files
+        try{
+            ConfigManager.getInstance().loadAll();
+        }
+        catch( IOException e ){
+            LOGGER.fatal("Unable to load config files");
+            LOGGER.debug( e );
+            System.exit( 1 );
+        }
+        
         // Create new players
         List<Player> players = new ArrayList();
         players.add( new Player( "maxime", new PlayerToken( "#40A497" )));
@@ -62,7 +77,6 @@ public class Main {
         // Usefull vars
         Player currentPlayer;
         Main m = new Main();
-//        m.saveGame(board);
 
         
         /*
@@ -76,9 +90,9 @@ public class Main {
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", currentPlayer); // wet set the current player
             playerActionParams.put("usedElements", new ArrayList<UsableElement>());
-            playerActionParams.put("areaToExcavate", null);
-            playerActionParams.put("cardToPickUp", null);
-            playerActionParams.put("expoCardToDo", null);
+            playerActionParams.put("areaToExcavate", null); // put here one of the board excavationArea the player want to excavate
+            playerActionParams.put("cardToPickUp", null); // put here one of the fourCurrentCard the player chose to pick up
+            playerActionParams.put("expoCardToDo", null); // put here one of the board expoCard the player chose to do
             playerActionParams.put("nbWeeksForExcavation", null);
         
             /**
@@ -96,13 +110,16 @@ public class Main {
              * 
              */
             // TEST ACTION_CHANGE_FOUR_CARDS
+            /*
             if( ! board.isPlayerAbleToMakeRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams) ){
                 // deactivate gui function
             }
             else{
                 hasOneActionPossible = true;
             }
+            */
             // TEST ACTION_EXCAVATE
+            /*
             for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
                 playerActionParams.put("areaToExcavate", area);
                 if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams)){
@@ -112,7 +129,9 @@ public class Main {
                     hasOneActionPossible = true;
                 }
             }
+            */
             // TEST ACTION_ORGANIZE_EXPO
+            /*
             for (ExpoCard card : board.getExpoCards()) {
                 playerActionParams.put("expoCardToDo", card);
                 if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams)){
@@ -122,7 +141,9 @@ public class Main {
                     hasOneActionPossible = true;
                 }
             }
+            */
             // TEST ACTION_PICK_CARD
+            /*
             for (Card card : board.getFourCurrentCards()) {
                 playerActionParams.put("cardToPickUp", card);
                 if( ! board.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, playerActionParams)){
@@ -132,6 +153,7 @@ public class Main {
                     hasOneActionPossible = true;
                 }
             }
+            */
 
             /**
              * NOW WE DO THE PLAYER ACTION
@@ -141,9 +163,6 @@ public class Main {
             if( hasOneActionPossible ){
                 
                 // Here we set some action parmaeters exemple 
-                playerActionParams.put("player", currentPlayer); // we pass the current player
-                playerActionParams.put("cardToPickUp", board.getFourCurrentCards().get( 2 )); // the player clicked on carte 3
-                // playerActionParams.put("expoCard", board.getExpoCards().get( 1 )); // the player do the second expo card
                 playerActionParams.put("areaToExcavate", (ExcavationArea)board.getAreas().get( "egypt" )); // the player decide to excavate egypt area
                 // Because the player want to excavate we set some active cards
                 currentPlayer.getCards().add( new GeneralKnowledgeCard(0, null, null, 0, 0) );
@@ -187,7 +206,7 @@ public class Main {
          * This is the end game
          */
         for (Player player : board.getPlayerTokensAndPlayers().values()) {
-            player.calculatePoint();
+//            player.calculatePoint();
         }
         
         // blabla ...
