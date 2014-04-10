@@ -379,7 +379,7 @@ public class Board implements Serializable {
     /**
      * Check if the player is able to do the demanded action. Use player action Constant to provide an action key
      * @param actionPattern player constant (exemple: player.ACTION...)
-     * @param playerActionParams 
+     * @param playerActionParams HashMap
      * <table border="1">
      * <tr><td>player</td><td>Provide a Player (required)</td></tr>
      * <tr><td>areaToExcavate</td><td>Provide an ExcavationArea (required ACTION_EXCAVATE)</td></tr>
