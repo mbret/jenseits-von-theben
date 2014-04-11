@@ -1,5 +1,6 @@
 package com.miage.game;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  * 
  * @author maxime
  */
-public class PlayerKnowledges {
+public class PlayerKnowledges implements Serializable {
 	
 	private int generalKnowledge;
 	private Map<String, Integer> specificKnowledges;

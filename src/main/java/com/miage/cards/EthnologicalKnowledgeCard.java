@@ -1,13 +1,18 @@
 package com.miage.cards;
 
+import com.miage.interfaces.CombinableElement;
+import com.miage.interfaces.DiscardableElement;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.interfaces.UsableElement;
 import com.miage.config.ConfigManager;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  *
  * @author maxime
  */
-public class EthnologicalKnowledgeCard extends Card{
+public class EthnologicalKnowledgeCard extends Card implements Serializable, KnowledgeElement, UsableElement{
     
     /**
      * 
@@ -18,27 +23,11 @@ public class EthnologicalKnowledgeCard extends Card{
      * 
      */
     private final String excavationAreaName;
-    
-    /**
-     * Color relating to the excavation zone
-     * @deprecated 
-     */
-    private String codeColor;
 
     public EthnologicalKnowledgeCard(int id, String displayName, String areaName, int weekCost, int value, String paramExcavationAreaName) throws IOException {
         super(displayName, areaName, id, weekCost);
         this.value = value;
         this.excavationAreaName = paramExcavationAreaName;
-        if(excavationAreaName.equals("greece"))
-            this.codeColor = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty("greece.color");
-        else if(excavationAreaName.equals("crete"))
-            this.codeColor = ConfigManager.getInstance().getConfig( ConfigManager.AREAS_CONFIG_NAME ).getProperty("crete.color");
-        else if(excavationAreaName.equals("egypt"))
-            this.codeColor = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME ).getProperty("egypt.color");
-        else if(excavationAreaName.equals("palestine"))
-            this.codeColor = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME ).getProperty("palestine.color");
-        else if(excavationAreaName.equals("mesopotamia"))
-            this.codeColor = ConfigManager.getInstance().getConfig(ConfigManager.AREAS_CONFIG_NAME ).getProperty("mesopotamia.color");
     }
 
     /**
@@ -73,18 +62,6 @@ public class EthnologicalKnowledgeCard extends Card{
      *                                  Getter & Setter
      * 
      ***********************************************************************************************/
-    
-    /**
-     * 
-     * @return 
-     */
-    public String getCodeColor() {
-        return codeColor;
-    }
-
-    public void setCodeColor(String codeColor) {
-        this.codeColor = codeColor;
-    }
 
     public int getValue() {
         return value;
@@ -92,6 +69,11 @@ public class EthnologicalKnowledgeCard extends Card{
 
     public String getExcavationAreaName() {
         return excavationAreaName;
+    }
+
+    @Override
+    public int getKnowledgePoints() {
+        return this.value;
     }
 
 }

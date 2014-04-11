@@ -19,6 +19,7 @@ import com.miage.tokens.PointToken;
 import com.miage.tokens.SpecificKnowledgeToken;
 import com.miage.tokens.Token;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,8 +31,13 @@ import java.util.logging.Logger;
  *
  * @author David
  */
-public class LogDisplay {
+public class LogDisplay implements Serializable {
     
+    
+    /**
+     * string which store all logs of the game.
+     */
+    private static String logBackup = "";
     /**
      * Display logs, depending of the action executed by the player
      * @param b 
@@ -90,7 +96,28 @@ public class LogDisplay {
                 message = "Erreur : l'action "+action+" n'est pas reconnue ...";
                 break;
         }
+        LogDisplay.setLogBackup(message);
         return message;
+    }
+    
+    /**
+     * @author david
+     * @param logToAdd 
+     */
+    public static void setLogBackup(String logToAdd){
+        LogDisplay.logBackup += logToAdd;
+    }
+    
+    /**
+     * @author david
+     * @return logSave 
+     */
+    public static String getLogBackup(){
+        return LogDisplay.logBackup;
+    }
+    
+    public static void cleanLogBackup(){
+        LogDisplay.logBackup = "";
     }
     
 }

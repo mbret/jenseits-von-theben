@@ -1,13 +1,15 @@
 package com.miage.cards;
 
 import com.miage.config.ConfigManager;
+import com.miage.interfaces.KnowledgeElement;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * 
  * @author maxime
  */
-public class SpecificKnowledgeCard extends Card{
+public class SpecificKnowledgeCard extends Card implements Serializable, KnowledgeElement{
 	
     /**
      * 
@@ -82,6 +84,11 @@ public class SpecificKnowledgeCard extends Card{
 
     public String getExcavationAreaName() {
         return excavationAreaName;
+    }
+
+    @Override
+    public int getKnowledgePoints() {
+        return value;
     }
 
 }

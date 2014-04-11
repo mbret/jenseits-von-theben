@@ -2,13 +2,15 @@
 
 package com.miage.tokens;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * A point token can be empty or with a value
+ * 
  * @author maxime
  */
-public class PointToken extends Token{
+public class PointToken extends Token implements Serializable{
 
     private final Integer value;
     
@@ -26,6 +28,8 @@ public class PointToken extends Token{
     	return super.toString()+","+value;
     }
 
-    
+    public boolean isBlank(){
+        return this.value == 0;
+    }
     
 }
