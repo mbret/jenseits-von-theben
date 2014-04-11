@@ -259,7 +259,7 @@ public class Board implements Serializable {
         // We check and iterate over all used elements to get some informations and make more precise list
         List<UsableElement> usedElements;
         try{
-            usedElements = ((List<UsableElement>)playerActionParams.get("usedElements")); // we verify that the listis ok
+            usedElements = ((List<UsableElement>)playerActionParams.get("usedElements")); // we verify that the list is ok
             if( usedElements == null ) usedElements = new ArrayList();
         }
         catch( ClassCastException e){

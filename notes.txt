@@ -6,8 +6,10 @@ Group can add note here...
 	Gael
 
 -----------------------
-- Finir le switch des competences, faire la gestion des couts quand carte piochée
+Distances des arretes du board 
 
+Longueur : extrémités extérieures : 1 -> (x:70 ,y:37 )    16 -> (x:1015 ,y:37 )   move de 63 en x 
+Hauteur : extrémités extérieures : 27 -> (x:1015 ,y:730 )    16 -> (x:70 ,y:730 )   move de 63 en y
 
 -----------------------
 
