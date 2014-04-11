@@ -51,7 +51,7 @@ public class MapPanel extends javax.swing.JPanel {
         // Init graphical components
         initComponents();
 
-        // Init the board and the tabbed pane with name player's
+        // Init the board and the tabbed pane with name's players
         this.currentBoard = board;
         this.setPlayerAndPlayerToken(board);
         menuCardsPlayer.setVisible(false);
@@ -68,8 +68,6 @@ public class MapPanel extends javax.swing.JPanel {
             curNb++;
         }
 
-        // Select the first player in the tabbed pane
-
         playerActionParams = new HashMap();
         playerPanel.setVisible(false);
 
@@ -78,6 +76,9 @@ public class MapPanel extends javax.swing.JPanel {
         boardCard2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(1).getId() + ".jpg")));
         boardCard3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(2).getId() + ".jpg")));
         boardCard4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(3).getId() + ".jpg")));
+
+        // Select the first player in the tabbed pane and update the current player with the first one
+
         menuCardsPlayer.setSelectedIndex(0);
         try {
             this.getPlayerTab(menuCardsPlayer);
@@ -531,12 +532,18 @@ public class MapPanel extends javax.swing.JPanel {
                 break;
         }
 
-        LOGGER.debug("Le joueur courant " + currentPlayer.getName());
         //Test if the current player can do something
         canPlayPlayer = this.playerCanPlay(currentPlayer, playerActionParams);
-        this.updateUI();
     }
 
+    /**
+     * Test if a player can do an action between - Excavate - Change 4 current
+     * cards - Pick a card - Doing an expo
+     *
+     * @param pl the player concerned by the action
+     * @param plAcParam the list of the player action parameters
+     * @return
+     */
     private boolean playerCanPlay(Player pl, HashMap<String, Object> plAcParam) {
         boolean hasOneActionPossible = false;
         System.out.println("" + pl.getCards());
@@ -627,13 +634,19 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_moscowCarLabelMouseExited
 
+    /**
+     * When you put the mouse in the roma zeppelin of the player menu, it shows
+     * all the zeppelin cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void romaZeppelinLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_romaZeppelinLabelMouseEntered
         this.displayPlayerCard(ZeppelinCard.class);
     }//GEN-LAST:event_romaZeppelinLabelMouseEntered
 
     /**
-     * When you put the mouse out of the moscow car of the player menu, it hides
-     * and clean the panel cards owned by the player
+     * When you put the mouse out of the roma Zeppelin of the player menu, it
+     * hides and clean the panel cards owned by the player
      *
      * @param evt The mouse event that serves for launching the method
      */
@@ -641,13 +654,19 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_romaZeppelinLabelMouseExited
 
+    /**
+     * When you put the mouse in the london excavation of the player menu, it
+     * shows all the car cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void londonExcavationLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonExcavationLabelMouseEntered
         this.displayPlayerCard(ExcavationAuthorizationCard.class);
     }//GEN-LAST:event_londonExcavationLabelMouseEntered
 
     /**
-     * When you put the mouse out of the moscow car of the player menu, it hides
-     * and clean the panel cards owned by the player
+     * When you put the mouse out of the london excavation of the player menu,
+     * it hides and clean the panel cards owned by the player
      *
      * @param evt The mouse event that serves for launching the method
      */
@@ -655,13 +674,19 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_londonExcavationLabelMouseExited
 
+    /**
+     * When you put the mouse in the berlin congress of the player menu, it
+     * shows all the congress cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void berlinCongressPLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressPLabelMouseEntered
         this.displayPlayerCard(CongressCard.class);
     }//GEN-LAST:event_berlinCongressPLabelMouseEntered
 
     /**
-     * When you put the mouse out of the moscow car of the player menu, it hides
-     * and clean the panel cards owned by the player
+     * When you put the mouse out of the berlin congress of the player menu, it
+     * hides and clean the panel cards owned by the player
      *
      * @param evt The mouse event that serves for launching the method
      */
@@ -669,13 +694,19 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_berlinCongressPLabelMouseExited
 
+    /**
+     * When you put the mouse in the berlin general knowledge of the player
+     * menu, it shows all the general knowledge cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void berlinGenKnowledgeLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinGenKnowledgeLabelMouseEntered
         this.displayPlayerCard(GeneralKnowledgeCard.class);
     }//GEN-LAST:event_berlinGenKnowledgeLabelMouseEntered
 
     /**
-     * When you put the mouse out of the moscow car of the player menu, it hides
-     * and clean the panel cards owned by the player
+     * When you put the mouse out of the berlin General knowledge of the player
+     * menu, it hides and clean the panel cards owned by the player
      *
      * @param evt The mouse event that serves for launching the method
      */
@@ -683,13 +714,19 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_berlinGenKnowledgeLabelMouseExited
 
+    /**
+     * When you put the mouse in the berlin assistant of the player menu, it
+     * shows all the assistant cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void berlinAssistantLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinAssistantLabelMouseEntered
         this.displayPlayerCard(AssistantCard.class);
     }//GEN-LAST:event_berlinAssistantLabelMouseEntered
 
     /**
-     * When you put the mouse out of the moscow car of the player menu, it hides
-     * and clean the panel cards owned by the player
+     * When you put the mouse out of the berlin assistant of the player menu, it
+     * hides and clean the panel cards owned by the player
      *
      * @param evt The mouse event that serves for launching the method
      */
@@ -697,13 +734,19 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_berlinAssistantLabelMouseExited
 
+    /**
+     * When you put the mouse in the berlin ethnological knowledge of the player
+     * menu, it shows all the ethnological knowledge cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void berlinEtnoLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinEtnoLabelMouseEntered
         this.displayPlayerCard(EthnologicalKnowledgeCard.class);
     }//GEN-LAST:event_berlinEtnoLabelMouseEntered
 
     /**
-     * When you put the mouse out of the moscow car of the player menu, it hides
-     * and clean the panel cards owned by the player
+     * When you put the mouse out of the berlin Ethnological of the player menu,
+     * it hides and clean the panel cards owned by the player
      *
      * @param evt The mouse event that serves for launching the method
      */
@@ -711,13 +754,19 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_berlinEtnoLabelMouseExited
 
+    /**
+     * When you put the mouse in the moscow scientific knowledge of the player
+     * menu, it shows all the scientific knowledge cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void moscowScienKnowledgeLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowScienKnowledgeLabelMouseEntered
         this.displayPlayerCard(SpecificKnowledgeCard.class);
     }//GEN-LAST:event_moscowScienKnowledgeLabelMouseEntered
 
     /**
-     * When you put the mouse out of the moscow car of the player menu, it hides
-     * and clean the panel cards owned by the player
+     * When you put the mouse out of the moscow scientific knowledge of the
+     * player menu, it hides and clean the panel cards owned by the player
      *
      * @param evt The mouse event that serves for launching the method
      */
@@ -725,13 +774,19 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_moscowScienKnowledgeLabelMouseExited
 
+    /**
+     * When you put the mouse in the london shovel of the player menu, it shows
+     * all the shovel cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void londonShovelLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonShovelLabelMouseEntered
         this.displayPlayerCard(ShovelCard.class);
     }//GEN-LAST:event_londonShovelLabelMouseEntered
 
     /**
-     * When you put the mouse out of the moscow car of the player menu, it hides
-     * and clean the panel cards owned by the player
+     * When you put the mouse out of the london shovel of the player menu, it
+     * hides and clean the panel cards owned by the player
      *
      * @param evt The mouse event that serves for launching the method
      */
@@ -739,13 +794,19 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_londonShovelLabelMouseExited
 
+    /**
+     * When you put the mouse in the berlin small exposition of the player menu,
+     * it shows all the exposition (big and small) cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void berlinSmallExpoLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinSmallExpoLabelMouseEntered
         this.displayPlayerCard(ExpoCard.class);
     }//GEN-LAST:event_berlinSmallExpoLabelMouseEntered
 
     /**
-     * When you put the mouse out of the moscow car of the player menu, it hides
-     * and clean the panel cards owned by the player
+     * When you put the mouse out of the berlin small exposition of the player
+     * menu, it hides and clean the panel cards owned by the player
      *
      * @param evt The mouse event that serves for launching the method
      */
@@ -753,6 +814,12 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_berlinSmallExpoLabelMouseExited
 
+    /**
+     * When you put the mouse out of the player menu, it hides and shows some
+     * elements of the screen
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void playerPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playerPanelMouseExited
         if ((evt.getXOnScreen() > playerPanel.getWidth()) || (evt.getYOnScreen() > playerPanel.getHeight())) {
             menuCardsPlayer.setVisible(false);
@@ -766,62 +833,131 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_playerPanelMouseExited
 
+    /**
+     * When you put the mouse in the crete null token of the player menu, it
+     * shows all crete tokens owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void creteNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_creteNullTokenLabelMouseEntered
         displayPlayerAreaToken("purple");
     }//GEN-LAST:event_creteNullTokenLabelMouseEntered
 
+    /**
+     * When you put the mouse out of the crete null token of the player menu, it
+     * hides and clean the panel cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void creteNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_creteNullTokenLabelMouseExited
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_creteNullTokenLabelMouseExited
 
+    /**
+     * When you put the mouse in the palestine null token of the player menu, it
+     * shows all palestine tokens owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void palestineNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_palestineNullTokenLabelMouseEntered
         displayPlayerAreaToken("green");
     }//GEN-LAST:event_palestineNullTokenLabelMouseEntered
 
+    /**
+     * When you put the mouse out of the palestine null token of the player
+     * menu, it hides and clean the panel cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void palestineNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_palestineNullTokenLabelMouseExited
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_palestineNullTokenLabelMouseExited
 
+    /**
+     * When you put the mouse in the mesopotamia null token of the player menu,
+     * it shows all mesopotamia tokens owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void mesopotamiaNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mesopotamiaNullTokenLabelMouseEntered
         displayPlayerAreaToken("blue");
     }//GEN-LAST:event_mesopotamiaNullTokenLabelMouseEntered
 
+    /**
+     * When you put the mouse out of the mesopotamia null token of the player
+     * menu, it hides and clean the panel cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void mesopotamiaNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mesopotamiaNullTokenLabelMouseExited
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_mesopotamiaNullTokenLabelMouseExited
 
+    /**
+     * When you put the mouse in the greece null token of the player menu, it
+     * shows all greece tokens owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void greeceNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_greeceNullTokenLabelMouseEntered
         displayPlayerAreaToken("orange");
     }//GEN-LAST:event_greeceNullTokenLabelMouseEntered
 
+    /**
+     * When you put the mouse out of the greece null token of the player menu,
+     * it hides and clean the panel cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void greeceNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_greeceNullTokenLabelMouseExited
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_greeceNullTokenLabelMouseExited
 
+    /**
+     * When you put the mouse in the egypt null token of the player menu, it
+     * shows all crete tokens owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void egyptNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_egyptNullTokenLabelMouseEntered
         displayPlayerAreaToken("yellow");
     }//GEN-LAST:event_egyptNullTokenLabelMouseEntered
 
+    /**
+     * When you put the mouse out of the egypt null token of the player menu, it
+     * hides and clean the panel cards owned by the player
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void egyptNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_egyptNullTokenLabelMouseExited
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
+    /**
+     * Method called when a player click on a card to pick in the board. Check
+     * if the player can play and update the UI for the four cards in the board
+     * and the expo Cards
+     *
+     * @param indexInFourCurrentCards the index of the card to pick in the four
+     * current cards list
+     */
     private void playerPickCard(int indexInFourCurrentCards) {
         if (canPlayPlayer) {
             try {
                 playerActionParams.put("cardToPickUp", currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
                 currentBoard.doPlayerRoundAction(Player.ACTION_PICK_CARD, playerActionParams);
                 LOGGER.debug(" Cartes d'expo" + currentBoard.getExpoCards());
+                LOGGER.debug("Nombre de carte du type " + currentPlayer.getCards().size());
                 if (!currentBoard.getExpoCards().isEmpty()) {
                     if (currentBoard.getExpoCards().size() == 1) {
                         this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(0).getId() + ".jpg")));
                     } else if (currentBoard.getExpoCards().size() == 2) {
-                        this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(1).getId() + ".jpg")));
-                        this.expoCardBLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(0).getId() + ".jpg")));
-                    } else if (currentBoard.getExpoCards().size() >= 3) {
-                        this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(currentBoard.getExpoCards().size()-1).getId() + ".jpg")));
-                        this.expoCardBLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(currentBoard.getExpoCards().size()-2).getId() + ".jpg")));
-                        this.expoCardCLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(currentBoard.getExpoCards().size()-3).getId() + ".jpg")));
+                        this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(0).getId() + ".jpg")));
+                        this.expoCardBLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(1).getId() + ".jpg")));
+                    } else if (currentBoard.getExpoCards().size() == 3) {
+                        this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(0).getId() + ".jpg")));
+                        this.expoCardBLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(1).getId() + ".jpg")));
+                        this.expoCardCLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(2).getId() + ".jpg")));
                     }
                 }
             } catch (Exception ex) {
@@ -830,21 +966,45 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * When a player click on the first card on the map, it calls the
+     * playerPickCard method and update the first card icon
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void boardCard1LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard1LabelMouseClicked
         this.playerPickCard(0);
         boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(0).getId() + ".jpg")));
     }//GEN-LAST:event_boardCard1LabelMouseClicked
 
+    /**
+     * When a player click on the first card on the map, it calls the
+     * playerPickCard method and update the second card icon
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void boardCard2LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard2LabelMouseClicked
         this.playerPickCard(1);
         boardCard2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(1).getId() + ".jpg")));
     }//GEN-LAST:event_boardCard2LabelMouseClicked
 
+    /**
+     * When a player click on the first card on the map, it calls the
+     * playerPickCard method and update the third card icon
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void boardCard3LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard3LabelMouseClicked
         this.playerPickCard(2);
         boardCard3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(2).getId() + ".jpg")));
     }//GEN-LAST:event_boardCard3LabelMouseClicked
 
+    /**
+     * When a player click on the first card on the map, it calls the
+     * playerPickCard method and update the fourth card icon
+     *
+     * @param evt The mouse event that serves for launching the method
+     */
     private void boardCard4LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard4LabelMouseClicked
         this.playerPickCard(3);
         boardCard4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(3).getId() + ".jpg")));
