@@ -39,6 +39,8 @@ public class MapPanel extends javax.swing.JPanel {
     private PlayerToken playerToken3;
     private PlayerToken playerToken4;
     private HashMap<String, Object> playerActionParams;
+    private HashMap<String, List<Card>> discardableCards;
+    private List<String> displayedDiscardableCards;
     private boolean canPlayPlayer;
     private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(MapPanel.class.getName());
 
@@ -67,6 +69,8 @@ public class MapPanel extends javax.swing.JPanel {
             menuCardsPlayer.setTitleAt(curNb, currentBoard.getPlayerTokensAndPlayers().get(tok).getName());
             curNb++;
         }
+        discardableCards = new HashMap();
+        displayedDiscardableCards = new ArrayList();
 
         playerActionParams = new HashMap();
         playerPanel.setVisible(false);
@@ -127,7 +131,6 @@ public class MapPanel extends javax.swing.JPanel {
         logMenu = new javax.swing.JPanel();
         logMenuScrollBar = new javax.swing.JScrollBar();
         usableCardsMenu = new javax.swing.JPanel();
-        jSeparator3 = new javax.swing.JSeparator();
         usedCardsMenu = new javax.swing.JPanel();
         jSeparator2 = new javax.swing.JSeparator();
         displayedCardTokenPanel = new javax.swing.JPanel();
@@ -361,10 +364,6 @@ public class MapPanel extends javax.swing.JPanel {
         logMenu.add(logMenuScrollBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, -1, 180));
 
         add(logMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 0, 320, 180));
-
-        usableCardsMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        usableCardsMenu.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 320, 10));
-
         add(usableCardsMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 180, 320, 370));
 
         usedCardsMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -944,10 +943,27 @@ public class MapPanel extends javax.swing.JPanel {
     private void playerPickCard(int indexInFourCurrentCards) {
         if (canPlayPlayer) {
             try {
+                ArrayList<Card> discardableCard;
+                if (currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).isDiscardable()) {
+                    if (!discardableCards.containsKey(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getDisplayName())) {
+                        discardableCard = new ArrayList();
+                        discardableCard.add(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
+                        discardableCards.put((currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getDisplayName()), discardableCard);
+                    } else {
+                        discardableCards.get(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getDisplayName()).add(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
+                    }
+                    for (String t : discardableCards.keySet()) {
+                        if (!displayedDiscardableCards.contains(t)) {
+                            displayedDiscardableCards.add(t);
+                            javax.swing.JLabel imageCard = new javax.swing.JLabel();
+                            imageCard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + discardableCards.get(t).get(0).getId() + ".jpg")));
+                            usableCardsMenu.add(imageCard);
+                        }
+                    }
+                    usableCardsMenu.updateUI();
+                }
                 playerActionParams.put("cardToPickUp", currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
                 currentBoard.doPlayerRoundAction(Player.ACTION_PICK_CARD, playerActionParams);
-                LOGGER.debug(" Cartes d'expo" + currentBoard.getExpoCards());
-                LOGGER.debug("Nombre de carte du type " + currentPlayer.getCards().size());
                 if (!currentBoard.getExpoCards().isEmpty()) {
                     if (currentBoard.getExpoCards().size() == 1) {
                         this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(0).getId() + ".jpg")));
@@ -1032,7 +1048,6 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPanel logMenu;
     private javax.swing.JScrollBar logMenuScrollBar;
     private javax.swing.JLabel londonExcavationLabel;
