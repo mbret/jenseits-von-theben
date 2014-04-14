@@ -847,38 +847,38 @@ public class Board implements Serializable {
              */
             switch (type) {
                 case "excavationAuthorization":
-                    newCard = new ExcavationAuthorizationCard(id, "ExcavationAuthorizationCard", area, weekCost);
+                    newCard = new ExcavationAuthorizationCard(id, "displayName", area, weekCost);
                     break;
                 case "zeppelin":
-                    newCard = new ZeppelinCard(id, "ZeppelinCard", area, weekCost);
+                    newCard = new ZeppelinCard(id, "displayName", area, weekCost);
                     break;
                 case "car":
-                    newCard = new CarCard(id, "CarCard", area, weekCost);
+                    newCard = new CarCard(id, "displayName", area, weekCost);
                     break;
                 case "congress":
-                    newCard = new CongressCard(id, "CongressCard", area, weekCost);
+                    newCard = new CongressCard(id, "displayName", area, weekCost);
                     break;
                 case "assistant":
-                    newCard = new AssistantCard(id, "AssistantCard", area, weekCost);
+                    newCard = new AssistantCard(id, "displayName", area, weekCost);
                     break;
                 case "shovel":
-                    newCard = new ShovelCard(id, "ShovelCard", area, weekCost);
+                    newCard = new ShovelCard(id, "displayName", area, weekCost);
                     break;
                 case "generalKnowledge": {
                     int value = Integer.parseInt(values[3]); // check pattern in .properties
-                    newCard = new GeneralKnowledgeCard(id, "generalKnowledge", area, weekCost, value);
+                    newCard = new GeneralKnowledgeCard(id, "displayName", area, weekCost, value);
                     break;
                 }
                 case "specificKnowledge": {
                     int value = Integer.parseInt(values[3]); // check pattern in .properties
                     String excavationArea = values[4];
-                    newCard = new SpecificKnowledgeCard(id, "specificKnowledge", area, weekCost, value, excavationArea);
+                    newCard = new SpecificKnowledgeCard(id, "displayName", area, weekCost, value, excavationArea);
                     break;
                 }
                 case "ethnologicalKnowledge": {
                     int value = Integer.parseInt(values[3]); // check pattern in .properties
                     String excavationArea = values[4];
-                    newCard = new EthnologicalKnowledgeCard(id, "ethnologicalKnowledge", area, weekCost, value, excavationArea);
+                    newCard = new EthnologicalKnowledgeCard(id, "displayName", area, weekCost, value, excavationArea);
                     break;
                 }
                 case "expo": {

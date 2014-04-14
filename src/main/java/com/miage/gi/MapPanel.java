@@ -38,9 +38,19 @@ public class MapPanel extends javax.swing.JPanel {
     private PlayerToken playerToken2;
     private PlayerToken playerToken3;
     private PlayerToken playerToken4;
+    
+    // the hashmap that contains the action that a player can do
     private HashMap<String, Object> playerActionParams;
-    private HashMap<String, List<Card>> discardableCards;
-    private List<String> displayedDiscardableCards;
+    
+    /* the hashmap that contains for a class of usable cards the list of that kind of card
+    *  Exemple, CarCard in key, (RomCar, MoskauCar) in value
+    */
+    private HashMap<String, List<Card>> usableCards;
+    
+    // List of displayed Usable Cards, one card for a type of card (one for car, one for zeppelin...)
+    private List<String> displayedUsableCards;
+    
+    //boolean that serves to know if a player can do an action (here if he can play)
     private boolean canPlayPlayer;
     private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(MapPanel.class.getName());
 
@@ -69,9 +79,12 @@ public class MapPanel extends javax.swing.JPanel {
             menuCardsPlayer.setTitleAt(curNb, currentBoard.getPlayerTokensAndPlayers().get(tok).getName());
             curNb++;
         }
-        discardableCards = new HashMap();
-        displayedDiscardableCards = new ArrayList();
+        
+        //Init the displayed list and hashmap of usable Card
+        usableCards = new HashMap();
+        displayedUsableCards = new ArrayList();
 
+        //Init the hashmap of actions that can be done by a player
         playerActionParams = new HashMap();
         playerPanel.setVisible(false);
 
@@ -464,9 +477,11 @@ public class MapPanel extends javax.swing.JPanel {
      */
     private void displayPlayerCard(Class cl) {
         try {
+            //Get the current player
             this.getPlayerTab(menuCardsPlayer);
             if (currentPlayer.getCards().size() > 0) {
                 displayedCardTokenPanel.setVisible(true);
+                // For each card of the list, compare the class of the card with the class in parameter, if it's good, display
                 for (Card c : currentPlayer.getCards()) {
                     if (c.getClass().getName().equals(cl.getName())) {
                         javax.swing.JLabel imageCard = new javax.swing.JLabel();
@@ -488,9 +503,11 @@ public class MapPanel extends javax.swing.JPanel {
      */
     private void displayPlayerAreaToken(String color) {
         try {
+            //Get the current player
             this.getPlayerTab(menuCardsPlayer);
             if (currentPlayer.getTokens().size() > 0) {
                 displayedCardTokenPanel.setVisible(true);
+                // For each token of the player's list, compare the color of the token with the color in parameter, if it's good, display
                 for (Token t : currentPlayer.getTokens()) {
                     if (t.getColor().equals(color)) {
                         javax.swing.JLabel imageToken = new javax.swing.JLabel();
@@ -941,29 +958,41 @@ public class MapPanel extends javax.swing.JPanel {
      * current cards list
      */
     private void playerPickCard(int indexInFourCurrentCards) {
+        
+        // If the player can play
         if (canPlayPlayer) {
             try {
-                ArrayList<Card> discardableCard;
-                if (currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).isDiscardable()) {
-                    if (!discardableCards.containsKey(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getDisplayName())) {
-                        discardableCard = new ArrayList();
-                        discardableCard.add(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
-                        discardableCards.put((currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getDisplayName()), discardableCard);
+                
+                //List of all the usable cards of the player's cards
+                ArrayList<Card> usableCard;
+                
+                //If the card is usable
+                if (currentBoard.getFourCurrentCards().get(indexInFourCurrentCards) instanceof UsableElement) {
+                    // If it is not in the list
+                    if (!usableCards.containsKey(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getDisplayName())) {
+                        usableCard = new ArrayList(); // creation of a list for the class of the card and add into it + add into the hashmap
+                        usableCard.add(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
+                        usableCards.put((currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getClass().getName()), usableCard);
                     } else {
-                        discardableCards.get(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getDisplayName()).add(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
+                        usableCards.get(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getClass().getName()).add(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
                     }
-                    for (String t : discardableCards.keySet()) {
-                        if (!displayedDiscardableCards.contains(t)) {
-                            displayedDiscardableCards.add(t);
+                    //For each class of card in the hashmap, if it's not displayed, we add it in the list and displayed it
+                    for (String t : usableCards.keySet()) {
+                        if (!displayedUsableCards.contains(t)) {
+                            displayedUsableCards.add(t);
                             javax.swing.JLabel imageCard = new javax.swing.JLabel();
-                            imageCard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + discardableCards.get(t).get(0).getId() + ".jpg")));
+                            imageCard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + usableCards.get(t).get(0).getId() + ".jpg")));
                             usableCardsMenu.add(imageCard);
                         }
                     }
                     usableCardsMenu.updateUI();
                 }
+                
+                //Put the card to pick up inside the hashmap
                 playerActionParams.put("cardToPickUp", currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
                 currentBoard.doPlayerRoundAction(Player.ACTION_PICK_CARD, playerActionParams);
+                
+                // If the list of the expo cards isn't empty, we dsiplay them
                 if (!currentBoard.getExpoCards().isEmpty()) {
                     if (currentBoard.getExpoCards().size() == 1) {
                         this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(0).getId() + ".jpg")));
