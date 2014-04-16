@@ -71,7 +71,7 @@ public class FrameMain_MapPanel extends javax.swing.JFrame {
                     frameMain.setVisible(true);
                 } catch ( Exception ex) {
                     LOGGER.fatal(ex);
-                    System.exit(0);
+                    ex.printStackTrace();
                 }
             }
         });
@@ -81,8 +81,14 @@ public class FrameMain_MapPanel extends javax.swing.JFrame {
      * Creates new form FrameMain
      */
     public FrameMain_MapPanel() throws IOException, InterruptedException, Exception{
+        
         initComponents();
         
+        this.setSize(1366, 768);
+        
+        /**
+         * Create the game
+         */
         // add home panel to main frame
         List<Player> players = new ArrayList();
         players.add( new Player("richard", new PlayerToken("red")));
@@ -113,11 +119,15 @@ public class FrameMain_MapPanel extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(350, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(251, Short.MAX_VALUE))
         );
 
         pack();
