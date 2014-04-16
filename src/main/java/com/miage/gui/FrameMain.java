@@ -64,8 +64,9 @@ public class FrameMain extends javax.swing.JFrame {
                 try {
                     frameMain = new FrameMain();
                     frameMain.setVisible(true);
-                } catch (IOException | InterruptedException ex) {
+                } catch ( Exception ex) {
                     LOGGER.fatal(ex);
+                    System.exit(0);
                 }
             }
         });

@@ -522,7 +522,7 @@ public class PanelHome extends javax.swing.JPanel {
      * @param evt
      */
     private void playLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playLabelMouseEntered
-        this.switchVisible( playLabel, playRedLabel);
+        this.switchVisible( playRedLabel, playLabel);
     }//GEN-LAST:event_playLabelMouseEntered
 
     /**
@@ -706,7 +706,7 @@ public class PanelHome extends javax.swing.JPanel {
      * @param evt 
      */
     private void jComboBoxChooseNbPlayersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxChooseNbPlayersActionPerformed
-        nbPlayers = (int)jComboBoxChooseNbPlayers.getSelectedItem();
+        nbPlayers = Integer.parseInt((String)jComboBoxChooseNbPlayers.getSelectedItem());
         /**
          * Depend of how many players, player 3 and 4 we will displayed or not
          * - players 1 & 2 are always displayed
@@ -866,7 +866,7 @@ public class PanelHome extends javax.swing.JPanel {
      * @return ok
      */
     public boolean checkColors() {
-        nbPlayers = (int) jComboBoxChooseNbPlayers.getSelectedItem();
+        nbPlayers = Integer.parseInt((String) jComboBoxChooseNbPlayers.getSelectedItem()) ;
         boolean ok = true;
         String colorPlayer1 = (String) colorPlayer1ComboBox.getSelectedItem();
         String colorPlayer2 = (String) colorPlayer2ComboBox.getSelectedItem();
