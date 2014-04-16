@@ -53,7 +53,7 @@ public class Board implements Serializable {
      * Stack of player's token
      * The stack allow to define which player should play before others
      */
-    private PlayerTokenStack playerTokenStack;
+    private LinkedList playerTokenStack;
 
     /**
      *  List of areas composing the board
@@ -106,7 +106,7 @@ public class Board implements Serializable {
         this.discardingDeck = new Deck();
         this.fourCurrentCards = new LinkedList();
         this._initDecks();
-        this.playerTokenStack = new PlayerTokenStack();
+        this.playerTokenStack = new LinkedList();
         this.playerTokensAndPlayers = new HashMap();
         this.chronotime = new Chronotime();
         this.players = new ArrayList();
@@ -121,7 +121,7 @@ public class Board implements Serializable {
         for (Player player : players){
             player.getPlayerToken().setPosition( this.areas.get("warsaw")); // set started area for playertoken
             player.getPlayerToken().setTimeState( this.startGameDatePosition ); // init date of token
-            this.playerTokenStack.addPlayerToken(player.getPlayerToken() ); // set stack of playertoken
+            this.playerTokenStack.add(player.getPlayerToken() ); // set stack of playertoken
             this.playerTokensAndPlayers.put( player.getPlayerToken(), player); // set the link between player and playerTokens
         }
         this.players.addAll( players );
@@ -227,7 +227,7 @@ public class Board implements Serializable {
      * @return 
      */
     public Player getUpcomingPlayer(){
-        Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get( this.playerTokenStack.getFirstPlayerToken() );
+        Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get( this.playerTokenStack.getFirst());
         if( this.playersWhoFinished.contains( playerWhoShouldPlayFirst )
                 || this.isPlayerOnTheEndGamePosition( playerWhoShouldPlayFirst )){
             return null;
@@ -987,6 +987,10 @@ public class Board implements Serializable {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public Chronotime getChronotime() {
+        return chronotime;
     }
     
     

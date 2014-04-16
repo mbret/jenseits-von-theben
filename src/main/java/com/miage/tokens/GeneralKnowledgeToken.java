@@ -1,4 +1,5 @@
 
+
 package com.miage.tokens;
 
 import com.miage.interfaces.CombinableElement;

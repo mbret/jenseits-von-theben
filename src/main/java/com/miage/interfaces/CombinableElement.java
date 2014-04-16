@@ -13,4 +13,6 @@ public interface CombinableElement {
     
 //    public Object processMethod( Method method, List<CombinableElement> otherCombinatedElements );
     
+//    public List<CombinableElement> getAllCombinatedOfThisElement();
+    
 }

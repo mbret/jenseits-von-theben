@@ -2,10 +2,12 @@
 
 package com.miage.areas;
 
-import java.util.Collections;
-import java.util.LinkedList;
+import com.miage.tokens.PointToken;
 import com.miage.tokens.Token;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Excavation area
@@ -25,28 +27,51 @@ public class ExcavationArea extends Area implements Serializable{
      */
     private LinkedList<Token> tokenList; 
 
+    private boolean alreadyExcavated;
+    
+    private PointToken pointTokenFirstExcavation;
+            
     /**
      * 
      * @param id
      * @param name
      * @param codeColor
+     * @deprecated 
      */
     public ExcavationArea(int id, String name, String codeColor){
         this(id, name, codeColor, new LinkedList<Token>());
     }
+    
     
     /**
      * 
      * @param id
      * @param name
      * @param codeColor
-     * @param tokenList 
+     * @param tokenList
+     * @deprecated 
      */
     public ExcavationArea(int id, String name, String codeColor, LinkedList<Token> tokenList){
+        this(id, name, codeColor, tokenList, new PointToken("name", "name", "color", 1));
+    }
+
+    /**
+     * 
+     * @param id
+     * @param name
+     * @param codeColor
+     * @param tokenList
+     * @param pointTokenFirstExcavation 
+     */
+    public ExcavationArea(int id, String name, String codeColor, LinkedList<Token> tokenList, PointToken pointTokenFirstExcavation ) {
         super(id, name);
         this.codeColor = codeColor;
         this.tokenList = tokenList;
+        this.alreadyExcavated = false;
+        this.pointTokenFirstExcavation = pointTokenFirstExcavation;
     }
+    
+    
 
 
     /***********************************************************************************************
@@ -101,5 +126,19 @@ public class ExcavationArea extends Area implements Serializable{
         this.tokenList = tokenList;
     }
 
+    public boolean isAlreadyExcavated() {
+        return alreadyExcavated;
+    }
+
+    public void setAlreadyExcavated(boolean alreadyExcavated) {
+        this.alreadyExcavated = alreadyExcavated;
+    }
+
+    public PointToken getPointTokenFirstExcavation() {
+        return pointTokenFirstExcavation;
+    }
+
+    
+    
     
 }
