@@ -965,6 +965,11 @@ public class Board implements Serializable {
         return currentPlayerToken;
     }
 
+    /**
+     * Set the current player token.
+     * <br/>/!\ change the actual player, be carefull
+     * @param currentPlayerToken 
+     */
     public void setCurrentPlayerToken(PlayerToken currentPlayerToken) {
         this.currentPlayerToken = currentPlayerToken;
     }

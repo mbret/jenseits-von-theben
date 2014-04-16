@@ -838,7 +838,7 @@ public class PanelHome extends javax.swing.JPanel {
             add(map, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
             this.updateUI();
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             LOGGER.fatal( ex );
         }
 
