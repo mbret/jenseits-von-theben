@@ -1,5 +1,8 @@
 package com.miage.game;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 
  * 
@@ -10,12 +13,26 @@ package com.miage.game;
 
 public class Position {
 	
-	// Absciss of the player token on the board
-	private int x;
+	/**
+	 *  Abscissa of the player token on the board
+	 */
+	private int xTemporal;
 	
-	// Ordinate of the player token on the board
-	private int y;
+	/**
+	 *  Ordinate of the player token on the board
+	 */
+	private int yTemporal;
 	
+	/**
+	 *  map of the position (x,y) of areas
+	 */
+	private static Map<String, Position> positionsArea = new HashMap<String, Position>();
+	
+	
+	
+	/**
+	 * Constant variables
+	 */
 	private final static int TOP_LEFT = 1;
 	private final static int TOP_RIGHT = 16;
 	private final static int BOTTOM_RIGHT = 27;
@@ -28,9 +45,11 @@ public class Position {
 	
 	
 	
-	public Position(int x, int y){
-		this.x = x;
-		this.y = y;
+
+	public Position(int xTemporal, int yTemporal){
+		this.xTemporal = xTemporal;
+		this.yTemporal = yTemporal;
+		
 	}
 
 	
@@ -43,28 +62,52 @@ public class Position {
 		
 		Position basePosition = new Position(70,37);
 		
+		
 		if(weeks >= TOP_LEFT && weeks <= TOP_RIGHT)
-			basePosition.x += (weeks-1)*SPACE_BETWEEN_SQUARE;
+			basePosition.xTemporal += (weeks-1)*SPACE_BETWEEN_SQUARE;
 		
 		if(weeks > TOP_RIGHT && weeks <= BOTTOM_RIGHT){
-			basePosition.x += LENGTH*SPACE_BETWEEN_SQUARE;
-			basePosition.y += ((weeks-1)-LENGTH)*SPACE_BETWEEN_SQUARE;
+			basePosition.xTemporal += LENGTH*SPACE_BETWEEN_SQUARE;
+			basePosition.yTemporal += ((weeks-1)-LENGTH)*SPACE_BETWEEN_SQUARE;
 		}
 		
 		if(weeks > BOTTOM_RIGHT && weeks <= BOTTOM_LEFT){
-			basePosition.x += (LENGTH-((weeks-1)-LENGTH-HEIGHT))*SPACE_BETWEEN_SQUARE;
-			basePosition.y += HEIGHT*SPACE_BETWEEN_SQUARE;
+			basePosition.xTemporal += (LENGTH-((weeks-1)-LENGTH-HEIGHT))*SPACE_BETWEEN_SQUARE;
+			basePosition.yTemporal += HEIGHT*SPACE_BETWEEN_SQUARE;
 		}
 		
 		if(weeks > BOTTOM_LEFT)
-			basePosition.y += (HEIGHT-((weeks-1)-(2*LENGTH)-HEIGHT))*SPACE_BETWEEN_SQUARE;
+			basePosition.yTemporal += (HEIGHT-((weeks-1)-(2*LENGTH)-HEIGHT))*SPACE_BETWEEN_SQUARE;
 		
 	
-		this.x = basePosition.getX();
-		this.y = basePosition.getY();
+		this.xTemporal = basePosition.getXTemporal();
+		this.yTemporal = basePosition.getYTemporal();
 		
 	}
 	
+	
+	
+	
+	/**
+	 * 
+	 * Initalization of the coord of the differents areas
+	 * 
+	 */
+	public void initAreaPositions(){
+		
+		positionsArea.put("london", new Position(200,125));
+		positionsArea.put("paris", new Position(235,235));
+		positionsArea.put("rome", new Position(345,355));
+		positionsArea.put("berlin", new Position(385,170));
+		positionsArea.put("vienna", new Position(440,280));
+		positionsArea.put("warsaw", new Position(510,195));
+		positionsArea.put("moscow", new Position(660,125));
+		positionsArea.put("greece", new Position(530,420));
+		positionsArea.put("crete", new Position(590,540));
+		positionsArea.put("egypt", new Position(670,655));
+		positionsArea.put("palestine", new Position(795,645));
+		positionsArea.put("mesopotamia", new Position(910,530));
+	}
 	
 	
     /***********************************************************************************************
@@ -74,13 +117,20 @@ public class Position {
     *  
    ************************************************************************************************/
 	
-	public int getX() {
-		return x;
+	public int getXTemporal() {
+		return xTemporal;
 	}
 
-	public int getY() {
-		return y;
+	public int getYTemporal() {
+		return yTemporal;
 	}
+
+
+	public static Map<String, Position> getPositionsArea() {
+		return positionsArea;
+	}
+	
+	
 	
 	
 	

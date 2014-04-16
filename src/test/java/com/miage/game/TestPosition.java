@@ -37,45 +37,47 @@ public class TestPosition {
 		
 		// square 1
 		position.positionDependingOnWeeks(1);
-		assertEquals(70, position.getX());
-		assertEquals(37, position.getY());
+		assertEquals(70, position.getXTemporal());
+		assertEquals(37, position.getYTemporal());
 		
 		
 		// square 6
 		position.positionDependingOnWeeks(6);
-		assertEquals(385, position.getX());
-		assertEquals(37, position.getY());
+		assertEquals(385, position.getXTemporal());
+		assertEquals(37, position.getYTemporal());
 		
 		// square 16
 		position.positionDependingOnWeeks(16);
-		assertEquals(1015, position.getX());
-		assertEquals(37, position.getY());
+		assertEquals(1015, position.getXTemporal());
+		assertEquals(37, position.getYTemporal());
 		
 		
 		// square 25
 		position.positionDependingOnWeeks(25);
-		assertEquals(1015, position.getX());
-		assertEquals(604, position.getY());
+		assertEquals(1015, position.getXTemporal());
+		assertEquals(604, position.getYTemporal());
 		
 		// square 27
 		position.positionDependingOnWeeks(27);
-		assertEquals(1015, position.getX());
-		assertEquals(730, position.getY());
+		assertEquals(1015, position.getXTemporal());
+		assertEquals(730, position.getYTemporal());
 		
 		// square 38
 		position.positionDependingOnWeeks(38);
-		assertEquals(322, position.getX());
-		assertEquals(730, position.getY());
+		assertEquals(322, position.getXTemporal());
+		assertEquals(730, position.getYTemporal());
 		
 		// square 42
 		position.positionDependingOnWeeks(42);
-		assertEquals(70, position.getX());
-		assertEquals(730, position.getY());
+		assertEquals(70, position.getXTemporal());
+		assertEquals(730, position.getYTemporal());
 		
 		// square 52
 		position.positionDependingOnWeeks(52);
-		assertEquals(70, position.getX());
-		assertEquals(100, position.getY());
+		assertEquals(70, position.getXTemporal());
+		assertEquals(100, position.getYTemporal());
+		
+	
 	
 		
 		
