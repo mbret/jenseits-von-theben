@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.miage.gi;
+package com.miage.gui;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miage.gi;
+package com.miage.gui;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
