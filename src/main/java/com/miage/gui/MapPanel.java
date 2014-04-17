@@ -338,6 +338,8 @@ public class MapPanel extends javax.swing.JPanel {
         player1Panel = new javax.swing.JPanel();
         logMenu = new javax.swing.JPanel();
         logMenuScrollBar = new javax.swing.JScrollBar();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         usableCardsMenu = new javax.swing.JPanel();
         usedCardsMenu = new javax.swing.JPanel();
         jSeparator2 = new javax.swing.JSeparator();
@@ -560,6 +562,12 @@ public class MapPanel extends javax.swing.JPanel {
 
         logMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         logMenu.add(logMenuScrollBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, -1, 180));
+
+        jLabel1.setText("jLabel1");
+        logMenu.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, -1, -1));
+
+        jLabel2.setText("jLabel2");
+        logMenu.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 170, -1, -1));
 
         add(logMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 0, 320, 180));
         add(usableCardsMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 180, 320, 370));
@@ -1144,6 +1152,8 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel expoCardCLabel;
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPanel logMenu;
     private javax.swing.JScrollBar logMenuScrollBar;
