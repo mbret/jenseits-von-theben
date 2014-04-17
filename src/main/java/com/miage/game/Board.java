@@ -100,7 +100,7 @@ public class Board implements Serializable {
         this.playerTokensAndPlayers = new HashMap();
         this.chronotime = new Chronotime();
         this.players = new ArrayList();
-
+        
         // Init date of end game
         String[] tmp = ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("game.endGameDatePosition").split("\\|")[0].split("\\-");
         this.endGameDatePosition = LocalDate.of(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), Integer.parseInt(tmp[2]));
