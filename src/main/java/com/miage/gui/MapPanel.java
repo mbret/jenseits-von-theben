@@ -37,33 +37,21 @@ public class MapPanel extends javax.swing.JPanel {
 
     private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(MapPanel.class.getName());
     
+    // Variables relating to the game
     private Board currentBoard;
     private Player currentPlayer;
     private ArrayList<UsableElement> currentPlayerUsingElements;
-    
-//    private Player player1;
-//    private Player player2;
-//    private Player player3;
-//    private Player player4;
-//    private PlayerToken playerToken1;
-//    private PlayerToken playerToken2;
-//    private PlayerToken playerToken3;
-//    private PlayerToken playerToken4;
-    
-    // the hashmap that contains the action that a player can do
-    private HashMap<String, Object> playerActionParams;
-    
-    /* the hashmap that contains for a class of usable cards the list of that kind of card
-    *  Exemple, CarCard in key, (RomCar, MoskauCar) in value
-    */
-    private HashMap<String, List<UsableElement>> usableCards;
-    
-    // List of displayed Usable Cards, one card for a type of card (one for car, one for zeppelin...)
-//    private List<String> displayedUsableCards;
-    
-    //boolean that serves to know if a player can do an action (here if he can play)
-    private boolean hasPlayerOneActionPossible;
+    private HashMap<String, Object> playerActionParams; // the hashmap that contains the action that a player can do
+    private boolean hasPlayerOneActionPossible; //boolean that serves to know if a player can do an action (here if he can play)
 
+    // variables relating to the UI
+    // Used to work through list (set/update event, update UI)
+    // The order is very important
+    private ArrayList<Component> listOfUsableElementsComponent;
+    private ArrayList<Component> listOfUsingElementsComponent;
+    private ArrayList<Component> listOfExpoCardsComponent;
+    private ArrayList<Component> listOfBoardCardsComponent;
+    
     private Player currentPlayerLeftPanel;
 
     
@@ -86,7 +74,6 @@ public class MapPanel extends javax.swing.JPanel {
         this.currentPlayerLeftPanel = this.currentPlayer; // active left panel player
         
         //Init the displayed list and hashmap of usable Card
-        this.usableCards = new HashMap();
         this.currentPlayerUsingElements = new ArrayList();
 
         // Init the params of the player's action
@@ -152,6 +139,12 @@ public class MapPanel extends javax.swing.JPanel {
             );
         }
         
+        // Add event on click (change four cards)
+        changeFourCardsjButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeFourcardsButtonActionPerformed(evt, true);
+            }
+        });
         
         /*
             Test the players actions
@@ -165,12 +158,16 @@ public class MapPanel extends javax.swing.JPanel {
         
         // TEST ACTION_CHANGE_FOUR_CARDS
         if( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams) ){
-            // deactivate gui function
+            changeFourCardsjButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    changeFourcardsButtonActionPerformed(evt, false);
+                }
+            });
         }
         else{
             hasPlayerOneActionPossible = true;
         }
-            
+        
         // TEST ACTION_EXCAVATE
         for (ExcavationArea area : this.currentBoard.getAreas( ExcavationArea.class ).values()) {
             playerActionParams.put("areaToExcavate", area);
@@ -305,6 +302,31 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
             
+    private void changeFourcardsButtonActionPerformed(java.awt.event.ActionEvent evt, boolean playerIsAble){
+        LOGGER.debug("changeFourcardsButtonActionPerformed:");
+        
+        if( playerIsAble ){
+            
+            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
+            
+            // DO THE MAIN ACTION
+            try {
+                currentBoard.doPlayerRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams);
+            } catch (Exception ex) {
+                LOGGER.fatal( ex.getMessage() );
+                ex.printStackTrace();
+                System.exit( 0 );
+            }
+            
+            _updateExpoCardsUI();
+            
+            _updateBoardCardsUI();
+        }
+        else{
+            JOptionPane.showMessageDialog( this , "Vous ne pouvez pas changer les quatres cartes ");
+        }
+    }
+    
     private void _updateBoardCardsUI(){
         for (int i = 0; i < this.currentBoard.getFourCurrentCards().size(); i++) {
             ((JLabel)this.boardCardsContainerPanel.getComponent( i )).setIcon(
@@ -428,6 +450,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         arrowMenuLabel = new javax.swing.JLabel();
+        changeFourCardsjButton = new javax.swing.JButton();
         expoCardsContainerPanel = new javax.swing.JPanel();
         expoCard1Label = new javax.swing.JLabel();
         expoCard2Label = new javax.swing.JLabel();
@@ -478,6 +501,10 @@ public class MapPanel extends javax.swing.JPanel {
         });
         add(arrowMenuLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -3, -1, 770));
 
+        changeFourCardsjButton.setText("Changer les quatres cartes");
+        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        add(changeFourCardsjButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 410, 190, 50));
+
         expoCardsContainerPanel.setOpaque(false);
         expoCardsContainerPanel.setLayout(null);
 
@@ -503,18 +530,22 @@ public class MapPanel extends javax.swing.JPanel {
 
         boardCard1Label.setText("0");
         boardCard1Label.setToolTipText("");
+        boardCard1Label.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         boardCard1Label.setPreferredSize(new java.awt.Dimension(97, 150));
         boardCardsContainerPanel.add(boardCard1Label);
 
         boardCard2Label.setText("1");
+        boardCard2Label.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         boardCard2Label.setPreferredSize(new java.awt.Dimension(97, 150));
         boardCardsContainerPanel.add(boardCard2Label);
 
         boardCard3Label.setText("2");
+        boardCard3Label.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         boardCard3Label.setPreferredSize(new java.awt.Dimension(97, 150));
         boardCardsContainerPanel.add(boardCard3Label);
 
         boardCard4Label.setText("3");
+        boardCard4Label.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         boardCard4Label.setPreferredSize(new java.awt.Dimension(97, 150));
         boardCardsContainerPanel.add(boardCard4Label);
 
@@ -746,27 +777,6 @@ public class MapPanel extends javax.swing.JPanel {
         boardCard4Label.setEnabled(false);
     }//GEN-LAST:event_arrowMenuLabelMouseEntered
 
-    /**
-     * Initialize all players and all Players Token
-     *
-     * @param board The board initialized in the main menu
-     * @deprecated 
-     */
-    private void setPlayerAndPlayerToken(Board board) {
-//        List<Player> allPlayer = currentBoard.getPlayers();
-//        player1 = allPlayer.get(0);
-//        player2 = allPlayer.get(1);
-//        playerToken1 = player1.getPlayerToken();
-//        playerToken2 = player2.getPlayerToken();
-//        if (allPlayer.size() >= 3) {
-//            player3 = allPlayer.get(2);
-//            playerToken3 = player2.getPlayerToken();
-//        }
-//        if (allPlayer.size() == 4) {
-//            player4 = allPlayer.get(3);
-//            playerToken4 = player4.getPlayerToken();
-//        }
-    }
 
     /**
      * Shows cards owned by the current player
@@ -1262,6 +1272,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel boardCard3Label;
     private javax.swing.JLabel boardCard4Label;
     private javax.swing.JPanel boardCardsContainerPanel;
+    private javax.swing.JButton changeFourCardsjButton;
     private javax.swing.JLabel creteExcavationLabel;
     private javax.swing.JLabel creteNullTokenLabel;
     private javax.swing.JPanel displayedCardTokenPanel;
