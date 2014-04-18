@@ -23,13 +23,18 @@ public class PlayerToken implements Comparable, Serializable{
      * Define the current Date (duration of playing) of the player
      */
     private LocalDate timeState;
+    
+    /**
+     * Represent the position of the temporal player token on the board
+     */
+    private Position temporalPosition;
 
     /**
      * Use this constructeur when you do not need the complete init of the token
      * @param color 
      */
     public PlayerToken(String color){
-        this(color, null, null);
+        this(color, null, null, null);
     }
 
     /**
@@ -37,8 +42,9 @@ public class PlayerToken implements Comparable, Serializable{
      * @param color
      * @param position
      * @param timeState 
+     * @param temporalPosition
      */
-    public PlayerToken(String color, Area position, LocalDate timeState) {
+    public PlayerToken(String color, Area position, LocalDate timeState, Position temporalPosition) {
         this.color = color;
         this.position = position;
         this.timeState = timeState;
