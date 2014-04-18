@@ -168,7 +168,7 @@ public class Board implements Serializable {
      * the game is over
      * <br/>- If the player is on the end game position : the game is over
      *
-     * @return
+     * @return Player | null
      */
     public Player getUpcomingPlayer() {
         Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get(this.playerTokenStack.getFirst()); // pop the last player token
