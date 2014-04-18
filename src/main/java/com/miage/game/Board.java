@@ -100,7 +100,7 @@ public class Board implements Serializable {
         this.playerTokensAndPlayers = new HashMap();
         this.chronotime = new Chronotime();
         this.players = new ArrayList();
-
+        
         // Init date of end game
         String[] tmp = ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("game.endGameDatePosition").split("\\|")[0].split("\\-");
         this.endGameDatePosition = LocalDate.of(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), Integer.parseInt(tmp[2]));
@@ -168,7 +168,7 @@ public class Board implements Serializable {
      * the game is over
      * <br/>- If the player is on the end game position : the game is over
      *
-     * @return
+     * @return Player | null
      */
     public Player getUpcomingPlayer() {
         Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get(this.playerTokenStack.getFirst()); // pop the last player token
@@ -965,6 +965,11 @@ public class Board implements Serializable {
         return currentPlayerToken;
     }
 
+    /**
+     * Set the current player token.
+     * <br/>/!\ change the actual player, be carefull
+     * @param currentPlayerToken 
+     */
     public void setCurrentPlayerToken(PlayerToken currentPlayerToken) {
         this.currentPlayerToken = currentPlayerToken;
     }

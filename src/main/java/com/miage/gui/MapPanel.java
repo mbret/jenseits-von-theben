@@ -1,23 +1,32 @@
-/*
+/**
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miage.gi;
+package com.miage.gui;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
 import com.miage.game.*;
+import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.tokens.Token;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import org.apache.log4j.LogManager;
 
 /**
@@ -28,82 +37,506 @@ import org.apache.log4j.LogManager;
  */
 public class MapPanel extends javax.swing.JPanel {
 
+    private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(MapPanel.class.getName());
+    
+    // Variables relating to the game
     private Board currentBoard;
     private Player currentPlayer;
-    private Player player1;
-    private Player player2;
-    private Player player3;
-    private Player player4;
-    private PlayerToken playerToken1;
-    private PlayerToken playerToken2;
-    private PlayerToken playerToken3;
-    private PlayerToken playerToken4;
-    
-    // the hashmap that contains the action that a player can do
-    private HashMap<String, Object> playerActionParams;
-    
-    /* the hashmap that contains for a class of usable cards the list of that kind of card
-    *  Exemple, CarCard in key, (RomCar, MoskauCar) in value
-    */
-    private HashMap<String, List<Card>> usableCards;
-    
-    // List of displayed Usable Cards, one card for a type of card (one for car, one for zeppelin...)
-    private List<String> displayedUsableCards;
-    
-    //boolean that serves to know if a player can do an action (here if he can play)
-    private boolean canPlayPlayer;
-    private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(MapPanel.class.getName());
+    private ArrayList<UsableElement> currentPlayerUsingElements;
+    private HashMap<String, Object> playerActionParams; // the hashmap that contains the action that a player can do
+    private boolean hasPlayerOneActionPossible; //boolean that serves to know if a player can do an action (here if he can play)
 
+    // variables relating to the UI
+    // Used to work through list (set/update event, update UI)
+    // The order is very important
+    private HashMap<UsableElement, Component> listOfUsableElementsComponent;
+    private HashMap<Object, Component> listOfUsingElementsComponent;
+    private LinkedHashMap<Component, ExpoCard> listOfExpoCardsComponent;  // component instanciated once, only change linked expoCard (all should be always ordened)
+    private LinkedHashMap<Component, Card> listOfBoardCardsComponent;     // components instanciated once, only cards are changed (all should be always ordened)
+    
+    private Player currentPlayerLeftPanel;
+
+    
     /**
      * Creates new form MapPanel
      *
      * @param board Board initialize in the menu panel
      */
-    public MapPanel(Board board) throws IOException {
+    public MapPanel(Board board) throws IOException, Exception {
+        
         // Init graphical components
         initComponents();
-
-        // Init the board and the tabbed pane with name's players
-        this.currentBoard = board;
-        this.setPlayerAndPlayerToken(board);
-        menuCardsPlayer.setVisible(false);
-        displayedCardTokenPanel.setVisible(false);
-        if (currentBoard.getPlayerTokensAndPlayers().size() < menuCardsPlayer.getTabCount()) {
-            for (int i = menuCardsPlayer.getTabCount() - 1; i >= currentBoard.getPlayerTokensAndPlayers().size(); i--) {
-                menuCardsPlayer.remove(i);
-            }
-        }
-        int curNb = 0;
-        for (PlayerToken tok : currentBoard.getPlayerTokensAndPlayers().keySet()) {
-            menuCardsPlayer.setSelectedIndex(curNb);
-            menuCardsPlayer.setTitleAt(curNb, currentBoard.getPlayerTokensAndPlayers().get(tok).getName());
-            curNb++;
-        }
         
-        //Init the displayed list and hashmap of usable Card
-        usableCards = new HashMap();
-        displayedUsableCards = new ArrayList();
+        // Init the board and the tabbed pane with name's players
+        this.currentBoard = board; // active board
+        
+        // Init list of board cards component
+        this.listOfBoardCardsComponent = new LinkedHashMap();
+        for (int i = 0; i < this.currentBoard.getFourCurrentCards().size(); i++) {
+            
+            Card card = this.currentBoard.getFourCurrentCards().get( i );
+            final int idCard = i;
+            JLabel boardcardComponent = new JLabel();
+            listOfBoardCardsComponent.put(
+                    boardcardComponent,
+                    card);
+            
+            boardcardComponent.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        boardCardLabelMouseClicked(evt, idCard, true);
+                    }
+                }
+            );
+            
+            this.boardCardsContainerPanel.add( boardcardComponent );
+        }
+        this._updateBoardCardsUI();
+        
+        
+        // Init list of expo cards component
+        this.listOfExpoCardsComponent = new LinkedHashMap();
+        this.expoCardsContainerPanel.removeAll();
+        this._updateExpoCardsUI();
+        
+        
+        // Get and init upcoming player
+        this.switchNewPlayer();
+        
+        
 
-        //Init the hashmap of actions that can be done by a player
-        playerActionParams = new HashMap();
-        playerPanel.setVisible(false);
-
-        //First four cards of the deck displayed in the map
-        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(0).getId() + ".jpg")));
-        boardCard2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(1).getId() + ".jpg")));
-        boardCard3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(2).getId() + ".jpg")));
-        boardCard4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(3).getId() + ".jpg")));
-
-        // Select the first player in the tabbed pane and update the current player with the first one
-
-        menuCardsPlayer.setSelectedIndex(0);
+        /*
+            Update the left panel
+        */
+        this.playerPanel.setVisible(false); // hide player panel
+        this.menuCardsPlayerTab.setVisible(false); // hide left panel
+        displayedCardTokenPanel.setVisible(false);
+        // add and set dynamicaly player tab on left panel
+        this.menuCardsPlayerTab.removeTabAt(0);
+        for (Player player : this.currentBoard.getPlayers()) {
+            javax.swing.JPanel playerLeftPanel = new javax.swing.JPanel();
+            playerLeftPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+            playerLeftPanel.setBorder( BorderFactory.createEmptyBorder() );
+            this.menuCardsPlayerTab.addTab( player.getName(), playerLeftPanel);
+        }
+//        this.menuCardsPlayerTab.setSelectedIndex(0); // Select the first player in the tabbed pane and update the current player with the first one
         try {
-            this.getPlayerTab(menuCardsPlayer);
+//            leftPanelViewingPlayer = this.currentBoard.getUpcomingPlayer(); // set the viewing player on the left panel
+//            this.getPlayerTab( menuCardsPlayerTab );
         } catch (Exception ex) {
             Logger.getLogger(MapPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
+        
+        
+
+        
+        // Add event on click (change four cards)
+        changeFourCardsjButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeFourcardsButtonActionPerformed(evt, true);
+            }
+        });
+        
+        
     }
 
+    /**
+     * Get the new upcoming player and init everything about him.
+     * <br/>- update actions listeners
+     * @throws Exception 
+     */
+    public void switchNewPlayer() {
+        try{
+            this.currentPlayer = this.currentBoard.getUpcomingPlayer();
+            if( this.currentPlayer == null ){
+                JOptionPane.showMessageDialog( this, "Plus aucun joueur ne peut jouer" );
+            }
+            else{
+
+                this.currentPlayerLeftPanel = this.currentPlayer; // active left panel player
+                //Init the displayed list and hashmap of usable Card
+                this.currentPlayerUsingElements = new ArrayList();
+
+                // Init the params of the player's action
+                this.playerActionParams = new HashMap();
+                this.playerActionParams.put("player", currentPlayer); // wet set the current player
+                this.playerActionParams.put("usedElements", new ArrayList<UsableElement>());
+                this.playerActionParams.put("areaToExcavate", null); // put here one of the board excavationArea the player want to excavate
+                this.playerActionParams.put("cardToPickUp", null); // put here one of the fourCurrentCard the player chose to pick up
+                this.playerActionParams.put("expoCardToDo", null); // put here one of the board expoCard the player chose to do
+                this.playerActionParams.put("nbTokenToPickUp", null); // number of tokens the player is allowed to pick up inside area
+
+                /*
+                    Test the players actions
+                */
+                LOGGER.debug("Test player able to do all actions");
+                this.hasPlayerOneActionPossible = false;
+                // Set active car card in case of player has
+                if( currentPlayer.hasCarCard() ){
+                    // set visible
+                }
+
+                // TEST ACTION_CHANGE_FOUR_CARDS
+                if( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams) ){
+                    changeFourCardsjButton.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            changeFourcardsButtonActionPerformed(evt, false);
+                        }
+                    });
+                }
+                else{
+                    hasPlayerOneActionPossible = true;
+                }
+
+                // TEST ACTION_EXCAVATE
+                for (ExcavationArea area : this.currentBoard.getAreas( ExcavationArea.class ).values()) {
+                    playerActionParams.put("areaToExcavate", area);
+                    if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams)){
+                        // deactivate gui function
+                    }
+                    else{
+                        hasPlayerOneActionPossible = true;
+                    }
+                }
+
+                // TEST ACTION_ORGANIZE_EXPO
+                for (int i = 0; i < this.currentBoard.getExpoCards().size(); i++) {
+
+                    ExpoCard card = this.currentBoard.getExpoCards().get( i );
+                    playerActionParams.put("expoCardToDo", card);
+                    if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams)){
+                        LOGGER.debug("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                        // Do special event to prevent action
+                        JLabel expoCardLabel = (JLabel) this.listOfExpoCardsComponent.keySet().toArray()[i];
+                        final int idExpoCard = i;
+                        JOptionPane.showMessageDialog(this, "unable to do this expo");
+                        expoCardLabel.addMouseListener(
+                            new java.awt.event.MouseAdapter() {
+                                @Override
+                                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                                    boardExpoLabelMouseClicked(evt, idExpoCard, false);
+                                }
+                            }
+                        );
+
+                    }
+                    else{
+                        hasPlayerOneActionPossible = true;
+                    }
+                }
+
+                // TEST ACTION_PICK_CARD
+                for (int i = 0; i < this.currentBoard.getFourCurrentCards().size(); i++) {
+
+                    Card card = this.currentBoard.getFourCurrentCards().get(i);
+                    playerActionParams.put("cardToPickUp", card);
+                    final int idCardToPickUp = this.currentBoard.getFourCurrentCards().indexOf( card );
+
+                    if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, playerActionParams)){
+
+                        // Do special event to prevent action
+                        JLabel boardCardLabel = (JLabel) this.listOfBoardCardsComponent.keySet().toArray()[i];
+                        boardCardLabel.addMouseListener(
+                            new java.awt.event.MouseAdapter() {
+                                @Override
+                                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                                    boardCardLabelMouseClicked(evt, idCardToPickUp, false);
+                                }
+                            }
+                        );
+                    }
+                    else{
+                        hasPlayerOneActionPossible = true;
+                    }
+                }
+
+                JOptionPane.showMessageDialog( this, "Joueur " + this.currentPlayer.getName() + ", c'est à vous de jouer !");
+            }
+        }
+        catch( Exception ex ){
+            LOGGER.fatal( ex );
+            ex.printStackTrace();
+            System.exit(0);
+        }
+    }
+
+    
+    /**
+     * Trigger when a player click on one of the four cards on board.
+     * <br/>Do the main action
+     * <br/>Update usable element UI
+     * <br/>Update using element UI
+     * <br/>Update expo cards UI
+     * @param evt
+     * @param label 
+     */
+    private void boardCardLabelMouseClicked(java.awt.event.MouseEvent evt, int idCard, boolean playerIsAble) {
+        LOGGER.debug("boardCardLabelMouseClicked: Player click on one card = " + evt.getComponent().getName());
+        
+        if( playerIsAble ){
+            
+            //Put the card to pick up inside the hashmap
+            playerActionParams.put("cardToPickUp", this.currentBoard.getFourCurrentCards().get( idCard ) );
+            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
+            
+            // DO THE MAIN ACTION
+            try {
+                currentBoard.doPlayerRoundAction(Player.ACTION_PICK_CARD, playerActionParams);
+            } catch (Exception ex) {
+                LOGGER.fatal( ex );
+                System.exit(0);
+            }
+            
+            // Update the card linked to each component
+            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+            this._updateBoardCards( this.currentBoard.getFourCurrentCards() );
+            
+            _updatePlayerUsableElementUI();
+            _updatePlayerUsingElementUI();
+            _updateExpoCardsUI();
+            _updateBoardCardsUI();
+        }
+        else{
+            JOptionPane.showMessageDialog( this , "Vous ne pouvez pas piocher ");
+        }
+    }    
+    
+    private void boardExpoLabelMouseClicked(java.awt.event.MouseEvent evt, int idExpoCard, boolean playerIsAble) {
+        LOGGER.debug("boardExpoLabelMouseClicked: Player click on one expo card = " + evt.getComponent().getName());
+        
+        if( playerIsAble ){
+            Card expoCardToDo = this.currentBoard.getExpoCards().get( idExpoCard );
+            
+            //Put the card to pick up inside the hashmap
+            playerActionParams.put("expoCardToDo", expoCardToDo );
+            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
+            
+            // DO THE MAIN ACTION
+            try {
+                currentBoard.doPlayerRoundAction(Player.ACTION_ORGANIZE_EXPO, playerActionParams);
+            } catch (Exception ex) {
+                LOGGER.fatal( ex );
+                System.exit(0);
+            }
+            
+            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+            
+            _updatePlayerUsableElementUI();
+            _updatePlayerUsingElementUI();
+            _updateExpoCardsUI();
+            
+        }
+        else{
+            JOptionPane.showMessageDialog( this , "Vous ne pouvez effectuer cette exposition");
+        }
+    }   
+
+    private void UsableElementLabelMouseClicked(java.awt.event.MouseEvent evt, UsableElement usableElement){
+        if( this.currentPlayerUsingElements.contains( usableElement )){
+            JOptionPane.showMessageDialog( this , "Vous utilisez déjà cet element ");
+        }
+        else{
+            this.currentPlayerUsingElements.add( usableElement );
+            _updatePlayerUsingElementUI();
+        }
+    }
+
+    private void changeFourcardsButtonActionPerformed(java.awt.event.ActionEvent evt, boolean playerIsAble){
+        LOGGER.debug("changeFourcardsButtonActionPerformed:");
+        
+        if( playerIsAble ){
+            
+            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
+            
+            // DO THE MAIN ACTION
+            try {
+                currentBoard.doPlayerRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams);
+            } catch (Exception ex) {
+                LOGGER.fatal( ex.getMessage() );
+                ex.printStackTrace();
+                System.exit( 0 );
+            }
+            
+            // Update the card linked to each component
+            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+            this._updateBoardCards( this.currentBoard.getFourCurrentCards() );
+            
+            _updateExpoCardsUI();
+            _updateBoardCardsUI();
+            
+            this.switchNewPlayer();
+
+        }
+        else{
+            JOptionPane.showMessageDialog( this , "Vous ne pouvez pas changer les quatres cartes ");
+        }
+    }
+    
+    /**
+     * /!\ not optimized
+     * @param expoCards 
+     */
+    private void _updatExpoCardsComponent( List<ExpoCard> expoCards ){
+        LOGGER.debug("_updatExpoCardsComponent");
+        this.listOfExpoCardsComponent.clear();
+        for (int i = 0; i < expoCards.size(); i++) {
+            
+            JLabel expoCardComponent = new JLabel();
+            
+            final int idExpoCard = i;
+            expoCardComponent.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        boardExpoLabelMouseClicked(evt, idExpoCard, true);
+                    }
+                }
+            );
+            
+            this.listOfExpoCardsComponent.put(
+                    expoCardComponent, 
+                    expoCards.get(i));
+        }
+        if(listOfExpoCardsComponent.size() > 0 ) LOGGER.debug("_updatExpoCardsComponent: Some expoCards component have been added");
+    }
+    
+    private void _updateBoardCards( List<Card> cards ){
+        for (int i = 0; i < cards.size(); i++) {
+            this.listOfBoardCardsComponent.put( 
+                    (Component)this.listOfBoardCardsComponent.keySet().toArray()[i], 
+                    cards.get( i )
+            );
+        }
+    }
+    
+    /**
+     * Update the display off all four cards from the list of component
+     */
+    private void _updateBoardCardsUI(){
+        
+        for (Map.Entry<Component, Card> entry : this.listOfBoardCardsComponent.entrySet()) {
+            // Set icon depend of cards
+            ((JLabel)entry.getKey()).setIcon( new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + entry.getValue().getId() + ".jpg")) );
+            
+            // Do wathever you want abotu display here
+        }
+        this.boardCardsContainerPanel.updateUI();
+    }
+    
+    /**
+     * 
+     * <br/>Add click event on all cards
+     */
+    private void _updatePlayerUsableElementUI(){
+        LOGGER.debug("_updatePlayerUsableElementUI: refresh of usable element panel");
+        
+        this.usableElementsMenuPanel.removeAll();
+        for (final UsableElement element : this.currentPlayer.getAllUsableElements()) {
+            
+            javax.swing.JLabel elementLabel = new javax.swing.JLabel();
+            
+            // card
+            if( element instanceof Card){
+                elementLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)element).getId() + ".jpg")));
+            }
+            // token
+            else{
+                elementLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)element).getId() + ".jpg")));
+            }
+
+            // Add the click event
+            elementLabel.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        UsableElementLabelMouseClicked(evt, element );
+                    }
+                }
+            );
+            
+            this.usableElementsMenuPanel.add( elementLabel );
+                
+                
+//                // If it is not in the list
+//                if (!usableCards.containsKey(currentBoard.getFourCurrentCards().get(idCard).getDisplayName())) {
+//                    usableCard = new ArrayList(); // creation of a list for the class of the card and add into it + add into the hashmap
+//                    usableCard.add((UsableElement)currentBoard.getFourCurrentCards().get(idCard));
+//                    usableCards.put((currentBoard.getFourCurrentCards().get(idCard).getClass().getName()), usableCard);
+//                } else {
+//                    usableCards.get(currentBoard.getFourCurrentCards().get(idCard).getClass().getName()).add( (UsableElement)currentBoard.getFourCurrentCards().get(idCard));
+//                }
+//                //For each class of card in the hashmap, if it's not displayed, we add it in the list and displayed it
+//                for (String t : usableCards.keySet()) {
+//                    if (!displayedUsableCards.contains(t)) {
+//                        displayedUsableCards.add( t);
+//                        javax.swing.JLabel imageCard = new javax.swing.JLabel();
+//                        imageCard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)usableCards.get(t).get(0)).getId() + ".jpg")));
+//                        usableElementMenu.add(imageCard);
+//                    }
+//                }
+                
+        }
+        this.usableElementsMenuPanel.updateUI();
+    }
+    
+    /**
+     * 
+     */
+    private void _updatePlayerUsingElementUI(){
+        LOGGER.debug("_updatePlayerUsingElementUI:");
+        this.usingElementsMenuPanel.removeAll();
+        
+        for (UsableElement element : this.currentPlayerUsingElements) {
+            LOGGER.debug("_updatePlayerUsingElementUI: element="+element.toString());
+            JLabel elementLabel = new javax.swing.JLabel();
+            
+            // card
+            if( element instanceof Card){
+                elementLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)element).getId() + ".jpg")));
+            }
+            // token
+            else{
+                elementLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)element).getId() + ".jpg")));
+            }
+            
+            this.usingElementsMenuPanel.add( elementLabel );
+        }
+        
+        if(this.currentPlayer.hasCarCard()){
+            this.usingElementsMenuPanel.add( 
+                    new javax.swing.JLabel( 
+                            new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + this.currentPlayer.getSpecificCards(CarCard.class).get(0).getId() + ".jpg")) 
+                    ) 
+            );
+        }
+        
+        this.usingElementsMenuPanel.updateUI();
+        
+    }
+    
+    /**
+     * 
+     */
+    private void _updateExpoCardsUI(){
+        LOGGER.debug("_updateExpoCardsUI");
+        
+        this.expoCardsContainerPanel.removeAll();
+        
+        for (Map.Entry<Component, ExpoCard> entry : this.listOfExpoCardsComponent.entrySet()) {
+            // Set icon depend of cards
+            ((JLabel)entry.getKey()).setIcon( new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + entry.getValue().getId() + ".jpg")) );
+            
+            // Do wathever you want abotu display here
+            this.expoCardsContainerPanel.add( entry.getKey() );
+            LOGGER.debug("_updateExpoCardsUI: One expoCard Label has been added to the container");
+        }
+
+        this.expoCardsContainerPanel.updateUI();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -114,6 +547,11 @@ public class MapPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         arrowMenuLabel = new javax.swing.JLabel();
+        changeFourCardsjButton = new javax.swing.JButton();
+        expoCardsContainerPanel = new javax.swing.JPanel();
+        usingElementsMenuPanel = new javax.swing.JPanel();
+        usableElementsMenuPanel = new javax.swing.JPanel();
+        boardCardsContainerPanel = new javax.swing.JPanel();
         playerPanel = new javax.swing.JPanel();
         berlinAssistantLabel = new javax.swing.JLabel();
         moscowCarLabel = new javax.swing.JLabel();
@@ -136,24 +574,11 @@ public class MapPanel extends javax.swing.JPanel {
         creteNullTokenLabel = new javax.swing.JLabel();
         egyptNullTokenLabel = new javax.swing.JLabel();
         playerBackgroundLabel = new javax.swing.JLabel();
-        menuCardsPlayer = new javax.swing.JTabbedPane();
+        menuCardsPlayerTab = new javax.swing.JTabbedPane();
         player1Panel = new javax.swing.JPanel();
-        player2Panel = new javax.swing.JPanel();
-        player3Panel = new javax.swing.JPanel();
-        player4Panel = new javax.swing.JPanel();
         logMenu = new javax.swing.JPanel();
         logMenuScrollBar = new javax.swing.JScrollBar();
-        usableCardsMenu = new javax.swing.JPanel();
-        usedCardsMenu = new javax.swing.JPanel();
-        jSeparator2 = new javax.swing.JSeparator();
         displayedCardTokenPanel = new javax.swing.JPanel();
-        boardCard1Label = new javax.swing.JLabel();
-        boardCard2Label = new javax.swing.JLabel();
-        boardCard3Label = new javax.swing.JLabel();
-        boardCard4Label = new javax.swing.JLabel();
-        expoCardALabel = new javax.swing.JLabel();
-        expoCardBLabel = new javax.swing.JLabel();
-        expoCardCLabel = new javax.swing.JLabel();
         backgroundLabel = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -165,6 +590,18 @@ public class MapPanel extends javax.swing.JPanel {
             }
         });
         add(arrowMenuLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -3, -1, 770));
+
+        changeFourCardsjButton.setText("Changer les quatres cartes");
+        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        add(changeFourCardsjButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 410, 190, 50));
+
+        expoCardsContainerPanel.setOpaque(false);
+        add(expoCardsContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 440, 400, 300));
+        add(usingElementsMenuPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 550, 320, 220));
+        add(usableElementsMenuPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 180, 320, 370));
+
+        boardCardsContainerPanel.setOpaque(false);
+        add(boardCardsContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 70, 240, 350));
 
         playerPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
@@ -359,74 +796,17 @@ public class MapPanel extends javax.swing.JPanel {
         add(playerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 25, -1, -1));
 
         player1Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        menuCardsPlayer.addTab("Joueur 1", player1Panel);
+        menuCardsPlayerTab.addTab("Joueur 1", player1Panel);
 
-        player2Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        menuCardsPlayer.addTab("Joueur 2", player2Panel);
-
-        player3Panel.setOpaque(false);
-        player3Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        menuCardsPlayer.addTab("Joueur 3", player3Panel);
-
-        player4Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        menuCardsPlayer.addTab("Joueur 4", player4Panel);
-
-        add(menuCardsPlayer, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 770));
+        add(menuCardsPlayerTab, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 770));
 
         logMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         logMenu.add(logMenuScrollBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, -1, 180));
 
         add(logMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 0, 320, 180));
-        add(usableCardsMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 180, 320, 370));
-
-        usedCardsMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        usedCardsMenu.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 320, -1));
-
-        add(usedCardsMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 550, 320, 220));
 
         displayedCardTokenPanel.setOpaque(false);
-        add(displayedCardTokenPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(474, 20, 550, 730));
-
-        boardCard1Label.setPreferredSize(new java.awt.Dimension(97, 150));
-        boardCard1Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                boardCard1LabelMouseClicked(evt);
-            }
-        });
-        add(boardCard1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(764, 90, -1, -1));
-
-        boardCard2Label.setPreferredSize(new java.awt.Dimension(97, 150));
-        boardCard2Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                boardCard2LabelMouseClicked(evt);
-            }
-        });
-        add(boardCard2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(871, 90, -1, -1));
-
-        boardCard3Label.setPreferredSize(new java.awt.Dimension(97, 150));
-        boardCard3Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                boardCard3LabelMouseClicked(evt);
-            }
-        });
-        add(boardCard3Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(764, 250, -1, -1));
-
-        boardCard4Label.setPreferredSize(new java.awt.Dimension(97, 150));
-        boardCard4Label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                boardCard4LabelMouseClicked(evt);
-            }
-        });
-        add(boardCard4Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(871, 250, -1, -1));
-
-        expoCardALabel.setPreferredSize(new java.awt.Dimension(150, 97));
-        add(expoCardALabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 443, -1, -1));
-
-        expoCardBLabel.setPreferredSize(new java.awt.Dimension(150, 97));
-        add(expoCardBLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 569, -1, -1));
-
-        expoCardCLabel.setPreferredSize(new java.awt.Dimension(150, 97));
-        add(expoCardCLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 569, -1, -1));
+        add(displayedCardTokenPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 10, 550, 730));
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/map.jpg"))); // NOI18N
         add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -439,36 +819,16 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt the mouse event that serves for launching the method
      */
     private void arrowMenuLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arrowMenuLabelMouseEntered
-        menuCardsPlayer.setVisible(true);
+        menuCardsPlayerTab.setVisible(true);
         playerPanel.setVisible(true);
         arrowMenuLabel.setVisible(false);
         backgroundLabel.setEnabled(false);
-        boardCard1Label.setEnabled(false);
-        boardCard2Label.setEnabled(false);
-        boardCard3Label.setEnabled(false);
-        boardCard4Label.setEnabled(false);
+//        boardCard1Label.setEnabled(false);
+//        boardCard2Label.setEnabled(false);
+//        boardCard3Label.setEnabled(false);
+//        boardCard4Label.setEnabled(false);
     }//GEN-LAST:event_arrowMenuLabelMouseEntered
 
-    /**
-     * Initialize all players and all Players Token
-     *
-     * @param board The board initialized in the main menu
-     */
-    private void setPlayerAndPlayerToken(Board board) {
-        List<Player> allPlayer = currentBoard.getPlayers();
-        player1 = allPlayer.get(0);
-        player2 = allPlayer.get(1);
-        playerToken1 = player1.getPlayerToken();
-        playerToken2 = player2.getPlayerToken();
-        if (allPlayer.size() >= 3) {
-            player3 = allPlayer.get(2);
-            playerToken3 = player2.getPlayerToken();
-        }
-        if (allPlayer.size() == 4) {
-            player4 = allPlayer.get(3);
-            playerToken4 = player4.getPlayerToken();
-        }
-    }
 
     /**
      * Shows cards owned by the current player
@@ -478,7 +838,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void displayPlayerCard(Class cl) {
         try {
             //Get the current player
-            this.getPlayerTab(menuCardsPlayer);
+            this.getPlayerTab(menuCardsPlayerTab);
             if (currentPlayer.getCards().size() > 0) {
                 displayedCardTokenPanel.setVisible(true);
                 // For each card of the list, compare the class of the card with the class in parameter, if it's good, display
@@ -504,7 +864,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void displayPlayerAreaToken(String color) {
         try {
             //Get the current player
-            this.getPlayerTab(menuCardsPlayer);
+            this.getPlayerTab(menuCardsPlayerTab);
             if (currentPlayer.getTokens().size() > 0) {
                 displayedCardTokenPanel.setVisible(true);
                 // For each token of the player's list, compare the color of the token with the color in parameter, if it's good, display
@@ -529,27 +889,27 @@ public class MapPanel extends javax.swing.JPanel {
      * @return The Player corresponding to the tab selected
      */
     private void getPlayerTab(javax.swing.JTabbedPane tp) throws Exception {
-        switch (tp.getSelectedIndex()) {
-            case 0:
-                currentBoard.setCurrentPlayerToken(playerToken1);
-                currentPlayer = player1;
-                break;
-            case 1:
-                currentBoard.setCurrentPlayerToken(playerToken2);
-                currentPlayer = player2;
-                break;
-            case 2:
-                currentBoard.setCurrentPlayerToken(playerToken3);
-                currentPlayer = player3;
-                break;
-            case 3:
-                currentBoard.setCurrentPlayerToken(playerToken4);
-                currentPlayer = player4;
-                break;
-        }
-
-        //Test if the current player can do something
-        canPlayPlayer = this.playerCanPlay(currentPlayer, playerActionParams);
+//        switch (tp.getSelectedIndex()) {
+//            case 0:
+//                currentBoard.setCurrentPlayerToken(playerToken1);
+//                currentPlayer = player1;
+//                break;
+//            case 1:
+//                currentBoard.setCurrentPlayerToken(playerToken2);
+//                currentPlayer = player2;
+//                break;
+//            case 2:
+//                currentBoard.setCurrentPlayerToken(playerToken3);
+//                currentPlayer = player3;
+//                break;
+//            case 3:
+//                currentBoard.setCurrentPlayerToken(playerToken4);
+//                currentPlayer = player4;
+//                break;
+//        }
+//
+//        //Test if the current player can do something
+//        canPlayPlayer = this.playerCanPlay(currentPlayer, playerActionParams);
     }
 
     /**
@@ -838,14 +1198,14 @@ public class MapPanel extends javax.swing.JPanel {
      */
     private void playerPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playerPanelMouseExited
         if ((evt.getXOnScreen() > playerPanel.getWidth()) || (evt.getYOnScreen() > playerPanel.getHeight())) {
-            menuCardsPlayer.setVisible(false);
+            menuCardsPlayerTab.setVisible(false);
             playerPanel.setVisible(false);
             arrowMenuLabel.setVisible(true);
             backgroundLabel.setEnabled(true);
-            boardCard1Label.setEnabled(true);
-            boardCard2Label.setEnabled(true);
-            boardCard3Label.setEnabled(true);
-            boardCard4Label.setEnabled(true);
+//            boardCard1Label.setEnabled(true);
+//            boardCard2Label.setEnabled(true);
+//            boardCard3Label.setEnabled(true);
+//            boardCard4Label.setEnabled(true);
         }
     }//GEN-LAST:event_playerPanelMouseExited
 
@@ -949,111 +1309,8 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
-    /**
-     * Method called when a player click on a card to pick in the board. Check
-     * if the player can play and update the UI for the four cards in the board
-     * and the expo Cards
-     *
-     * @param indexInFourCurrentCards the index of the card to pick in the four
-     * current cards list
-     */
-    private void playerPickCard(int indexInFourCurrentCards) {
-        
-        // If the player can play
-        if (canPlayPlayer) {
-            try {
-                
-                //List of all the usable cards of the player's cards
-                ArrayList<Card> usableCard;
-                
-                //If the card is usable
-                if (currentBoard.getFourCurrentCards().get(indexInFourCurrentCards) instanceof UsableElement) {
-                    // If it is not in the list
-                    if (!usableCards.containsKey(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getDisplayName())) {
-                        usableCard = new ArrayList(); // creation of a list for the class of the card and add into it + add into the hashmap
-                        usableCard.add(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
-                        usableCards.put((currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getClass().getName()), usableCard);
-                    } else {
-                        usableCards.get(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards).getClass().getName()).add(currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
-                    }
-                    //For each class of card in the hashmap, if it's not displayed, we add it in the list and displayed it
-                    for (String t : usableCards.keySet()) {
-                        if (!displayedUsableCards.contains(t)) {
-                            displayedUsableCards.add(t);
-                            javax.swing.JLabel imageCard = new javax.swing.JLabel();
-                            imageCard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + usableCards.get(t).get(0).getId() + ".jpg")));
-                            usableCardsMenu.add(imageCard);
-                        }
-                    }
-                    usableCardsMenu.updateUI();
-                }
-                
-                //Put the card to pick up inside the hashmap
-                playerActionParams.put("cardToPickUp", currentBoard.getFourCurrentCards().get(indexInFourCurrentCards));
-                currentBoard.doPlayerRoundAction(Player.ACTION_PICK_CARD, playerActionParams);
-                
-                // If the list of the expo cards isn't empty, we dsiplay them
-                if (!currentBoard.getExpoCards().isEmpty()) {
-                    if (currentBoard.getExpoCards().size() == 1) {
-                        this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(0).getId() + ".jpg")));
-                    } else if (currentBoard.getExpoCards().size() == 2) {
-                        this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(0).getId() + ".jpg")));
-                        this.expoCardBLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(1).getId() + ".jpg")));
-                    } else if (currentBoard.getExpoCards().size() == 3) {
-                        this.expoCardALabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(0).getId() + ".jpg")));
-                        this.expoCardBLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(1).getId() + ".jpg")));
-                        this.expoCardCLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getExpoCards().get(2).getId() + ".jpg")));
-                    }
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(MapPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
+    
 
-    /**
-     * When a player click on the first card on the map, it calls the
-     * playerPickCard method and update the first card icon
-     *
-     * @param evt The mouse event that serves for launching the method
-     */
-    private void boardCard1LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard1LabelMouseClicked
-        this.playerPickCard(0);
-        boardCard1Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(0).getId() + ".jpg")));
-    }//GEN-LAST:event_boardCard1LabelMouseClicked
-
-    /**
-     * When a player click on the first card on the map, it calls the
-     * playerPickCard method and update the second card icon
-     *
-     * @param evt The mouse event that serves for launching the method
-     */
-    private void boardCard2LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard2LabelMouseClicked
-        this.playerPickCard(1);
-        boardCard2Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(1).getId() + ".jpg")));
-    }//GEN-LAST:event_boardCard2LabelMouseClicked
-
-    /**
-     * When a player click on the first card on the map, it calls the
-     * playerPickCard method and update the third card icon
-     *
-     * @param evt The mouse event that serves for launching the method
-     */
-    private void boardCard3LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard3LabelMouseClicked
-        this.playerPickCard(2);
-        boardCard3Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(2).getId() + ".jpg")));
-    }//GEN-LAST:event_boardCard3LabelMouseClicked
-
-    /**
-     * When a player click on the first card on the map, it calls the
-     * playerPickCard method and update the fourth card icon
-     *
-     * @param evt The mouse event that serves for launching the method
-     */
-    private void boardCard4LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardCard4LabelMouseClicked
-        this.playerPickCard(3);
-        boardCard4Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + currentBoard.getFourCurrentCards().get(3).getId() + ".jpg")));
-    }//GEN-LAST:event_boardCard4LabelMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowMenuLabel;
     private javax.swing.JLabel backgroundLabel;
@@ -1062,26 +1319,21 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel berlinEtnoLabel;
     private javax.swing.JLabel berlinGenKnowledgeLabel;
     private javax.swing.JLabel berlinSmallExpoLabel;
-    private javax.swing.JLabel boardCard1Label;
-    private javax.swing.JLabel boardCard2Label;
-    private javax.swing.JLabel boardCard3Label;
-    private javax.swing.JLabel boardCard4Label;
+    private javax.swing.JPanel boardCardsContainerPanel;
+    private javax.swing.JButton changeFourCardsjButton;
     private javax.swing.JLabel creteExcavationLabel;
     private javax.swing.JLabel creteNullTokenLabel;
     private javax.swing.JPanel displayedCardTokenPanel;
     private javax.swing.JLabel egyptExcavationLabel;
     private javax.swing.JLabel egyptNullTokenLabel;
-    private javax.swing.JLabel expoCardALabel;
-    private javax.swing.JLabel expoCardBLabel;
-    private javax.swing.JLabel expoCardCLabel;
+    private javax.swing.JPanel expoCardsContainerPanel;
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPanel logMenu;
     private javax.swing.JScrollBar logMenuScrollBar;
     private javax.swing.JLabel londonExcavationLabel;
     private javax.swing.JLabel londonShovelLabel;
-    private javax.swing.JTabbedPane menuCardsPlayer;
+    private javax.swing.JTabbedPane menuCardsPlayerTab;
     private javax.swing.JLabel mesopotamiaExcavationLabel;
     private javax.swing.JLabel mesopotamiaNullTokenLabel;
     private javax.swing.JLabel moscowCarLabel;
@@ -1089,13 +1341,10 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel palestineExcavationLabel;
     private javax.swing.JLabel palestineNullTokenLabel;
     private javax.swing.JPanel player1Panel;
-    private javax.swing.JPanel player2Panel;
-    private javax.swing.JPanel player3Panel;
-    private javax.swing.JPanel player4Panel;
     private javax.swing.JLabel playerBackgroundLabel;
     private javax.swing.JPanel playerPanel;
     private javax.swing.JLabel romaZeppelinLabel;
-    private javax.swing.JPanel usableCardsMenu;
-    private javax.swing.JPanel usedCardsMenu;
+    private javax.swing.JPanel usableElementsMenuPanel;
+    private javax.swing.JPanel usingElementsMenuPanel;
     // End of variables declaration//GEN-END:variables
 }
