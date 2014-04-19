@@ -17,9 +17,9 @@ import static org.junit.Assert.*;
  *
  * @author Maxime
  */
-public class AssistantCardTest {
+public class TestAssistantCard {
     
-    public AssistantCardTest() {
+    public TestAssistantCard() {
     }
     
     @BeforeClass
