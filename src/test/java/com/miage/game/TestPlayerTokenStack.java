@@ -40,10 +40,10 @@ public class TestPlayerTokenStack {
         public void testOrder(){
             LinkedList<PlayerToken> playerTokenStack = new LinkedList();
 		
-            PlayerToken red = new PlayerToken("red", null, LocalDate.now());
-            PlayerToken yellow = new PlayerToken("yellow", null, LocalDate.now());
-            PlayerToken blue = new PlayerToken("blue", null, LocalDate.now());
-            PlayerToken purple = new PlayerToken("purple", null, LocalDate.now());
+            PlayerToken red = new PlayerToken("red", null, LocalDate.now(), null);
+            PlayerToken yellow = new PlayerToken("yellow", null, LocalDate.now(), null);
+            PlayerToken blue = new PlayerToken("blue", null, LocalDate.now(),null);
+            PlayerToken purple = new PlayerToken("purple", null, LocalDate.now(), null);
             
             // All player same position
             playerTokenStack.add( red );
