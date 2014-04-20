@@ -3,7 +3,7 @@ package com.miage.cards;
 import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.DiscardableElement;
 import com.miage.interfaces.KnowledgeElement;
-import com.miage.interfaces.UsableElement;
+import com.miage.interfaces.ActivableElement;
 import com.miage.config.ConfigManager;
 import java.io.IOException;
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author maxime
  */
-public class EthnologicalKnowledgeCard extends Card implements Serializable, KnowledgeElement, UsableElement{
+public class EthnologicalKnowledgeCard extends Card implements KnowledgeElement, ActivableElement{
     
     /**
      * 

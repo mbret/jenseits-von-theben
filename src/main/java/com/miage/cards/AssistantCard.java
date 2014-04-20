@@ -6,7 +6,7 @@ import com.miage.areas.Area;
 import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.DiscardableElement;
 import com.miage.interfaces.KnowledgeElement;
-import com.miage.interfaces.UsableElement;
+import com.miage.interfaces.ActivableElement;
 import java.io.Serializable;
 import java.util.HashMap;
 import org.apache.log4j.LogManager;
@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  * @author maxime
  * 
  */
-public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, UsableElement, Serializable{
+public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, ActivableElement{
 
     private final static Logger LOGGER = LogManager.getLogger(AssistantCard.class.getName());
     

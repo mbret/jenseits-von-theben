@@ -8,7 +8,7 @@ import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
-import com.miage.interfaces.UsableElement;
+import com.miage.interfaces.ActivableElement;
 import com.miage.tokens.BlankToken;
 import com.miage.tokens.PointToken;
 import com.miage.tokens.Token;

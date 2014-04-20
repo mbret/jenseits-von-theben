@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @author maxime
  */
-public class CongressCard extends Card implements Serializable{
+public class CongressCard extends Card{
 
     public CongressCard(int id, String displayName, String areaName, int weekCost) {
         super(displayName, areaName, id, weekCost);

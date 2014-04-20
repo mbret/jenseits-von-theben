@@ -79,6 +79,9 @@ public class FrameMain extends javax.swing.JFrame {
         //full screen
 //        setUndecorated(true);
         initComponents();
+        
+        this.setSize(1366, 800);
+        
 //        GraphicsDevice device;
 //        device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 //        if (device.isFullScreenSupported()) {

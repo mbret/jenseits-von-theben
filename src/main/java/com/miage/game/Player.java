@@ -14,7 +14,7 @@ import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.interfaces.KnowledgeElement;
-import com.miage.interfaces.UsableElement;
+import com.miage.interfaces.ActivableElement;
 import com.miage.tokens.GeneralKnowledgeToken;
 import com.miage.tokens.SpecificKnowledgeToken;
 import com.miage.tokens.Token;
@@ -69,11 +69,11 @@ public class Player implements Serializable {
      */
     private ArrayList<Token> tokens; 
 
-    /**
-     * Contain all tokens which are just picked up from last round
-     * <br/>This variable is updated each round automatically
-     */
-    private ArrayList<Token> tokensJustPickedUp;
+//    /**
+//     * Contain all tokens which are just picked up from last round
+//     * <br/>This variable is updated each round automatically
+//     */
+//    private ArrayList<Token> tokensJustPickedUp;
     
     /**
      * Structure stocking competences :
@@ -112,7 +112,7 @@ public class Player implements Serializable {
             this.cards = new ArrayList();
             this.areasAlreadyExcavate = new ArrayList();
             this.nbRoundStillPlaying = 0;
-            this.tokensJustPickedUp = new ArrayList();
+//            this.tokensJustPickedUp = new ArrayList();
             
             /*
              * Initialization of competences
@@ -205,13 +205,13 @@ public class Player implements Serializable {
         return false;
     }
     
-    public ArrayList<UsableElement> getAllUsableElements(){
-        ArrayList<UsableElement> allUsableElms = new ArrayList();
+    public ArrayList<ActivableElement> getAllUsableElements(){
+        ArrayList<ActivableElement> allUsableElms = new ArrayList();
         for (Card card : this.getCards()) {
-            if( card instanceof UsableElement) allUsableElms.add( (UsableElement)card );
+            if( card instanceof ActivableElement) allUsableElms.add( (ActivableElement)card );
         }
         for (Token token : this.getTokens()) {
-            if( token instanceof UsableElement) allUsableElms.add( (UsableElement)token );
+            if( token instanceof ActivableElement) allUsableElms.add( (ActivableElement)token );
         }
         return allUsableElms;
     }
@@ -270,6 +270,12 @@ public class Player implements Serializable {
             }
         }
         return tokensToReturn;
+    }
+    
+    public <T extends Card> T getFirstOccurOfSpecificCard( Class<T> typeOfCard ){
+        List<T> l = this.getSpecificCards( typeOfCard );
+        if( l.size() > 0) return l.get(0);
+        return null;
     }
     
     /**
@@ -658,13 +664,13 @@ public class Player implements Serializable {
         this.nbRoundStillPlaying = nbRoundStillPlaying;
     }
 
-    public ArrayList<Token> getTokensJustPickedUp() {
-        return tokensJustPickedUp;
-    }
-
-    public void setTokensJustPickedUp(ArrayList<Token> tokensJustPickedUp) {
-        this.tokensJustPickedUp = tokensJustPickedUp;
-    }
+//    public ArrayList<Token> getTokensJustPickedUp() {
+//        return tokensJustPickedUp;
+//    }
+//
+//    public void setTokensJustPickedUp(ArrayList<Token> tokensJustPickedUp) {
+//        this.tokensJustPickedUp = tokensJustPickedUp;
+//    }
 
     public int getPoints() {
         return points;
