@@ -6,7 +6,7 @@ import com.miage.config.ConfigManager;
 import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.DiscardableElement;
 import com.miage.interfaces.KnowledgeElement;
-import com.miage.interfaces.UsableElement;
+import com.miage.interfaces.ActivableElement;
 import com.miage.main.Main;
 import com.miage.tokens.*;
 import java.io.FileOutputStream;
@@ -255,9 +255,9 @@ public class Board implements Serializable {
         List<ShovelCard> shovelCards = new ArrayList();             // list of ised shovel cards
 
         // We check and iterate over all used elements to get some informations and make more precise list
-        List<UsableElement> usedElements;
+        List<ActivableElement> usedElements;
         try {
-            usedElements = ((List<UsableElement>) playerActionParams.get("usedElements")); // we verify that the listis ok
+            usedElements = (List<ActivableElement>) playerActionParams.get("usedElements"); // we verify that the list is ok
             if (usedElements == null) {
                 usedElements = new ArrayList();
             }
@@ -265,7 +265,7 @@ public class Board implements Serializable {
             throw new Exception("No usedElements provided or wrong structure, please see the parameters details");
         }
 
-        for (UsableElement element : usedElements) {
+    for(ActivableElement element : usedElements) {
             if (element instanceof ZeppelinCard) {
                 useZeppelin = true;
             }
@@ -329,7 +329,7 @@ public class Board implements Serializable {
 
         // Because of combinable behaviors we treat assistantCard separatly
         List<AssistantCard> assistantCards = new ArrayList();
-        for (UsableElement element : usedElements) {
+            for(ActivableElement element : usedElements) {
             if (element instanceof AssistantCard) {
                 assistantCards.add((AssistantCard) element);
                 usedElements.remove(element);

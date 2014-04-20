@@ -4,7 +4,7 @@ package com.miage.cards;
 
 import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.DiscardableElement;
-import com.miage.interfaces.UsableElement;
+import com.miage.interfaces.ActivableElement;
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -12,7 +12,7 @@ import java.util.HashMap;
  *
  * @author maxime
  */
-public class ShovelCard extends Card implements UsableElement, CombinableElement, DiscardableElement, Serializable{
+public class ShovelCard extends Card implements ActivableElement, CombinableElement, DiscardableElement, Serializable{
 
     
     private static HashMap<Integer, Integer> values = new HashMap(){{

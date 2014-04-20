@@ -1,7 +1,7 @@
 package com.miage.main;
 
 import com.miage.interfaces.KnowledgeElement;
-import com.miage.interfaces.UsableElement;
+import com.miage.interfaces.ActivableElement;
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.AssistantCard;
 import com.miage.cards.Card;
@@ -89,7 +89,7 @@ public class Main {
             // player actions parameters, defined dynamically depending of what the game need in specific action case
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", currentPlayer); // wet set the current player
-            playerActionParams.put("usedElements", new ArrayList<UsableElement>());
+            playerActionParams.put("usedElements", new ArrayList());
             playerActionParams.put("areaToExcavate", null); // put here one of the board excavationArea the player want to excavate
             playerActionParams.put("cardToPickUp", null); // put here one of the fourCurrentCard the player chose to pick up
             playerActionParams.put("expoCardToDo", null); // put here one of the board expoCard the player chose to do

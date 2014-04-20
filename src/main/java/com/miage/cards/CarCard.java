@@ -2,7 +2,7 @@
 
 package com.miage.cards;
 
-import com.miage.interfaces.UsableElement;
+import com.miage.interfaces.ActivableElement;
 import java.io.Serializable;
 
 /**
