@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  * @author maxime
  * 
  */
-public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, ActivableElement, Serializable{
+public class AssistantCard extends Card implements KnowledgeElement, CombinableElement, ActivableElement{
 
     private final static Logger LOGGER = LogManager.getLogger(AssistantCard.class.getName());
     

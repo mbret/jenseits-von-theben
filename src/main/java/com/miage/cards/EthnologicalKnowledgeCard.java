@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author maxime
  */
-public class EthnologicalKnowledgeCard extends Card implements Serializable, KnowledgeElement, ActivableElement{
+public class EthnologicalKnowledgeCard extends Card implements KnowledgeElement, ActivableElement{
     
     /**
      * 

@@ -6,6 +6,6 @@ package com.miage.interfaces;
  * <br/>Tokens, card are for exemple some usable elements
  * @author Maxime
  */
-public interface ActivableElement {
+public interface ActivableElement extends UsableElement{
     
 }

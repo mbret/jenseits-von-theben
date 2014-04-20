@@ -834,7 +834,7 @@ public class PanelHome extends javax.swing.JPanel {
             Board board = new Board(nbPlayers, players);
             // remove actual GUI content and add de MapPanel
             this.removeAll();
-            MapPanel map = new MapPanel(board);
+            MapPanel map = MapPanel.create(board);
             add(map, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
             this.updateUI();
 

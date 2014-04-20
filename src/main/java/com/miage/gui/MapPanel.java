@@ -6,20 +6,25 @@ package com.miage.gui;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
+import com.miage.config.ConfigManager;
 import com.miage.game.*;
 import com.miage.interfaces.ActivableElement;
+import com.miage.interfaces.ActiveElement;
 import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.tokens.Token;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import static java.lang.reflect.Array.set;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,6 +32,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -56,16 +62,32 @@ public class MapPanel extends javax.swing.JPanel {
     private HashMap<UsableElement, Component> listOfUsingElementsComponent;            // contain all active element a player is using (object because of CarCard)
     private LinkedHashMap<Component, ExpoCard> listOfExpoCardsComponent;  // component instanciated once, only change linked expoCard (all should be always ordened)
     private LinkedHashMap<Component, Card> listOfBoardCardsComponent;     // components instanciated once, only cards are changed (all should be always ordened)
+    private HashMap<Component, ExcavationArea> listOfExcavationSiteComponent; 
+    
+//    private HashMap<Component, MouseListener> componentsMouseListener; // contain all the listerner about the main player action for each component (fuite memoire ça)
     
     private Player currentPlayerLeftPanel;
 
+    private MapPanel instance = null;
+    
+    /**
+     * Factory constructor
+     * @param board
+     * @return
+     * @throws Exception 
+     */
+    public static MapPanel create( Board board ) throws Exception{
+        MapPanel instance = new MapPanel( board );
+        instance.switchNewPlayer();
+        return instance;
+    }
     
     /**
      * Creates new form MapPanel
      *
      * @param board Board initialize in the menu panel
      */
-    public MapPanel(Board board) throws IOException, Exception {
+    private MapPanel(Board board) throws IOException, Exception {
         
         // Init graphical components
         initComponents();
@@ -91,6 +113,11 @@ public class MapPanel extends javax.swing.JPanel {
         this.listOfUsingElementsComponent = new HashMap();
         // ... rest will be updated inside (switchplayer) function
         
+        // Init list of excavation component
+        this.listOfExcavationSiteComponent = new HashMap();
+        this._updateExcavationSiteComponent( new ArrayList( this.currentBoard.getAreas( ExcavationArea.class ).values() ) ) ;
+        this._updateExcavationSiteUI();
+        
         // Add event on click (change four cards)
         changeFourCardsjButton.addActionListener(
             new java.awt.event.ActionListener() {
@@ -100,6 +127,8 @@ public class MapPanel extends javax.swing.JPanel {
                 }
             }
         );
+        
+        
         
         /*
             Update the left panel
@@ -122,18 +151,23 @@ public class MapPanel extends javax.swing.JPanel {
         } catch (Exception ex) {
             Logger.getLogger(MapPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         
-        
-        // Get and init upcoming player
-        this.switchNewPlayer();
     }
 
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Various methods
+     * 
+     ***********************************************************************************************/
+    
     /**
      * Get the new upcoming player and init everything about him.
-     * <br/>- update actions listeners
-     * @throws Exception 
+     * <br/>- update actions listeners 
      */
-    public void switchNewPlayer() {
+    private void switchNewPlayer() {
         try{
             
             this.currentPlayer = this.currentBoard.getUpcomingPlayer();
@@ -142,6 +176,15 @@ public class MapPanel extends javax.swing.JPanel {
             }
             else{
 
+                /**
+                 * For each round
+                 * - reset or update useful intern vars
+                 * - reset params of action method
+                 * - update component to match the actual player
+                 * - update UI to match the actual player
+                 * - Test and lock player's action
+                 */
+                
                 // Update intern vars
                 this.currentPlayerLeftPanel = this.currentPlayer; // active left panel player
                 this.currentPlayerUsingElements = new ArrayList(); //Init the displayed list and hashmap of usable Card
@@ -157,7 +200,7 @@ public class MapPanel extends javax.swing.JPanel {
                 
                 // Update player's component
                 this._updateUsableElementComponent( this.currentPlayer.getAllUsableElements() );
-                this._updateUsingElementComponent( this.currentPlayerUsingElements, this.currentPlayer.getFirstOccurOfSpecificCard( CarCard.class ) );
+                this._updateUsingElementComponent( this.currentPlayerUsingElements );
                 
                 // Update UI
                 this._updatePlayerUsableElementUI();
@@ -175,6 +218,9 @@ public class MapPanel extends javax.swing.JPanel {
 
                 // TEST ACTION_CHANGE_FOUR_CARDS
                 if( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams) ){
+                    
+                    // We remove and set the new listener
+                    changeFourCardsjButton.removeMouseListener( changeFourCardsjButton.getMouseListeners()[0] ); // we remove the previous mouse listener listener
                     changeFourCardsjButton.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
                             _actionChangeFourcardsButtonActionPerformed(evt, false);
@@ -186,10 +232,25 @@ public class MapPanel extends javax.swing.JPanel {
                 }
 
                 // TEST ACTION_EXCAVATE
-                for (ExcavationArea area : this.currentBoard.getAreas( ExcavationArea.class ).values()) {
+                List<ExcavationArea> excaAreas = new ArrayList( this.currentBoard.getAreas( ExcavationArea.class ).values() );
+                for (int i = 0; i < excaAreas.size(); i++) {
+                
+                    final ExcavationArea area = excaAreas.get(i);
                     playerActionParams.put("areaToExcavate", area);
                     if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams)){
-                        // deactivate gui function
+                        
+                        // We remove and set the new listener
+                        JLabel excavationSiteLabel = (JLabel) this.listOfExcavationSiteComponent.keySet().toArray()[i];
+                        final int idExpoCard = i;
+                        excavationSiteLabel.removeMouseListener( excavationSiteLabel.getMouseListeners()[0] ); // we remove the previous mouse listener listener
+                        excavationSiteLabel.addMouseListener(
+                            new java.awt.event.MouseAdapter() {
+                                @Override
+                                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                                    _actionExcavationSiteMouseClicked(evt, area, false);
+                                }
+                            }
+                        );
                     }
                     else{
                         hasPlayerOneActionPossible = true;
@@ -203,7 +264,7 @@ public class MapPanel extends javax.swing.JPanel {
                     playerActionParams.put("expoCardToDo", card);
                     if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams)){
                         
-                        // Do special event to prevent action
+                        // We remove and set the new listener
                         JLabel expoCardLabel = (JLabel) this.listOfExpoCardsComponent.keySet().toArray()[i];
                         final int idExpoCard = i;
                         expoCardLabel.removeMouseListener( expoCardLabel.getMouseListeners()[0] ); // we remove the previous mouse listener listener
@@ -231,7 +292,7 @@ public class MapPanel extends javax.swing.JPanel {
 
                     if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, playerActionParams)){
 
-                        // Do special event to prevent action
+                        // We remove and set the new listener
                         JLabel boardCardLabel = (JLabel) this.listOfBoardCardsComponent.keySet().toArray()[i];
                         boardCardLabel.removeMouseListener( boardCardLabel.getMouseListeners()[0] ); // we remove the previous mouse listener listener
                         boardCardLabel.addMouseListener(
@@ -258,131 +319,6 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
     
-    /**
-     * Trigger when a player click on one of the four cards on board.
-     * <br/>Do the main action
-     * <br/>Update usable element UI
-     * <br/>Update using element UI
-     * <br/>Update expo cards UI
-     * @param evt
-     * @param label 
-     */
-    private void _actionBoardCardLabelMouseClicked(java.awt.event.MouseEvent evt, int idCard, boolean playerIsAble) {
-        LOGGER.debug("boardCardLabelMouseClicked: Player click on one card = " + evt.getComponent().getName());
-        
-        if( playerIsAble ){
-            
-            //Put the card to pick up inside the hashmap
-            playerActionParams.put("cardToPickUp", this.currentBoard.getFourCurrentCards().get( idCard ) );
-            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
-            
-            // DO THE MAIN ACTION
-            try {
-                currentBoard.doPlayerRoundAction(Player.ACTION_PICK_CARD, playerActionParams);
-            } catch (Exception ex) {
-                LOGGER.fatal( ex );
-                System.exit(0);
-            }
-            
-            // Update the card linked to each component
-            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
-            this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
-            
-            _updatePlayerUsableElementUI();
-            _updatePlayerUsingElementUI();
-            _updateExpoCardsUI();
-            _updateBoardCardsUI();
-            
-            this.switchNewPlayer();
-        }
-        else{
-            JOptionPane.showMessageDialog( this , "Vous ne pouvez pas piocher ");
-        }
-    }    
-    
-    private void _actionBoardExpoLabelMouseClicked(java.awt.event.MouseEvent evt, int idExpoCard, boolean playerIsAble) {
-        LOGGER.debug("boardExpoLabelMouseClicked: Player click on one expo card = " + evt.getComponent().getName());
-        
-        if( playerIsAble ){
-            Card expoCardToDo = this.currentBoard.getExpoCards().get( idExpoCard );
-            
-            //Put the card to pick up inside the hashmap
-            playerActionParams.put("expoCardToDo", expoCardToDo );
-            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
-            
-            // DO THE MAIN ACTION
-            try {
-                currentBoard.doPlayerRoundAction(Player.ACTION_ORGANIZE_EXPO, playerActionParams);
-            } catch (Exception ex) {
-                LOGGER.fatal( ex );
-                System.exit(0);
-            }
-            
-            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
-            
-            _updatePlayerUsableElementUI();
-            _updatePlayerUsingElementUI();
-            _updateExpoCardsUI();
-            
-        }
-        else{
-            JOptionPane.showMessageDialog( this , "Vous ne pouvez effectuer cette exposition");
-        }
-    }   
-
-    private void _actionUsableElementLabelMouseClicked(java.awt.event.MouseEvent evt, ActivableElement usableElement){
-        if( this.currentPlayerUsingElements.contains( usableElement )){
-            JOptionPane.showMessageDialog( this , "Vous utilisez déjà cet element ");
-        }
-        else{
-            this.currentPlayerUsingElements.add( usableElement );
-            this._updateUsingElementComponent( this.currentPlayerUsingElements, this.currentPlayer.getFirstOccurOfSpecificCard( CarCard.class ));
-            this._updatePlayerUsingElementUI();
-        }
-    }
-    
-    /**
-     * Uncheck the active usable element (remove from the low panel)
-     * @param evt
-     * @param usableElement 
-     */
-    private void _actionUsingElementLabelMouseClicked(java.awt.event.MouseEvent evt, ActivableElement usableElement){
-        this.currentPlayerUsingElements.remove( usableElement );
-        this._updateUsingElementComponent( this.currentPlayerUsingElements, this.currentPlayer.getFirstOccurOfSpecificCard( CarCard.class ));
-        this._updatePlayerUsingElementUI();
-    }
-
-    private void _actionChangeFourcardsButtonActionPerformed(java.awt.event.ActionEvent evt, boolean playerIsAble){
-        LOGGER.debug("changeFourcardsButtonActionPerformed:");
-        
-        if( playerIsAble ){
-            
-            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
-            
-            // DO THE MAIN ACTION
-            try {
-                currentBoard.doPlayerRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams);
-            } catch (Exception ex) {
-                LOGGER.fatal( ex.getMessage() );
-                ex.printStackTrace();
-                System.exit( 0 );
-            }
-            
-            // Update the card linked to each component
-            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
-            this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
-            
-            _updateExpoCardsUI();
-            _updateBoardCardsUI();
-            
-            this.switchNewPlayer();
-
-        }
-        else{
-            JOptionPane.showMessageDialog( this , "Vous ne pouvez pas changer les quatres cartes ");
-        }
-    }
-    
     private void _updateUsingElementComponent( List<UsableElement> elements ){
         LOGGER.debug("_updateUsingElementComponent");
         
@@ -391,15 +327,6 @@ public class MapPanel extends javax.swing.JPanel {
         for (final UsableElement element : elements) {
             
             javax.swing.JLabel elementLabel = new javax.swing.JLabel();
-            
-            // card
-            if( element instanceof Card){
-                elementLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)element).getId() + ".jpg")));
-            }
-            // token
-            else{
-                elementLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)element).getId() + ".jpg")));
-            }
 
             // Add the click event
             if( element instanceof ActivableElement ){
@@ -426,15 +353,6 @@ public class MapPanel extends javax.swing.JPanel {
         for (final ActivableElement element : elements) {
             
             javax.swing.JLabel elementLabel = new javax.swing.JLabel();
-            
-            // card
-            if( element instanceof Card){
-                elementLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)element).getId() + ".jpg")));
-            }
-            // token
-            else{
-                elementLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)element).getId() + ".jpg")));
-            }
 
             // Add the click event
             elementLabel.addMouseListener(
@@ -460,8 +378,6 @@ public class MapPanel extends javax.swing.JPanel {
         for (int i = 0; i < expoCards.size(); i++) {
             
             JLabel expoCardComponent = new JLabel();
-            
-            expoCardComponent.setIcon( new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + expoCards.get(i).getId() + ".jpg")) );
             
             final int idExpoCard = i;
             expoCardComponent.addMouseListener(
@@ -511,6 +427,32 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
     
+    private void _updateExcavationSiteComponent( List<ExcavationArea> areas ) throws IOException{
+        for (final ExcavationArea excavationArea : areas) {
+            JLabel excavationSiteLabel = new JLabel();
+            
+            excavationSiteLabel.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        _actionExcavationSiteMouseClicked(evt, excavationArea, true);
+                    }
+                }
+            );
+            
+            this.listOfExcavationSiteComponent.put( excavationSiteLabel, excavationArea);
+        
+        }
+    }
+    
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Update UI
+     * 
+     ***********************************************************************************************/
+    
     /**
      * Update the display off all four cards from the list of component
      */
@@ -538,6 +480,15 @@ public class MapPanel extends javax.swing.JPanel {
         this.usableElementsMenuPanel.removeAll();
         for (Map.Entry<ActivableElement, Component> entry : this.listOfUsableElementsComponent.entrySet()) {
             
+            // card
+            if( entry.getKey() instanceof Card){
+                ((JLabel)entry.getKey()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)entry.getKey()).getId() + ".jpg")));
+            }
+            // token
+            else{
+                ((JLabel)entry.getKey()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)entry.getKey()).getId() + ".jpg")));
+            }
+            
             this.usableElementsMenuPanel.add( entry.getValue() );
                 
         }
@@ -552,6 +503,15 @@ public class MapPanel extends javax.swing.JPanel {
         this.usingElementsMenuPanel.removeAll();
         
         for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
+            
+            // card
+            if( entry.getKey() instanceof Card){
+                ((JLabel)entry.getKey()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)entry.getKey()).getId() + ".jpg")));
+            }
+            // token
+            else{
+                ((JLabel)entry.getKey()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)entry.getKey()).getId() + ".jpg")));
+            }
             
             this.usingElementsMenuPanel.add( entry.getValue() );
         }
@@ -574,13 +534,230 @@ public class MapPanel extends javax.swing.JPanel {
         this.expoCardsContainerPanel.removeAll();
         
         for (Map.Entry<Component, ExpoCard> entry : this.listOfExpoCardsComponent.entrySet()) {
+            
             // Do wathever you want about display here
+            ((JLabel)entry.getKey()).setIcon( new ImageIcon(getClass().getResource("/images/cards/" + entry.getValue().getId() + ".jpg")) );
+            ((JLabel)entry.getKey()).setCursor( new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR) );
+            
+            // Set the position and others ...
+            
             this.expoCardsContainerPanel.add( entry.getKey() );
             LOGGER.debug("_updateExpoCardsUI: One expoCard Label has been added to the container");
         }
 
         this.expoCardsContainerPanel.updateUI();
     }
+    
+    private void _updateExcavationSiteUI() throws IOException{
+        this.excavationContainerPanel.removeAll();
+        for (Map.Entry<Component, ExcavationArea> entry : this.listOfExcavationSiteComponent.entrySet()) {
+            
+            ((JLabel)entry.getKey()).setIcon( new ImageIcon( getClass().getResource( ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.images") + "excavate-icon.png")) );
+            ((JLabel)entry.getKey()).setCursor( new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR) );
+            
+            // ... set the positions and others
+            
+            this.excavationContainerPanel.add( entry.getKey() );
+        }
+        this.excavationContainerPanel.updateUI();
+    }
+    
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Animations
+     * 
+     ***********************************************************************************************/
+    
+    /**
+     * Animate the action of picking cards
+     * @param pickedCards
+     * @param indexOfCardOnBoard 
+     */
+    private void _animatePickingCard( Card pickedCard, int indexOfCardOnBoard ){
+        // ...
+//        JOptionPane.showMessageDialog( this, "Vous venez de piocher une carte");
+        // ...
+    }
+    
+    private void _animatePlayerMoving(){}
+    
+    private void _animatePlayerExcavating(){}
+    
+    
+    
+    
+    /***********************************************************************************************
+     *
+     *                                  Own events
+     * 
+     ***********************************************************************************************/
+    
+    /**
+     * Trigger when a player click on one of the four cards on board.
+     * <br/>Do the main action
+     * <br/>Update usable element UI
+     * <br/>Update using element UI
+     * <br/>Update expo cards UI
+     * @param evt
+     * @param label 
+     */
+    private void _actionBoardCardLabelMouseClicked(java.awt.event.MouseEvent evt, int idCard, boolean playerIsAble) {
+        LOGGER.debug("boardCardLabelMouseClicked: Player click on one card = " + evt.getComponent().getName());
+        
+        if( playerIsAble ){
+            
+//            HashMap<String, Object> returnedInfo = null;
+            Card pickedCard = null;
+            
+            //Put the card to pick up inside the hashmap
+            playerActionParams.put("cardToPickUp", this.currentBoard.getFourCurrentCards().get( idCard ) );
+            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
+            
+            // DO THE MAIN ACTION 
+            try {
+                pickedCard = (Card) ((HashMap<String, Object>) currentBoard.doPlayerRoundAction(Player.ACTION_PICK_CARD, playerActionParams)).get("pickedCard");
+            } catch (Exception ex) {
+                LOGGER.fatal( ex );
+                System.exit(0);
+            }
+            
+            // Animate the action of picking
+            this._animatePickingCard( pickedCard, idCard);
+                    
+            // We eventually add the final picked card to using eement if this card is an activeElement
+            if( pickedCard instanceof ActiveElement ){
+                this.currentPlayerUsingElements.add( (UsableElement) pickedCard);
+            }
+            
+            
+            // Update the card linked to each component
+            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+            this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
+            
+            _updatePlayerUsableElementUI();
+            _updatePlayerUsingElementUI();
+            _updateExpoCardsUI();
+            _updateBoardCardsUI();
+            
+            this.switchNewPlayer();
+        }
+        else{
+            JOptionPane.showMessageDialog( this , "Vous ne pouvez pas piocher ");
+        }
+    }    
+    
+    private void _actionBoardExpoLabelMouseClicked(java.awt.event.MouseEvent evt, int idExpoCard, boolean playerIsAble) {
+        LOGGER.debug("boardExpoLabelMouseClicked: Player click on one expo card = " + evt.getComponent().getName());
+        
+        if( playerIsAble ){
+            Card expoCardToDo = this.currentBoard.getExpoCards().get( idExpoCard );
+            
+            //Put the card to pick up inside the hashmap
+            playerActionParams.put("expoCardToDo", expoCardToDo );
+            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
+            
+            // DO THE MAIN ACTION
+            try {
+                currentBoard.doPlayerRoundAction(Player.ACTION_ORGANIZE_EXPO, playerActionParams);
+            } catch (Exception ex) {
+                LOGGER.fatal( ex );
+                System.exit(0);
+            }
+            
+            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+            
+            _updatePlayerUsableElementUI();
+            _updatePlayerUsingElementUI();
+            _updateExpoCardsUI();
+            
+        }
+        else{
+            JOptionPane.showMessageDialog( this , "Vous ne pouvez effectuer cette exposition");
+        }
+    }
+
+    /**
+     * When the player click on the activabe element on the panel right
+     * @param evt
+     * @param usableElement 
+     */
+    private void _actionUsableElementLabelMouseClicked(java.awt.event.MouseEvent evt, ActivableElement element){
+        if( this.currentPlayerUsingElements.contains( (UsableElement)element )){
+            JOptionPane.showMessageDialog( this , "Vous utilisez déjà cet element ");
+        }
+        else{
+            this.currentPlayerUsingElements.add( (UsableElement)element );
+            this._updateUsingElementComponent( this.currentPlayerUsingElements );
+            this._updatePlayerUsingElementUI();
+        }
+    }
+    
+    /**
+     * When the player want to remove an activated element
+     * @param evt
+     * @param usableElement 
+     */
+    private void _actionUsingElementLabelMouseClicked(java.awt.event.MouseEvent evt, UsableElement element ){
+        if( ! (element instanceof ActivableElement) ){
+            JOptionPane.showMessageDialog( this, "Vous ne pouvez pas désactiver cet element");
+        }
+        else{
+            this.currentPlayerUsingElements.remove( element );
+            this._updateUsingElementComponent( this.currentPlayerUsingElements );
+            this._updatePlayerUsingElementUI();
+        }
+        
+    }
+
+    private void _actionChangeFourcardsButtonActionPerformed(java.awt.event.ActionEvent evt, boolean playerIsAble){
+        LOGGER.debug("changeFourcardsButtonActionPerformed:");
+        
+        if( playerIsAble ){
+            
+            playerActionParams.put("usedElements", this.currentPlayerUsingElements);
+            
+            // DO THE MAIN ACTION
+            try {
+                currentBoard.doPlayerRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams);
+            } catch (Exception ex) {
+                LOGGER.fatal( ex.getMessage() );
+                ex.printStackTrace();
+                System.exit( 0 );
+            }
+            
+            // Update the card linked to each component
+            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+            this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
+            
+            _updateExpoCardsUI();
+            _updateBoardCardsUI();
+            
+            this.switchNewPlayer();
+
+        }
+        else{
+            JOptionPane.showMessageDialog( this , "Vous ne pouvez pas changer les quatres cartes ");
+        }
+    }
+    
+    private void _actionExcavationSiteMouseClicked( java.awt.event.MouseEvent evt, ExcavationArea area, boolean playerIsAble ){
+        if( ! playerIsAble ){
+            JOptionPane.showMessageDialog( this, "Vous ne pouvez pas fouiller " + area.getName());
+        }
+        else{
+            JOptionPane.showMessageDialog( this, "Vous venez de fouiller " + area.getName());
+        }
+    }
+    
+    
+    
+    /***********************************************************************************************
+     *
+     *                               Netbeans & auto generated
+     * 
+     ***********************************************************************************************/
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -593,6 +770,7 @@ public class MapPanel extends javax.swing.JPanel {
 
         arrowMenuLabel = new javax.swing.JLabel();
         changeFourCardsjButton = new javax.swing.JButton();
+        excavationContainerPanel = new javax.swing.JPanel();
         expoCardsContainerPanel = new javax.swing.JPanel();
         usingElementsMenuPanel = new javax.swing.JPanel();
         usableElementsMenuPanel = new javax.swing.JPanel();
@@ -637,8 +815,11 @@ public class MapPanel extends javax.swing.JPanel {
         add(arrowMenuLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -3, -1, 770));
 
         changeFourCardsjButton.setText("Changer les quatres cartes");
-        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         add(changeFourCardsjButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 410, 190, 50));
+
+        excavationContainerPanel.setOpaque(false);
+        add(excavationContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 350, 540, 360));
 
         expoCardsContainerPanel.setOpaque(false);
         add(expoCardsContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 440, 400, 300));
@@ -970,6 +1151,7 @@ public class MapPanel extends javax.swing.JPanel {
         System.out.println("" + pl.getCards());
         if ((pl = currentBoard.getUpcomingPlayer()) != null) {
             try {
+                
                 // player actions parameters, defined dynamically depending of what the game need in specific action case
                 plAcParam.put("player", pl); // wet set the current player
                 plAcParam.put("usedElement", new ArrayList<ActivableElement>());
@@ -1371,6 +1553,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel displayedCardTokenPanel;
     private javax.swing.JLabel egyptExcavationLabel;
     private javax.swing.JLabel egyptNullTokenLabel;
+    private javax.swing.JPanel excavationContainerPanel;
     private javax.swing.JPanel expoCardsContainerPanel;
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;

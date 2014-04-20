@@ -236,9 +236,14 @@ public class Board implements Serializable {
      * <tr><td>List<UsableElement> usedElements</td><td>Provide a list of
      * elements the player want to use (not required)</td></tr>
      * </table>
+     * @return an hashmap with some useful information like last card picked up ...
      */
-    public void doPlayerRoundAction(int actionPattern, HashMap<String, Object> playerActionParams) throws Exception {
+    public HashMap<String, Object> doPlayerRoundAction(int actionPattern, HashMap<String, Object> playerActionParams) throws Exception {
         LOGGER.debug("doPlayerRoundAction: pattern=" + actionPattern + " playerActionParams=" + playerActionParams.toString());
+        
+        HashMap<String, Object> returnedInfo = new HashMap();
+        returnedInfo.put("pickedCard", null);
+        
         /**
          * Note to developers (find a better way to use discard combinable
          * element todo ...
@@ -317,11 +322,12 @@ public class Board implements Serializable {
                 if (!playerActionParams.containsKey("cardToPickUp") || !(playerActionParams.get("cardToPickUp") instanceof Card)) {
                     throw new Exception("No cardToPickUp provided, please see the parameters details");
                 }
-                this._actionPlayerDoPickCard(
-                        player,
-                        ((Card) playerActionParams.get("cardToPickUp")),
-                        useZeppelin,
-                        useCarCard);
+                Card pickedCard = this._actionPlayerDoPickCard(
+                                    player,
+                                    ((Card) playerActionParams.get("cardToPickUp")),
+                                    useZeppelin,
+                                    useCarCard);
+                returnedInfo.put("pickedCard", pickedCard);
                 break;
         }
 
@@ -352,6 +358,8 @@ public class Board implements Serializable {
 
         // We increment the number of round this player is still playing
         player.setNbRoundStillPlaying(player.getNbRoundStillPlaying() + 1);
+        
+        return returnedInfo;
     }
 
     /**
@@ -607,7 +615,7 @@ public class Board implements Serializable {
      *
      * @param player
      */
-    private void _actionPlayerDoPickCard(Player player, Card cardToPickUp, boolean useZeppelinCard, boolean useCarCard) {
+    private Card _actionPlayerDoPickCard(Player player, Card cardToPickUp, boolean useZeppelinCard, boolean useCarCard) {
         LOGGER.debug("_actionPlayerDoPickCard: cardToPickUp=" + cardToPickUp);
 
         player.getPlayerToken().movePlayerToken(this.getArea(cardToPickUp.getAreaName()), useZeppelinCard, useCarCard); // move
@@ -617,6 +625,8 @@ public class Board implements Serializable {
 
         player.getPlayerToken().addWeeks(pickedCard.getWeekCost());
         player.getCards().add(pickedCard); // update player hand
+        
+        return pickedCard;
     }
 
     /**
@@ -996,6 +1006,7 @@ public class Board implements Serializable {
         return areasToReturn;
     }
 
+
     public List<Card> getFourCurrentCards() {
         return fourCurrentCards;
     }
@@ -1015,7 +1026,7 @@ public class Board implements Serializable {
     public Area getArea(String areaName) {
         return this.getAreas().get(areaName);
     }
-
+   
     public HashMap<PlayerToken, Player> getPlayerTokensAndPlayers() {
         return playerTokensAndPlayers;
     }
