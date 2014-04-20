@@ -570,6 +570,7 @@ public class MapPanel extends javax.swing.JPanel {
     }
     
     private void _updatePlayerTokenPositionUI() {
+        LOGGER.debug( this.currentBoard.getPlayerTokenStack());
         this.playerTokenContainerPanel.removeAll();
         for (int i = 0; i < this.currentBoard.getPlayerTokenStack().size(); i++) {
             PlayerToken playerToken = this.currentBoard.getPlayerTokenStack().get(i);

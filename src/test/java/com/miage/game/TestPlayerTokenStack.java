@@ -55,6 +55,7 @@ public class TestPlayerTokenStack {
             assertTrue( playerTokenStack.getFirst().getColor().equals("red") );
             
             // red is moving to 1 week, so blue must play now and red is the last
+            
             red.addWeeks(1);
             Collections.sort( playerTokenStack );
             assertTrue( playerTokenStack.getFirst().getColor().equals("blue") );
