@@ -64,11 +64,9 @@ public class MapPanel extends javax.swing.JPanel {
     private LinkedHashMap<Component, Card> listOfBoardCardsComponent;     // components instanciated once, only cards are changed (all should be always ordened)
     private HashMap<Component, ExcavationArea> listOfExcavationSiteComponent; 
     
-//    private HashMap<Component, MouseListener> componentsMouseListener; // contain all the listerner about the main player action for each component (fuite memoire ça)
-    
     private Player currentPlayerLeftPanel;
 
-    private MapPanel instance = null;
+    private final MapPanel instance = null;
     
     /**
      * Factory constructor
@@ -192,7 +190,7 @@ public class MapPanel extends javax.swing.JPanel {
                 // Init the params of the player's action
                 this.playerActionParams = new HashMap();
                 this.playerActionParams.put("player", currentPlayer); // wet set the current player
-                this.playerActionParams.put("usedElements", new ArrayList<ActivableElement>());
+                this.playerActionParams.put("usedElements", this.currentPlayerUsingElements);
                 this.playerActionParams.put("areaToExcavate", null); // put here one of the board excavationArea the player want to excavate
                 this.playerActionParams.put("cardToPickUp", null); // put here one of the fourCurrentCard the player chose to pick up
                 this.playerActionParams.put("expoCardToDo", null); // put here one of the board expoCard the player chose to do
@@ -309,7 +307,7 @@ public class MapPanel extends javax.swing.JPanel {
                     }
                 }
 
-                JOptionPane.showMessageDialog( this, "Joueur " + this.currentPlayer.getName() + ", c'est à vous de jouer !");
+//                JOptionPane.showMessageDialog( this, "Joueur " + this.currentPlayer.getName() + ", c'est à vous de jouer !");
             }
         }
         catch( Exception ex ){
@@ -464,6 +462,7 @@ public class MapPanel extends javax.swing.JPanel {
             
             // Set icon depend of cards
             ((JLabel)entry.getKey()).setIcon( new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + entry.getValue().getId() + ".jpg")) );
+            ((JLabel)entry.getKey()).setCursor( new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR) );
             
             // Do wathever you want abotu display here
         }
@@ -482,11 +481,11 @@ public class MapPanel extends javax.swing.JPanel {
             
             // card
             if( entry.getKey() instanceof Card){
-                ((JLabel)entry.getKey()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)entry.getKey()).getId() + ".jpg")));
+                ((JLabel)entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)entry.getKey()).getId() + ".jpg")));
             }
             // token
             else{
-                ((JLabel)entry.getKey()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)entry.getKey()).getId() + ".jpg")));
+                ((JLabel)entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)entry.getKey()).getId() + ".jpg")));
             }
             
             this.usableElementsMenuPanel.add( entry.getValue() );
@@ -506,11 +505,11 @@ public class MapPanel extends javax.swing.JPanel {
             
             // card
             if( entry.getKey() instanceof Card){
-                ((JLabel)entry.getKey()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)entry.getKey()).getId() + ".jpg")));
+                ((JLabel)entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card)entry.getKey()).getId() + ".jpg")));
             }
             // token
             else{
-                ((JLabel)entry.getKey()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)entry.getKey()).getId() + ".jpg")));
+                ((JLabel)entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token)entry.getKey()).getId() + ".jpg")));
             }
             
             this.usingElementsMenuPanel.add( entry.getValue() );
@@ -585,7 +584,12 @@ public class MapPanel extends javax.swing.JPanel {
     
     private void _animatePlayerExcavating(){}
     
-    
+    private void _animatePickingTokens( List<Token> tokensPicked ){
+        JOptionPane.showMessageDialog( this, "Vous venez de piocher : " + tokensPicked);
+        for (Token token : tokensPicked) {
+            // ...
+        }
+    }
     
     
     /***********************************************************************************************
@@ -630,7 +634,6 @@ public class MapPanel extends javax.swing.JPanel {
             if( pickedCard instanceof ActiveElement ){
                 this.currentPlayerUsingElements.add( (UsableElement) pickedCard);
             }
-            
             
             // Update the card linked to each component
             this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
@@ -747,6 +750,23 @@ public class MapPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog( this, "Vous ne pouvez pas fouiller " + area.getName());
         }
         else{
+            playerActionParams.put("areaToExcavate", area);
+ 
+            List<Token> tokensJustPickedUp = null;
+            
+            // DO THE MAIN ACTION
+            try {
+                tokensJustPickedUp = (List<Token>) currentBoard.doPlayerRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams).get("tokensJustPickedUp");
+            } catch (Exception ex) {
+                LOGGER.fatal( ex.getMessage() );
+                ex.printStackTrace();
+                System.exit( 0 );
+            }
+            
+            this._animatePickingTokens( tokensJustPickedUp );
+            
+            this.switchNewPlayer();
+            
             JOptionPane.showMessageDialog( this, "Vous venez de fouiller " + area.getName());
         }
     }
