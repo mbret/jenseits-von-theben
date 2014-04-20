@@ -4,6 +4,7 @@ import com.miage.areas.Area;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.log4j.LogManager;
 
 /**
  * 
@@ -15,23 +16,24 @@ import java.util.Map;
 
 public class PlayerTokenPosition {
 	
-	
+	private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(PlayerTokenPosition.class.getName());
+        
 	/**
 	 *  map of the position (x,y) of areas
 	 */
 	private static Map<String, Point> positionsArea = new HashMap(){{
-            this.put("london", new Point(180,125));
-            this.put("paris", new Point(215,235));
-            this.put("rome", new Point(325,355));
-            this.put("berlin", new Point(365,170));
-            this.put("vienna", new Point(420,280));
-            this.put("warsaw", new Point(490,195));
-            this.put("moscow", new Point(640,125));
-            this.put("greece", new Point(510,420));
-            this.put("crete", new Point(570,540));
-            this.put("egypt", new Point(650,655));
-            this.put("palestine", new Point(775,645));
-            this.put("mesopotamia", new Point(890,530));
+            this.put("london", new Point(130,125));
+            this.put("paris", new Point(180,225));
+            this.put("rome", new Point(300,345));
+            this.put("berlin", new Point(330,150));
+            this.put("vienna", new Point(400,280));
+            this.put("warsaw", new Point(460,175));
+            this.put("moscow", new Point(600,110));
+            this.put("greece", new Point(500,420));
+            this.put("crete", new Point(500,540));
+            this.put("egypt", new Point(600,655));
+            this.put("palestine", new Point(700,645));
+            this.put("mesopotamia", new Point(800,530));
         }};
         
 	/**
@@ -105,11 +107,12 @@ public class PlayerTokenPosition {
 	 * 
 	 * Initalization of the coord of the differents areas
 	 * 
+     * @param area
+     * @param decalMultiplier
 	 */
 	public static Point positionDependingOnArea( String area, int decalMultiplier){
             Point p = PlayerTokenPosition.positionsArea.get(area);
-            p.x += decalMultiplier * PlayerTokenPosition.decal;
-            return p;
+            return new Point(p.x + decalMultiplier * PlayerTokenPosition.decal, p.y);
 		
 	}
 	
