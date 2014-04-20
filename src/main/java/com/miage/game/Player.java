@@ -69,12 +69,6 @@ public class Player implements Serializable {
      */
     private ArrayList<Token> tokens; 
 
-//    /**
-//     * Contain all tokens which are just picked up from last round
-//     * <br/>This variable is updated each round automatically
-//     */
-//    private ArrayList<Token> tokensJustPickedUp;
-    
     /**
      * Structure stocking competences :
      *  "car"
@@ -112,7 +106,6 @@ public class Player implements Serializable {
             this.cards = new ArrayList();
             this.areasAlreadyExcavate = new ArrayList();
             this.nbRoundStillPlaying = 0;
-//            this.tokensJustPickedUp = new ArrayList();
             
             /*
              * Initialization of competences
@@ -663,14 +656,6 @@ public class Player implements Serializable {
     public void setNbRoundStillPlaying(int nbRoundStillPlaying) {
         this.nbRoundStillPlaying = nbRoundStillPlaying;
     }
-
-//    public ArrayList<Token> getTokensJustPickedUp() {
-//        return tokensJustPickedUp;
-//    }
-//
-//    public void setTokensJustPickedUp(ArrayList<Token> tokensJustPickedUp) {
-//        this.tokensJustPickedUp = tokensJustPickedUp;
-//    }
 
     public int getPoints() {
         return points;

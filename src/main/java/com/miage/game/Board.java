@@ -1012,7 +1012,6 @@ public class Board implements Serializable {
         return areasToReturn;
     }
 
-
     public List<Card> getFourCurrentCards() {
         return fourCurrentCards;
     }
@@ -1073,6 +1072,11 @@ public class Board implements Serializable {
         return players;
     }
 
+    public LinkedList<PlayerToken> getPlayerTokenStack() {
+        return playerTokenStack;
+    }
+
+    
     public Chronotime getChronotime() {
         return chronotime;
     }

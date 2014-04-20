@@ -92,8 +92,8 @@ public class FrameMain_MapPanel extends javax.swing.JFrame {
          */
         // add home panel to main frame
         List<Player> players = new ArrayList();
-        players.add( new Player("richard", new PlayerToken("red")));
-        players.add( new Player("maxime", new PlayerToken("black")));
+        players.add( new Player("richard", new PlayerToken("blue")));
+        players.add( new Player("maxime", new PlayerToken("red")));
         players.add( new Player("anneso", new PlayerToken("green")));
         players.add( new Player("gael", new PlayerToken("yellow")));
         Board board = new Board(4, players);

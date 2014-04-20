@@ -1,5 +1,6 @@
 package com.miage.game;
 
+import com.miage.gui.PlayerTokenPosition;
 import java.time.LocalDate;
 
 import com.miage.areas.Area;
@@ -27,7 +28,7 @@ public class PlayerToken implements Comparable, Serializable{
     /**
      * Represent the position of the temporal player token on the board
      */
-    private Position temporalPosition;
+    private PlayerTokenPosition temporalPosition;
 
     /**
      * Use this constructeur when you do not need the complete init of the token
@@ -44,7 +45,7 @@ public class PlayerToken implements Comparable, Serializable{
      * @param timeState 
      * @param temporalPosition
      */
-    public PlayerToken(String color, Area position, LocalDate timeState, Position temporalPosition) {
+    public PlayerToken(String color, Area position, LocalDate timeState, PlayerTokenPosition temporalPosition) {
         this.color = color;
         this.position = position;
         this.timeState = timeState;
@@ -220,7 +221,11 @@ public class PlayerToken implements Comparable, Serializable{
     public void setTimeState(LocalDate timeState) {
         this.timeState = timeState;
     }
+
+    public PlayerTokenPosition getTemporalPosition() {
+        return temporalPosition;
+    }
 	
-	
+    
 
 }

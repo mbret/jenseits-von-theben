@@ -14,6 +14,7 @@ import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.tokens.Token;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -37,6 +38,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.apache.log4j.LogManager;
+import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 /**
  * Class containing all elements (Map, Log, Cards, etc...) It's the main class
@@ -74,7 +76,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @return
      * @throws Exception 
      */
-    public static MapPanel create( Board board ) throws Exception{
+    public static MapPanel create( Board board ) {
         MapPanel instance = new MapPanel( board );
         instance.switchNewPlayer();
         return instance;
@@ -85,7 +87,7 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param board Board initialize in the menu panel
      */
-    private MapPanel(Board board) throws IOException, Exception {
+    private MapPanel(Board board)  {
         
         // Init graphical components
         initComponents();
@@ -93,6 +95,7 @@ public class MapPanel extends javax.swing.JPanel {
         // Init the board and the tabbed pane with name's players
         this.currentBoard = board; // active board
         
+                
         // Init list of board cards component (the four cards)
         this.listOfBoardCardsComponent = new LinkedHashMap();
         this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
@@ -116,6 +119,10 @@ public class MapPanel extends javax.swing.JPanel {
         this._updateExcavationSiteComponent( new ArrayList( this.currentBoard.getAreas( ExcavationArea.class ).values() ) ) ;
         this._updateExcavationSiteUI();
         
+        // Init player tokens
+        this.playerTokenContainerPanel.setLayout( null );
+        this._updatePlayerTokenPositionUI();
+        
         // Add event on click (change four cards)
         changeFourCardsjButton.addActionListener(
             new java.awt.event.ActionListener() {
@@ -125,6 +132,7 @@ public class MapPanel extends javax.swing.JPanel {
                 }
             }
         );
+        
         
         
         
@@ -425,7 +433,7 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
     
-    private void _updateExcavationSiteComponent( List<ExcavationArea> areas ) throws IOException{
+    private void _updateExcavationSiteComponent( List<ExcavationArea> areas ) {
         for (final ExcavationArea excavationArea : areas) {
             JLabel excavationSiteLabel = new JLabel();
             
@@ -547,7 +555,7 @@ public class MapPanel extends javax.swing.JPanel {
         this.expoCardsContainerPanel.updateUI();
     }
     
-    private void _updateExcavationSiteUI() throws IOException{
+    private void _updateExcavationSiteUI() {
         this.excavationContainerPanel.removeAll();
         for (Map.Entry<Component, ExcavationArea> entry : this.listOfExcavationSiteComponent.entrySet()) {
             
@@ -559,6 +567,41 @@ public class MapPanel extends javax.swing.JPanel {
             this.excavationContainerPanel.add( entry.getKey() );
         }
         this.excavationContainerPanel.updateUI();
+    }
+    
+    private void _updatePlayerTokenPositionUI() {
+        this.playerTokenContainerPanel.removeAll();
+        for (int i = 0; i < this.currentBoard.getPlayerTokenStack().size(); i++) {
+            PlayerToken playerToken = this.currentBoard.getPlayerTokenStack().get(i);
+            
+            // Token on the time squares
+            JLabel playerTokenLabel = new JLabel();
+            playerTokenLabel.setIcon(
+                new ImageIcon(
+                    getClass().getResource( 
+                        ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.playerToken") + playerToken.getColor() + ".png"
+                    )
+                )
+            );
+            playerTokenLabel.setSize(32, 32);
+            playerTokenLabel.setLocation( PlayerTokenPosition.positionDependingOnWeeks( playerToken.getCurrentWeek(), i ) );
+            this.playerTokenContainerPanel.add( playerTokenLabel );
+            
+            // Token on areas
+            JLabel playerTokenLabelOnArea = new JLabel();
+            playerTokenLabelOnArea.setIcon(
+                new ImageIcon(
+                    getClass().getResource( 
+                        ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.playerToken") + playerToken.getColor() + ".png"
+                    )
+                )
+            );
+            playerTokenLabelOnArea.setSize(32, 32);
+            playerTokenLabelOnArea.setLocation( PlayerTokenPosition.positionDependingOnArea( playerToken.getPosition().getName(), i) );
+            this.playerTokenContainerPanel.add( playerTokenLabelOnArea );
+            
+        }
+        this.playerTokenContainerPanel.updateUI();
     }
     
     
@@ -643,6 +686,7 @@ public class MapPanel extends javax.swing.JPanel {
             _updatePlayerUsingElementUI();
             _updateExpoCardsUI();
             _updateBoardCardsUI();
+            _updatePlayerTokenPositionUI();
             
             this.switchNewPlayer();
         }
@@ -736,6 +780,7 @@ public class MapPanel extends javax.swing.JPanel {
             
             _updateExpoCardsUI();
             _updateBoardCardsUI();
+            _updatePlayerTokenPositionUI();
             
             this.switchNewPlayer();
 
@@ -822,6 +867,8 @@ public class MapPanel extends javax.swing.JPanel {
         logMenu = new javax.swing.JPanel();
         logMenuScrollBar = new javax.swing.JScrollBar();
         displayedCardTokenPanel = new javax.swing.JPanel();
+        playerTokenContainerPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         backgroundLabel = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1053,6 +1100,14 @@ public class MapPanel extends javax.swing.JPanel {
 
         displayedCardTokenPanel.setOpaque(false);
         add(displayedCardTokenPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 10, 550, 730));
+
+        playerTokenContainerPanel.setOpaque(false);
+        playerTokenContainerPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setText("jLabel1");
+        playerTokenContainerPanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        add(playerTokenContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/map.jpg"))); // NOI18N
         add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -1577,6 +1632,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel expoCardsContainerPanel;
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel logMenu;
     private javax.swing.JScrollBar logMenuScrollBar;
     private javax.swing.JLabel londonExcavationLabel;
@@ -1591,6 +1647,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel player1Panel;
     private javax.swing.JLabel playerBackgroundLabel;
     private javax.swing.JPanel playerPanel;
+    private javax.swing.JPanel playerTokenContainerPanel;
     private javax.swing.JLabel romaZeppelinLabel;
     private javax.swing.JPanel usableElementsMenuPanel;
     private javax.swing.JPanel usingElementsMenuPanel;
