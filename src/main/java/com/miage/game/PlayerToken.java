@@ -72,13 +72,14 @@ public class PlayerToken implements Comparable, Serializable{
      * @param o Object to compare
      * @return int
      */
+    @Override
     public int compareTo(Object o) {
         int result;
         PlayerToken p = (PlayerToken) o;
         if(this.getTimeState().isAfter(p.getTimeState()))
             result = 1;
         else if(this.getTimeState().equals( p.getTimeState() )){
-            result = 0;
+            result = -1;
         }
         else{
             result = -1;
@@ -91,15 +92,7 @@ public class PlayerToken implements Comparable, Serializable{
      * @param nb number of weeks to add
      */
     public void addWeeks(int nb){
-        this.setTimeState(this.timeState.plusDays(nb*7));
-    }
-	
-    /**
-    * add weeks at the playerToken depending on the card picked
-    * @param card 
-    */
-    public void addWeeks(Card card){
-        this.addWeeks(card.getWeekCost());
+        this.setTimeState(this.timeState.plusWeeks(nb));
     }
     
     /**

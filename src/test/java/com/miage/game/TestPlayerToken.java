@@ -127,9 +127,9 @@ public class TestPlayerToken {
 		ShovelCard shovelCard = new ShovelCard(0,"shovel", "paris", 3);
 		
 		
-		this.playerToken1.addWeeks(generalKnowledgeCard);
-		this.playerToken1.addWeeks(generalKnowledgeCard2);
-		this.playerToken1.addWeeks(shovelCard);
+		this.playerToken1.addWeeks(generalKnowledgeCard.getWeekCost());
+		this.playerToken1.addWeeks(generalKnowledgeCard2.getWeekCost());
+		this.playerToken1.addWeeks(shovelCard.getWeekCost());
 		
 		
 		assertEquals(this.playerToken1.getCurrentWeek() , 12);
