@@ -120,7 +120,7 @@ public class MapPanel extends javax.swing.JPanel {
         this._updateExcavationSiteUI();
         
         // Init player tokens
-        this.playerTokenContainerPanel.setLayout( null );
+        this.mapContainerPanel.setLayout( null );
         this._updatePlayerTokenPositionUI();
         
         // Add event on click (change four cards)
@@ -132,8 +132,6 @@ public class MapPanel extends javax.swing.JPanel {
                 }
             }
         );
-        
-        
         
         
         /*
@@ -571,7 +569,7 @@ public class MapPanel extends javax.swing.JPanel {
     
     private void _updatePlayerTokenPositionUI() {
         LOGGER.debug( this.currentBoard.getPlayerTokenStack());
-        this.playerTokenContainerPanel.removeAll();
+        this.tokenContainerPanel.removeAll();
         for (int i = 0; i < this.currentBoard.getPlayerTokenStack().size(); i++) {
             PlayerToken playerToken = this.currentBoard.getPlayerTokenStack().get(i);
             
@@ -586,7 +584,7 @@ public class MapPanel extends javax.swing.JPanel {
             );
             playerTokenLabel.setSize(32, 32);
             playerTokenLabel.setLocation( PlayerTokenPosition.positionDependingOnWeeks( playerToken.getCurrentWeek(), i ) );
-            this.playerTokenContainerPanel.add( playerTokenLabel );
+            this.tokenContainerPanel.add( playerTokenLabel );
             
             // Token on areas
             JLabel playerTokenLabelOnArea = new JLabel();
@@ -599,10 +597,11 @@ public class MapPanel extends javax.swing.JPanel {
             );
             playerTokenLabelOnArea.setSize(32, 32);
             playerTokenLabelOnArea.setLocation( PlayerTokenPosition.positionDependingOnArea( playerToken.getPosition().getName(), i) );
-            this.playerTokenContainerPanel.add( playerTokenLabelOnArea );
+            this.tokenContainerPanel.add( playerTokenLabelOnArea );
             
         }
-        this.playerTokenContainerPanel.updateUI();
+        this.tokenContainerPanel.updateUI();
+        this.mapContainerPanel.updateUI();
     }
     
     
@@ -835,12 +834,13 @@ public class MapPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         arrowMenuLabel = new javax.swing.JLabel();
-        changeFourCardsjButton = new javax.swing.JButton();
-        excavationContainerPanel = new javax.swing.JPanel();
-        expoCardsContainerPanel = new javax.swing.JPanel();
+        rightPanelContainerPanel = new javax.swing.JPanel();
         usingElementsMenuPanel = new javax.swing.JPanel();
         usableElementsMenuPanel = new javax.swing.JPanel();
-        boardCardsContainerPanel = new javax.swing.JPanel();
+        logMenu = new javax.swing.JPanel();
+        logMenuScrollBar = new javax.swing.JScrollBar();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
         playerPanel = new javax.swing.JPanel();
         berlinAssistantLabel = new javax.swing.JLabel();
         moscowCarLabel = new javax.swing.JLabel();
@@ -865,11 +865,13 @@ public class MapPanel extends javax.swing.JPanel {
         playerBackgroundLabel = new javax.swing.JLabel();
         menuCardsPlayerTab = new javax.swing.JTabbedPane();
         player1Panel = new javax.swing.JPanel();
-        logMenu = new javax.swing.JPanel();
-        logMenuScrollBar = new javax.swing.JScrollBar();
         displayedCardTokenPanel = new javax.swing.JPanel();
-        playerTokenContainerPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        mapContainerPanel = new javax.swing.JPanel();
+        changeFourCardsjButton = new javax.swing.JButton();
+        boardCardsContainerPanel = new javax.swing.JPanel();
+        tokenContainerPanel = new javax.swing.JPanel();
+        excavationContainerPanel = new javax.swing.JPanel();
+        expoCardsContainerPanel = new javax.swing.JPanel();
         backgroundLabel = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -882,20 +884,29 @@ public class MapPanel extends javax.swing.JPanel {
         });
         add(arrowMenuLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -3, -1, 770));
 
-        changeFourCardsjButton.setText("Changer les quatres cartes");
-        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        add(changeFourCardsjButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 410, 190, 50));
+        rightPanelContainerPanel.setOpaque(false);
+        rightPanelContainerPanel.setLayout(null);
 
-        excavationContainerPanel.setOpaque(false);
-        add(excavationContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 350, 540, 360));
+        usingElementsMenuPanel.setOpaque(false);
+        rightPanelContainerPanel.add(usingElementsMenuPanel);
+        usingElementsMenuPanel.setBounds(0, 560, 310, 200);
 
-        expoCardsContainerPanel.setOpaque(false);
-        add(expoCardsContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 440, 400, 300));
-        add(usingElementsMenuPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 550, 320, 220));
-        add(usableElementsMenuPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 180, 320, 370));
+        usableElementsMenuPanel.setOpaque(false);
+        rightPanelContainerPanel.add(usableElementsMenuPanel);
+        usableElementsMenuPanel.setBounds(0, 210, 310, 340);
 
-        boardCardsContainerPanel.setOpaque(false);
-        add(boardCardsContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 70, 240, 350));
+        logMenu.setOpaque(false);
+        logMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        logMenu.add(logMenuScrollBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, -1, 180));
+
+        rightPanelContainerPanel.add(logMenu);
+        logMenu.setBounds(0, 20, 310, 180);
+        rightPanelContainerPanel.add(jSeparator1);
+        jSeparator1.setBounds(0, 200, 310, 20);
+        rightPanelContainerPanel.add(jSeparator2);
+        jSeparator2.setBounds(0, 550, 310, 20);
+
+        add(rightPanelContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 0, 320, 770));
 
         playerPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
@@ -1094,21 +1105,35 @@ public class MapPanel extends javax.swing.JPanel {
 
         add(menuCardsPlayerTab, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 770));
 
-        logMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        logMenu.add(logMenuScrollBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, -1, 180));
-
-        add(logMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 0, 320, 180));
-
         displayedCardTokenPanel.setOpaque(false);
         add(displayedCardTokenPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 10, 550, 730));
 
-        playerTokenContainerPanel.setOpaque(false);
-        playerTokenContainerPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        mapContainerPanel.setOpaque(false);
+        mapContainerPanel.setLayout(null);
 
-        jLabel1.setText("jLabel1");
-        playerTokenContainerPanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        changeFourCardsjButton.setText("Changer les quatres cartes");
+        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        mapContainerPanel.add(changeFourCardsjButton);
+        changeFourCardsjButton.setBounds(770, 410, 200, 30);
 
-        add(playerTokenContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
+        boardCardsContainerPanel.setOpaque(false);
+        mapContainerPanel.add(boardCardsContainerPanel);
+        boardCardsContainerPanel.setBounds(750, 80, 230, 330);
+
+        tokenContainerPanel.setOpaque(false);
+        tokenContainerPanel.setLayout(null);
+        mapContainerPanel.add(tokenContainerPanel);
+        tokenContainerPanel.setBounds(0, 10, 1050, 750);
+
+        excavationContainerPanel.setOpaque(false);
+        mapContainerPanel.add(excavationContainerPanel);
+        excavationContainerPanel.setBounds(470, 380, 520, 330);
+
+        expoCardsContainerPanel.setOpaque(false);
+        mapContainerPanel.add(expoCardsContainerPanel);
+        expoCardsContainerPanel.setBounds(70, 460, 330, 250);
+
+        add(mapContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/map.jpg"))); // NOI18N
         add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -1633,11 +1658,13 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel expoCardsContainerPanel;
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPanel logMenu;
     private javax.swing.JScrollBar logMenuScrollBar;
     private javax.swing.JLabel londonExcavationLabel;
     private javax.swing.JLabel londonShovelLabel;
+    private javax.swing.JPanel mapContainerPanel;
     private javax.swing.JTabbedPane menuCardsPlayerTab;
     private javax.swing.JLabel mesopotamiaExcavationLabel;
     private javax.swing.JLabel mesopotamiaNullTokenLabel;
@@ -1648,8 +1675,9 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel player1Panel;
     private javax.swing.JLabel playerBackgroundLabel;
     private javax.swing.JPanel playerPanel;
-    private javax.swing.JPanel playerTokenContainerPanel;
+    private javax.swing.JPanel rightPanelContainerPanel;
     private javax.swing.JLabel romaZeppelinLabel;
+    private javax.swing.JPanel tokenContainerPanel;
     private javax.swing.JPanel usableElementsMenuPanel;
     private javax.swing.JPanel usingElementsMenuPanel;
     // End of variables declaration//GEN-END:variables
