@@ -13,6 +13,11 @@ public class BlankToken extends Token{
     public BlankToken(String id, String areaName, String color) {
         super(id, areaName, color);
     }
+
+    @Override
+    public String toString() {
+        return "BlankToken{" + '}';
+    }
     
     
 }

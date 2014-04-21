@@ -825,12 +825,13 @@ public class Board implements Serializable {
                 Area newArea = null;
 //                LOGGER.debug("area." + areaName + ".type");
                 String categorie = entries.get("area." + areaName + ".type");
-
+                String areaDisplayName = entries.get("area." + areaName + ".displayName");
+                
                 /**
                  * Case of touristic area
                  */
                 if (categorie.equals("touristic")) {
-                    newArea = new TouristicArea(0, areaName);
+                    newArea = new TouristicArea(0, areaName, areaDisplayName);
                 } /**
                  * Case of excavation area
                  */
@@ -909,7 +910,7 @@ public class Board implements Serializable {
                         }
                     }
 
-                    newArea = new ExcavationArea(0, areaName, color, tokens, pointTokenFirstExcavation);
+                    newArea = new ExcavationArea(0, areaName, areaDisplayName, color, tokens, pointTokenFirstExcavation);
                 }
 
                 /**

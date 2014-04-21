@@ -14,6 +14,7 @@ import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.tokens.Token;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
@@ -36,6 +37,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -124,18 +127,17 @@ public class MapPanel extends javax.swing.JPanel {
         
         // Init player tokens
         this.mapContainerPanel.setLayout( null );
-        this._updatePlayerTokenPositionUI();
         
         // Add event on click (change four cards)
         changeFourCardsjButton.addActionListener(
-            new java.awt.event.ActionListener() {
+            new java.awt.event.ActionListener(){
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     _actionChangeFourcardsButtonActionPerformed(evt);
                 }
             }
         );
-        
+ 
         
         /*
             Update the left panel
@@ -176,9 +178,14 @@ public class MapPanel extends javax.swing.JPanel {
     
     /**
      * Get the new upcoming player and init everything about him.
+     * <br/>
      * <br/>- update actions listeners 
+     * <br/>- Update all UI
      */
     private void switchNewPlayer() {
+        
+        this._updatePlayerTokenPositionUI();
+        
         try{
             
             this.currentPlayer = this.currentBoard.getUpcomingPlayer();
@@ -186,7 +193,7 @@ public class MapPanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog( this, "Plus aucun joueur ne peut jouer" );
             }
             else{
-
+                
                 /**
                  * For each round
                  * - reset or update useful intern vars
@@ -211,11 +218,15 @@ public class MapPanel extends javax.swing.JPanel {
                 // Update player's component
                 this._updateActivableElementComponent( this.currentPlayer.getAllActivableElements() );
                 this._updateUsingElementComponent( this.currentPlayerUsingElements );
+                this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+                this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
                 
                 // Update UI
-                this._updatePlayerUsableElementUI();
-                this._updatePlayerUsingElementUI();
-
+                this._updateRightPanelUI();
+                this._updateBoardPanelUI();
+                
+                
+                
 //                JOptionPane.showMessageDialog( this, "Joueur " + this.currentPlayer.getName() + ", c'est à vous de jouer !");
             }
         }
@@ -363,7 +374,7 @@ public class MapPanel extends javax.swing.JPanel {
         int nbWeeks = 0;
         int nbKnowledgePoint = 0;
         int maxKnowledgePoint = 0;
-        
+       
         // We keep only active knowledge elements
         List<KnowledgeElement> activableKnowledgeElements = new ArrayList();
         for (UsableElement element : this.currentPlayerUsingElements) {
@@ -372,9 +383,12 @@ public class MapPanel extends javax.swing.JPanel {
             }
         }
         maxKnowledgePoint = this.currentPlayer.getTotalAskedKnowledgePoint( area, activableKnowledgeElements );
+        LOGGER.debug("_displayChronotime: the maximum knowledge point got is =" + maxKnowledgePoint);
         
+        String res = JOptionPane.showInputDialog("Combien de semaine ?");
+        nbWeeks = Integer.parseInt( res );
         
-        return this.currentBoard.getChronotime().getNbTokensToPickUp(nbKnowledgePoint, nbWeeks);
+        return this.currentBoard.getChronotime().getNbTokensToPickUp(maxKnowledgePoint, nbWeeks);
     }
     
     
@@ -559,6 +573,40 @@ public class MapPanel extends javax.swing.JPanel {
         this.mapContainerPanel.updateUI();
     }
     
+    private void _updateInfoContainerPanelUI(){
+        
+        this.currentPlayerLabel.setText( this.currentPlayer.getName() );
+        this.currentPlayerLabel.setForeground( this.currentPlayer.getPlayerToken().getColorUI() );
+        this.currentPlayerLabel.setVisible(true);
+        
+        this.knowledgePointComboBox.removeAllItems();
+        for (ExcavationArea area : this.currentBoard.getAreas( ExcavationArea.class ).values() ) {
+            this.knowledgePointComboBox.addItem( new ComboBoxAreaItem( area.getName(), area.getDisplayName() ) );
+        }
+        
+        this.currentPlayerLabel.updateUI();
+        this.infoContainerPanel.updateUI();
+    }
+    
+    private void _updateLeftPanelUI(){
+        
+    }
+    
+    private void _updateRightPanelUI(){
+        this._updatePlayerUsableElementUI();
+        this._updatePlayerUsingElementUI();
+        this._updateInfoContainerPanelUI();
+    }
+    
+    private void _updateBoardPanelUI(){
+        this._updateBoardCardsUI();
+        this._updateExpoCardsUI();
+        this._updateExcavationSiteUI();
+        this._updatePlayerTokenPositionUI();
+    }
+ 
+    
+    
     
     
     /***********************************************************************************************
@@ -645,21 +693,6 @@ public class MapPanel extends javax.swing.JPanel {
             
             // Animate the action of picking
             this._animatePickingCard( pickedCard, idCard);
-                    
-            // We eventually add the final picked card to using element if this card is an activeElement
-            if( pickedCard instanceof ActiveElement ){
-                this.currentPlayerUsingElements.add( (UsableElement) pickedCard);
-            }
-            
-            // Update the card linked to each component
-            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
-            this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
-            
-            _updatePlayerUsableElementUI();
-            _updatePlayerUsingElementUI();
-            _updateExpoCardsUI();
-            _updateBoardCardsUI();
-            _updatePlayerTokenPositionUI();
             
             this.switchNewPlayer();
         }
@@ -702,11 +735,7 @@ public class MapPanel extends javax.swing.JPanel {
                 System.exit(0);
             }
             
-            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
-            
-            _updatePlayerUsableElementUI();
-            _updatePlayerUsingElementUI();
-            _updateExpoCardsUI();
+            this.switchNewPlayer();
             
         }
         else{
@@ -726,7 +755,7 @@ public class MapPanel extends javax.swing.JPanel {
         else{
             this.currentPlayerUsingElements.add( (UsableElement)element );
             this._updateUsingElementComponent( this.currentPlayerUsingElements );
-            this._updatePlayerUsingElementUI();
+            this._updateRightPanelUI();
         }
     }
     
@@ -742,7 +771,7 @@ public class MapPanel extends javax.swing.JPanel {
         else{
             this.currentPlayerUsingElements.remove( element );
             this._updateUsingElementComponent( this.currentPlayerUsingElements );
-            this._updatePlayerUsingElementUI();
+            this._updateRightPanelUI();
         }
         
     }
@@ -776,14 +805,6 @@ public class MapPanel extends javax.swing.JPanel {
                 ex.printStackTrace();
                 System.exit( 0 );
             }
-            
-            // Update the card linked to each component
-            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
-            this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
-            
-            _updateExpoCardsUI();
-            _updateBoardCardsUI();
-            _updatePlayerTokenPositionUI();
             
             this.switchNewPlayer();
 
@@ -831,9 +852,10 @@ public class MapPanel extends javax.swing.JPanel {
             
             this._animatePickingTokens( tokensJustPickedUp );
             
+            JOptionPane.showMessageDialog( this, "Vous venez de fouiller " + area.getName());
+            
             this.switchNewPlayer();
             
-            JOptionPane.showMessageDialog( this, "Vous venez de fouiller " + area.getName());
         }
     }
     
@@ -861,6 +883,7 @@ public class MapPanel extends javax.swing.JPanel {
         boardCardsContainerPanel = new javax.swing.JPanel();
         tokenContainerPanel = new javax.swing.JPanel();
         excavationContainerPanel = new javax.swing.JPanel();
+        chronotimeButton = new javax.swing.JButton();
         excavationSiteContainerPanel = new javax.swing.JPanel();
         expoCardsContainerPanel = new javax.swing.JPanel();
         leftPanelContainerPanel = new javax.swing.JPanel();
@@ -895,6 +918,13 @@ public class MapPanel extends javax.swing.JPanel {
         logMenuScrollBar = new javax.swing.JScrollBar();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
+        infoContainerPanel = new javax.swing.JPanel();
+        currentPlayerLabel = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        knowledgePointComboBox = new javax.swing.JComboBox();
+        selectedKnowledgePointLabel = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
         backgroundLabel = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -931,6 +961,15 @@ public class MapPanel extends javax.swing.JPanel {
 
         excavationContainerPanel.setOpaque(false);
         excavationContainerPanel.setLayout(null);
+
+        chronotimeButton.setText("Chrono");
+        chronotimeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chronotimeButtonActionPerformed(evt);
+            }
+        });
+        excavationContainerPanel.add(chronotimeButton);
+        chronotimeButton.setBounds(440, 270, 70, 50);
 
         excavationSiteContainerPanel.setOpaque(false);
         excavationContainerPanel.add(excavationSiteContainerPanel);
@@ -1166,11 +1205,44 @@ public class MapPanel extends javax.swing.JPanel {
         logMenu.add(logMenuScrollBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, -1, 180));
 
         rightPanelContainerPanel.add(logMenu);
-        logMenu.setBounds(0, 20, 310, 180);
+        logMenu.setBounds(0, 120, 310, 80);
         rightPanelContainerPanel.add(jSeparator1);
         jSeparator1.setBounds(0, 200, 310, 20);
         rightPanelContainerPanel.add(jSeparator2);
         jSeparator2.setBounds(0, 550, 310, 20);
+
+        infoContainerPanel.setOpaque(false);
+        infoContainerPanel.setLayout(null);
+
+        currentPlayerLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        currentPlayerLabel.setText("currentPlayer");
+        infoContainerPanel.add(currentPlayerLabel);
+        currentPlayerLabel.setBounds(100, 10, 90, 14);
+
+        jLabel3.setText("Connaissances utilisable :");
+        infoContainerPanel.add(jLabel3);
+        jLabel3.setBounds(10, 30, 170, 14);
+
+        jLabel5.setText("Joueur courant :");
+        infoContainerPanel.add(jLabel5);
+        jLabel5.setBounds(10, 10, 90, 14);
+
+        knowledgePointComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                knowledgePointComboBoxActionPerformed(evt);
+            }
+        });
+        infoContainerPanel.add(knowledgePointComboBox);
+        knowledgePointComboBox.setBounds(10, 50, 180, 20);
+
+        selectedKnowledgePointLabel.setText("selectedKnowledge");
+        infoContainerPanel.add(selectedKnowledgePointLabel);
+        selectedKnowledgePointLabel.setBounds(200, 50, 100, 14);
+
+        rightPanelContainerPanel.add(infoContainerPanel);
+        infoContainerPanel.setBounds(0, 20, 310, 90);
+        rightPanelContainerPanel.add(jSeparator3);
+        jSeparator3.setBounds(0, 110, 310, 10);
 
         add(rightPanelContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 0, 320, 770));
 
@@ -1679,6 +1751,31 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
+    private void chronotimeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chronotimeButtonActionPerformed
+        this._displayChronotime( (ExcavationArea)this.currentBoard.getArea("egypt") );
+    }//GEN-LAST:event_chronotimeButtonActionPerformed
+
+    private void knowledgePointComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_knowledgePointComboBoxActionPerformed
+        if( ((JComboBox)evt.getSource()).getSelectedItem() != null){
+            String area = ((ComboBoxAreaItem) ((JComboBox)evt.getSource()).getSelectedItem()).id;
+        
+            // We keep only active knowledge elements
+            List<KnowledgeElement> activableKnowledgeElements = new ArrayList();
+            for (ActivableElement element : this.currentPlayer.getAllActivableElements() ) {
+
+                if( ( element instanceof KnowledgeElement ) ){
+                    activableKnowledgeElements.add( (KnowledgeElement)element );
+                }
+
+            }
+
+            this.selectedKnowledgePointLabel.setText( String.valueOf( this.currentPlayer.getTotalAskedKnowledgePoint( this.currentBoard.getArea( area ), activableKnowledgeElements) ) );
+            this.selectedKnowledgePointLabel.updateUI();
+        }
+        
+
+    }//GEN-LAST:event_knowledgePointComboBoxActionPerformed
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1691,8 +1788,10 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel berlinSmallExpoLabel;
     private javax.swing.JPanel boardCardsContainerPanel;
     private javax.swing.JButton changeFourCardsjButton;
+    private javax.swing.JButton chronotimeButton;
     private javax.swing.JLabel creteExcavationLabel;
     private javax.swing.JLabel creteNullTokenLabel;
+    private javax.swing.JLabel currentPlayerLabel;
     private javax.swing.JPanel displayedCardTokenPanel;
     private javax.swing.JLabel egyptExcavationLabel;
     private javax.swing.JLabel egyptNullTokenLabel;
@@ -1701,8 +1800,13 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel expoCardsContainerPanel;
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
+    private javax.swing.JPanel infoContainerPanel;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JComboBox knowledgePointComboBox;
     private javax.swing.JPanel leftPanelContainerPanel;
     private javax.swing.JPanel logMenu;
     private javax.swing.JScrollBar logMenuScrollBar;
@@ -1720,9 +1824,31 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel playerLeftPanel;
     private javax.swing.JPanel rightPanelContainerPanel;
     private javax.swing.JLabel romaZeppelinLabel;
+    private javax.swing.JLabel selectedKnowledgePointLabel;
     private javax.swing.JPanel timeTokenContainerPanel;
     private javax.swing.JPanel tokenContainerPanel;
     private javax.swing.JPanel usableElementsMenuPanel;
     private javax.swing.JPanel usingElementsMenuPanel;
     // End of variables declaration//GEN-END:variables
+    
+    
+    public class ComboBoxAreaItem {
+        
+        String id;
+        String display;
+
+        public ComboBoxAreaItem(String id, String display) {
+            this.id = id;
+            this.display = display;
+        }
+
+        @Override
+        public String toString() {
+            return this.display;
+        }
+        
+    }
+
+
+
 }

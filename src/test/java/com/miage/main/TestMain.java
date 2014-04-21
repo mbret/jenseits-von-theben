@@ -124,7 +124,7 @@ public class TestMain {
             }
             String tempDate = new SimpleDateFormat("[HH:mm:ss]").format(new Date());
             LogDisplay.cleanLogBackup();
-            LogDisplay.displayAction(board,"move",new TouristicArea(1,"paris"));
+            LogDisplay.displayAction(board,"move",new TouristicArea(1,"paris", "paris"));
             
             main.saveGame(board);
             

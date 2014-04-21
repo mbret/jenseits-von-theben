@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class TouristicArea extends Area implements Serializable{
 	
 	
-    public TouristicArea(Integer id, String name){
-        super(id,name);
+    public TouristicArea(Integer id, String name, String displayName){
+        super(id,name, displayName);
     }
 
 }

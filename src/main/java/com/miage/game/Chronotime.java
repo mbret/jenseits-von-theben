@@ -40,7 +40,7 @@ public class Chronotime implements Serializable{
             for (int i = 0; i < nbTokensToPickUp.length; i++) {
                 subValues.put( i, Integer.parseInt(nbTokensToPickUp[i]) );
             }
-                
+            
             // We put all the weeks with their associated tokens inside the current knowledge range
             this.values.put( numberOfKnowledge, subValues);
         }
@@ -54,7 +54,12 @@ public class Chronotime implements Serializable{
      */
     public int getNbTokensToPickUp( int nbKnowIedgePoint, int nbWeeks){
         LOGGER.debug("getNbTokensToPickUp: nbKnowIedgePoint="+nbKnowIedgePoint+" nbWeekds="+nbWeeks);
-        return this.values.get( nbKnowIedgePoint ).get( nbWeeks );
+        try{
+            return this.values.get( nbKnowIedgePoint ).get( nbWeeks );
+        }
+        catch( NullPointerException ex ){
+            throw new NullPointerException("Please provide a valid range for the chronotime");
+        }
     }
    
     

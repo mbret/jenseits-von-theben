@@ -29,9 +29,12 @@ public abstract class Token implements Serializable{
             return areaName;
     }
 
-    public String toString(){
-            return this.getAreaName()+","+this.getColor();
+    @Override
+    public String toString() {
+        return "Token{" + "areaName=" + areaName + ", id=" + id + ", color=" + color + '}';
     }
+
+    
 
     public String getId() {
         return id;
