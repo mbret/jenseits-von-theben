@@ -74,7 +74,7 @@ public class PlayerToken implements Comparable, Serializable{
         if(this.getTimeState().isAfter( p.getTimeState() ))
             result = 1;
         else if(this.getTimeState().equals( p.getTimeState() )){
-            result = -1;
+            result = 0;
         }
         else{
             result = -1;

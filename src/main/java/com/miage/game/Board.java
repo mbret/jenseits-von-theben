@@ -712,12 +712,19 @@ public class Board implements Serializable {
         }
         
         player.getPlayerToken().movePlayerToken(this.getArea(cardToPickUp.getAreaName()), useZeppelinCard, useCarCard); // move
-        Collections.sort(this.playerTokenStack);
+        
+       
+        
 
         Card pickedCard = this._pickCardOnBoard( this.fourCurrentCards.indexOf(cardToPickUp) );
 
         player.getPlayerToken().applyCardCost(pickedCard);
         player.getCards().add(pickedCard); // update player hand
+        
+        Collections.sort(this.playerTokenStack);
+        
+
+        
         
         return pickedCard;
     }

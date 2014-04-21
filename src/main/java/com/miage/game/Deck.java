@@ -77,7 +77,8 @@ public class Deck extends LinkedList<Card> implements Serializable{
          */
         public Deck[] getDividedDeck( int nbPart ){ // 2
             Deck[] decksReturn = new Deck[nbPart];
-            int indexRatio = this.size() / nbPart; // get the lower (5/2 = 2 and not 2,5 or 3)
+      
+            int indexRatio = Math.round(((float)this.size() / (float)nbPart)); // get the nearby int
             int to = 0, from;
             for (int i = 0; i < nbPart; i++) {
                 from = to;
