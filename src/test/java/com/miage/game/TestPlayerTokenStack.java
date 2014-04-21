@@ -40,10 +40,10 @@ public class TestPlayerTokenStack {
         public void testOrder(){
             LinkedList<PlayerToken> playerTokenStack = new LinkedList();
 		
-            PlayerToken red = new PlayerToken("red", null, LocalDate.now(), null);
-            PlayerToken yellow = new PlayerToken("yellow", null, LocalDate.now(), null);
-            PlayerToken blue = new PlayerToken("blue", null, LocalDate.now(),null);
-            PlayerToken purple = new PlayerToken("purple", null, LocalDate.now(), null);
+            PlayerToken red = new PlayerToken("red", null, LocalDate.of(1900, 12, 31), null);
+            PlayerToken yellow = new PlayerToken("yellow", null, LocalDate.of(1900, 12, 31), null);
+            PlayerToken blue = new PlayerToken("blue", null, LocalDate.of(1900, 12, 31),null);
+            PlayerToken purple = new PlayerToken("purple", null, LocalDate.of(1900, 12, 31), null);
             
             // All player same position
             playerTokenStack.add( red );
@@ -56,24 +56,24 @@ public class TestPlayerTokenStack {
             
             // red is moving to 1 week, so blue must play now and red is the last
             
-            red.getTimeState().plusWeeks(1);
+            red.setTimeState(red.getTimeState().plusWeeks(1));
             Collections.sort( playerTokenStack );
             assertTrue( playerTokenStack.getFirst().getColor().equals("blue") );
             assertTrue( playerTokenStack.getLast().getColor().equals("red") );
             
             // yellow move to 5 weeks (yellow must be the last)
-            yellow.getTimeState().plusWeeks( 5 );
+            yellow.setTimeState(yellow.getTimeState().plusWeeks(5));
             Collections.sort( playerTokenStack );
             assertTrue( playerTokenStack.getLast().getColor().equals("yellow") );
             
             // now blue join yellow 
-            blue.getTimeState().plusWeeks( 5 );
+            blue.setTimeState(blue.getTimeState().plusWeeks(5));
             Collections.sort( playerTokenStack );
             // then red join yellow
-            red.getTimeState().plusWeeks( 4 );
+            red.setTimeState(red.getTimeState().plusWeeks(4));
             Collections.sort( playerTokenStack );
             // then purple join yellow
-            purple.getTimeState().plusWeeks( 5 );
+            purple.setTimeState(purple.getTimeState().plusWeeks(5));
             Collections.sort( playerTokenStack );
             
             // Here purple is the last one to have join yellow so it must be the first to play
