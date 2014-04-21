@@ -1,6 +1,6 @@
 package com.miage.game;
 
-import com.miage.gui.PlayerTokenPosition;
+import com.miage.gui.TokensPosition;
 import java.time.LocalDate;
 
 import com.miage.areas.Area;
@@ -24,11 +24,6 @@ public class PlayerToken implements Comparable, Serializable{
      * Define the current Date (duration of playing) of the player
      */
     private LocalDate timeState;
-    
-    /**
-     * Represent the position of the temporal player token on the board
-     */
-    private PlayerTokenPosition temporalPosition;
 
     /**
      * Use this constructeur when you do not need the complete init of the token
@@ -45,7 +40,7 @@ public class PlayerToken implements Comparable, Serializable{
      * @param timeState 
      * @param temporalPosition
      */
-    public PlayerToken(String color, Area position, LocalDate timeState, PlayerTokenPosition temporalPosition) {
+    public PlayerToken(String color, Area position, LocalDate timeState, TokensPosition temporalPosition) {
         this.color = color;
         this.position = position;
         this.timeState = timeState;
@@ -91,7 +86,7 @@ public class PlayerToken implements Comparable, Serializable{
      * Add some weeks at the timeState.
      * @param nb number of weeks to add
      */
-    public void addWeeks(int nb){
+    private void addWeeks(int nb){
         this.setTimeState(this.timeState.plusWeeks(nb));
     }
     
@@ -113,6 +108,9 @@ public class PlayerToken implements Comparable, Serializable{
         return this.timeState.getYear();
     }
 
+    public void applyCardCost( Card card ){
+        this.timeState.plusWeeks( card.getWeekCost() );
+    }
 
     /**
      * @author Gael
@@ -213,10 +211,6 @@ public class PlayerToken implements Comparable, Serializable{
 
     public void setTimeState(LocalDate timeState) {
         this.timeState = timeState;
-    }
-
-    public PlayerTokenPosition getTemporalPosition() {
-        return temporalPosition;
     }
 	
     

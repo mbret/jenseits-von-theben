@@ -56,24 +56,24 @@ public class TestPlayerTokenStack {
             
             // red is moving to 1 week, so blue must play now and red is the last
             
-            red.addWeeks(1);
+            red.getTimeState().plusWeeks(1);
             Collections.sort( playerTokenStack );
             assertTrue( playerTokenStack.getFirst().getColor().equals("blue") );
             assertTrue( playerTokenStack.getLast().getColor().equals("red") );
             
             // yellow move to 5 weeks (yellow must be the last)
-            yellow.addWeeks( 5 );
+            yellow.getTimeState().plusWeeks( 5 );
             Collections.sort( playerTokenStack );
             assertTrue( playerTokenStack.getLast().getColor().equals("yellow") );
             
             // now blue join yellow 
-            blue.addWeeks( 5 );
+            blue.getTimeState().plusWeeks( 5 );
             Collections.sort( playerTokenStack );
             // then red join yellow
-            red.addWeeks( 4 );
+            red.getTimeState().plusWeeks( 4 );
             Collections.sort( playerTokenStack );
             // then purple join yellow
-            purple.addWeeks( 5 );
+            purple.getTimeState().plusWeeks( 5 );
             Collections.sort( playerTokenStack );
             
             // Here purple is the last one to have join yellow so it must be the first to play

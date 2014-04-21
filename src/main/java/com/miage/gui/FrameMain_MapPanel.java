@@ -85,7 +85,8 @@ public class FrameMain_MapPanel extends javax.swing.JFrame {
         
         initComponents();
         
-        this.setSize(1366, 768);
+        this.setSize(1370, 795);
+        this.setResizable( false);
         
         /**
          * Create the game

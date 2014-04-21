@@ -3,10 +3,11 @@ package com.miage.game;
 import com.miage.areas.*;
 import com.miage.cards.*;
 import com.miage.config.ConfigManager;
+import com.miage.interfaces.ActivableElement;
 import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.DiscardableElement;
 import com.miage.interfaces.KnowledgeElement;
-import com.miage.interfaces.ActivableElement;
+import com.miage.interfaces.UsableElement;
 import com.miage.main.Main;
 import com.miage.tokens.*;
 import java.io.FileOutputStream;
@@ -15,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -157,8 +159,29 @@ public class Board implements Serializable {
      * @param endGameDatePosition
      * @return
      */
-    public static boolean hasEnoughTimeBeforeEndGame(LocalDate currentDatePosition, int weekCost, LocalDate endGameDatePosition) {
+    public static boolean hasEnoughTimeBeforeEndGame(LocalDate currentDatePosition, int weekCost, LocalDate endGameDatePosition, List<UsableElement> usedElement) {
+        
         LocalDate dateAfterTravel = currentDatePosition.plusWeeks(weekCost);
+        boolean hasCarCard = false;
+        boolean hasZeppelin = false;
+        
+        for (UsableElement usableElement : usedElement) {
+            if( usableElement instanceof CarCard ){
+                hasCarCard = true;
+            }
+            else if( usableElement instanceof ZeppelinCard ){
+                hasZeppelin = true;
+            }
+        }
+        
+        if( hasCarCard ){
+            dateAfterTravel.minusWeeks( 1 );
+        }
+        if( hasZeppelin ){
+            dateAfterTravel = currentDatePosition;
+        }
+        
+        
         return ((Main.getWeek(dateAfterTravel)) <= Main.getWeek(endGameDatePosition) && Main.getYear(dateAfterTravel) <= Main.getYear(endGameDatePosition)); // test if enough time
     }
 
@@ -241,9 +264,7 @@ public class Board implements Serializable {
     public HashMap<String, Object> doPlayerRoundAction(int actionPattern, HashMap<String, Object> playerActionParams) throws Exception {
         LOGGER.debug("doPlayerRoundAction: pattern=" + actionPattern + " playerActionParams=" + playerActionParams.toString());
         
-        // USEFUL VARS
-        boolean useZeppelin = false;                                // Does the player is using zeppelin cards ?
-        boolean useCarCard = false;                                 // Does the player is using car cards ?
+        // USEFUL VARS                              
         List<ShovelCard> shovelCards = new ArrayList();             // list of ised shovel cards
         
         // RETURNER OBJECT
@@ -256,34 +277,31 @@ public class Board implements Serializable {
             throw new Exception("No player provided, please see the parameters details");
         }
         Player player = (Player) playerActionParams.get("player");
-        useCarCard = player.hasCarCard();
         
 //        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         
         // CHECK USEDELEMENTS PARAMETER (We check and iterate over all used elements to get some informations and make more precise list)
-        List<ActivableElement> usedElements;
+        List<UsableElement> usedElements;
         try {
-            usedElements = (List<ActivableElement>) playerActionParams.get("usedElements"); // we verify that the list is ok
+            usedElements = (List<UsableElement>) playerActionParams.get("usedElements"); // we verify that the list is ok
             if (usedElements == null) {
                 usedElements = new ArrayList();
             }
         } catch (ClassCastException e) { throw new Exception("No usedElements provided or wrong structure, please see the parameters details"); }
 
-        for(ActivableElement element : usedElements) {
-            if (element instanceof ZeppelinCard) {
-                useZeppelin = true;
-            }
+        for(UsableElement element : usedElements) {
 //            if( element instanceof KnowledgeElement ) knowledgeElements.add( (KnowledgeElement)element );
             if (element instanceof ShovelCard) {
                 shovelCards.add((ShovelCard) element);
             }
+
         }
 
         // DO THE MAIN ACTION
         switch (actionPattern) {
 
             case Player.ACTION_CHANGE_FOUR_CARDS:
-                this._actionPlayerDoChangeFourCards(player, useZeppelin, useCarCard);
+                this._actionPlayerDoChangeFourCards(player, usedElements);
                 break;
 
             case Player.ACTION_EXCAVATE:
@@ -298,10 +316,9 @@ public class Board implements Serializable {
                 List<Token> tokensJustPickedUp = this._actionPlayerDoExcavateArea(
                                                     player,
                                                     ((ExcavationArea) playerActionParams.get("areaToExcavate")),
-                                                    useZeppelin,
-                                                    useCarCard,
                                                     shovelCards,
-                                                    ((Integer) playerActionParams.get("nbTokenToPickUp")));
+                                                    ((Integer) playerActionParams.get("nbTokenToPickUp")),
+                                                    usedElements);
                 returnedInfo.put("tokensJustPickedUp", tokensJustPickedUp);
                 break;
 
@@ -313,8 +330,7 @@ public class Board implements Serializable {
                 this._actionPlayerDoOrganizeExpo(
                         player,
                         ((ExpoCard) playerActionParams.get("expoCardToDo")),
-                        useZeppelin,
-                        useCarCard);
+                        usedElements);
                 break;
 
             case Player.ACTION_PICK_CARD:
@@ -325,8 +341,7 @@ public class Board implements Serializable {
                 Card pickedCard = this._actionPlayerDoPickCard(
                                     player,
                                     ((Card) playerActionParams.get("cardToPickUp")),
-                                    useZeppelin,
-                                    useCarCard);
+                                    usedElements);
                 returnedInfo.put("pickedCard", pickedCard);
                 break;
         }
@@ -335,7 +350,7 @@ public class Board implements Serializable {
 
         // Because of combinable behaviors we treat assistantCard separatly
         List<AssistantCard> assistantCards = new ArrayList();
-            for(ActivableElement element : usedElements) {
+            for(UsableElement element : usedElements) {
             if (element instanceof AssistantCard) {
                 assistantCards.add((AssistantCard) element);
                 usedElements.remove(element);
@@ -376,6 +391,7 @@ public class Board implements Serializable {
      * ACTION_PICK_CARD)</td></tr>
      * <tr><td>expoCardToDo</td><td>Provide a ExpoCard to do (required
      * ACTION_ORGANIZE_EXPO)</td></tr>
+     * <tr><td>List<UsableElement> usedElements</td><td>If a list of used element is provided the able test will be based on these cards as well</td></tr>
      * </table>
      * @return
      * @throws java.lang.Exception
@@ -388,33 +404,41 @@ public class Board implements Serializable {
         }
         Player player = (Player) playerActionParams.get("player");
 
+        List<UsableElement> usedElements;
+        if( playerActionParams.containsKey("usedElements") ){
+            usedElements = (List) playerActionParams.get("usedElements");
+        }
+        else{
+            throw new Exception("No usedElements provided or wrong structure, please see the parameters details");
+        }
+        
         /**
          * Main loop - redirect the asked action to the specified intern method
          */
         switch (actionPattern) {
             case Player.ACTION_CHANGE_FOUR_CARDS:
-                return this._actionPlayerAbleToChangeFourCards(player);
+                return this._actionPlayerAbleToChangeFourCards(player, usedElements);
 
             case Player.ACTION_EXCAVATE:
                 // Check area to excavate parameter
                 if (!playerActionParams.containsKey("areaToExcavate") || !(playerActionParams.get("areaToExcavate") instanceof ExcavationArea)) {
                     throw new Exception("No areaToExcavate provided, please see the parameters details");
                 }
-                return this._actionPlayerAbleToExcavateArea(player, ((ExcavationArea) playerActionParams.get("areaToExcavate")));
+                return this._actionPlayerAbleToExcavateArea(player, ((ExcavationArea) playerActionParams.get("areaToExcavate")), usedElements );
 
             case Player.ACTION_ORGANIZE_EXPO:
                 // Check expoCardToDo parameter
                 if (!playerActionParams.containsKey("expoCardToDo") || !(playerActionParams.get("expoCardToDo") instanceof ExpoCard)) {
                     throw new Exception("No expoCardToDo provided, please see the parameters details");
                 }
-                return this._actionPlayerAbleToOrganizeExpo(player, ((ExpoCard) playerActionParams.get("expoCardToDo")));
+                return this._actionPlayerAbleToOrganizeExpo(player, ((ExpoCard) playerActionParams.get("expoCardToDo")), usedElements );
 
             case Player.ACTION_PICK_CARD:
                 // Check cardToPickUp parameter
                 if (!playerActionParams.containsKey("cardToPickUp") || !(playerActionParams.get("cardToPickUp") instanceof Card)) {
                     throw new Exception("No cardToPickUp provided, please see the parameters details");
                 }
-                return this._actionPlayerAbleToPickCard(player, this.getFourCurrentCards().indexOf(((Card) playerActionParams.get("cardToPickUp"))));
+                return this._actionPlayerAbleToPickCard(player, this.getFourCurrentCards().indexOf(((Card) playerActionParams.get("cardToPickUp"))), usedElements);
         }
         throw new UnsupportedOperationException("Please provide an existing action pattern");
     }
@@ -422,14 +446,22 @@ public class Board implements Serializable {
     /**
      * Check if the playerToken has enough time to go in the asked place before
      * the end of game
-     *
+     * <br/>- take care of car cards
+     * <br/>- take care of all eventual usable element
      * @param area
      * @param playerToken
+     * @param usedElement
      * @return
      */
-    public boolean hasEnoughTimeToGoInThisArea(Area area, PlayerToken playerToken) {
-        int weekCost = playerToken.getPosition().getDistanceWeekCostTo(area.getName()); // weekcost from current place to area
-        return Board.hasEnoughTimeBeforeEndGame(playerToken.getTimeState(), weekCost, this.endGameDatePosition);
+    public boolean hasEnoughTimeToGoInThisArea(Area area, PlayerToken playerToken, List<UsableElement> usedElement) {
+        
+        int weekCost = playerToken.getPosition().getDistanceWeekCostTo( area.getName() ); // weekcost from current place to area
+        
+        return Board.hasEnoughTimeBeforeEndGame(
+                    playerToken.getTimeState(), 
+                    weekCost, 
+                    this.endGameDatePosition, 
+                    usedElement);
     }
 
     /**
@@ -448,9 +480,15 @@ public class Board implements Serializable {
      * @param playerToken
      * @return
      */
-    private boolean _actionPlayerAbleToChangeFourCards(Player player) {
+    private boolean _actionPlayerAbleToChangeFourCards(Player player, List<UsableElement> usedElement) {
+        
         int costOfOperation = player.getNbRoundStillPlaying(); // the cost of this operation is depending of how long time the player is still playing (only him)
-        return Board.hasEnoughTimeBeforeEndGame(player.getPlayerToken().getTimeState(), player.getPlayerToken().getPosition().getDistanceWeekCostTo("warsaw") + costOfOperation, endGameDatePosition);
+        
+        return Board.hasEnoughTimeBeforeEndGame(
+                    player.getPlayerToken().getTimeState(), 
+                    player.getPlayerToken().getPosition().getDistanceWeekCostTo("warsaw") + costOfOperation, 
+                    endGameDatePosition,
+                    usedElement);
     }
 
     /**
@@ -463,12 +501,19 @@ public class Board implements Serializable {
      * @param playerToken
      * @return
      */
-    private boolean _actionPlayerAbleToExcavateArea(Player player, ExcavationArea areaToExcavate) {
-        if (player.isAuthorizedToExcavateArea(areaToExcavate) // 
-                && this.hasEnoughTimeToGoInThisArea(areaToExcavate, player.getPlayerToken())
-                && (player.hasSpecificKnowledgeCardForThisExcavationArea(areaToExcavate.getName()) || player.hasSpecificKnowledgeTokenForThisExcavationArea(areaToExcavate.getName()))) {
-            return true;
+    private boolean _actionPlayerAbleToExcavateArea(Player player, ExcavationArea areaToExcavate, List<UsableElement> usedElement ) {
+        
+        if ( player.isAuthorizedToExcavateArea(areaToExcavate) ){
+            
+            if( this.hasEnoughTimeToGoInThisArea(areaToExcavate, player.getPlayerToken(), usedElement ) ){
+                
+                if( player.hasSpecificKnowledgeCardForThisExcavationArea(areaToExcavate.getName()) || player.hasSpecificKnowledgeTokenForThisExcavationArea(areaToExcavate.getName()) ) {
+                    return true;
+                }
+            }
+            
         }
+        
         return false;
     }
 
@@ -481,7 +526,7 @@ public class Board implements Serializable {
      * @param expoCards
      * @return
      */
-    private boolean _actionPlayerAbleToOrganizeExpo(Player player, ExpoCard expoCard) {
+    private boolean _actionPlayerAbleToOrganizeExpo(Player player, ExpoCard expoCard, List<UsableElement> usedElement) {
         List<PointToken> playerTokens = player.getSpecificTokens(PointToken.class);
 
         // iterate over all expo token to check if the user has one token 
@@ -504,7 +549,8 @@ public class Board implements Serializable {
         if (Board.hasEnoughTimeBeforeEndGame(
                 player.getPlayerToken().getTimeState(),
                 player.getPlayerToken().getPosition().getDistanceWeekCostTo(expoCard.getAreaName()) + expoCard.getWeekCost(),
-                endGameDatePosition) // check if enought time to go there + week cost of the card
+                endGameDatePosition,
+                usedElement) // check if enought time to go there + week cost of the card
                 ) {
             return true;
         }
@@ -517,12 +563,13 @@ public class Board implements Serializable {
      *
      * @return
      */
-    private boolean _actionPlayerAbleToPickCard(Player player, int indexOfCardToPickTup) {
+    private boolean _actionPlayerAbleToPickCard(Player player, int indexOfCardToPickTup, List<UsableElement> usedElement) {
         Card card = this.fourCurrentCards.get(indexOfCardToPickTup);
         if (Board.hasEnoughTimeBeforeEndGame(
                 player.getPlayerToken().getTimeState(),
                 player.getPlayerToken().getPosition().getDistanceWeekCostTo(card.getAreaName()) + card.getWeekCost(),
-                endGameDatePosition)) {
+                endGameDatePosition,
+                usedElement)) {
             return true;
         }
         return false;
@@ -537,7 +584,16 @@ public class Board implements Serializable {
      * @param useZeppelinCard
      * @param useCarCard
      */
-    private void _actionPlayerDoChangeFourCards(Player player, boolean useZeppelinCard, boolean useCarCard) {
+    private void _actionPlayerDoChangeFourCards(Player player, List<UsableElement> usedElement) {
+        boolean useZeppelinCard = false, useCarCard = false;
+        for (UsableElement usableElement : usedElement) {
+            if( usableElement instanceof CarCard){
+                useCarCard = true;
+            }
+            if( usableElement instanceof ZeppelinCard){
+                useZeppelinCard = true;
+            }
+        }
         player.getPlayerToken().movePlayerToken(this.areas.get("warsaw"), useZeppelinCard, useCarCard);
         Collections.sort(this.playerTokenStack);
         this.changeFourCurrentCards();
@@ -558,9 +614,19 @@ public class Board implements Serializable {
      * @param areaToExcavate
      * @param knowledgePointElements
      */
-    private List<Token> _actionPlayerDoExcavateArea(Player player, ExcavationArea areaToExcavate, boolean useZeppelinCard, boolean useCarCard, List<ShovelCard> shovelCards, int nbTokenToPickUp) {
+    private List<Token> _actionPlayerDoExcavateArea(Player player, ExcavationArea areaToExcavate, List<ShovelCard> shovelCards, int nbTokenToPickUp, List<UsableElement> usedElement) {
 
         List<Token> tokensJustPickedUp = new ArrayList();
+        
+        boolean useZeppelinCard = false, useCarCard = false;
+        for (UsableElement usableElement : usedElement) {
+            if( usableElement instanceof CarCard){
+                useCarCard = true;
+            }
+            if( usableElement instanceof ZeppelinCard){
+                useZeppelinCard = true;
+            }
+        }
         
         // Moving process
         player.getPlayerToken().movePlayerToken(areaToExcavate, useZeppelinCard, useCarCard);
@@ -574,7 +640,7 @@ public class Board implements Serializable {
             Token pickedToken = areaToExcavate.getTokenList().get(0);
             
             tokensJustPickedUp.add(pickedToken); // add to the returned picked tokens
-                            
+            
             // If the player pick a none blank token we add it and we remove it from the area token list
             if (!(pickedToken instanceof BlankToken)) {
                 areaToExcavate.getTokenList().remove(pickedToken); // remove from area
@@ -589,6 +655,7 @@ public class Board implements Serializable {
         // update area excavated for player
         player.addAreaAlreadyExcavate(areaToExcavate.getName());
         
+        LOGGER.debug("_actionPlayerDoExcavateArea: tokens picked = " + tokensJustPickedUp);
         return tokensJustPickedUp;
     }
 
@@ -601,12 +668,22 @@ public class Board implements Serializable {
      *
      * @param expoCards
      */
-    private void _actionPlayerDoOrganizeExpo(Player player, ExpoCard expoCardToDo, boolean useZeppelinCard, boolean useCarCard) {
+    private void _actionPlayerDoOrganizeExpo(Player player, ExpoCard expoCardToDo, List<UsableElement> usedElement) {
 
+        boolean useZeppelinCard = false, useCarCard = false;
+        for (UsableElement usableElement : usedElement) {
+            if( usableElement instanceof CarCard){
+                useCarCard = true;
+            }
+            if( usableElement instanceof ZeppelinCard){
+                useZeppelinCard = true;
+            }
+        }
+        
         player.getPlayerToken().movePlayerToken(this.areas.get(expoCardToDo.getAreaName()), useZeppelinCard, useCarCard);
         Collections.sort(this.playerTokenStack);
 
-        player.getPlayerToken().addWeeks(expoCardToDo.getWeekCost());
+        player.getPlayerToken().applyCardCost(expoCardToDo);
         player.getCards().add(expoCardToDo);
         this.getExpoCards().remove(expoCardToDo);
     }
@@ -621,15 +698,25 @@ public class Board implements Serializable {
      *
      * @param player
      */
-    private Card _actionPlayerDoPickCard(Player player, Card cardToPickUp, boolean useZeppelinCard, boolean useCarCard) {
+    private Card _actionPlayerDoPickCard(Player player, Card cardToPickUp, List<UsableElement> usedElement) {
         LOGGER.debug("_actionPlayerDoPickCard: cardToPickUp=" + cardToPickUp);
 
+        boolean useZeppelinCard = false, useCarCard = false;
+        for (UsableElement usableElement : usedElement) {
+            if( usableElement instanceof CarCard){
+                useCarCard = true;
+            }
+            if( usableElement instanceof ZeppelinCard){
+                useZeppelinCard = true;
+            }
+        }
+        
         player.getPlayerToken().movePlayerToken(this.getArea(cardToPickUp.getAreaName()), useZeppelinCard, useCarCard); // move
         Collections.sort(this.playerTokenStack);
 
-        Card pickedCard = this._pickCardOnBoard(this.fourCurrentCards.indexOf(cardToPickUp));
+        Card pickedCard = this._pickCardOnBoard( this.fourCurrentCards.indexOf(cardToPickUp) );
 
-        player.getPlayerToken().addWeeks(pickedCard.getWeekCost());
+        player.getPlayerToken().applyCardCost(pickedCard);
         player.getCards().add(pickedCard); // update player hand
         
         return pickedCard;
@@ -649,24 +736,41 @@ public class Board implements Serializable {
      */
     private Card _pickCardOnBoard(Integer indexOf) {
         LOGGER.debug("_pickCardOnBoard: indexOf=" + indexOf);
-        Card cardToReturn = this.fourCurrentCards.remove(indexOf.intValue());
-
+        LOGGER.debug("_pickCardOnBoard: " + this.discardingDeck.size() + " cards inside the discarding deck");
+        LOGGER.debug("_pickCardOnBoard: " + this.sideDeck.size() + " cards inside the side deck");
+        LOGGER.debug("_pickCardOnBoard: " + this.deck.size() + " cards inside the main deck");
+        
+        Card cardToReturn = this.fourCurrentCards.remove( indexOf.intValue() );
+        boolean noMoreCardsInAnyDeck = false;
+        
+//        if( this.deck.isEmpty() && this.sideDeck.isEmpty() ){
+//            LOGGER.debug("_pickCardOnBoard: No more cards left in any decks");
+//            return null;
+//        }
+        
         Card cardToAddOnTheBoard = null;
         do {
             // If deck is empty we mix discardingDeck and sideDeck together
             // and we add tese two deck inside the main deck
             if (this.deck.isEmpty()) {
-                this.discardingDeck.addAll(this.sideDeck);
+                this.discardingDeck.addAll( this.sideDeck );
                 this.sideDeck.clear();
                 this.discardingDeck.mix();
                 this.deck.addAll(this.discardingDeck);
                 this.discardingDeck.clear();
+                LOGGER.debug("_pickCardOnBoard: The main deck is empty. " + this.deck.size() + " cards has been added to the main deck");
             }
-            cardToAddOnTheBoard = this.deck.pick();
-            if (cardToAddOnTheBoard instanceof ExpoCard) {
-                this._addExpoCardOnBoard((ExpoCard) cardToAddOnTheBoard);
+            if( this.deck.isEmpty() && this.sideDeck.isEmpty() ){
+                LOGGER.debug("_pickCardOnBoard: No more cards left in any decks");
+                noMoreCardsInAnyDeck = true;
             }
-        } while (cardToAddOnTheBoard instanceof ExpoCard);
+            else{
+                cardToAddOnTheBoard = this.deck.pick();
+                if (cardToAddOnTheBoard instanceof ExpoCard) {
+                    this._addExpoCardOnBoard((ExpoCard) cardToAddOnTheBoard);
+                }
+            }
+        } while ( cardToAddOnTheBoard instanceof ExpoCard && noMoreCardsInAnyDeck != true);
 
         this.fourCurrentCards.add(indexOf, cardToAddOnTheBoard); // here we got card or null
 
@@ -957,6 +1061,9 @@ public class Board implements Serializable {
 
         dividedDecks[0].addAll(dividedDecks[1]); // we put deck1 on deck2
         this.deck = new Deck(dividedDecks[0]); // tmp deck 1 & 2 become main deck
+        LOGGER.debug("_initDecks: " + this.sideDeck.size() + " cards inside the side deck");
+        LOGGER.debug("_initDecks: " + this.discardingDeck.size() + " cards inside the discarding deck");
+        LOGGER.debug("_initDecks: " + this.deck.size() + " cards inside the main deck");
     }
 
     /**

@@ -14,6 +14,7 @@ import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.tokens.Token;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
@@ -55,7 +56,7 @@ public class MapPanel extends javax.swing.JPanel {
     private Player currentPlayer;
     private ArrayList<UsableElement> currentPlayerUsingElements;
     private HashMap<String, Object> playerActionParams; // the hashmap that contains the action that a player can do
-    private boolean hasPlayerOneActionPossible; //boolean that serves to know if a player can do an action (here if he can play)
+//    private boolean hasPlayerOneActionPossible; //boolean that serves to know if a player can do an action (here if he can play)
 
     // variables relating to the UI
     // Used to work through list (set/update event, update UI)
@@ -66,9 +67,9 @@ public class MapPanel extends javax.swing.JPanel {
     private LinkedHashMap<Component, Card> listOfBoardCardsComponent;     // components instanciated once, only cards are changed (all should be always ordened)
     private HashMap<Component, ExcavationArea> listOfExcavationSiteComponent; 
     
-    private Player currentPlayerLeftPanel;
+//    private Player currentPlayerLeftPanel;
 
-    private final MapPanel instance = null;
+    private static MapPanel instance = null;
     
     /**
      * Factory constructor
@@ -77,8 +78,10 @@ public class MapPanel extends javax.swing.JPanel {
      * @throws Exception 
      */
     public static MapPanel create( Board board ) {
-        MapPanel instance = new MapPanel( board );
-        instance.switchNewPlayer();
+        if( MapPanel.instance == null ){
+            MapPanel.instance = new MapPanel( board );
+            instance.switchNewPlayer();
+        }
         return instance;
     }
     
@@ -95,7 +98,6 @@ public class MapPanel extends javax.swing.JPanel {
         // Init the board and the tabbed pane with name's players
         this.currentBoard = board; // active board
         
-                
         // Init list of board cards component (the four cards)
         this.listOfBoardCardsComponent = new LinkedHashMap();
         this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
@@ -128,7 +130,7 @@ public class MapPanel extends javax.swing.JPanel {
             new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    _actionChangeFourcardsButtonActionPerformed(evt, true);
+                    _actionChangeFourcardsButtonActionPerformed(evt);
                 }
             }
         );
@@ -137,16 +139,20 @@ public class MapPanel extends javax.swing.JPanel {
         /*
             Update the left panel
         */
-        this.playerPanel.setVisible(false); // hide player panel
-        this.menuCardsPlayerTab.setVisible(false); // hide left panel
-        displayedCardTokenPanel.setVisible(false);
+        this.leftPanelContainerPanel.setVisible( false );
+//        this.playerLeftPanel.setVisible(false); // hide player panel
+//        this.menuCardsPlayerTab.setVisible(false); // hide left panel
+//        displayedCardTokenPanel.setVisible(false);
         // add and set dynamicaly player tab on left panel
-        this.menuCardsPlayerTab.removeTabAt(0);
+
         for (Player player : this.currentBoard.getPlayers()) {
-            javax.swing.JPanel playerLeftPanel = new javax.swing.JPanel();
-            playerLeftPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-            playerLeftPanel.setBorder( BorderFactory.createEmptyBorder() );
-            this.menuCardsPlayerTab.addTab( player.getName(), playerLeftPanel);
+            
+//            JPanel playerLeftPanel = new javax.swing.JPanel();
+//            playerLeftPanel.setLayout(new AbsoluteLayout());
+//            playerLeftPanel.setBorder( BorderFactory.createEmptyBorder() );
+//            
+//            this.menuCardsPlayerTab.addTab( player.getName(), playerLeftPanel);
+              this.menuCardsPlayerTab.addTab( player.getName(), this.playerLeftPanel);
         }
 //        this.menuCardsPlayerTab.setSelectedIndex(0); // Select the first player in the tabbed pane and update the current player with the first one
         try {
@@ -186,13 +192,12 @@ public class MapPanel extends javax.swing.JPanel {
                  * - reset params of action method
                  * - update component to match the actual player
                  * - update UI to match the actual player
-                 * - Test and lock player's action
                  */
-                
                 // Update intern vars
-                this.currentPlayerLeftPanel = this.currentPlayer; // active left panel player
+//                this.currentPlayerLeftPanel = this.currentPlayer; // active left panel player
                 this.currentPlayerUsingElements = new ArrayList(); //Init the displayed list and hashmap of usable Card
-
+                this.currentPlayerUsingElements.addAll( this.currentPlayer.getAllActiveElements() ); // get all already picked active elements
+                
                 // Init the params of the player's action
                 this.playerActionParams = new HashMap();
                 this.playerActionParams.put("player", currentPlayer); // wet set the current player
@@ -203,115 +208,12 @@ public class MapPanel extends javax.swing.JPanel {
                 this.playerActionParams.put("nbTokenToPickUp", null); // number of tokens the player is allowed to pick up inside area
                 
                 // Update player's component
-                this._updateUsableElementComponent( this.currentPlayer.getAllUsableElements() );
+                this._updateActivableElementComponent( this.currentPlayer.getAllActivableElements() );
                 this._updateUsingElementComponent( this.currentPlayerUsingElements );
                 
                 // Update UI
                 this._updatePlayerUsableElementUI();
                 this._updatePlayerUsingElementUI();
-
-                /*
-                    Test the players actions
-                */
-                LOGGER.debug("Test player able to do all actions");
-                this.hasPlayerOneActionPossible = false;
-                // Set active car card in case of player has
-                if( currentPlayer.hasCarCard() ){
-                    // set visible
-                }
-
-                // TEST ACTION_CHANGE_FOUR_CARDS
-                if( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams) ){
-                    
-                    // We remove and set the new listener
-                    changeFourCardsjButton.removeMouseListener( changeFourCardsjButton.getMouseListeners()[0] ); // we remove the previous mouse listener listener
-                    changeFourCardsjButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                            _actionChangeFourcardsButtonActionPerformed(evt, false);
-                        }
-                    });
-                }
-                else{
-                    hasPlayerOneActionPossible = true;
-                }
-
-                // TEST ACTION_EXCAVATE
-                List<ExcavationArea> excaAreas = new ArrayList( this.currentBoard.getAreas( ExcavationArea.class ).values() );
-                for (int i = 0; i < excaAreas.size(); i++) {
-                
-                    final ExcavationArea area = excaAreas.get(i);
-                    playerActionParams.put("areaToExcavate", area);
-                    if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams)){
-                        
-                        // We remove and set the new listener
-                        JLabel excavationSiteLabel = (JLabel) this.listOfExcavationSiteComponent.keySet().toArray()[i];
-                        final int idExpoCard = i;
-                        excavationSiteLabel.removeMouseListener( excavationSiteLabel.getMouseListeners()[0] ); // we remove the previous mouse listener listener
-                        excavationSiteLabel.addMouseListener(
-                            new java.awt.event.MouseAdapter() {
-                                @Override
-                                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                    _actionExcavationSiteMouseClicked(evt, area, false);
-                                }
-                            }
-                        );
-                    }
-                    else{
-                        hasPlayerOneActionPossible = true;
-                    }
-                }
-
-                // TEST ACTION_ORGANIZE_EXPO
-                for (int i = 0; i < this.currentBoard.getExpoCards().size(); i++) {
-
-                    ExpoCard card = this.currentBoard.getExpoCards().get( i );
-                    playerActionParams.put("expoCardToDo", card);
-                    if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams)){
-                        
-                        // We remove and set the new listener
-                        JLabel expoCardLabel = (JLabel) this.listOfExpoCardsComponent.keySet().toArray()[i];
-                        final int idExpoCard = i;
-                        expoCardLabel.removeMouseListener( expoCardLabel.getMouseListeners()[0] ); // we remove the previous mouse listener listener
-                        expoCardLabel.addMouseListener(
-                            new java.awt.event.MouseAdapter() {
-                                @Override
-                                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                    _actionBoardExpoLabelMouseClicked(evt, idExpoCard, false);
-                                }
-                            }
-                        );
-
-                    }
-                    else{
-                        hasPlayerOneActionPossible = true;
-                    }
-                }
-
-                // TEST ACTION_PICK_CARD
-                for (int i = 0; i < this.currentBoard.getFourCurrentCards().size(); i++) {
-
-                    Card card = this.currentBoard.getFourCurrentCards().get(i);
-                    playerActionParams.put("cardToPickUp", card);
-                    final int idCardToPickUp = this.currentBoard.getFourCurrentCards().indexOf( card );
-
-                    if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, playerActionParams)){
-
-                        // We remove and set the new listener
-                        JLabel boardCardLabel = (JLabel) this.listOfBoardCardsComponent.keySet().toArray()[i];
-                        boardCardLabel.removeMouseListener( boardCardLabel.getMouseListeners()[0] ); // we remove the previous mouse listener listener
-                        boardCardLabel.addMouseListener(
-                            new java.awt.event.MouseAdapter() {
-                                @Override
-                                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                    _actionBoardCardLabelMouseClicked(evt, idCardToPickUp, false);
-                                }
-                            }
-                        );
-                    }
-                    else{
-                        hasPlayerOneActionPossible = true;
-                    }
-                }
 
 //                JOptionPane.showMessageDialog( this, "Joueur " + this.currentPlayer.getName() + ", c'est à vous de jouer !");
             }
@@ -323,6 +225,10 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * Update the list of component through the current using player's elements
+     * @param elements 
+     */
     private void _updateUsingElementComponent( List<UsableElement> elements ){
         LOGGER.debug("_updateUsingElementComponent");
         
@@ -349,7 +255,7 @@ public class MapPanel extends javax.swing.JPanel {
         
     }
     
-    private void _updateUsableElementComponent( List<ActivableElement> elements ){
+    private void _updateActivableElementComponent( List<ActivableElement> elements ){
         LOGGER.debug("_updateUsableElementComponent");
         
         this.listOfUsableElementsComponent.clear();
@@ -388,7 +294,7 @@ public class MapPanel extends javax.swing.JPanel {
                 new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
-                        _actionBoardExpoLabelMouseClicked(evt, idExpoCard, true);
+                        _actionBoardExpoLabelMouseClicked(evt, idExpoCard);
                     }
                 }
             );
@@ -420,14 +326,16 @@ public class MapPanel extends javax.swing.JPanel {
                     card);              // link to the card
             
             // Add the event to the newly creted component
-            boardcardComponent.addMouseListener(
-                new java.awt.event.MouseAdapter() {
-                    @Override
-                    public void mouseClicked(java.awt.event.MouseEvent evt) {
-                        _actionBoardCardLabelMouseClicked(evt, idCard, true);
+            if( card != null ){
+                boardcardComponent.addMouseListener(
+                    new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mouseClicked(java.awt.event.MouseEvent evt) {
+                            _actionBoardCardLabelMouseClicked(evt, idCard);
+                        }
                     }
-                }
-            );
+                );
+            }
         }
     }
     
@@ -439,7 +347,7 @@ public class MapPanel extends javax.swing.JPanel {
                 new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
-                        _actionExcavationSiteMouseClicked(evt, excavationArea, true);
+                        _actionExcavationSiteMouseClicked(evt, excavationArea);
                     }
                 }
             );
@@ -461,18 +369,25 @@ public class MapPanel extends javax.swing.JPanel {
      * Update the display off all four cards from the list of component
      */
     private void _updateBoardCardsUI(){
+        LOGGER.debug("_updateBoardCardsUI");
         this.boardCardsContainerPanel.removeAll();
         for (Map.Entry<Component, Card> entry : this.listOfBoardCardsComponent.entrySet()) {
             
             this.boardCardsContainerPanel.add( entry.getKey() );
             
             // Set icon depend of cards
-            ((JLabel)entry.getKey()).setIcon( new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + entry.getValue().getId() + ".jpg")) );
-            ((JLabel)entry.getKey()).setCursor( new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR) );
+            if( entry.getValue() != null ){
+                ((JLabel)entry.getKey()).setIcon( new ImageIcon(getClass().getResource("/images/cards/" + entry.getValue().getId() + ".jpg")) );
+                ((JLabel)entry.getKey()).setCursor( new Cursor( Cursor.HAND_CURSOR ) );
+            }
+            else{
+                ((JLabel)entry.getKey()).setIcon( new ImageIcon(getClass().getResource("/images/cards/empty.jpg")) );
+            }
             
             // Do wathever you want abotu display here
         }
         this.boardCardsContainerPanel.updateUI();
+        this.mapContainerPanel.updateUI();
     }
     
     /**
@@ -498,6 +413,7 @@ public class MapPanel extends javax.swing.JPanel {
                 
         }
         this.usableElementsMenuPanel.updateUI();
+        this.rightPanelContainerPanel.updateUI();
     }
     
     /**
@@ -527,6 +443,7 @@ public class MapPanel extends javax.swing.JPanel {
         }
         
         this.usingElementsMenuPanel.updateUI();
+        this.rightPanelContainerPanel.updateUI();
         
     }
     
@@ -551,6 +468,7 @@ public class MapPanel extends javax.swing.JPanel {
         }
 
         this.expoCardsContainerPanel.updateUI();
+        this.mapContainerPanel.updateUI();
     }
     
     private void _updateExcavationSiteUI() {
@@ -565,6 +483,7 @@ public class MapPanel extends javax.swing.JPanel {
             this.excavationContainerPanel.add( entry.getKey() );
         }
         this.excavationContainerPanel.updateUI();
+        this.mapContainerPanel.updateUI();
     }
     
     private void _updatePlayerTokenPositionUI() {
@@ -583,7 +502,7 @@ public class MapPanel extends javax.swing.JPanel {
                 )
             );
             playerTokenLabel.setSize(32, 32);
-            playerTokenLabel.setLocation( PlayerTokenPosition.positionDependingOnWeeks( playerToken.getCurrentWeek(), i ) );
+            playerTokenLabel.setLocation( TokensPosition.positionDependingOnWeeks( playerToken.getCurrentWeek(), i ) );
             this.tokenContainerPanel.add( playerTokenLabel );
             
             // Token on areas
@@ -596,11 +515,27 @@ public class MapPanel extends javax.swing.JPanel {
                 )
             );
             playerTokenLabelOnArea.setSize(32, 32);
-            playerTokenLabelOnArea.setLocation( PlayerTokenPosition.positionDependingOnArea( playerToken.getPosition().getName(), i) );
+            playerTokenLabelOnArea.setLocation( TokensPosition.positionDependingOnArea( playerToken.getPosition().getName(), i) );
             this.tokenContainerPanel.add( playerTokenLabelOnArea );
             
         }
         this.tokenContainerPanel.updateUI();
+        
+        // Update the position of time token
+        this.timeTokenContainerPanel.removeAll();
+        JLabel timeTokenLabel = new JLabel();
+        timeTokenLabel.setIcon(
+                new ImageIcon(
+                    getClass().getResource( 
+                        ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.playerToken") + "timeToken.png"
+                    )
+                )
+            );
+        timeTokenLabel.setSize(32, 32);
+        timeTokenLabel.setLocation( TokensPosition.positionDependingOnYear( this.currentBoard.getUpcomingPlayer().getPlayerToken().getCurrentYear() ));
+        this.timeTokenContainerPanel.add( timeTokenLabel );
+        this.timeTokenContainerPanel.updateUI();
+        
         this.mapContainerPanel.updateUI();
     }
     
@@ -650,9 +585,26 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt
      * @param label 
      */
-    private void _actionBoardCardLabelMouseClicked(java.awt.event.MouseEvent evt, int idCard, boolean playerIsAble) {
+    private void _actionBoardCardLabelMouseClicked(java.awt.event.MouseEvent evt, int idCard) {
         LOGGER.debug("boardCardLabelMouseClicked: Player click on one card = " + evt.getComponent().getName());
         
+        boolean playerIsAble = true;
+        
+        // TEST ACTION_PICK_CARD
+        Card card = this.currentBoard.getFourCurrentCards().get( idCard );
+        playerActionParams.put("cardToPickUp", card);
+        try {
+            if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_PICK_CARD, playerActionParams)){
+                playerIsAble = false;
+            }
+        } catch (Exception ex) {
+            LOGGER.fatal( ex );
+            ex.printStackTrace();
+            System.exit(0);
+        }
+
+        
+        // DO ACTION
         if( playerIsAble ){
             
 //            HashMap<String, Object> returnedInfo = null;
@@ -667,13 +619,14 @@ public class MapPanel extends javax.swing.JPanel {
                 pickedCard = (Card) ((HashMap<String, Object>) currentBoard.doPlayerRoundAction(Player.ACTION_PICK_CARD, playerActionParams)).get("pickedCard");
             } catch (Exception ex) {
                 LOGGER.fatal( ex );
+                ex.printStackTrace();
                 System.exit(0);
             }
             
             // Animate the action of picking
             this._animatePickingCard( pickedCard, idCard);
                     
-            // We eventually add the final picked card to using eement if this card is an activeElement
+            // We eventually add the final picked card to using element if this card is an activeElement
             if( pickedCard instanceof ActiveElement ){
                 this.currentPlayerUsingElements.add( (UsableElement) pickedCard);
             }
@@ -695,9 +648,25 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }    
     
-    private void _actionBoardExpoLabelMouseClicked(java.awt.event.MouseEvent evt, int idExpoCard, boolean playerIsAble) {
+    private void _actionBoardExpoLabelMouseClicked(java.awt.event.MouseEvent evt, int idExpoCard) {
         LOGGER.debug("boardExpoLabelMouseClicked: Player click on one expo card = " + evt.getComponent().getName());
         
+        boolean playerIsAble = true;
+        
+        // TEST ACTION_ORGANIZE_EXPO
+        ExpoCard card = this.currentBoard.getExpoCards().get( idExpoCard );
+        playerActionParams.put("expoCardToDo", card);
+        try {
+            if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_ORGANIZE_EXPO, playerActionParams)){
+                playerIsAble = false;
+            }
+        } catch (Exception ex) {
+            LOGGER.fatal( ex );
+            ex.printStackTrace();
+            System.exit(0);
+        }
+        
+        // DO ACTION
         if( playerIsAble ){
             Card expoCardToDo = this.currentBoard.getExpoCards().get( idExpoCard );
             
@@ -758,9 +727,23 @@ public class MapPanel extends javax.swing.JPanel {
         
     }
 
-    private void _actionChangeFourcardsButtonActionPerformed(java.awt.event.ActionEvent evt, boolean playerIsAble){
+    private void _actionChangeFourcardsButtonActionPerformed(java.awt.event.ActionEvent evt){
         LOGGER.debug("changeFourcardsButtonActionPerformed:");
         
+        boolean playerIsAble = true;
+        
+        // TEST ACTION_CHANGE_FOUR_CARDS
+        try {
+            if( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams) ){
+                playerIsAble = false;
+            }
+        } catch (Exception ex) {
+            LOGGER.fatal( ex );
+            ex.printStackTrace();
+            System.exit(0);
+        }
+        
+        // DO ACTION
         if( playerIsAble ){
             
             playerActionParams.put("usedElements", this.currentPlayerUsingElements);
@@ -790,7 +773,24 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
     
-    private void _actionExcavationSiteMouseClicked( java.awt.event.MouseEvent evt, ExcavationArea area, boolean playerIsAble ){
+    private void _actionExcavationSiteMouseClicked( java.awt.event.MouseEvent evt, ExcavationArea area){
+        
+        boolean playerIsAble = true;
+                
+        // TEST ACTION_EXCAVATE
+        playerActionParams.put("areaToExcavate", area);
+        try {
+            if( ! this.currentBoard.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams)){
+                playerIsAble = false;
+            }
+        } catch (Exception ex) {
+            LOGGER.fatal( ex );
+            ex.printStackTrace();
+            System.exit(0);
+        }
+
+                
+        // DO MAIN ACTION 
         if( ! playerIsAble ){
             JOptionPane.showMessageDialog( this, "Vous ne pouvez pas fouiller " + area.getName());
         }
@@ -801,7 +801,7 @@ public class MapPanel extends javax.swing.JPanel {
             
             // DO THE MAIN ACTION
             try {
-                tokensJustPickedUp = (List<Token>) currentBoard.doPlayerRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams).get("tokensJustPickedUp");
+                tokensJustPickedUp = (List<Token>) currentBoard.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams).get("tokensJustPickedUp");
             } catch (Exception ex) {
                 LOGGER.fatal( ex.getMessage() );
                 ex.printStackTrace();
@@ -834,14 +834,15 @@ public class MapPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         arrowMenuLabel = new javax.swing.JLabel();
-        rightPanelContainerPanel = new javax.swing.JPanel();
-        usingElementsMenuPanel = new javax.swing.JPanel();
-        usableElementsMenuPanel = new javax.swing.JPanel();
-        logMenu = new javax.swing.JPanel();
-        logMenuScrollBar = new javax.swing.JScrollBar();
-        jSeparator1 = new javax.swing.JSeparator();
-        jSeparator2 = new javax.swing.JSeparator();
-        playerPanel = new javax.swing.JPanel();
+        mapContainerPanel = new javax.swing.JPanel();
+        changeFourCardsjButton = new javax.swing.JButton();
+        timeTokenContainerPanel = new javax.swing.JPanel();
+        boardCardsContainerPanel = new javax.swing.JPanel();
+        tokenContainerPanel = new javax.swing.JPanel();
+        excavationContainerPanel = new javax.swing.JPanel();
+        expoCardsContainerPanel = new javax.swing.JPanel();
+        leftPanelContainerPanel = new javax.swing.JPanel();
+        playerLeftPanel = new javax.swing.JPanel();
         berlinAssistantLabel = new javax.swing.JLabel();
         moscowCarLabel = new javax.swing.JLabel();
         berlinEtnoLabel = new javax.swing.JLabel();
@@ -864,14 +865,14 @@ public class MapPanel extends javax.swing.JPanel {
         egyptNullTokenLabel = new javax.swing.JLabel();
         playerBackgroundLabel = new javax.swing.JLabel();
         menuCardsPlayerTab = new javax.swing.JTabbedPane();
-        player1Panel = new javax.swing.JPanel();
         displayedCardTokenPanel = new javax.swing.JPanel();
-        mapContainerPanel = new javax.swing.JPanel();
-        changeFourCardsjButton = new javax.swing.JButton();
-        boardCardsContainerPanel = new javax.swing.JPanel();
-        tokenContainerPanel = new javax.swing.JPanel();
-        excavationContainerPanel = new javax.swing.JPanel();
-        expoCardsContainerPanel = new javax.swing.JPanel();
+        rightPanelContainerPanel = new javax.swing.JPanel();
+        usingElementsMenuPanel = new javax.swing.JPanel();
+        usableElementsMenuPanel = new javax.swing.JPanel();
+        logMenu = new javax.swing.JPanel();
+        logMenuScrollBar = new javax.swing.JScrollBar();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
         backgroundLabel = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -883,6 +884,243 @@ public class MapPanel extends javax.swing.JPanel {
             }
         });
         add(arrowMenuLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -3, -1, 770));
+
+        mapContainerPanel.setOpaque(false);
+        mapContainerPanel.setLayout(null);
+
+        changeFourCardsjButton.setText("Changer les quatres cartes");
+        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        mapContainerPanel.add(changeFourCardsjButton);
+        changeFourCardsjButton.setBounds(770, 410, 200, 30);
+
+        timeTokenContainerPanel.setOpaque(false);
+        timeTokenContainerPanel.setLayout(null);
+        mapContainerPanel.add(timeTokenContainerPanel);
+        timeTokenContainerPanel.setBounds(100, 240, 50, 160);
+
+        boardCardsContainerPanel.setOpaque(false);
+        mapContainerPanel.add(boardCardsContainerPanel);
+        boardCardsContainerPanel.setBounds(750, 80, 230, 330);
+
+        tokenContainerPanel.setOpaque(false);
+        tokenContainerPanel.setLayout(null);
+        mapContainerPanel.add(tokenContainerPanel);
+        tokenContainerPanel.setBounds(0, 10, 1050, 750);
+
+        excavationContainerPanel.setOpaque(false);
+        mapContainerPanel.add(excavationContainerPanel);
+        excavationContainerPanel.setBounds(470, 380, 520, 330);
+
+        expoCardsContainerPanel.setOpaque(false);
+        mapContainerPanel.add(expoCardsContainerPanel);
+        expoCardsContainerPanel.setBounds(70, 460, 330, 250);
+
+        add(mapContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
+
+        leftPanelContainerPanel.setEnabled(false);
+        leftPanelContainerPanel.setOpaque(false);
+        leftPanelContainerPanel.setLayout(null);
+
+        playerLeftPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                playerLeftPanelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        berlinAssistantLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/18.jpg"))); // NOI18N
+        berlinAssistantLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinAssistantLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinAssistantLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(berlinAssistantLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
+
+        moscowCarLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg"))); // NOI18N
+        moscowCarLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                moscowCarLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                moscowCarLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(moscowCarLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
+
+        berlinEtnoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/85.jpg"))); // NOI18N
+        berlinEtnoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinEtnoLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinEtnoLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(berlinEtnoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, -1, -1));
+
+        romaZeppelinLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/3.jpg"))); // NOI18N
+        romaZeppelinLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                romaZeppelinLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                romaZeppelinLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(romaZeppelinLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
+
+        londonExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
+        londonExcavationLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                londonExcavationLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                londonExcavationLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(londonExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
+
+        berlinCongressPLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
+        berlinCongressPLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinCongressPLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinCongressPLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(berlinCongressPLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+
+        berlinGenKnowledgeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/31.jpg"))); // NOI18N
+        berlinGenKnowledgeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinGenKnowledgeLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinGenKnowledgeLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(berlinGenKnowledgeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
+
+        moscowScienKnowledgeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/74.jpg"))); // NOI18N
+        moscowScienKnowledgeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                moscowScienKnowledgeLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                moscowScienKnowledgeLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(moscowScienKnowledgeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 360, -1, -1));
+
+        londonShovelLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/22.jpg"))); // NOI18N
+        londonShovelLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                londonShovelLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                londonShovelLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(londonShovelLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
+
+        berlinSmallExpoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/88.jpg"))); // NOI18N
+        berlinSmallExpoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                berlinSmallExpoLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                berlinSmallExpoLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(berlinSmallExpoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 390, -1, -1));
+
+        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/mesopotamiaExcavation.jpg"))); // NOI18N
+        playerLeftPanel.add(mesopotamiaExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
+
+        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/palestineExcavation.jpg"))); // NOI18N
+        playerLeftPanel.add(palestineExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
+
+        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/egyptExcavation.jpg"))); // NOI18N
+        playerLeftPanel.add(egyptExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
+
+        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/creteExcavation.jpg"))); // NOI18N
+        playerLeftPanel.add(creteExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
+
+        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/greeceExcavation.jpg"))); // NOI18N
+        playerLeftPanel.add(greeceExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
+
+        mesopotamiaNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/blueNull.png"))); // NOI18N
+        mesopotamiaNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                mesopotamiaNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                mesopotamiaNullTokenLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(mesopotamiaNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
+
+        palestineNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/palestine/greenNull.png"))); // NOI18N
+        palestineNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                palestineNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                palestineNullTokenLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(palestineNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
+
+        greeceNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/greece/orangeNull.png"))); // NOI18N
+        greeceNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                greeceNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                greeceNullTokenLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(greeceNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
+
+        creteNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/crete/purpleNull.png"))); // NOI18N
+        creteNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                creteNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                creteNullTokenLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(creteNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
+
+        egyptNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/egypt/yellowNull.png"))); // NOI18N
+        egyptNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                egyptNullTokenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                egyptNullTokenLabelMouseExited(evt);
+            }
+        });
+        playerLeftPanel.add(egyptNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
+
+        playerBackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/playerBackground.jpg"))); // NOI18N
+        playerLeftPanel.add(playerBackgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        leftPanelContainerPanel.add(playerLeftPanel);
+        playerLeftPanel.setBounds(0, 13, 446, 743);
+        leftPanelContainerPanel.add(menuCardsPlayerTab);
+        menuCardsPlayerTab.setBounds(0, 0, 450, 770);
+
+        displayedCardTokenPanel.setOpaque(false);
+        leftPanelContainerPanel.add(displayedCardTokenPanel);
+        displayedCardTokenPanel.setBounds(460, 20, 570, 730);
+
+        add(leftPanelContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
 
         rightPanelContainerPanel.setOpaque(false);
         rightPanelContainerPanel.setLayout(null);
@@ -908,233 +1146,6 @@ public class MapPanel extends javax.swing.JPanel {
 
         add(rightPanelContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 0, 320, 770));
 
-        playerPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                playerPanelMouseExited(evt);
-            }
-        });
-        playerPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        berlinAssistantLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/18.jpg"))); // NOI18N
-        berlinAssistantLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                berlinAssistantLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                berlinAssistantLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(berlinAssistantLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
-
-        moscowCarLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/5.jpg"))); // NOI18N
-        moscowCarLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                moscowCarLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                moscowCarLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(moscowCarLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
-
-        berlinEtnoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/85.jpg"))); // NOI18N
-        berlinEtnoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                berlinEtnoLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                berlinEtnoLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(berlinEtnoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, -1, -1));
-
-        romaZeppelinLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/3.jpg"))); // NOI18N
-        romaZeppelinLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                romaZeppelinLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                romaZeppelinLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(romaZeppelinLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
-
-        londonExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
-        londonExcavationLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                londonExcavationLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                londonExcavationLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(londonExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
-
-        berlinCongressPLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/9.jpg"))); // NOI18N
-        berlinCongressPLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                berlinCongressPLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                berlinCongressPLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(berlinCongressPLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
-
-        berlinGenKnowledgeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/31.jpg"))); // NOI18N
-        berlinGenKnowledgeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                berlinGenKnowledgeLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                berlinGenKnowledgeLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(berlinGenKnowledgeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
-
-        moscowScienKnowledgeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/74.jpg"))); // NOI18N
-        moscowScienKnowledgeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                moscowScienKnowledgeLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                moscowScienKnowledgeLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(moscowScienKnowledgeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 360, -1, -1));
-
-        londonShovelLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/22.jpg"))); // NOI18N
-        londonShovelLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                londonShovelLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                londonShovelLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(londonShovelLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
-
-        berlinSmallExpoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/88.jpg"))); // NOI18N
-        berlinSmallExpoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                berlinSmallExpoLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                berlinSmallExpoLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(berlinSmallExpoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 390, -1, -1));
-
-        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/mesopotamiaExcavation.jpg"))); // NOI18N
-        playerPanel.add(mesopotamiaExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
-
-        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/palestineExcavation.jpg"))); // NOI18N
-        playerPanel.add(palestineExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 550, -1, -1));
-
-        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/egyptExcavation.jpg"))); // NOI18N
-        playerPanel.add(egyptExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
-
-        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/creteExcavation.jpg"))); // NOI18N
-        playerPanel.add(creteExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, -1, -1));
-
-        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/greeceExcavation.jpg"))); // NOI18N
-        playerPanel.add(greeceExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
-
-        mesopotamiaNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/blueNull.png"))); // NOI18N
-        mesopotamiaNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                mesopotamiaNullTokenLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                mesopotamiaNullTokenLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(mesopotamiaNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
-
-        palestineNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/palestine/greenNull.png"))); // NOI18N
-        palestineNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                palestineNullTokenLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                palestineNullTokenLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(palestineNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
-
-        greeceNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/greece/orangeNull.png"))); // NOI18N
-        greeceNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                greeceNullTokenLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                greeceNullTokenLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(greeceNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
-
-        creteNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/crete/purpleNull.png"))); // NOI18N
-        creteNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                creteNullTokenLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                creteNullTokenLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(creteNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
-
-        egyptNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/egypt/yellowNull.png"))); // NOI18N
-        egyptNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                egyptNullTokenLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                egyptNullTokenLabelMouseExited(evt);
-            }
-        });
-        playerPanel.add(egyptNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
-
-        playerBackgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/playerBackground.jpg"))); // NOI18N
-        playerPanel.add(playerBackgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-
-        add(playerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 25, -1, -1));
-
-        player1Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        menuCardsPlayerTab.addTab("Joueur 1", player1Panel);
-
-        add(menuCardsPlayerTab, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 770));
-
-        displayedCardTokenPanel.setOpaque(false);
-        add(displayedCardTokenPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 10, 550, 730));
-
-        mapContainerPanel.setOpaque(false);
-        mapContainerPanel.setLayout(null);
-
-        changeFourCardsjButton.setText("Changer les quatres cartes");
-        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        mapContainerPanel.add(changeFourCardsjButton);
-        changeFourCardsjButton.setBounds(770, 410, 200, 30);
-
-        boardCardsContainerPanel.setOpaque(false);
-        mapContainerPanel.add(boardCardsContainerPanel);
-        boardCardsContainerPanel.setBounds(750, 80, 230, 330);
-
-        tokenContainerPanel.setOpaque(false);
-        tokenContainerPanel.setLayout(null);
-        mapContainerPanel.add(tokenContainerPanel);
-        tokenContainerPanel.setBounds(0, 10, 1050, 750);
-
-        excavationContainerPanel.setOpaque(false);
-        mapContainerPanel.add(excavationContainerPanel);
-        excavationContainerPanel.setBounds(470, 380, 520, 330);
-
-        expoCardsContainerPanel.setOpaque(false);
-        mapContainerPanel.add(expoCardsContainerPanel);
-        expoCardsContainerPanel.setBounds(70, 460, 330, 250);
-
-        add(mapContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
-
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/map.jpg"))); // NOI18N
         add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
@@ -1146,14 +1157,12 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt the mouse event that serves for launching the method
      */
     private void arrowMenuLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arrowMenuLabelMouseEntered
-        menuCardsPlayerTab.setVisible(true);
-        playerPanel.setVisible(true);
-        arrowMenuLabel.setVisible(false);
-        backgroundLabel.setEnabled(false);
-//        boardCard1Label.setEnabled(false);
-//        boardCard2Label.setEnabled(false);
-//        boardCard3Label.setEnabled(false);
-//        boardCard4Label.setEnabled(false);
+        
+        this.arrowMenuLabel.setVisible( false );
+        this.leftPanelContainerPanel.setVisible( true );
+        
+        this.mapContainerPanel.setEnabled( false );
+        this.rightPanelContainerPanel.setEnabled( false );
     }//GEN-LAST:event_arrowMenuLabelMouseEntered
 
 
@@ -1524,18 +1533,23 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void playerPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playerPanelMouseExited
-        if ((evt.getXOnScreen() > playerPanel.getWidth()) || (evt.getYOnScreen() > playerPanel.getHeight())) {
-            menuCardsPlayerTab.setVisible(false);
-            playerPanel.setVisible(false);
-            arrowMenuLabel.setVisible(true);
-            backgroundLabel.setEnabled(true);
+    private void playerLeftPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playerLeftPanelMouseExited
+       
+        if ((evt.getXOnScreen() > playerLeftPanel.getWidth()) || (evt.getYOnScreen() > playerLeftPanel.getHeight())) {
+            
+            this.leftPanelContainerPanel.setVisible( false );
+            this.arrowMenuLabel.setVisible( true );
+//            menuCardsPlayerTab.setVisible(false);
+//            playerLeftPanel.setVisible(false);
+//            arrowMenuLabel.setVisible(true);
+//            backgroundLabel.setEnabled(true);
 //            boardCard1Label.setEnabled(true);
 //            boardCard2Label.setEnabled(true);
 //            boardCard3Label.setEnabled(true);
 //            boardCard4Label.setEnabled(true);
         }
-    }//GEN-LAST:event_playerPanelMouseExited
+        
+    }//GEN-LAST:event_playerLeftPanelMouseExited
 
     /**
      * When you put the mouse in the crete null token of the player menu, it
@@ -1660,6 +1674,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel greeceNullTokenLabel;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JPanel leftPanelContainerPanel;
     private javax.swing.JPanel logMenu;
     private javax.swing.JScrollBar logMenuScrollBar;
     private javax.swing.JLabel londonExcavationLabel;
@@ -1672,11 +1687,11 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel moscowScienKnowledgeLabel;
     private javax.swing.JLabel palestineExcavationLabel;
     private javax.swing.JLabel palestineNullTokenLabel;
-    private javax.swing.JPanel player1Panel;
     private javax.swing.JLabel playerBackgroundLabel;
-    private javax.swing.JPanel playerPanel;
+    private javax.swing.JPanel playerLeftPanel;
     private javax.swing.JPanel rightPanelContainerPanel;
     private javax.swing.JLabel romaZeppelinLabel;
+    private javax.swing.JPanel timeTokenContainerPanel;
     private javax.swing.JPanel tokenContainerPanel;
     private javax.swing.JPanel usableElementsMenuPanel;
     private javax.swing.JPanel usingElementsMenuPanel;

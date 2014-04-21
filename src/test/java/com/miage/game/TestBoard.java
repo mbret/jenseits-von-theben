@@ -9,6 +9,7 @@ import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.interfaces.ActivableElement;
+import com.miage.interfaces.UsableElement;
 import com.miage.tokens.BlankToken;
 import com.miage.tokens.PointToken;
 import com.miage.tokens.Token;
@@ -268,8 +269,8 @@ public class TestBoard {
         @Test
         public void testHasEnoughTimeBeforeEndGame(){
             LocalDate startDate = LocalDate.of(1900, 1, 1);
-            assertTrue( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(10))); // time for 10 supplementary weeks
-            assertFalse( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(9))); // time for 10 supplementary weeks
+            assertTrue( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(10), new ArrayList<UsableElement>()) ); // time for 10 supplementary weeks
+            assertFalse( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(9), new ArrayList<UsableElement>()) ); // time for 10 supplementary weeks
         }
         
         /**

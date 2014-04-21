@@ -1,6 +1,6 @@
 package com.miage.game;
 
-import com.miage.gui.PlayerTokenPosition;
+import com.miage.gui.TokensPosition;
 import static org.junit.Assert.*;
 
 import org.junit.After;

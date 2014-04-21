@@ -13,8 +13,10 @@ import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
-import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.ActivableElement;
+import com.miage.interfaces.ActiveElement;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.interfaces.UsableElement;
 import com.miage.tokens.GeneralKnowledgeToken;
 import com.miage.tokens.SpecificKnowledgeToken;
 import com.miage.tokens.Token;
@@ -198,13 +200,35 @@ public class Player implements Serializable {
         return false;
     }
     
-    public ArrayList<ActivableElement> getAllUsableElements(){
+    public ArrayList<ActivableElement> getAllActivableElements(){
         ArrayList<ActivableElement> allUsableElms = new ArrayList();
         for (Card card : this.getCards()) {
             if( card instanceof ActivableElement) allUsableElms.add( (ActivableElement)card );
         }
         for (Token token : this.getTokens()) {
             if( token instanceof ActivableElement) allUsableElms.add( (ActivableElement)token );
+        }
+        return allUsableElms;
+    }
+    
+    public ArrayList<UsableElement> getAllUsableElements(){
+        ArrayList<UsableElement> allUsableElms = new ArrayList();
+        for (Card card : this.getCards()) {
+            if( card instanceof UsableElement) allUsableElms.add( (UsableElement)card );
+        }
+        for (Token token : this.getTokens()) {
+            if( token instanceof UsableElement) allUsableElms.add( (UsableElement)token );
+        }
+        return allUsableElms;
+    }
+    
+    public ArrayList<ActiveElement> getAllActiveElements(){
+        ArrayList<ActiveElement> allUsableElms = new ArrayList();
+        for (Card card : this.getCards()) {
+            if( card instanceof ActiveElement) allUsableElms.add( (ActiveElement)card );
+        }
+        for (Token token : this.getTokens()) {
+            if( token instanceof ActiveElement) allUsableElms.add( (ActiveElement)token );
         }
         return allUsableElms;
     }

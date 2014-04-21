@@ -14,9 +14,9 @@ import org.apache.log4j.LogManager;
  * 
  */
 
-public class PlayerTokenPosition {
+public class TokensPosition {
 	
-	private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(PlayerTokenPosition.class.getName());
+	private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(TokensPosition.class.getName());
         
 	/**
 	 *  map of the position (x,y) of areas
@@ -34,6 +34,12 @@ public class PlayerTokenPosition {
             this.put("egypt", new Point(600,655));
             this.put("palestine", new Point(700,645));
             this.put("mesopotamia", new Point(800,530));
+        }};
+        
+        private static final Map<Integer, Point> timeTokenPosition = new HashMap(){{
+            this.put(1901, new Point(8,120));
+            this.put(1902, new Point(8,60)); 
+            this.put(1903, new Point(8,10));
         }};
         
 	/**
@@ -58,7 +64,7 @@ public class PlayerTokenPosition {
 
         
         
-        private PlayerTokenPosition() {
+        private TokensPosition() {
         }
 
 	
@@ -74,12 +80,12 @@ public class PlayerTokenPosition {
                 int y_base;
                 
                 if( weeks > 0){
-                    x_base = PlayerTokenPosition.x_square1;
-                    y_base = PlayerTokenPosition.y_square1;
+                    x_base = TokensPosition.x_square1;
+                    y_base = TokensPosition.y_square1;
                 }
                 else{
-                    x_base = PlayerTokenPosition.x_squareStart;
-                    y_base = PlayerTokenPosition.y_squareStart;
+                    x_base = TokensPosition.x_squareStart;
+                    y_base = TokensPosition.y_squareStart;
                 }
 		
 		if(weeks >= TOP_LEFT && weeks <= TOP_RIGHT)
@@ -98,7 +104,7 @@ public class PlayerTokenPosition {
 		if(weeks > BOTTOM_LEFT)
 			y_base += (HEIGHT-((weeks-1)-(2*LENGTH)-HEIGHT))*SPACE_BETWEEN_SQUARE;
 		
-                return new Point(x_base + decalMultiplier * PlayerTokenPosition.decal, y_base);
+                return new Point(x_base + decalMultiplier * TokensPosition.decal, y_base);
 	}
 	
 	
@@ -111,9 +117,13 @@ public class PlayerTokenPosition {
      * @param decalMultiplier
 	 */
 	public static Point positionDependingOnArea( String area, int decalMultiplier){
-            Point p = PlayerTokenPosition.positionsArea.get(area);
-            return new Point(p.x + decalMultiplier * PlayerTokenPosition.decal, p.y);
+            Point p = TokensPosition.positionsArea.get(area);
+            return new Point(p.x + decalMultiplier * TokensPosition.decal, p.y);
 		
 	}
 	
+        
+        public static Point positionDependingOnYear( Integer year ){
+            return TokensPosition.timeTokenPosition.get(year);
+        }
 }
