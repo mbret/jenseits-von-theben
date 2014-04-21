@@ -793,8 +793,10 @@ public class MapPanel extends javax.swing.JPanel {
         }
         
         // DO ACTION
-        if( playerIsAble ){
-            
+        if( ! playerIsAble ){
+            JOptionPane.showMessageDialog( this , "Vous ne pouvez pas changer les quatres cartes ");
+        }
+        else{
             playerActionParams.put("usedElements", this.currentPlayerUsingElements);
             
             // DO THE MAIN ACTION
@@ -807,10 +809,6 @@ public class MapPanel extends javax.swing.JPanel {
             }
             
             this.switchNewPlayer();
-
-        }
-        else{
-            JOptionPane.showMessageDialog( this , "Vous ne pouvez pas changer les quatres cartes ");
         }
     }
     
