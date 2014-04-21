@@ -230,14 +230,14 @@ public class Main {
            try {
                /*
                 * default directory is C:/Users/[loginUser]/Documents/JenseitsVonTheben.
-                * if directory doesn't exist, it's create the directory before save the file named "board.boobs"
+                * if directory doesn't exist, it's create the directory before save the file named "board.jvt"
                 */
                String saveDirectory = javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory().getPath()+"\\JenseitsVonTheben";
                File directory = new File(saveDirectory);
                if(!directory.exists())
                    if(!new File(saveDirectory).mkdir())
                        throw new IOException();
-               FileOutputStream backupFile = new FileOutputStream(saveDirectory+"/board.boobs");
+               FileOutputStream backupFile = new FileOutputStream(saveDirectory+"/board.jvt");
                ObjectOutputStream oos = new ObjectOutputStream(backupFile);
                boardToSave.setLogDisplay(LogDisplay.getLogBackup());
                oos.writeObject(boardToSave);
@@ -260,7 +260,7 @@ public class Main {
        public Board loadGame(){
            Board boardLoaded = null;
            try {
-                FileInputStream fis = new FileInputStream(javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory().getPath()+"\\JenseitsVonTheben\\board.boobs");
+                FileInputStream fis = new FileInputStream(javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory().getPath()+"\\JenseitsVonTheben\\board.jvt");
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 boardLoaded = (Board) ois.readObject();
                 LogDisplay.setLogBackup(boardLoaded.getLogDisplay());
