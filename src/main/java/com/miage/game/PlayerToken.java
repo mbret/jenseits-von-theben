@@ -109,7 +109,7 @@ public class PlayerToken implements Comparable, Serializable{
     }
 
     public void applyCardCost( Card card ){
-        this.timeState.plusWeeks( card.getWeekCost() );
+        this.addWeeks( card.getWeekCost() );
     }
 
     /**
