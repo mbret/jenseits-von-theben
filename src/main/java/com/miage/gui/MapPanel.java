@@ -846,15 +846,6 @@ public class MapPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         arrowMenuLabel = new javax.swing.JLabel();
-        mapContainerPanel = new javax.swing.JPanel();
-        changeFourCardsjButton = new javax.swing.JButton();
-        timeTokenContainerPanel = new javax.swing.JPanel();
-        boardCardsContainerPanel = new javax.swing.JPanel();
-        tokenContainerPanel = new javax.swing.JPanel();
-        excavationContainerPanel = new javax.swing.JPanel();
-        chronotimeButton = new javax.swing.JButton();
-        excavationSiteContainerPanel = new javax.swing.JPanel();
-        expoCardsContainerPanel = new javax.swing.JPanel();
         leftPanelContainerPanel = new javax.swing.JPanel();
         playerLeftPanel = new javax.swing.JPanel();
         berlinAssistantLabel = new javax.swing.JLabel();
@@ -880,6 +871,15 @@ public class MapPanel extends javax.swing.JPanel {
         playerBackgroundLabel = new javax.swing.JLabel();
         menuCardsPlayerTab = new javax.swing.JTabbedPane();
         displayedCardTokenPanel = new javax.swing.JPanel();
+        mapContainerPanel = new javax.swing.JPanel();
+        changeFourCardsjButton = new javax.swing.JButton();
+        timeTokenContainerPanel = new javax.swing.JPanel();
+        boardCardsContainerPanel = new javax.swing.JPanel();
+        tokenContainerPanel = new javax.swing.JPanel();
+        excavationContainerPanel = new javax.swing.JPanel();
+        chronotimeButton = new javax.swing.JButton();
+        excavationSiteContainerPanel = new javax.swing.JPanel();
+        expoCardsContainerPanel = new javax.swing.JPanel();
         rightPanelContainerPanel = new javax.swing.JPanel();
         usingElementsMenuPanel = new javax.swing.JPanel();
         usableElementsMenuPanel = new javax.swing.JPanel();
@@ -905,53 +905,6 @@ public class MapPanel extends javax.swing.JPanel {
             }
         });
         add(arrowMenuLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -3, -1, 770));
-
-        mapContainerPanel.setOpaque(false);
-        mapContainerPanel.setLayout(null);
-
-        changeFourCardsjButton.setText("Changer les quatres cartes");
-        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        mapContainerPanel.add(changeFourCardsjButton);
-        changeFourCardsjButton.setBounds(770, 410, 200, 30);
-
-        timeTokenContainerPanel.setOpaque(false);
-        timeTokenContainerPanel.setLayout(null);
-        mapContainerPanel.add(timeTokenContainerPanel);
-        timeTokenContainerPanel.setBounds(100, 240, 50, 160);
-
-        boardCardsContainerPanel.setOpaque(false);
-        mapContainerPanel.add(boardCardsContainerPanel);
-        boardCardsContainerPanel.setBounds(750, 80, 230, 330);
-
-        tokenContainerPanel.setOpaque(false);
-        tokenContainerPanel.setLayout(null);
-        mapContainerPanel.add(tokenContainerPanel);
-        tokenContainerPanel.setBounds(0, 10, 1050, 750);
-
-        excavationContainerPanel.setOpaque(false);
-        excavationContainerPanel.setLayout(null);
-
-        chronotimeButton.setText("Chrono");
-        chronotimeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chronotimeButtonActionPerformed(evt);
-            }
-        });
-        excavationContainerPanel.add(chronotimeButton);
-        chronotimeButton.setBounds(440, 270, 70, 50);
-
-        excavationSiteContainerPanel.setOpaque(false);
-        excavationContainerPanel.add(excavationSiteContainerPanel);
-        excavationSiteContainerPanel.setBounds(0, 0, 520, 330);
-
-        mapContainerPanel.add(excavationContainerPanel);
-        excavationContainerPanel.setBounds(470, 380, 520, 330);
-
-        expoCardsContainerPanel.setOpaque(false);
-        mapContainerPanel.add(expoCardsContainerPanel);
-        expoCardsContainerPanel.setBounds(70, 460, 330, 250);
-
-        add(mapContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
 
         leftPanelContainerPanel.setEnabled(false);
         leftPanelContainerPanel.setOpaque(false);
@@ -1157,6 +1110,53 @@ public class MapPanel extends javax.swing.JPanel {
         displayedCardTokenPanel.setBounds(460, 20, 570, 730);
 
         add(leftPanelContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
+
+        mapContainerPanel.setOpaque(false);
+        mapContainerPanel.setLayout(null);
+
+        changeFourCardsjButton.setText("Changer les quatres cartes");
+        changeFourCardsjButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        mapContainerPanel.add(changeFourCardsjButton);
+        changeFourCardsjButton.setBounds(770, 410, 200, 30);
+
+        timeTokenContainerPanel.setOpaque(false);
+        timeTokenContainerPanel.setLayout(null);
+        mapContainerPanel.add(timeTokenContainerPanel);
+        timeTokenContainerPanel.setBounds(100, 240, 50, 160);
+
+        boardCardsContainerPanel.setOpaque(false);
+        mapContainerPanel.add(boardCardsContainerPanel);
+        boardCardsContainerPanel.setBounds(750, 80, 230, 330);
+
+        tokenContainerPanel.setOpaque(false);
+        tokenContainerPanel.setLayout(null);
+        mapContainerPanel.add(tokenContainerPanel);
+        tokenContainerPanel.setBounds(0, 10, 1050, 750);
+
+        excavationContainerPanel.setOpaque(false);
+        excavationContainerPanel.setLayout(null);
+
+        chronotimeButton.setText("Chrono");
+        chronotimeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chronotimeButtonActionPerformed(evt);
+            }
+        });
+        excavationContainerPanel.add(chronotimeButton);
+        chronotimeButton.setBounds(440, 270, 70, 50);
+
+        excavationSiteContainerPanel.setOpaque(false);
+        excavationContainerPanel.add(excavationSiteContainerPanel);
+        excavationSiteContainerPanel.setBounds(0, 0, 520, 330);
+
+        mapContainerPanel.add(excavationContainerPanel);
+        excavationContainerPanel.setBounds(470, 380, 520, 330);
+
+        expoCardsContainerPanel.setOpaque(false);
+        mapContainerPanel.add(expoCardsContainerPanel);
+        expoCardsContainerPanel.setBounds(70, 460, 330, 250);
+
+        add(mapContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
 
         rightPanelContainerPanel.setOpaque(false);
         rightPanelContainerPanel.setLayout(null);
