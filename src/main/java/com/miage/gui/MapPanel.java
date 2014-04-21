@@ -11,6 +11,7 @@ import com.miage.game.*;
 import com.miage.interfaces.ActivableElement;
 import com.miage.interfaces.ActiveElement;
 import com.miage.interfaces.CombinableElement;
+import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.tokens.Token;
 import java.awt.Component;
@@ -357,6 +358,25 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
     
+    private int _displayChronotime( ExcavationArea area ){
+        
+        int nbWeeks = 0;
+        int nbKnowledgePoint = 0;
+        int maxKnowledgePoint = 0;
+        
+        // We keep only active knowledge elements
+        List<KnowledgeElement> activableKnowledgeElements = new ArrayList();
+        for (UsableElement element : this.currentPlayerUsingElements) {
+            if( element instanceof ActivableElement && ( element instanceof KnowledgeElement ) ){
+                activableKnowledgeElements.add( (KnowledgeElement)element );
+            }
+        }
+        maxKnowledgePoint = this.currentPlayer.getTotalAskedKnowledgePoint( area, activableKnowledgeElements );
+        
+        
+        return this.currentBoard.getChronotime().getNbTokensToPickUp(nbKnowledgePoint, nbWeeks);
+    }
+    
     
     
     /***********************************************************************************************
@@ -472,7 +492,7 @@ public class MapPanel extends javax.swing.JPanel {
     }
     
     private void _updateExcavationSiteUI() {
-        this.excavationContainerPanel.removeAll();
+        this.excavationSiteContainerPanel.removeAll();
         for (Map.Entry<Component, ExcavationArea> entry : this.listOfExcavationSiteComponent.entrySet()) {
             
             ((JLabel)entry.getKey()).setIcon( new ImageIcon( getClass().getResource( ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.images") + "excavate-icon.png")) );
@@ -480,9 +500,9 @@ public class MapPanel extends javax.swing.JPanel {
             
             // ... set the positions and others
             
-            this.excavationContainerPanel.add( entry.getKey() );
+            this.excavationSiteContainerPanel.add( entry.getKey() );
         }
-        this.excavationContainerPanel.updateUI();
+        this.excavationSiteContainerPanel.updateUI();
         this.mapContainerPanel.updateUI();
     }
     
@@ -789,14 +809,15 @@ public class MapPanel extends javax.swing.JPanel {
             System.exit(0);
         }
 
-                
+        
         // DO MAIN ACTION 
         if( ! playerIsAble ){
             JOptionPane.showMessageDialog( this, "Vous ne pouvez pas fouiller " + area.getName());
         }
         else{
-            playerActionParams.put("areaToExcavate", area);
- 
+            this.playerActionParams.put("areaToExcavate", area);
+            this.playerActionParams.put("nbTokenToPickUp", this._displayChronotime( area ));
+
             List<Token> tokensJustPickedUp = null;
             
             // DO THE MAIN ACTION
@@ -840,6 +861,7 @@ public class MapPanel extends javax.swing.JPanel {
         boardCardsContainerPanel = new javax.swing.JPanel();
         tokenContainerPanel = new javax.swing.JPanel();
         excavationContainerPanel = new javax.swing.JPanel();
+        excavationSiteContainerPanel = new javax.swing.JPanel();
         expoCardsContainerPanel = new javax.swing.JPanel();
         leftPanelContainerPanel = new javax.swing.JPanel();
         playerLeftPanel = new javax.swing.JPanel();
@@ -908,6 +930,12 @@ public class MapPanel extends javax.swing.JPanel {
         tokenContainerPanel.setBounds(0, 10, 1050, 750);
 
         excavationContainerPanel.setOpaque(false);
+        excavationContainerPanel.setLayout(null);
+
+        excavationSiteContainerPanel.setOpaque(false);
+        excavationContainerPanel.add(excavationSiteContainerPanel);
+        excavationSiteContainerPanel.setBounds(0, 0, 520, 330);
+
         mapContainerPanel.add(excavationContainerPanel);
         excavationContainerPanel.setBounds(470, 380, 520, 330);
 
@@ -1669,6 +1697,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel egyptExcavationLabel;
     private javax.swing.JLabel egyptNullTokenLabel;
     private javax.swing.JPanel excavationContainerPanel;
+    private javax.swing.JPanel excavationSiteContainerPanel;
     private javax.swing.JPanel expoCardsContainerPanel;
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
