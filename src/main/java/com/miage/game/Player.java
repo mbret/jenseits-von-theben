@@ -540,53 +540,58 @@ public class Player implements Serializable {
     /**
      * Return the maximum of knowledge point the player can use to excavate this area.
      * <br/>Effect:
-     * <br/>- get all knowledge from specific knowledge card and tokens
-     * <br/>- get all knowledge from ethnologic cards
-     * <br/>- get all points from assistants
+     * <br/>- get all knowledge point from specific knowledge card and tokens ( intern to player )
+     * <br/>- get all knowledge point from used elements
      * @param areaToExcavate
-     * @param usedKnowledgeElements List of everything except general knowledge the player want to use
+     * @param usedKnowledgeElements List<KnowledgeElement>. List of all knowledge and activable elements the player is using
      * @return 
      */
     public int getTotalAskedKnowledgePoint( Area areaToExcavate, List<KnowledgeElement> usedKnowledgeElements){
-        if(usedKnowledgeElements == null){
-            usedKnowledgeElements = new ArrayList();
-        }
+        
         int nbAssistantCards = 0;
+        int pointsForExcavation = 0;
+        
         for (KnowledgeElement element : usedKnowledgeElements){
             if( element instanceof AssistantCard ){
                 nbAssistantCards++;
                 usedKnowledgeElements.remove( element );
             }
         }
-        int pointsForExcavation = 0;
         
-        // Get all points from specific cards
-        for (SpecificKnowledgeCard card : this.getSpecificCards( SpecificKnowledgeCard.class  )) {
-            if(card.getExcavationAreaName().equals( areaToExcavate.getName() )){
-                pointsForExcavation += ((KnowledgeElement)card).getKnowledgePoints();
-            }
-        }
-        // Get all points from specific tokens
-        for (SpecificKnowledgeToken token : this.getSpecificTokens( SpecificKnowledgeToken.class )) {
-            if(token.getAreaName().equals( areaToExcavate.getName() )){
-                pointsForExcavation += ((KnowledgeElement)token).getKnowledgePoints();
-            }
-        }
-        
-        // Get all others knowledge used
-        for (KnowledgeElement knowledgeElement : usedKnowledgeElements){
-            // Get general knowledge card
-            if( knowledgeElement instanceof GeneralKnowledgeCard){
+        // GET POINT FROM ACTIVE ELEMENTS
+        for (ActiveElement element : this.getAllActiveElements()) {
+            
+            if( element instanceof KnowledgeElement ){
                 
+                if(element instanceof Card){
+                    if( ((SpecificKnowledgeCard)element).getExcavationAreaName().equals( areaToExcavate.getName() )){
+                        pointsForExcavation += ((KnowledgeElement)element).getKnowledgePoints();
+                    }
+                }
+                else if(element instanceof Token){
+                    if( ((SpecificKnowledgeToken)element).getAreaName().equals( areaToExcavate.getName() )){
+                        pointsForExcavation += ((KnowledgeElement)element).getKnowledgePoints();
+                    }
+                }
+            }
+        }
+        
+        // GET POINT FROM USED ELEMENTS
+        for (KnowledgeElement element : usedKnowledgeElements){
+            
+            // Get general knowledge card
+            if( element instanceof GeneralKnowledgeCard){
+
             }
             // Get ethnological knowledge token
-            if( knowledgeElement instanceof EthnologicalKnowledgeCard){
-                
+            if( element instanceof EthnologicalKnowledgeCard){
+
             }
             // ...
         }
         
         // Get all assistant points
+        
         if(nbAssistantCards > 0){
             pointsForExcavation += AssistantCard.getKnowLedgePointsWhenCombinated( nbAssistantCards );
         }
