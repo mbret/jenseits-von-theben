@@ -93,11 +93,10 @@ public class TestBoard {
             
             // As board._actionPlayerDoPickCard is private we need to set as accessible
              //Player player, Card cardToPickUp, boolean useZeppelinCard, boolean useCarCard
-            cArg = new Class[4];
+            cArg = new Class[3];
             cArg[0] = Player.class;
             cArg[1] = Card.class;
-            cArg[2] = boolean.class;
-            cArg[3] = boolean.class;
+            cArg[2] = List.class;
             method_actionPlayerDoPickCard = c.getDeclaredMethod("_actionPlayerDoPickCard", cArg);
             method_actionPlayerDoPickCard.setAccessible(true);
 	}
@@ -287,7 +286,8 @@ public class TestBoard {
             
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", player); // wet set the current player
-            
+            playerActionParams.put( "usedElements", new ArrayList<UsableElement>() );
+                    
             // test all 4 actions
             assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams));
             for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
