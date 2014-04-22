@@ -519,9 +519,32 @@ public class MapPanel extends javax.swing.JPanel {
             ((JLabel) entry.getKey()).setIcon(new ImageIcon(getClass().getResource(ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.images") + "excavate-icon.png")));
             ((JLabel) entry.getKey()).setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-            // ... set the positions and others
-
+            
+           
+            
+          switch(entry.getValue().getName()){
+            
+            case "greece":
+            	((JLabel) entry.getKey()).setBounds(5, 5, 50, 50);
+            
+            case "crete":
+            	entry.getKey().setLocation(60, 135);
+            	
+            case "egypt":
+            	entry.getKey().setLocation(145, 230);
+            
+            case "palestine":
+            	entry.getKey().setLocation(265, 215);
+            
+            case "mesopotamia":
+            	entry.getKey().setLocation(320, 80);
+            	
+            }
+            
             this.excavationSiteContainerPanel.add(entry.getKey());
+           
+
+            
         }
         this.excavationSiteContainerPanel.updateUI();
         this.mapContainerPanel.updateUI();
@@ -1167,12 +1190,13 @@ public class MapPanel extends javax.swing.JPanel {
         excavationContainerPanel.add(chronotimeButton);
         chronotimeButton.setBounds(440, 270, 70, 50);
 
-        excavationSiteContainerPanel.setOpaque(false);
+        excavationSiteContainerPanel.setOpaque(false); 
+        excavationSiteContainerPanel.setLayout(null);
         excavationContainerPanel.add(excavationSiteContainerPanel);
-        excavationSiteContainerPanel.setBounds(0, 0, 520, 330);
+        excavationSiteContainerPanel.setBounds(0, 0, 435, 305);
 
         mapContainerPanel.add(excavationContainerPanel);
-        excavationContainerPanel.setBounds(470, 380, 520, 330);
+        excavationContainerPanel.setBounds(500, 445, 435, 305);
 
         expoCardsContainerPanel.setOpaque(false);
         mapContainerPanel.add(expoCardsContainerPanel);

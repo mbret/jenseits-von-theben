@@ -35,10 +35,10 @@ public class Chronotime implements Serializable{
 
             Integer numberOfKnowledge = Integer.parseInt(key.substring( "chronotime.knowledge.".length() ));
             
-            // We get all the weeks with their associated numbe rof token allowed to pick up
+            // We get all the weeks with their associated number of token allowed to pick up
             String[] nbTokensToPickUp = configProperties.getProperty( "chronotime.knowledge." + numberOfKnowledge).split("\\|");
             for (int i = 0; i < nbTokensToPickUp.length; i++) {
-                subValues.put( i, Integer.parseInt(nbTokensToPickUp[i]) );
+                subValues.put( i+1, Integer.parseInt(nbTokensToPickUp[i]) );
             }
             
             // We put all the weeks with their associated tokens inside the current knowledge range
