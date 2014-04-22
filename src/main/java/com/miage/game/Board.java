@@ -646,7 +646,7 @@ public class Board implements Serializable {
 //        player.getTokensJustPickedUp().clear(); // clear the previous round picked tokens
         for (int i = 0; i < nbTokenToPickUp; i++) {
             Token pickedToken = areaToExcavate.getTokenList().get(0);
-            
+            LOGGER.debug("LES JETONS DANS LA CLASSE BOARD " + pickedToken.getId());
             tokensJustPickedUp.add(pickedToken); // add to the returned picked tokens
             
             // If the player pick a none blank token we add it and we remove it from the area token list
