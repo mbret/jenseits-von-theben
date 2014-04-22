@@ -15,11 +15,27 @@ public abstract class Token implements Serializable{
      */
     private final String id;
 
+    /**
+     * @deprecated 
+     */
+    private final String color;
+    
+    /**
+     * @deprecated 
+     * @param id
+     * @param areaName
+     * @param color 
+     */
+    public Token(String id, String areaName, String color){
+        this.id = id;
+        this.color = color;
+        this.areaName = areaName;
+    }
+    
     public Token(String id, String areaName){
         this.id = id;
         this.areaName = areaName;
         this.color = "color";
-
     }
 
     public String getColor() {
@@ -40,32 +56,6 @@ public abstract class Token implements Serializable{
     public String getId() {
         return id;
     }
-	
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /**
-     * @deprecated 
-     */
-    private final String color;
-    /**
-     * @deprecated 
-     * @param id
-     * @param areaName
-     * @param color 
-     */
-    public Token(String id, String areaName, String color){
-        this.id = id;
-        this.color = color;
-        this.areaName = areaName;
-    }
+
 	
 }

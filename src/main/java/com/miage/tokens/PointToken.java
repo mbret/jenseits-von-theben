@@ -25,12 +25,7 @@ public class PointToken extends Token implements Serializable{
 
     @Override
     public String toString() {
-        return "PointToken{" + "value=" + value + '}';
-    }
-    
-
-    public boolean isBlank(){
-        return this.value == 0;
+        return "PointToken{" + super.toString() + "value=" + value + '}';
     }
     
     

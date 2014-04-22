@@ -848,7 +848,7 @@ public class Board implements Serializable {
                      * Lets fill tokens
                      */
                     String id; // define the id to retrieve image file
-                    int nb; // nb occurence of the current token
+                    int nbOccur; // nb occurence of the current token
                     int nbTokens; // nb different tokens
                     String[] set; // contain the token id or id,value and its occurence
 
@@ -857,23 +857,23 @@ public class Board implements Serializable {
                     nbTokens = blankTokens.length;
                     for (int i = 0; i < nbTokens; i++) {
                         set = blankTokens[i].split("\\:");
-                        nb = Integer.parseInt(set[1]);
+                        nbOccur = Integer.parseInt(set[1]);
                         id = set[0];
-                        for (int j = 0; j < nb; j++) {
+                        for (int j = 0; j < nbOccur; j++) {
                             tokens.add(new BlankToken(id, areaName, color)); // assign empty point
                         }
                     }
 
                     // Set value tokens
-                    String[] pointTokens = ((String) entries.get("area." + areaName + ".pointTokens")).split("\\|");
+                    String[] pointTokens = ((String) entries.get("area." + areaName + ".pointTokens")).split("\\|"); // p1a,1:1|p1b,1:1|...
                     nbTokens = pointTokens.length;
                     for (int i = 0; i < nbTokens; i++) {
                         set = pointTokens[i].split("\\:");
                         String[] subSet = set[0].split("\\,");
-                        nb = Integer.parseInt(set[1]);
+                        nbOccur = Integer.parseInt(set[1]);
                         id = subSet[0];
                         int value = Integer.parseInt(subSet[1]);
-                        for (int j = 0; j < nb; j++) {
+                        for (int j = 0; j < nbOccur; j++) {
                             tokens.add(new PointToken(id, areaName, color, value));
                         }
                     }
@@ -883,9 +883,9 @@ public class Board implements Serializable {
                     nbTokens = generalKnowledgesTokens.length;
                     for (int i = 0; i < nbTokens; i++) {
                         set = generalKnowledgesTokens[i].split("\\:");
-                        nb = Integer.parseInt(set[1]);
+                        nbOccur = Integer.parseInt(set[1]);
                         id = set[0];
-                        for (int j = 0; j < nb; j++) {
+                        for (int j = 0; j < nbOccur; j++) {
                             tokens.add(new GeneralKnowledgeToken(id, areaName, color, 1));
                         }
                     }
@@ -895,9 +895,9 @@ public class Board implements Serializable {
                     nbTokens = specificKnowledgesTokens.length;
                     for (int i = 0; i < nbTokens; i++) {
                         set = specificKnowledgesTokens[i].split("\\:");
-                        nb = Integer.parseInt(set[1]);
+                        nbOccur = Integer.parseInt(set[1]);
                         id = set[0];
-                        for (int j = 0; j < nb; j++) {
+                        for (int j = 0; j < nbOccur; j++) {
                             tokens.add(new SpecificKnowledgeToken(id, areaName, color, 1));
                         }
                     }

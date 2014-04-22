@@ -164,11 +164,31 @@ public class TestBoard {
             // test total point token of 4 
             Integer nbPointToken = 14; // (greece should have 15 pointTokens but one is placed on the excavation area for the first excavation)
             Integer nbPointTokenOf4InsideGreece = 1; // (greece should have 3 pointTokens of 4)
+            
             LinkedList<Token> tokens = ((ExcavationArea)b.getAreas().get("greece")).getTokenList();
+            
             Integer countedPointToken = 0;
             int expectedNbEmptyTokens = 16;
             int nbEmptyTokens = 0;
             Integer countedNbPointTokenOf4InsideCrete = 0;
+            
+            // TEST ID TOKENS
+            for( ExcavationArea area : this.board.getAreas(ExcavationArea.class).values() ){
+                for (Token token : area.getTokenList()) {
+                    if( token.getId().isEmpty() || token.getId().equals("") ){
+                        fail("One of the whole tokens has no ID");
+                    }
+                }
+            }
+            
+            // CHECK ID OF ONE TOKEN (area.greece.pointTokens = p1a,1:1 )
+            boolean found = false;
+            for (Token token : ((ExcavationArea)this.board.getArea("greece")).getTokenList() ) {
+                if( token.getId().equals("p1a")) found = true;
+            }
+            assertTrue("The token does not has the correct id", found);
+            
+            // loop over tokens inside egypt
             for (Token token : tokens){
                 if(token instanceof PointToken){
                     countedPointToken ++;
@@ -443,6 +463,7 @@ public class TestBoard {
             playerActionParams.put("areaToExcavate", board.getArea("egypt")); 
             int knowledgePoint = maxime.getTotalAskedKnowledgePoint( board.getArea("egypt"), new ArrayList()); // no special used knowledge except the unique specific added previously
             playerActionParams.put("nbTokenToPickUp", board.getChronotime().getNbTokensToPickUp( knowledgePoint, 1));
+            playerActionParams.put("numberOfWeeks", 1);
             board.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams);
 
             // Here maxime should has egypt excavated
