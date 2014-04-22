@@ -662,7 +662,7 @@ public class MapPanel extends javax.swing.JPanel {
                     .append( "'/>" );
             LOGGER.debug("_animatePickingTokens" + strB);
         }
-        String str = "<html>Vous venez de piocher : " + strB + "<html>";
+        String str = "<html>Vous venez de piocher : <br/>" + strB + "<html>";
         JOptionPane.showMessageDialog(this, str);
     }
 
