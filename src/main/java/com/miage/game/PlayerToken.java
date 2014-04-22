@@ -96,7 +96,7 @@ public class PlayerToken implements Comparable, Serializable{
      * Add some weeks at the timeState.
      * @param nb number of weeks to add
      */
-    private void addWeeks(int nb){
+    public void addWeeks(int nb){
         this.setTimeState(this.timeState.plusWeeks(nb));
     }
     

@@ -538,26 +538,28 @@ public class Player implements Serializable {
     }
     
     /**
-     * Return the maximum of knowledge point the player can use to excavate this area.
+     * Return the maximum of knowledge point the player can use to excavate this area. (use the intern elements and the passed list)
      * <br/>Effect:
      * <br/>- get all knowledge point from specific knowledge card and tokens ( intern to player )
      * <br/>- get all knowledge point from used elements
      * @param areaToExcavate
-     * @param usedKnowledgeElements List<KnowledgeElement>. List of all knowledge and activable elements the player is using
+     * @param usedKnowledgeElements List<ActivableElement>. List of all knowledge and activable elements the player is using
      * @return 
      */
-    public int getTotalAskedKnowledgePoint( Area areaToExcavate, List<KnowledgeElement> usedKnowledgeElements){
+    public int getTotalAskedKnowledgePoint( Area areaToExcavate, List<ActivableElement> usedKnowledgeElements){
         
         int nbAssistantCards = 0;
         int pointsForExcavation = 0;
+        int nbSpecificKnowledgePoint = 0;
+        int nbGeneralKnowledgePoint = 0;
         
-        for (KnowledgeElement element : usedKnowledgeElements){
-            
-            if( element instanceof AssistantCard ){
-                nbAssistantCards++;
-//                usedKnowledgeElements.remove( element );
+        for (ActivableElement element : usedKnowledgeElements){
+            if( element instanceof KnowledgeElement ){
+                // We count the number of this card to count then when combinated
+                if( element instanceof AssistantCard ){
+                    nbAssistantCards++;
+                }
             }
-            
         }
         
         // GET POINT FROM ACTIVE ELEMENTS
@@ -577,22 +579,26 @@ public class Player implements Serializable {
                 }
             }
         }
+        nbSpecificKnowledgePoint = pointsForExcavation;
         
-        // GET POINT FROM USED ELEMENTS
-        for (KnowledgeElement element : usedKnowledgeElements){
+        // GET POINT FROM USED (ACTIVABLE) ELEMENTS
+        for (ActivableElement element : usedKnowledgeElements){
             
-            // Get general knowledge card
-            if( element instanceof GeneralKnowledgeCard){
-
+            if( element instanceof KnowledgeElement ){
+                
+                // Get general knowledge card / token
+                if( element instanceof GeneralKnowledgeCard){
+                    nbGeneralKnowledgePoint += ((KnowledgeElement)element).getKnowledgePoints();
+                    pointsForExcavation += ((KnowledgeElement)element).getKnowledgePoints();
+                }
+                else{
+                    pointsForExcavation += ((KnowledgeElement)element).getKnowledgePoints();  // ethnological knowledge / 
+                }
             }
-            // Get ethnological knowledge token
-            if( element instanceof EthnologicalKnowledgeCard){
-
-            }
-            // ...
         }
+        nbGeneralKnowledgePoint += (nbSpecificKnowledgePoint - nbGeneralKnowledgePoint); // if we have 4 specific and 5 general then we keep only 4 general
         
-        // Get all assistant points
+        // GET POINT FROM ASSISTANT CARD
         if(nbAssistantCards > 0){
             pointsForExcavation += AssistantCard.getKnowLedgePointsWhenCombinated( nbAssistantCards );
         }
@@ -607,6 +613,16 @@ public class Player implements Serializable {
      */
     public boolean hasCarCard(){
         return ! this.getSpecificCards( CarCard.class ).isEmpty();
+    }
+    
+    public List<Token> getTokensByArea( String areaName ){
+        List<Token> lTokens = new ArrayList();
+        for (Token token : this.tokens) {
+            if( token.getAreaName().equals( areaName ) ){
+                lTokens.add(token);
+            }
+        }
+        return lTokens;
     }
     
 //    public void addPoints(int points){
