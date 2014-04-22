@@ -1,11 +1,12 @@
 package com.miage.game;
 
-import com.miage.gui.TokensPosition;
-import java.time.LocalDate;
-
 import com.miage.areas.Area;
 import com.miage.cards.Card;
+import com.miage.gui.TokensPosition;
+import java.awt.Color;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.time.LocalDate;
 
 /**
  * 
@@ -15,6 +16,8 @@ public class PlayerToken implements Comparable, Serializable{
 	
     private String color;
 
+    private Color colorUI;
+    
     /**
      * Define the actual position of the player token ( an area )
      */
@@ -44,6 +47,13 @@ public class PlayerToken implements Comparable, Serializable{
         this.color = color;
         this.position = position;
         this.timeState = timeState;
+        
+        try {
+            Field field = Class.forName("java.awt.Color").getField( color );
+            colorUI = (Color)field.get(null);
+        } catch (Exception e) {
+            color = null; // Not defined
+        }
     }
         
     
@@ -109,7 +119,7 @@ public class PlayerToken implements Comparable, Serializable{
     }
 
     public void applyCardCost( Card card ){
-        this.timeState.plusWeeks( card.getWeekCost() );
+        this.addWeeks( card.getWeekCost() );
     }
 
     /**
@@ -212,7 +222,12 @@ public class PlayerToken implements Comparable, Serializable{
     public void setTimeState(LocalDate timeState) {
         this.timeState = timeState;
     }
+
+    public Color getColorUI() {
+        return colorUI;
+    }
 	
+    
     
 
 }

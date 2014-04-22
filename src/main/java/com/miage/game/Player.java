@@ -552,10 +552,12 @@ public class Player implements Serializable {
         int pointsForExcavation = 0;
         
         for (KnowledgeElement element : usedKnowledgeElements){
+            
             if( element instanceof AssistantCard ){
                 nbAssistantCards++;
-                usedKnowledgeElements.remove( element );
+//                usedKnowledgeElements.remove( element );
             }
+            
         }
         
         // GET POINT FROM ACTIVE ELEMENTS
@@ -591,7 +593,6 @@ public class Player implements Serializable {
         }
         
         // Get all assistant points
-        
         if(nbAssistantCards > 0){
             pointsForExcavation += AssistantCard.getKnowLedgePointsWhenCombinated( nbAssistantCards );
         }

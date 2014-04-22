@@ -43,10 +43,12 @@ public abstract class Area implements Serializable {
      * 
      * @param id
      * @param name 
+     * @param displayName 
      */
-    public Area(int id, String name){
+    public Area(int id, String name, String displayName){
         this.name = name;
         this.id = id;
+        this.displayName = displayName;
         this.distances = new HashMap();
     }
 
@@ -134,4 +136,9 @@ public abstract class Area implements Serializable {
     	this.distances = distances;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    
 }

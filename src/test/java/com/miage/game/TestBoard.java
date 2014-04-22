@@ -9,6 +9,7 @@ import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
 import com.miage.interfaces.ActivableElement;
+import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.tokens.BlankToken;
 import com.miage.tokens.PointToken;
@@ -440,7 +441,7 @@ public class TestBoard {
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", maxime); 
             playerActionParams.put("areaToExcavate", board.getArea("egypt")); 
-            int knowledgePoint = maxime.getTotalAskedKnowledgePoint( board.getArea("egypt"), null); // no special used knowledge except the unique specific added previously
+            int knowledgePoint = maxime.getTotalAskedKnowledgePoint( board.getArea("egypt"), new ArrayList()); // no special used knowledge except the unique specific added previously
             playerActionParams.put("nbTokenToPickUp", board.getChronotime().getNbTokensToPickUp( knowledgePoint, 1));
             board.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams);
 

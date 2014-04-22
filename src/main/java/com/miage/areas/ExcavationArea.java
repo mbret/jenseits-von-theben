@@ -52,7 +52,7 @@ public class ExcavationArea extends Area implements Serializable{
      * @deprecated 
      */
     public ExcavationArea(int id, String name, String codeColor, LinkedList<Token> tokenList){
-        this(id, name, codeColor, tokenList, new PointToken("name", "name", "color", 1));
+        this(id, name, "", codeColor, tokenList, new PointToken("name", "name", "color", 1));
     }
 
     /**
@@ -63,8 +63,8 @@ public class ExcavationArea extends Area implements Serializable{
      * @param tokenList
      * @param pointTokenFirstExcavation 
      */
-    public ExcavationArea(int id, String name, String codeColor, LinkedList<Token> tokenList, PointToken pointTokenFirstExcavation ) {
-        super(id, name);
+    public ExcavationArea(int id, String name, String displayName, String codeColor, LinkedList<Token> tokenList, PointToken pointTokenFirstExcavation ) {
+        super(id, name, displayName);
         this.codeColor = codeColor;
         this.tokenList = tokenList;
         this.alreadyExcavated = false;

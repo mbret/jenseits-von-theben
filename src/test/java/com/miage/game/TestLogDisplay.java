@@ -93,7 +93,7 @@ public class TestLogDisplay {
             board.setPlayerTokensAndPlayers(playerTokensAndPlayers);
             board.setCurrentPlayerToken(pt);
             
-            TouristicArea ta = new TouristicArea(1,"paris");
+            TouristicArea ta = new TouristicArea(1,"paris", "paris");
             
             LinkedList<Token> lt = new LinkedList<Token>();
             GeneralKnowledgeToken gkt = new GeneralKnowledgeToken("1","generalKnowledgeToken","red", 1);
@@ -110,9 +110,9 @@ public class TestLogDisplay {
             Card c3 = new ShovelCard(1,"pelle","paris",3);
             
             
-            assertEquals(LogDisplay.displayAction(board,"move",new TouristicArea(1,"paris")), new SimpleDateFormat("[HH:mm:ss]").format(new Date())+" player se déplace sur paris.");
+            assertEquals(LogDisplay.displayAction(board,"move",new TouristicArea(1,"paris", "paris")), new SimpleDateFormat("[HH:mm:ss]").format(new Date())+" player se déplace sur paris.");
             assertEquals(LogDisplay.displayAction(board,"pickCard",c2) , new SimpleDateFormat("[HH:mm:ss]").format(new Date())+" player pioche la carte generalKnowledge.");
-            assertEquals(LogDisplay.displayAction(board,"move",new TouristicArea(2,"berlin")) , new SimpleDateFormat("[HH:mm:ss]").format(new Date())+" player se déplace sur berlin.");
+            assertEquals(LogDisplay.displayAction(board,"move",new TouristicArea(2,"berlin", "berlin")) , new SimpleDateFormat("[HH:mm:ss]").format(new Date())+" player se déplace sur berlin.");
             assertEquals(LogDisplay.displayAction(board,"pickCard",c1) , new SimpleDateFormat("[HH:mm:ss]").format(new Date())+" player pioche la carte generalKnowledge.");
             assertEquals(LogDisplay.displayAction(board,"pickCard",c3) , new SimpleDateFormat("[HH:mm:ss]").format(new Date())+" player pioche la carte pelle.");
             assertEquals(LogDisplay.displayAction(board,"use",c3) , new SimpleDateFormat("[HH:mm:ss]").format(new Date())+" player utilise la carte pelle.");

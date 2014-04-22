@@ -175,14 +175,16 @@ public class Board implements Serializable {
         }
         
         if( hasCarCard ){
-            dateAfterTravel.minusWeeks( 1 );
+            dateAfterTravel = dateAfterTravel.minusWeeks( 1 );
         }
         if( hasZeppelin ){
             dateAfterTravel = currentDatePosition;
         }
+        LOGGER.debug("hasEnoughTimeBeforeEndGame: Current date="+currentDatePosition+", Date after travel="+dateAfterTravel+", date of end="+endGameDatePosition+", Week cost="+weekCost);
+        boolean enoughTime = ((Main.getWeek(dateAfterTravel)) <= Main.getWeek(endGameDatePosition) && Main.getYear(dateAfterTravel) <= Main.getYear(endGameDatePosition)); // test if enough time
+        if( enoughTime == false ) LOGGER.debug("hasEnoughTimeBeforeEndGame: The player doesn't have enough time to do this action");
         
-        
-        return ((Main.getWeek(dateAfterTravel)) <= Main.getWeek(endGameDatePosition) && Main.getYear(dateAfterTravel) <= Main.getYear(endGameDatePosition)); // test if enough time
+        return enoughTime; 
     }
 
     /**
@@ -195,10 +197,13 @@ public class Board implements Serializable {
      */
     public Player getUpcomingPlayer() {
         Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get(this.playerTokenStack.getFirst()); // pop the last player token
+        
+        // test if this player is game over over
         if (this.playersWhoFinished.contains(playerWhoShouldPlayFirst)
                 || this.isPlayerOnTheEndGamePosition(playerWhoShouldPlayFirst)) {
             return null;
         } else {
+            
             return playerWhoShouldPlayFirst;
         }
     }
@@ -416,6 +421,7 @@ public class Board implements Serializable {
          * Main loop - redirect the asked action to the specified intern method
          */
         switch (actionPattern) {
+            
             case Player.ACTION_CHANGE_FOUR_CARDS:
                 return this._actionPlayerAbleToChangeFourCards(player, usedElements);
 
@@ -483,7 +489,7 @@ public class Board implements Serializable {
     private boolean _actionPlayerAbleToChangeFourCards(Player player, List<UsableElement> usedElement) {
         
         int costOfOperation = player.getNbRoundStillPlaying(); // the cost of this operation is depending of how long time the player is still playing (only him)
-        
+        LOGGER.debug("_actionPlayerAbleToChangeFourCards: player still playing for "+player.getNbRoundStillPlaying()+" round(s)");
         return Board.hasEnoughTimeBeforeEndGame(
                     player.getPlayerToken().getTimeState(), 
                     player.getPlayerToken().getPosition().getDistanceWeekCostTo("warsaw") + costOfOperation, 
@@ -595,7 +601,7 @@ public class Board implements Serializable {
             }
         }
         player.getPlayerToken().movePlayerToken(this.areas.get("warsaw"), useZeppelinCard, useCarCard);
-        Collections.sort(this.playerTokenStack);
+        this._updatePlayerTokenStack();
         this.changeFourCurrentCards();
     }
 
@@ -630,7 +636,7 @@ public class Board implements Serializable {
         
         // Moving process
         player.getPlayerToken().movePlayerToken(areaToExcavate, useZeppelinCard, useCarCard);
-        Collections.sort(this.playerTokenStack);
+        this._updatePlayerTokenStack();
 
         // Picking token process
         nbTokenToPickUp += ShovelCard.getTokensPointsWhenCombinated(shovelCards.size()); // get supplementary tokens thanks to the used shovels
@@ -654,6 +660,8 @@ public class Board implements Serializable {
 
         // update area excavated for player
         player.addAreaAlreadyExcavate(areaToExcavate.getName());
+        
+        this._updatePlayerTokenStack();
         
         LOGGER.debug("_actionPlayerDoExcavateArea: tokens picked = " + tokensJustPickedUp);
         return tokensJustPickedUp;
@@ -681,7 +689,7 @@ public class Board implements Serializable {
         }
         
         player.getPlayerToken().movePlayerToken(this.areas.get(expoCardToDo.getAreaName()), useZeppelinCard, useCarCard);
-        Collections.sort(this.playerTokenStack);
+        this._updatePlayerTokenStack();
 
         player.getPlayerToken().applyCardCost(expoCardToDo);
         player.getCards().add(expoCardToDo);
@@ -721,10 +729,7 @@ public class Board implements Serializable {
         player.getPlayerToken().applyCardCost(pickedCard);
         player.getCards().add(pickedCard); // update player hand
         
-        Collections.sort(this.playerTokenStack);
-        
-
-        
+        this._updatePlayerTokenStack();
         
         return pickedCard;
     }
@@ -750,10 +755,6 @@ public class Board implements Serializable {
         Card cardToReturn = this.fourCurrentCards.remove( indexOf.intValue() );
         boolean noMoreCardsInAnyDeck = false;
         
-//        if( this.deck.isEmpty() && this.sideDeck.isEmpty() ){
-//            LOGGER.debug("_pickCardOnBoard: No more cards left in any decks");
-//            return null;
-//        }
         
         Card cardToAddOnTheBoard = null;
         do {
@@ -825,12 +826,13 @@ public class Board implements Serializable {
                 Area newArea = null;
 //                LOGGER.debug("area." + areaName + ".type");
                 String categorie = entries.get("area." + areaName + ".type");
-
+                String areaDisplayName = entries.get("area." + areaName + ".displayName");
+                
                 /**
                  * Case of touristic area
                  */
                 if (categorie.equals("touristic")) {
-                    newArea = new TouristicArea(0, areaName);
+                    newArea = new TouristicArea(0, areaName, areaDisplayName);
                 } /**
                  * Case of excavation area
                  */
@@ -909,7 +911,7 @@ public class Board implements Serializable {
                         }
                     }
 
-                    newArea = new ExcavationArea(0, areaName, color, tokens, pointTokenFirstExcavation);
+                    newArea = new ExcavationArea(0, areaName, areaDisplayName, color, tokens, pointTokenFirstExcavation);
                 }
 
                 /**
@@ -1073,6 +1075,18 @@ public class Board implements Serializable {
         LOGGER.debug("_initDecks: " + this.deck.size() + " cards inside the main deck");
     }
 
+    /**
+     * Update the player token stack (sort it).
+     * <br/>Call this method after any operation which change the position of a player token
+     */
+    private void _updatePlayerTokenStack(){
+        PlayerToken oldFirstPlayer = this.playerTokenStack.getFirst();
+        Collections.sort( this.playerTokenStack ); // sort and reorganise the stack
+        if( ! oldFirstPlayer.equals(this.playerTokenStack.getFirst()) ){
+            this.playerTokensAndPlayers.get( oldFirstPlayer ).setNbRoundStillPlaying( 0 );
+        }
+    }
+    
     /**
      * *********************************************************************************************
      *

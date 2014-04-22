@@ -3,6 +3,8 @@ package com.miage.game;
 import com.miage.areas.Area;
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.tokens.SpecificKnowledgeToken;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -83,11 +85,6 @@ public class TestPlayer {
 
             board.setPlayerTokensAndPlayers(playerTokensAndPlayers);
             board.setCurrentPlayerToken(playerToken1);
-
-
-
-
-
 
     }
 
@@ -194,6 +191,18 @@ public class TestPlayer {
     }
 
   
+    @Test
+    public void getTotalAskedKnowledgePoint() throws IOException{
+        
+        // player has nothing yet
+        assertEquals( 0, this.player.getTotalAskedKnowledgePoint( this.board.getArea( "egypt" ), new ArrayList()));
+                
+        this.player.getCards().add( new SpecificKnowledgeCard(0, null, "paris", 0, 1, "egypt"));
+        this.player.getTokens().add( new SpecificKnowledgeToken("", "egypt", "orange", 1));
+        assertEquals( 2, this.player.getTotalAskedKnowledgePoint( this.board.getArea( "egypt" ), new ArrayList()));
+        
+
+    }
 
  
     

@@ -36,6 +36,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.easymock.EasyMock;
+import static org.easymock.EasyMock.*;
 
 /**
  *
@@ -64,8 +66,8 @@ public class TestMain {
             cArg[0] = ExpoCard.class;
             method_addExpoCardOnBoard = c.getDeclaredMethod("_addExpoCardOnBoard", cArg);
             method_addExpoCardOnBoard.setAccessible(true);
-
-	}
+           	
+        }
 
 	@After
 	public void tearDown() throws Exception {
@@ -124,14 +126,14 @@ public class TestMain {
             }
             String tempDate = new SimpleDateFormat("[HH:mm:ss]").format(new Date());
             LogDisplay.cleanLogBackup();
-            LogDisplay.displayAction(board,"move",new TouristicArea(1,"paris"));
-            
+            LogDisplay.displayAction(board,"move",new TouristicArea(1,"paris", "paris"));
+             
             main.saveGame(board);
             
             assertEquals(board.getLogDisplay(),tempDate+" maxime se déplace sur paris.");
             boolean testReussi;
             try{
-                FileReader fr = new FileReader("save.boobs");
+                FileReader fr = new FileReader("save.jvt");
                 testReussi = true;
             } catch (FileNotFoundException fnfe) {
                 testReussi = false;
@@ -145,6 +147,8 @@ public class TestMain {
          */
         @Test
         public void testLoadGame() throws IOException{
+            
+            
             Set<Player> players = new HashSet<Player>();
             Board board;
             Main main = new Main();

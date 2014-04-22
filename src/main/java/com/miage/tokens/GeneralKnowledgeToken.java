@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author maxime
  */
-public class GeneralKnowledgeToken extends Token implements KnowledgeElement, Serializable, ActivableElement{
+public class GeneralKnowledgeToken extends Token implements KnowledgeElement, ActivableElement{
 
     private final int value;
     
@@ -29,6 +29,12 @@ public class GeneralKnowledgeToken extends Token implements KnowledgeElement, Se
     public int getKnowledgePoints() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "GeneralKnowledgeToken{" + "value=" + value + '}';
+    }
+    
     
     
 }
