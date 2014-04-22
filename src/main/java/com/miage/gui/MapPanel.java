@@ -445,15 +445,18 @@ public class MapPanel extends javax.swing.JPanel {
 
         for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
 
-            // card
-            if (entry.getKey() instanceof Card) {
-                ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
-            } // token
-            else {
-                ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
-            }
+            //if the card can be active
+            if (entry instanceof ActivableElement) {
+                // card
+                if (entry.getKey() instanceof Card) {
+                    ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
+                } // token
+                else {
+                    ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
+                }
 
-            this.usingElementsMenuPanel.add(entry.getValue());
+                this.usingElementsMenuPanel.add(entry.getValue());
+            }
         }
 
         // Extra display for car
