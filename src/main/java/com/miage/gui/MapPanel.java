@@ -380,9 +380,9 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
 
-    private int _displayChronotime(ExcavationArea area) {
+    private int _displayChronotime(ExcavationArea area, int nbWeeks) {
 
-        int nbWeeks = 0;
+     
         int nbKnowledgePoint = 0;
         int maxKnowledgePoint = 0;
 
@@ -396,10 +396,16 @@ public class MapPanel extends javax.swing.JPanel {
         maxKnowledgePoint = this.currentPlayer.getTotalAskedKnowledgePoint(area, activableKnowledgeElements);
         LOGGER.debug("_displayChronotime: the maximum knowledge point got is =" + maxKnowledgePoint);
 
-        String res = JOptionPane.showInputDialog("Combien de semaine ?");
-        nbWeeks = Integer.parseInt(res);
+     
 
         return this.currentBoard.getChronotime().getNbTokensToPickUp(maxKnowledgePoint, nbWeeks);
+    }
+    
+    
+    private int _displayChronotimeFrame(){
+    	String res = JOptionPane.showInputDialog("Combien de semaine(s) ?");
+        int nbWeeks = Integer.parseInt(res);
+        return nbWeeks;
     }
 
     /**
@@ -525,7 +531,7 @@ public class MapPanel extends javax.swing.JPanel {
           switch(entry.getValue().getName()){
             
             case "greece":
-            	((JLabel) entry.getKey()).setBounds(5, 5, 50, 50);
+            	((JLabel) entry.getKey()).setBounds(0, 0, 50, 50);
             
             case "crete":
             	entry.getKey().setLocation(60, 135);
@@ -541,7 +547,7 @@ public class MapPanel extends javax.swing.JPanel {
             	
             }
             
-            this.excavationSiteContainerPanel.add(entry.getKey());
+            this.excavationContainerPanel.add(entry.getKey());
            
 
             
@@ -852,7 +858,9 @@ public class MapPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez pas fouiller " + area.getName());
         } else {
             this.playerActionParams.put("areaToExcavate", area);
-            this.playerActionParams.put("nbTokenToPickUp", this._displayChronotime(area));
+            int nbWeeks = _displayChronotimeFrame();
+            this.playerActionParams.put("numberOfWeeks", nbWeeks);
+            this.playerActionParams.put("nbTokenToPickUp", this._displayChronotime(area, nbWeeks));
 
             List<Token> tokensJustPickedUp = null;
 
@@ -1196,7 +1204,7 @@ public class MapPanel extends javax.swing.JPanel {
         excavationSiteContainerPanel.setBounds(0, 0, 435, 305);
 
         mapContainerPanel.add(excavationContainerPanel);
-        excavationContainerPanel.setBounds(500, 445, 435, 305);
+        excavationContainerPanel.setBounds(470, 380, 520, 330);
 
         expoCardsContainerPanel.setOpaque(false);
         mapContainerPanel.add(expoCardsContainerPanel);
@@ -1727,7 +1735,7 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
     private void chronotimeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chronotimeButtonActionPerformed
-        this._displayChronotime((ExcavationArea) this.currentBoard.getArea("egypt"));
+        this._displayChronotime((ExcavationArea) this.currentBoard.getArea("egypt"), _displayChronotimeFrame());
     }//GEN-LAST:event_chronotimeButtonActionPerformed
 
     private void knowledgePointComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_knowledgePointComboBoxActionPerformed

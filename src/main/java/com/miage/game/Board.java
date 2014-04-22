@@ -323,7 +323,8 @@ public class Board implements Serializable {
                                                     ((ExcavationArea) playerActionParams.get("areaToExcavate")),
                                                     shovelCards,
                                                     ((Integer) playerActionParams.get("nbTokenToPickUp")),
-                                                    usedElements);
+                                                    usedElements,
+                                                    (int)playerActionParams.get("numberOfWeeks"));
                 returnedInfo.put("tokensJustPickedUp", tokensJustPickedUp);
                 break;
 
@@ -620,7 +621,7 @@ public class Board implements Serializable {
      * @param areaToExcavate
      * @param knowledgePointElements
      */
-    private List<Token> _actionPlayerDoExcavateArea(Player player, ExcavationArea areaToExcavate, List<ShovelCard> shovelCards, int nbTokenToPickUp, List<UsableElement> usedElement) {
+    private List<Token> _actionPlayerDoExcavateArea(Player player, ExcavationArea areaToExcavate, List<ShovelCard> shovelCards, int nbTokenToPickUp, List<UsableElement> usedElement, int nbWeeks) {
 
         List<Token> tokensJustPickedUp = new ArrayList();
         
@@ -636,6 +637,7 @@ public class Board implements Serializable {
         
         // Moving process
         player.getPlayerToken().movePlayerToken(areaToExcavate, useZeppelinCard, useCarCard);
+        player.getPlayerToken().addWeeks(nbWeeks);
         this._updatePlayerTokenStack();
 
         // Picking token process
