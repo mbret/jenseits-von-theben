@@ -164,6 +164,14 @@ public class MapPanel extends javax.swing.JPanel {
         }
 
         
+        
+        
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                backgroundLabelMouseClicked(evt);
+            }
+        });
+        
     }
 
     
@@ -173,6 +181,15 @@ public class MapPanel extends javax.swing.JPanel {
      *                                  Various methods
      * 
      ***********************************************************************************************/
+    
+    
+    
+    private void backgroundLabelMouseClicked(java.awt.event.MouseEvent evt) {                                             
+        System.out.println("Coordonnées x: " + evt.getXOnScreen() + " y: " + evt.getYOnScreen());
+    }
+    
+   
+    
     
     /**
      * Get the new upcoming player and init everything about him.
