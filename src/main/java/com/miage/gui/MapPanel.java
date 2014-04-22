@@ -226,7 +226,7 @@ public class MapPanel extends javax.swing.JPanel {
                 // Update intern vars
 //                this.currentPlayerLeftPanel = this.currentPlayer; // active left panel player
                 this.currentPlayerUsingElements = new ArrayList(); //Init the displayed list and hashmap of usable Card
-                this.currentPlayerUsingElements.addAll(this.currentPlayer.getAllActiveElements()); // get all already picked active elements
+                this.currentPlayerUsingElements.addAll( this.currentPlayer.getAllActiveElements() ); // get all already picked active elements
 
                 // Init the params of the player's action
                 this.playerActionParams = new HashMap();
@@ -238,10 +238,10 @@ public class MapPanel extends javax.swing.JPanel {
                 this.playerActionParams.put("nbTokenToPickUp", null); // number of tokens the player is allowed to pick up inside area
 
                 // Update player's component
-                this._updateActivableElementComponent(this.currentPlayer.getAllActivableElements());
-                this._updateUsingElementComponent(this.currentPlayerUsingElements);
-                this._updatExpoCardsComponent(this.currentBoard.getExpoCards());
-                this._updateBoardCardsComponent(this.currentBoard.getFourCurrentCards());
+                this._updateActivableElementComponent(this.currentPlayer.getAllActivableElements() );
+                this._updateUsingElementComponent( this.currentPlayerUsingElements );
+                this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+                this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
 
                 // Update UI
                 this._updateRightPanelUI();
@@ -265,12 +265,10 @@ public class MapPanel extends javax.swing.JPanel {
      */
     private void _updateUsingElementComponent(List<UsableElement> elements) {
         LOGGER.debug("_updateUsingElementComponent");
-
         this.listOfUsingElementsComponent.clear();
 
         for (final UsableElement element : elements) {
-
-            javax.swing.JLabel elementLabel = new javax.swing.JLabel();
+            JLabel elementLabel = new JLabel();
             this.listOfUsingElementsComponent.put(element, elementLabel);
         }
 
@@ -283,7 +281,7 @@ public class MapPanel extends javax.swing.JPanel {
 
         for (final ActivableElement element : elements) {
 
-            javax.swing.JLabel elementLabel = new javax.swing.JLabel();
+            javax.swing.JLabel elementLabel = new JLabel();
 
             // Add the click event
             elementLabel.addMouseListener(
@@ -463,22 +461,27 @@ public class MapPanel extends javax.swing.JPanel {
         for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
 
             //if the card can be active
-            if (entry instanceof ActivableElement) {
+            if (entry.getKey() instanceof ActivableElement) {
+                
                 // card
                 if (entry.getKey() instanceof Card) {
-                    ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
+                    ((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
+                    this.usingElementsMenuPanel.add( entry.getValue() );
                 } // token
-                else {
-                    ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
+                else if( entry.getKey() instanceof Token ) {
+                    ((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
+                    this.usingElementsMenuPanel.add( entry.getValue() );
                 }
 
-                this.usingElementsMenuPanel.add(entry.getValue());
             }
-        }
-
-        // Extra display for car
-        if (this.currentPlayer.hasCarCard()) {
-            // move there / here ...
+            else if( entry.getKey() instanceof ActiveElement ){
+                
+                if( entry.getKey() instanceof CarCard ){
+                    ((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
+                    this.usingElementsMenuPanel.add( entry.getValue() );
+                }
+                
+            }
         }
 
         this.usingElementsMenuPanel.updateUI();
@@ -494,7 +497,7 @@ public class MapPanel extends javax.swing.JPanel {
 
         this.expoCardsContainerPanel.removeAll();
 
-        Point[] expoLocations = {new Point(0, 0), new Point(0, 115), new Point(180,115)};
+        Point[] expoLocations = {new Point(0, 0), new Point(0, 120), new Point(180,120)};
         
         int i = 0;
         for (Map.Entry<Component, ExpoCard> entry : this.listOfExpoCardsComponent.entrySet()) {
