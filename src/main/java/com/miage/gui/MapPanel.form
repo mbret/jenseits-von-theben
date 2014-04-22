@@ -285,7 +285,7 @@
             <Component class="javax.swing.JLabel" name="mesopotamiaNullTokenLabel">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/tokens/mesopotamia/blueNull.png"/>
+                  <Image iconType="3" name="/images/tokens/mesopotamia/ea.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -301,7 +301,7 @@
             <Component class="javax.swing.JLabel" name="palestineNullTokenLabel">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/tokens/palestine/greenNull.png"/>
+                  <Image iconType="3" name="/images/tokens/palestine/ea.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -317,7 +317,7 @@
             <Component class="javax.swing.JLabel" name="greeceNullTokenLabel">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/tokens/greece/orangeNull.png"/>
+                  <Image iconType="3" name="/images/tokens/greece/ea.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -333,7 +333,7 @@
             <Component class="javax.swing.JLabel" name="creteNullTokenLabel">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/tokens/crete/purpleNull.png"/>
+                  <Image iconType="3" name="/images/tokens/crete/ea.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -349,7 +349,7 @@
             <Component class="javax.swing.JLabel" name="egyptNullTokenLabel">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/tokens/egypt/yellowNull.png"/>
+                  <Image iconType="3" name="/images/tokens/egypt/ea.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -417,7 +417,11 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Changer les quatres cartes"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+<<<<<<< HEAD
               <Color id="Default Cursor"/>
+=======
+              <Color id="Curseur par d&#xe9;faut"/>
+>>>>>>> f7fd42344b96673a9620d04d6c2e0de590131a76
             </Property>
           </Properties>
           <Constraints>

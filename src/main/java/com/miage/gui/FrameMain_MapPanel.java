@@ -82,12 +82,11 @@ public class FrameMain_MapPanel extends javax.swing.JFrame {
      * Creates new form FrameMain
      */
     public FrameMain_MapPanel() throws IOException, InterruptedException, Exception{
-        
         initComponents();
         
         this.setSize(1370, 795);
         this.setResizable( false);
-        
+
         /**
          * Create the game
          */

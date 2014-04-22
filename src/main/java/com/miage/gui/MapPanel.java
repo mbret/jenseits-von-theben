@@ -460,15 +460,18 @@ public class MapPanel extends javax.swing.JPanel {
 
         for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
 
-            // card
-            if (entry.getKey() instanceof Card) {
-                ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
-            } // token
-            else {
-                ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
-            }
+            //if the card can be active
+            if (entry instanceof ActivableElement) {
+                // card
+                if (entry.getKey() instanceof Card) {
+                    ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
+                } // token
+                else {
+                    ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
+                }
 
-            this.usingElementsMenuPanel.add(entry.getValue());
+                this.usingElementsMenuPanel.add(entry.getValue());
+            }
         }
 
         // Extra display for car
@@ -862,6 +865,10 @@ public class MapPanel extends javax.swing.JPanel {
             }
 
             this._animatePickingTokens(tokensJustPickedUp);
+            
+//            for(Token t: tokensJustPickedUp){
+//                LOGGER.debug("Les jetons piochés " + t.getId());
+//            }
 
             JOptionPane.showMessageDialog(this, "Vous venez de fouiller " + area.getName());
 
@@ -1090,7 +1097,7 @@ public class MapPanel extends javax.swing.JPanel {
         greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/greeceExcavation.jpg"))); // NOI18N
         playerLeftPanel.add(greeceExcavationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, -1));
 
-        mesopotamiaNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/blueNull.png"))); // NOI18N
+        mesopotamiaNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/mesopotamia/ea.png"))); // NOI18N
         mesopotamiaNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 mesopotamiaNullTokenLabelMouseEntered(evt);
@@ -1101,7 +1108,7 @@ public class MapPanel extends javax.swing.JPanel {
         });
         playerLeftPanel.add(mesopotamiaNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 650, -1, -1));
 
-        palestineNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/palestine/greenNull.png"))); // NOI18N
+        palestineNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/palestine/ea.png"))); // NOI18N
         palestineNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 palestineNullTokenLabelMouseEntered(evt);
@@ -1112,7 +1119,7 @@ public class MapPanel extends javax.swing.JPanel {
         });
         playerLeftPanel.add(palestineNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
 
-        greeceNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/greece/orangeNull.png"))); // NOI18N
+        greeceNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/greece/ea.png"))); // NOI18N
         greeceNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 greeceNullTokenLabelMouseEntered(evt);
@@ -1123,7 +1130,7 @@ public class MapPanel extends javax.swing.JPanel {
         });
         playerLeftPanel.add(greeceNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, -1, -1));
 
-        creteNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/crete/purpleNull.png"))); // NOI18N
+        creteNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/crete/ea.png"))); // NOI18N
         creteNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 creteNullTokenLabelMouseEntered(evt);
@@ -1134,7 +1141,7 @@ public class MapPanel extends javax.swing.JPanel {
         });
         playerLeftPanel.add(creteNullTokenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
 
-        egyptNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/egypt/yellowNull.png"))); // NOI18N
+        egyptNullTokenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/egypt/ea.png"))); // NOI18N
         egyptNullTokenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 egyptNullTokenLabelMouseEntered(evt);
@@ -1334,19 +1341,19 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param color Color of the token to show
      */
-    private void displayPlayerAreaToken(String color) {
+    private void displayPlayerAreaToken(String area) {
         try {
             //Get the corresponding to the tab
             Player tempPlayer = this.getPlayerTab(menuCardsPlayerTab);
             if (tempPlayer.getTokens().size() > 0) {
                 displayedCardTokenPanel.setVisible(true);
                 // For each token of the player's list, compare the color of the token with the color in parameter, if it's good, display
-                for (Token t : tempPlayer.getTokens()) {
-                    if (t.getColor().equals(color)) {
+                for (Token t : tempPlayer.getTokensByArea(area)) {
+                        LOGGER.debug("LES PIONS DE LA LISTE    " + t.getAreaName() + "    " + t.getId());
                         javax.swing.JLabel imageToken = new javax.swing.JLabel();
                         imageToken.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/" + t.getAreaName() + "/" + t.getId() + ".png")));
                         displayedCardTokenPanel.add(imageToken);
-                    }
+                    
                 }
                 displayedCardTokenPanel.updateUI();
             }
@@ -1638,7 +1645,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt The mouse event that serves for launching the method
      */
     private void creteNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_creteNullTokenLabelMouseEntered
-        displayPlayerAreaToken("purple");
+        displayPlayerAreaToken("crete");
     }//GEN-LAST:event_creteNullTokenLabelMouseEntered
 
     /**
@@ -1658,7 +1665,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt The mouse event that serves for launching the method
      */
     private void palestineNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_palestineNullTokenLabelMouseEntered
-        displayPlayerAreaToken("green");
+        displayPlayerAreaToken("palestine");
     }//GEN-LAST:event_palestineNullTokenLabelMouseEntered
 
     /**
@@ -1678,7 +1685,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt The mouse event that serves for launching the method
      */
     private void mesopotamiaNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mesopotamiaNullTokenLabelMouseEntered
-        displayPlayerAreaToken("blue");
+        displayPlayerAreaToken("mesopotamia");
     }//GEN-LAST:event_mesopotamiaNullTokenLabelMouseEntered
 
     /**
@@ -1698,7 +1705,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt The mouse event that serves for launching the method
      */
     private void greeceNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_greeceNullTokenLabelMouseEntered
-        displayPlayerAreaToken("orange");
+        displayPlayerAreaToken("greece");
     }//GEN-LAST:event_greeceNullTokenLabelMouseEntered
 
     /**
@@ -1718,7 +1725,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt The mouse event that serves for launching the method
      */
     private void egyptNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_egyptNullTokenLabelMouseEntered
-        displayPlayerAreaToken("yellow");
+        displayPlayerAreaToken("egypt");
     }//GEN-LAST:event_egyptNullTokenLabelMouseEntered
 
     /**
