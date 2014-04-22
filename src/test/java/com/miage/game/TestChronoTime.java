@@ -40,7 +40,8 @@ public class TestChronoTime {
 			Chronotime chronoTime = new Chronotime();
 			
 			assertEquals(0, chronoTime.getNbTokensToPickUp(1, 6));
-			assertEquals(6, chronoTime.getNbTokensToPickUp(7, 6));
+			assertEquals(5, chronoTime.getNbTokensToPickUp(7, 6));
+			assertEquals(2, chronoTime.getNbTokensToPickUp(1, 12));
 			
 		} catch (IOException e) {
 			fail("IOException");
