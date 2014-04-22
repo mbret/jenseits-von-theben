@@ -1354,10 +1354,12 @@ public class MapPanel extends javax.swing.JPanel {
      */
     private void displayPlayerCard(Class cl) {
         try {
+            
             //Get the player corresponding to the tab
             Player tempPlayer = this.getPlayerTab(menuCardsPlayerTab);
             if (tempPlayer.getCards().size() > 0) {
                 displayedCardTokenPanel.setVisible(true);
+                
                 // For each card of the list, compare the class of the card with the class in parameter, if it's good, display
                 for (Card c : tempPlayer.getCards()) {
                     if (c.getClass().getName().equals(cl.getName())) {

@@ -615,6 +615,16 @@ public class Player implements Serializable {
         return ! this.getSpecificCards( CarCard.class ).isEmpty();
     }
     
+    public List<Token> getTokensByArea( String areaName ){
+        List<Token> lTokens = new ArrayList();
+        for (Token token : this.tokens) {
+            if( token.getAreaName().equals( areaName ) ){
+                lTokens.add(token);
+            }
+        }
+        return lTokens;
+    }
+    
 //    public void addPoints(int points){
 //        this.points += points;
 //    }
