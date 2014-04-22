@@ -917,15 +917,6 @@ public class MapPanel extends javax.swing.JPanel {
         playerBackgroundLabel = new javax.swing.JLabel();
         menuCardsPlayerTab = new javax.swing.JTabbedPane();
         displayedCardTokenPanel = new javax.swing.JPanel();
-        mapContainerPanel1 = new javax.swing.JPanel();
-        changeFourCardsjButton1 = new javax.swing.JButton();
-        timeTokenContainerPanel1 = new javax.swing.JPanel();
-        boardCardsContainerPanel1 = new javax.swing.JPanel();
-        tokenContainerPanel1 = new javax.swing.JPanel();
-        excavationContainerPanel1 = new javax.swing.JPanel();
-        chronotimeButton1 = new javax.swing.JButton();
-        excavationSiteContainerPanel1 = new javax.swing.JPanel();
-        expoCardsContainerPanel1 = new javax.swing.JPanel();
         rightPanelContainerPanel = new javax.swing.JPanel();
         usingElementsMenuPanel = new javax.swing.JPanel();
         usableElementsMenuPanel = new javax.swing.JPanel();
@@ -1204,54 +1195,6 @@ public class MapPanel extends javax.swing.JPanel {
         displayedCardTokenPanel.setBounds(460, 20, 570, 730);
 
         add(leftPanelContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
-
-        mapContainerPanel1.setOpaque(false);
-        mapContainerPanel1.setLayout(null);
-
-        changeFourCardsjButton1.setText("Changer les quatres cartes");
-        changeFourCardsjButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        mapContainerPanel1.add(changeFourCardsjButton1);
-        changeFourCardsjButton1.setBounds(770, 410, 200, 30);
-
-        timeTokenContainerPanel1.setOpaque(false);
-        timeTokenContainerPanel1.setLayout(null);
-        mapContainerPanel1.add(timeTokenContainerPanel1);
-        timeTokenContainerPanel1.setBounds(100, 240, 50, 160);
-
-        boardCardsContainerPanel1.setOpaque(false);
-        mapContainerPanel1.add(boardCardsContainerPanel1);
-        boardCardsContainerPanel1.setBounds(750, 80, 230, 330);
-
-        tokenContainerPanel1.setOpaque(false);
-        tokenContainerPanel1.setLayout(null);
-        mapContainerPanel1.add(tokenContainerPanel1);
-        tokenContainerPanel1.setBounds(0, 10, 1050, 750);
-
-        excavationContainerPanel1.setOpaque(false);
-        excavationContainerPanel1.setLayout(null);
-
-        chronotimeButton1.setText("Chrono");
-        chronotimeButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chronotimeButtonActionPerformed(evt);
-            }
-        });
-        excavationContainerPanel1.add(chronotimeButton1);
-        chronotimeButton1.setBounds(440, 270, 70, 50);
-
-        excavationSiteContainerPanel1.setOpaque(false);
-        excavationSiteContainerPanel1.setLayout(null);
-        excavationContainerPanel1.add(excavationSiteContainerPanel1);
-        excavationSiteContainerPanel1.setBounds(0, 0, 520, 330);
-
-        mapContainerPanel1.add(excavationContainerPanel1);
-        excavationContainerPanel1.setBounds(470, 380, 520, 330);
-
-        expoCardsContainerPanel1.setOpaque(false);
-        mapContainerPanel1.add(expoCardsContainerPanel1);
-        expoCardsContainerPanel1.setBounds(70, 460, 330, 250);
-
-        add(mapContainerPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
 
         rightPanelContainerPanel.setOpaque(false);
         rightPanelContainerPanel.setLayout(null);
@@ -1799,11 +1742,8 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel berlinGenKnowledgeLabel;
     private javax.swing.JLabel berlinSmallExpoLabel;
     private javax.swing.JPanel boardCardsContainerPanel;
-    private javax.swing.JPanel boardCardsContainerPanel1;
     private javax.swing.JButton changeFourCardsjButton;
-    private javax.swing.JButton changeFourCardsjButton1;
     private javax.swing.JButton chronotimeButton;
-    private javax.swing.JButton chronotimeButton1;
     private javax.swing.JLabel creteExcavationLabel;
     private javax.swing.JLabel creteNullTokenLabel;
     private javax.swing.JLabel currentPlayerLabel;
@@ -1811,11 +1751,8 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel egyptExcavationLabel;
     private javax.swing.JLabel egyptNullTokenLabel;
     private javax.swing.JPanel excavationContainerPanel;
-    private javax.swing.JPanel excavationContainerPanel1;
     private javax.swing.JPanel excavationSiteContainerPanel;
-    private javax.swing.JPanel excavationSiteContainerPanel1;
     private javax.swing.JPanel expoCardsContainerPanel;
-    private javax.swing.JPanel expoCardsContainerPanel1;
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
     private javax.swing.JPanel infoContainerPanel;
@@ -1831,7 +1768,6 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel londonExcavationLabel;
     private javax.swing.JLabel londonShovelLabel;
     private javax.swing.JPanel mapContainerPanel;
-    private javax.swing.JPanel mapContainerPanel1;
     private javax.swing.JTabbedPane menuCardsPlayerTab;
     private javax.swing.JLabel mesopotamiaExcavationLabel;
     private javax.swing.JLabel mesopotamiaNullTokenLabel;
@@ -1845,9 +1781,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel romaZeppelinLabel;
     private javax.swing.JLabel selectedKnowledgePointLabel;
     private javax.swing.JPanel timeTokenContainerPanel;
-    private javax.swing.JPanel timeTokenContainerPanel1;
     private javax.swing.JPanel tokenContainerPanel;
-    private javax.swing.JPanel tokenContainerPanel1;
     private javax.swing.JPanel usableElementsMenuPanel;
     private javax.swing.JPanel usingElementsMenuPanel;
     // End of variables declaration//GEN-END:variables
