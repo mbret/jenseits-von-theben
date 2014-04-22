@@ -21,6 +21,7 @@ import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -492,16 +494,19 @@ public class MapPanel extends javax.swing.JPanel {
 
         this.expoCardsContainerPanel.removeAll();
 
+        Point[] expoLocations = {new Point(0, 0), new Point(0, 115), new Point(180,115)};
+        
+        int i = 0;
         for (Map.Entry<Component, ExpoCard> entry : this.listOfExpoCardsComponent.entrySet()) {
-
-            // Do wathever you want about display here
+            
             ((JLabel) entry.getKey()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + entry.getValue().getId() + ".jpg")));
             ((JLabel) entry.getKey()).setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-            // Set the position and others ...
+            ((JLabel) entry.getKey()).setSize(150, 100);
+            ((JLabel) entry.getKey()).setLocation( expoLocations[i] );
 
             this.expoCardsContainerPanel.add(entry.getKey());
             LOGGER.debug("_updateExpoCardsUI: One expoCard Label has been added to the container");
+            i++;
         }
 
         this.expoCardsContainerPanel.updateUI();
@@ -1209,8 +1214,9 @@ public class MapPanel extends javax.swing.JPanel {
         excavationContainerPanel.setBounds(470, 380, 520, 330);
 
         expoCardsContainerPanel.setOpaque(false);
+        expoCardsContainerPanel.setLayout(null);
         mapContainerPanel.add(expoCardsContainerPanel);
-        expoCardsContainerPanel.setBounds(70, 460, 330, 250);
+        expoCardsContainerPanel.setBounds(110, 440, 330, 270);
 
         add(mapContainerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 770));
 
