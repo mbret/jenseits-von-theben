@@ -970,6 +970,7 @@ public class MapPanel extends javax.swing.JPanel {
         chronotimeButton.setBounds(440, 270, 70, 50);
 
         excavationSiteContainerPanel.setOpaque(false);
+        excavationSiteContainerPanel.setLayout(null);
         excavationContainerPanel.add(excavationSiteContainerPanel);
         excavationSiteContainerPanel.setBounds(0, 0, 520, 330);
 
