@@ -389,8 +389,22 @@ public class MapPanel extends javax.swing.JPanel {
     }
     
     private int _displayChronotimeFrame(){
-    	String res = JOptionPane.showInputDialog("Combien de semaine(s) ?");
-        int nbWeeks = Integer.parseInt(res);
+    	
+    
+    	int nbWeeks = 0;
+    	
+    	
+        while(nbWeeks < 1 || nbWeeks > 12){
+        	String res = JOptionPane.showInputDialog("Combien de semaine(s) ?");
+        	try{
+        		nbWeeks = Integer.parseInt(res);
+        	}catch(NumberFormatException e){
+        		
+        	}
+        	
+             
+        }
+        
         return nbWeeks;
     }
 

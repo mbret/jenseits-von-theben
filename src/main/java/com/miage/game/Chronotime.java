@@ -53,7 +53,7 @@ public class Chronotime implements Serializable{
      * @return 
      */
     public int getNbTokensToPickUp( int nbKnowIedgePoint, int nbWeeks){
-        LOGGER.debug("getNbTokensToPickUp: nbKnowIedgePoint="+nbKnowIedgePoint+" nbWeekds="+nbWeeks);
+        LOGGER.debug("getNbTokensToPickUp: nbKnowIedgePoint="+nbKnowIedgePoint+" nbWeeks="+nbWeeks);
         try{
             return this.values.get( nbKnowIedgePoint ).get( nbWeeks );
         }
