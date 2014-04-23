@@ -1367,7 +1367,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt the mouse event that serves for launching the method
      */
     private void arrowMenuLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arrowMenuLabelMouseEntered
-
+        this.menuCardsPlayerTab.setSelectedIndex(currentBoard.getPlayers().indexOf(currentPlayer));
         this.arrowMenuLabel.setVisible(false);
         this.leftPanelContainerPanel.setVisible(true);
         backgroundLabel.setEnabled(false);
