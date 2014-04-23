@@ -290,6 +290,7 @@ public class MapPanel extends javax.swing.JPanel {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     _actionUsableElementLabelMouseClicked(evt, element);
+                    Sound.play("clic");
                 }
             });
 
@@ -314,7 +315,7 @@ public class MapPanel extends javax.swing.JPanel {
                     new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    // declancher son
+                    Sound.play("clic");
                     _actionBoardExpoLabelMouseClicked(evt, idExpoCard);
                 }
             });
@@ -352,7 +353,6 @@ public class MapPanel extends javax.swing.JPanel {
                         new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
-                        // declancher son
                         _actionBoardCardLabelMouseClicked(evt, idCard);
                     }
                 });
@@ -369,6 +369,7 @@ public class MapPanel extends javax.swing.JPanel {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     _actionExcavationSiteMouseClicked(evt, excavationArea);
+                    Sound.play("clic");
                 }
             });
 
@@ -392,7 +393,7 @@ public class MapPanel extends javax.swing.JPanel {
     }
     
     private int _displayChronotimeFrame(){
-    	
+    	Sound.play("useChronotime");
     
     	int nbWeeks = 0;
     	
@@ -725,6 +726,7 @@ public class MapPanel extends javax.swing.JPanel {
             LOGGER.debug("_animatePickingTokens" + strB);
         }
         String str = "<html>Vous venez de piocher : <br/>" + strB + "<html>";
+        Sound.play("pickTokenPoint");
         JOptionPane.showMessageDialog(this, str);
     }
 
@@ -749,6 +751,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void _actionBoardCardLabelMouseClicked(java.awt.event.MouseEvent evt, int idCard) {
         LOGGER.debug("boardCardLabelMouseClicked: Player click on one card = " + evt.getComponent().getName());
 
+        Sound.play("clic");
         boolean playerIsAble = true;
 
         // TEST ACTION_PICK_CARD
@@ -795,7 +798,8 @@ public class MapPanel extends javax.swing.JPanel {
 
     private void _actionBoardExpoLabelMouseClicked(java.awt.event.MouseEvent evt, int idExpoCard) {
         LOGGER.debug("boardExpoLabelMouseClicked: Player click on one expo card = " + evt.getComponent().getName());
-
+        
+        Sound.play("clic");
         boolean playerIsAble = true;
 
         // TEST ACTION_ORGANIZE_EXPO
@@ -859,6 +863,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void _actionChangeFourcardsButtonActionPerformed(java.awt.event.ActionEvent evt) {
         LOGGER.debug("changeFourcardsButtonActionPerformed:");
 
+        Sound.play("clic");
         boolean playerIsAble = true;
 
         // TEST ACTION_CHANGE_FOUR_CARDS
@@ -893,6 +898,7 @@ public class MapPanel extends javax.swing.JPanel {
 
     private void _actionExcavationSiteMouseClicked(java.awt.event.MouseEvent evt, ExcavationArea area) {
 
+        Sound.play("clic");
         boolean playerIsAble = true;
 
         // TEST ACTION_EXCAVATE
