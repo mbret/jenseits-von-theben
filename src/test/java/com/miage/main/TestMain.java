@@ -115,7 +115,7 @@ public class TestMain {
             method_addExpoCardOnBoard.invoke(board, card4);
             
             board.setDeck(deckTest);
-            Main main = new Main();
+            Utils main = new Utils();
             
             for(PlayerToken pt : board.getPlayerTokensAndPlayers().keySet()){
                 switch(pt.getColor()){
@@ -151,7 +151,7 @@ public class TestMain {
             
             Set<Player> players = new HashSet<Player>();
             Board board;
-            Main main = new Main();
+            Utils main = new Utils();
             LogDisplay.cleanLogBackup();
             board = main.loadGame();
             Set<PlayerToken> playersTokens =  board.getPlayerTokensAndPlayers().keySet();

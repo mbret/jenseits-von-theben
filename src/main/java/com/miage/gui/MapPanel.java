@@ -13,6 +13,7 @@ import com.miage.interfaces.ActiveElement;
 import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
+import com.miage.main.Utils;
 import com.miage.tokens.Token;
 import java.awt.Color;
 import java.awt.Component;
@@ -1013,6 +1014,7 @@ public class MapPanel extends javax.swing.JPanel {
         selectedKnowledgePointLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         currentPlayerScoreLabel = new javax.swing.JLabel();
+        saveGameJButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         backgroundLabel = new javax.swing.JLabel();
 
@@ -1312,11 +1314,11 @@ public class MapPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Connaissances utilisable :");
         infoContainerPanel.add(jLabel3);
-        jLabel3.setBounds(10, 30, 170, 15);
+        jLabel3.setBounds(10, 30, 170, 14);
 
         jLabel5.setText("Joueur courant :");
         infoContainerPanel.add(jLabel5);
-        jLabel5.setBounds(10, 10, 90, 15);
+        jLabel5.setBounds(10, 10, 90, 14);
 
         knowledgePointComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1328,15 +1330,24 @@ public class MapPanel extends javax.swing.JPanel {
 
         selectedKnowledgePointLabel.setText("selectedKnowledge");
         infoContainerPanel.add(selectedKnowledgePointLabel);
-        selectedKnowledgePointLabel.setBounds(200, 50, 100, 15);
+        selectedKnowledgePointLabel.setBounds(200, 50, 30, 14);
 
         jLabel1.setText("Score :");
         infoContainerPanel.add(jLabel1);
-        jLabel1.setBounds(200, 10, 60, 15);
+        jLabel1.setBounds(200, 10, 60, 14);
 
         currentPlayerScoreLabel.setText("0");
         infoContainerPanel.add(currentPlayerScoreLabel);
-        currentPlayerScoreLabel.setBounds(270, 10, 30, 15);
+        currentPlayerScoreLabel.setBounds(270, 10, 30, 14);
+
+        saveGameJButton.setText("Save");
+        saveGameJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveGameJButtonActionPerformed(evt);
+            }
+        });
+        infoContainerPanel.add(saveGameJButton);
+        saveGameJButton.setBounds(230, 40, 60, 40);
 
         rightPanelContainerPanel.add(infoContainerPanel);
         infoContainerPanel.setBounds(0, 20, 310, 90);
@@ -1825,6 +1836,16 @@ public class MapPanel extends javax.swing.JPanel {
 
 
     }//GEN-LAST:event_knowledgePointComboBoxActionPerformed
+
+    /**
+     * Save game JButton
+     * @param evt 
+     */
+    private void saveGameJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveGameJButtonActionPerformed
+        Utils.saveGame( this.currentBoard );
+        JOptionPane.showMessageDialog( this, "Vous avez sauvegardé correctement votre jeux !");
+    }//GEN-LAST:event_saveGameJButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowMenuLabel;
     private javax.swing.JLabel backgroundLabel;
@@ -1873,6 +1894,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel playerLeftPanel;
     private javax.swing.JPanel rightPanelContainerPanel;
     private javax.swing.JLabel romaZeppelinLabel;
+    private javax.swing.JButton saveGameJButton;
     private javax.swing.JLabel selectedKnowledgePointLabel;
     private javax.swing.JPanel timeTokenContainerPanel;
     private javax.swing.JPanel tokenContainerPanel;
