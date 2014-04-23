@@ -8,7 +8,7 @@ import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.DiscardableElement;
 import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
-import com.miage.main.Main;
+import com.miage.main.Utils;
 import com.miage.tokens.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -182,7 +182,7 @@ public class Board implements Serializable {
             dateAfterTravel = currentDatePosition;
         }
         LOGGER.debug("hasEnoughTimeBeforeEndGame: Current date="+currentDatePosition+", Date after travel="+dateAfterTravel+", date of end="+endGameDatePosition+", Week cost="+weekCost);
-        boolean enoughTime = ((Main.getWeek(dateAfterTravel)) <= Main.getWeek(endGameDatePosition) && Main.getYear(dateAfterTravel) <= Main.getYear(endGameDatePosition)); // test if enough time
+        boolean enoughTime = ((Utils.getWeek(dateAfterTravel)) <= Utils.getWeek(endGameDatePosition) && Utils.getYear(dateAfterTravel) <= Utils.getYear(endGameDatePosition)); // test if enough time
         if( enoughTime == false ) LOGGER.debug("hasEnoughTimeBeforeEndGame: The player doesn't have enough time to do this action");
         
         return enoughTime; 

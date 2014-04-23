@@ -2,6 +2,7 @@
 package com.miage.gui;
 
 import com.miage.SAMPLE.SAMPLECLASS;
+import com.miage.config.ConfigManager;
 import com.miage.game.Sound;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -56,6 +57,15 @@ public class FrameMain extends javax.swing.JFrame {
 
         Sound.play("audioGame");
         
+        // We try to load all required config files
+        try{
+            ConfigManager.getInstance().loadAll();
+        }
+        catch( IOException e ){
+            LOGGER.fatal("Unable to load config files");
+            e.printStackTrace();
+            System.exit( 0 );
+        }
         
         /*
          * Create and display the main frame
@@ -70,6 +80,7 @@ public class FrameMain extends javax.swing.JFrame {
                     frameMain.setVisible(true);
                 } catch ( Exception ex) {
                     LOGGER.fatal(ex);
+                    ex.printStackTrace();
                     System.exit(0);
                 }
             }
@@ -86,13 +97,6 @@ public class FrameMain extends javax.swing.JFrame {
         
         this.setSize(1366, 800);
         
-//        GraphicsDevice device;
-//        device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-//        if (device.isFullScreenSupported()) {
-//            device.setFullScreenWindow(this);
-//        } else {
-//            System.err.println("Le mode plein écran n'est pas disponible");
-//        }
         
         // add home panel to main frame
         PanelContainer.add(new PanelHome(), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
