@@ -43,10 +43,33 @@ public class TestAssistantCard {
      */
     @Test
     public void testGetKnowLedgePointsWhenCombinated() {
-        int nb = 7;
-        int expResult = 4;
-        int result = AssistantCard.getKnowLedgePointsWhenCombinated(nb);
-        assertEquals(expResult, result);
+    	
+    	// expected 5 pts knowledges, with 7 assistants
+        assertEquals(5, AssistantCard.getKnowLedgePointsWhenCombinated(7));
+        
+     // expected 4 pts knowledges, with 6 assistants
+        assertEquals(4, AssistantCard.getKnowLedgePointsWhenCombinated(6));
+        
+     // expected 3 pts knowledges, with 5 assistants
+        assertEquals(3, AssistantCard.getKnowLedgePointsWhenCombinated(5));
+        
+     // expected 2 pts knowledges, with 4 assistants
+        assertEquals(2, AssistantCard.getKnowLedgePointsWhenCombinated(4));
+        
+     // expected 2 pts knowledges, with 3 assistants
+        assertEquals(2, AssistantCard.getKnowLedgePointsWhenCombinated(3));
+        
+     // expected 1 pts knowledges, with 2 assistants
+        assertEquals(1, AssistantCard.getKnowLedgePointsWhenCombinated(2));
+        
+     // expected 1 pts knowledges, with 1 assistants
+        assertEquals(1, AssistantCard.getKnowLedgePointsWhenCombinated(1));
+        
+     // expected 0 pts knowledges, with 0 assistants
+        assertEquals(0, AssistantCard.getKnowLedgePointsWhenCombinated(0));
+        
+        
+        
         // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
     }

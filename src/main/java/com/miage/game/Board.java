@@ -359,23 +359,24 @@ public class Board implements Serializable {
             for(UsableElement element : usedElements) {
             if (element instanceof AssistantCard) {
                 assistantCards.add((AssistantCard) element);
-                usedElements.remove(element);
+//                usedElements.remove(element);
             }
         }
         // we check the discard of assistant
         if (assistantCards.size() == 1) {
+            this.discardingDeck.add( assistantCards.get(0));
             player.getCards().remove(assistantCards.get(0)); // in case we have 1 assistant we discard it
         }
 
         // Discard all other elements
-        for (AssistantCard element : assistantCards) {
-            if (element instanceof DiscardableElement) {
-                // Case of card
-                if (element instanceof Card) {
-                    this.discardingDeck.add((Card) element);
-                }
-            }
-        }
+//        for (AssistantCard element : assistantCards) {
+//            if (element instanceof DiscardableElement) {
+//                // Case of card
+//                if (element instanceof Card) {
+//                    this.discardingDeck.add((Card) element);
+//                }
+//            }
+//        }
 
         // We increment the number of round this player is still playing
         player.setNbRoundStillPlaying(player.getNbRoundStillPlaying() + 1);
