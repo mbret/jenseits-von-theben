@@ -5,9 +5,6 @@
 package com.miage.game;
 
 import java.io.*;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import sun.audio.*;
 
 /**

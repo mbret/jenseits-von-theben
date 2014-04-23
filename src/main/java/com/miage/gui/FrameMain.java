@@ -1,16 +1,9 @@
 
 package com.miage.gui;
 
-import com.miage.SAMPLE.SAMPLECLASS;
 import com.miage.config.ConfigManager;
 import com.miage.game.Sound;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.sampled.AudioInputStream;
 import org.apache.log4j.LogManager;
 
 /**
@@ -55,7 +48,7 @@ public class FrameMain extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        Sound.play("audioGame");
+//        Sound.play("audioGame");
         
         // We try to load all required config files
         try{
