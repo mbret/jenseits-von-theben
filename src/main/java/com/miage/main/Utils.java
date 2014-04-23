@@ -4,6 +4,7 @@ import com.miage.game.Board;
 import com.miage.game.LogDisplay;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -81,7 +82,11 @@ public class Utils {
                 boardLoaded = (Board) ois.readObject();
                 LogDisplay.setLogBackup(boardLoaded.getLogDisplay());
                 return boardLoaded;
-            }catch (IOException e) {
+            }
+            catch ( FileNotFoundException e ){
+                return null;
+            }
+            catch (IOException e) {
                 /*
                  * Changer l'action de l'exception
                  */
@@ -92,6 +97,7 @@ public class Utils {
                  */
                 e.printStackTrace();
             }
+           
            return boardLoaded;
        }
 }

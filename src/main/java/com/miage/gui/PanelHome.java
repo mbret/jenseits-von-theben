@@ -75,13 +75,6 @@ public class PanelHome extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        playPanel = new javax.swing.JPanel();
-        backRedLabel = new javax.swing.JLabel();
-        backLabel = new javax.swing.JLabel();
-        loadGameJLabel = new javax.swing.JLabel();
-        newGameRedLabel = new javax.swing.JLabel();
-        newGameLabel = new javax.swing.JLabel();
-        menuLabel1 = new javax.swing.JLabel();
         newGamePanel = new javax.swing.JPanel();
         playGameRedLabel = new javax.swing.JLabel();
         newPlayLabel = new javax.swing.JLabel();
@@ -114,6 +107,13 @@ public class PanelHome extends javax.swing.JPanel {
         rulesRedLabel = new javax.swing.JLabel();
         rulesLabel = new javax.swing.JLabel();
         menuLabel = new javax.swing.JLabel();
+        playPanel = new javax.swing.JPanel();
+        backRedLabel = new javax.swing.JLabel();
+        backLabel = new javax.swing.JLabel();
+        loadGameJLabel = new javax.swing.JLabel();
+        newGameRedLabel = new javax.swing.JLabel();
+        newGameLabel = new javax.swing.JLabel();
+        menuLabel1 = new javax.swing.JLabel();
         warningInternalFrame = new javax.swing.JInternalFrame();
         jPanel1 = new javax.swing.JPanel();
         writingLabel = new javax.swing.JLabel();
@@ -124,78 +124,6 @@ public class PanelHome extends javax.swing.JPanel {
 
         setMaximumSize(new java.awt.Dimension(1366, 768));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        playPanel.setOpaque(false);
-        playPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        backRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 24)); // NOI18N
-        backRedLabel.setForeground(new java.awt.Color(153, 0, 0));
-        backRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        backRedLabel.setText("<html><b>RETOUR</b>");
-        backRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                backRedLabelMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                backRedLabelMouseExited(evt);
-            }
-        });
-        playPanel.add(backRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 390, 130, 20));
-
-        backLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 24)); // NOI18N
-        backLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        backLabel.setText("<html><b>RETOUR</b>");
-        backLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                backLabelMouseEntered(evt);
-            }
-        });
-        playPanel.add(backLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 390, 130, 20));
-
-        loadGameJLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        loadGameJLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        loadGameJLabel.setText("<html><b>CHARGER PARTIE</b>");
-        loadGameJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loadGameJLabelMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                loadGameJLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                loadGameJLabelMouseExited(evt);
-            }
-        });
-        playPanel.add(loadGameJLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 350, 50));
-
-        newGameRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        newGameRedLabel.setForeground(new java.awt.Color(153, 0, 0));
-        newGameRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        newGameRedLabel.setText("<html><b>NOUVELLE PARTIE</b>");
-        newGameRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                newGameRedLabelMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                newGameRedLabelMouseExited(evt);
-            }
-        });
-        playPanel.add(newGameRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 350, 50));
-
-        newGameLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        newGameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        newGameLabel.setText("<html><b>NOUVELLE PARTIE</b>");
-        newGameLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                newGameLabelMouseEntered(evt);
-            }
-        });
-        playPanel.add(newGameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 350, 50));
-
-        menuLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pap.png"))); // NOI18N
-        playPanel.add(menuLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 420, 460));
-
-        add(playPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 260, 490, 490));
 
         newGamePanel.setOpaque(false);
         newGamePanel.setPreferredSize(new java.awt.Dimension(450, 480));
@@ -449,6 +377,78 @@ public class PanelHome extends javax.swing.JPanel {
 
         add(MenuPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 260, 490, 490));
 
+        playPanel.setOpaque(false);
+        playPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        backRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 24)); // NOI18N
+        backRedLabel.setForeground(new java.awt.Color(153, 0, 0));
+        backRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        backRedLabel.setText("<html><b>RETOUR</b>");
+        backRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                backRedLabelMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                backRedLabelMouseExited(evt);
+            }
+        });
+        playPanel.add(backRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 390, 130, 20));
+
+        backLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 24)); // NOI18N
+        backLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        backLabel.setText("<html><b>RETOUR</b>");
+        backLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                backLabelMouseEntered(evt);
+            }
+        });
+        playPanel.add(backLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 390, 130, 20));
+
+        loadGameJLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        loadGameJLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        loadGameJLabel.setText("<html><b>CHARGER PARTIE</b>");
+        loadGameJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                loadGameJLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                loadGameJLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                loadGameJLabelMouseExited(evt);
+            }
+        });
+        playPanel.add(loadGameJLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 350, 50));
+
+        newGameRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        newGameRedLabel.setForeground(new java.awt.Color(153, 0, 0));
+        newGameRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        newGameRedLabel.setText("<html><b>NOUVELLE PARTIE</b>");
+        newGameRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newGameRedLabelMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                newGameRedLabelMouseExited(evt);
+            }
+        });
+        playPanel.add(newGameRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 350, 50));
+
+        newGameLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        newGameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        newGameLabel.setText("<html><b>NOUVELLE PARTIE</b>");
+        newGameLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                newGameLabelMouseEntered(evt);
+            }
+        });
+        playPanel.add(newGameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 350, 50));
+
+        menuLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pap.png"))); // NOI18N
+        playPanel.add(menuLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 420, 460));
+
+        add(playPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 260, 490, 490));
+
         warningInternalFrame.setClosable(true);
         warningInternalFrame.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         warningInternalFrame.setVisible(true);
@@ -659,7 +659,6 @@ public class PanelHome extends javax.swing.JPanel {
         quitLabel.setVisible(true);
         parameterLabel.setVisible(true);
         rulesLabel.setVisible(true);
-
         playPanel.setVisible(false);
     }//GEN-LAST:event_backRedLabelMouseClicked
 
@@ -676,7 +675,6 @@ public class PanelHome extends javax.swing.JPanel {
         player4TextField.setVisible(false);
         colorPlayer3ComboBox.setVisible(false);
         colorPlayer4ComboBox.setVisible(false);
-
         player1TextField.requestFocus();
     }//GEN-LAST:event_newGameRedLabelMouseClicked
 
@@ -855,8 +853,18 @@ public class PanelHome extends javax.swing.JPanel {
         ((JLabel)evt.getSource()).setForeground( new java.awt.Color(0, 0, 0) );
     }//GEN-LAST:event_loadGameJLabelMouseExited
 
+    /**
+     * Load game
+     * @param evt 
+     */
     private void loadGameJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadGameJLabelMouseClicked
-        this.launchGame( Utils.loadGame() );
+        Board boardLoaded = Utils.loadGame();
+        if( boardLoaded == null ){
+            JOptionPane.showMessageDialog( this, "Vous n'avez aucun jeu à charger !");
+        }
+        else{
+            this.launchGame( boardLoaded );
+        }
     }//GEN-LAST:event_loadGameJLabelMouseClicked
 
     /**
