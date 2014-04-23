@@ -273,7 +273,7 @@ public class Board implements Serializable {
         // USEFUL VARS 
         List<ShovelCard> shovelCards = new ArrayList();             // list of used shovel cards
         List<AssistantCard> assistantCards = new ArrayList();
-        HashMap<Area, List<EthnologicalKnowledgeCard>> ethnologicalKnowledgeCards = new HashMap();
+        HashMap<Area, EthnologicalKnowledgeCard> ethnologicalKnowledgeCards = new HashMap();
 
         // RETURNER OBJECT
         HashMap<String, Object> returnedInfo = new HashMap();
@@ -305,16 +305,8 @@ public class Board implements Serializable {
                 assistantCards.add((AssistantCard) element);
             }
             if (element instanceof EthnologicalKnowledgeCard) {
-                Area key = this.getArea(((EthnologicalKnowledgeCard)element).getAreaName());
-                List<EthnologicalKnowledgeCard> list;
-                if( ethnologicalKnowledgeCards.containsKey( key ) ){
-                    list = ethnologicalKnowledgeCards.get( key );
-                }
-                else{
-                    list = new ArrayList();
-                    ethnologicalKnowledgeCards.put( key, list );
-                }
-                list.add( (EthnologicalKnowledgeCard)element  );
+                Area key = this.getArea( ((EthnologicalKnowledgeCard)element).getAreaName() );
+                ethnologicalKnowledgeCards.put( key, (EthnologicalKnowledgeCard)element );
             }
         }
 
@@ -379,11 +371,11 @@ public class Board implements Serializable {
             this.discardingDeck.add( shovelCards.get(0) );
             player.getCards().remove( shovelCards.get(0) ); 
         }
-        for (Map.Entry<Area, List<EthnologicalKnowledgeCard>> entry : ethnologicalKnowledgeCards.entrySet()) {
+        for (Map.Entry<Area, EthnologicalKnowledgeCard> entry : ethnologicalKnowledgeCards.entrySet()) {
             if( Player.ACTION_EXCAVATE == actionPattern 
                     && ( entry.getKey().getName().equals( ((ExcavationArea) playerActionParams.get("areaToExcavate")).getName() ) ) ){
-                this.discardingDeck.add( entry.getValue().get(0) );
-                player.getCards().remove( entry.getValue().get(0) );
+                this.discardingDeck.add( entry.getValue() );
+                player.getCards().remove( entry.getValue() );
             }
         }
         
