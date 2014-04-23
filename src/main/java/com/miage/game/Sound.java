@@ -5,6 +5,9 @@
 package com.miage.game;
 
 import java.io.*;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sun.audio.*;
 
 /**
@@ -80,7 +83,8 @@ public class Sound{
                         AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerLoose))));
                         break;
                     case "audioGame":
-                          AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.audioGame))));
+                        as = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
+                          AudioPlayer.player.start(as);
                         break;
                 }
             }
@@ -97,7 +101,8 @@ public class Sound{
      * @author david
      * @param action 
      */
-    public static void stop(){
+    public static void stopAudioGame(){
         AudioPlayer.player.stop(as);
+        Sound.enableSound = false;
     }
 }
