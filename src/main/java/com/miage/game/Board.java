@@ -269,8 +269,10 @@ public class Board implements Serializable {
     public HashMap<String, Object> doPlayerRoundAction(int actionPattern, HashMap<String, Object> playerActionParams) throws Exception {
         LOGGER.debug("doPlayerRoundAction: pattern=" + actionPattern + " playerActionParams=" + playerActionParams.toString());
         
-        // USEFUL VARS                              
-        List<ShovelCard> shovelCards = new ArrayList();             // list of ised shovel cards
+        // USEFUL VARS 
+        List<ShovelCard> shovelCards = new ArrayList();             // list of used shovel cards
+        List<AssistantCard> assistantCards = new ArrayList();
+        List<EthnologicalKnowledgeCard> ethnologicalKnowledgeCards = new ArrayList();
         
         // RETURNER OBJECT
         HashMap<String, Object> returnedInfo = new HashMap();
@@ -295,11 +297,15 @@ public class Board implements Serializable {
         } catch (ClassCastException e) { throw new Exception("No usedElements provided or wrong structure, please see the parameters details"); }
 
         for(UsableElement element : usedElements) {
-//            if( element instanceof KnowledgeElement ) knowledgeElements.add( (KnowledgeElement)element );
             if (element instanceof ShovelCard) {
                 shovelCards.add((ShovelCard) element);
             }
-
+            if (element instanceof AssistantCard) {
+                assistantCards.add((AssistantCard) element);
+            }
+            if (element instanceof EthnologicalKnowledgeCard) {
+                ethnologicalKnowledgeCards.add((EthnologicalKnowledgeCard) element);
+            }
         }
 
         // DO THE MAIN ACTION
@@ -351,31 +357,32 @@ public class Board implements Serializable {
                 returnedInfo.put("pickedCard", pickedCard);
                 break;
         }
-
-        // Check all elements to eventually discard them
-
-        // Because of combinable behaviors we treat assistantCard separatly
-        List<AssistantCard> assistantCards = new ArrayList();
-            for(UsableElement element : usedElements) {
-            if (element instanceof AssistantCard) {
-                assistantCards.add((AssistantCard) element);
-                usedElements.remove(element);
-            }
-        }
-        // we check the discard of assistant
+        
+        // case one assistant, we discard it
         if (assistantCards.size() == 1) {
-            player.getCards().remove(assistantCards.get(0)); // in case we have 1 assistant we discard it
+            this.discardingDeck.add( assistantCards.get(0) );
+            player.getCards().remove( assistantCards.get(0) ); // in case we have 1 assistant we discard it
         }
-
-        // Discard all other elements
-        for (AssistantCard element : assistantCards) {
-            if (element instanceof DiscardableElement) {
-                // Case of card
-                if (element instanceof Card) {
-                    this.discardingDeck.add((Card) element);
-                }
-            }
+        // case one shovel, we discard it
+        if (shovelCards.size() == 1) {
+            this.discardingDeck.add( shovelCards.get(0) );
+            player.getCards().remove( shovelCards.get(0) ); 
         }
+        if( ethnologicalKnowledgeCards.size() == 1 ){
+            this.discardingDeck.add( ethnologicalKnowledgeCards.get(0) );
+            player.getCards().remove( ethnologicalKnowledgeCards.get(0) );
+        }
+        
+            
+//        // Discard all other elements
+//        for (AssistantCard element : assistantCards) {
+//            if (element instanceof DiscardableElement) {
+//                // Case of card
+//                if (element instanceof Card) {
+//                    this.discardingDeck.add((Card) element);
+//                }
+//            }
+//        }
 
         // We increment the number of round this player is still playing
         player.setNbRoundStillPlaying(player.getNbRoundStillPlaying() + 1);
@@ -658,7 +665,9 @@ public class Board implements Serializable {
 
         // Bonus token for first excavation
         if (!areaToExcavate.isAlreadyExcavated()) {
-            player.getTokens().add(areaToExcavate.getPointTokenFirstExcavation());
+            PointToken bonusToken = areaToExcavate.getPointTokenFirstExcavation();
+            player.getTokens().add( bonusToken );
+            tokensJustPickedUp.add( bonusToken ); // add to the returned picked tokens
         }
 
         // update area excavated for player

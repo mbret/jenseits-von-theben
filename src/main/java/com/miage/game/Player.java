@@ -562,7 +562,7 @@ public class Player implements Serializable {
             }
         }
         
-        // GET POINT FROM ACTIVE ELEMENTS
+        // GET POINTS FROM ACTIVE ELEMENTS
         for (ActiveElement element : this.getAllActiveElements()) {
             
             if( element instanceof KnowledgeElement ){
@@ -572,38 +572,41 @@ public class Player implements Serializable {
                         pointsForExcavation += ((KnowledgeElement)element).getKnowledgePoints();
                     }
                 }
-                else if(element instanceof Token){
+                else if( element instanceof Token ){
                     if( ((SpecificKnowledgeToken)element).getAreaName().equals( areaToExcavate.getName() )){
                         pointsForExcavation += ((KnowledgeElement)element).getKnowledgePoints();
                     }
                 }
+                else if( element instanceof GeneralKnowledgeCard){
+                    nbGeneralKnowledgePoint += ((KnowledgeElement)element).getKnowledgePoints();
+                }
             }
         }
         nbSpecificKnowledgePoint = pointsForExcavation;
+        pointsForExcavation = nbGeneralKnowledgePoint + (nbSpecificKnowledgePoint - nbGeneralKnowledgePoint); // (nbGeneral - diff(speciif we have 4 specific and 5 general then we keep only 4 general
         
-        // GET POINT FROM USED (ACTIVABLE) ELEMENTS
+        // GET POINTS FROM USED (ACTIVABLE) ELEMENTS
         for (ActivableElement element : usedKnowledgeElements){
             
             if( element instanceof KnowledgeElement ){
                 
                 // Get general knowledge card / token
-                if( element instanceof GeneralKnowledgeCard){
-                    nbGeneralKnowledgePoint += ((KnowledgeElement)element).getKnowledgePoints();
-                    pointsForExcavation += ((KnowledgeElement)element).getKnowledgePoints();
-                }
+//                if( element instanceof GeneralKnowledgeCard){
+//                    nbGeneralKnowledgePoint += ((KnowledgeElement)element).getKnowledgePoints();
+//                    pointsForExcavation += ((KnowledgeElement)element).getKnowledgePoints();
+//                }
                 else{
                     pointsForExcavation += ((KnowledgeElement)element).getKnowledgePoints();  // ethnological knowledge / 
                 }
             }
         }
-        nbGeneralKnowledgePoint += (nbSpecificKnowledgePoint - nbGeneralKnowledgePoint); // if we have 4 specific and 5 general then we keep only 4 general
+//        nbGeneralKnowledgePoint += (nbSpecificKnowledgePoint - nbGeneralKnowledgePoint); // if we have 4 specific and 5 general then we keep only 4 general
         
-        // GET POINT FROM ASSISTANT CARD
+        // GET POINTS FROM ASSISTANT CARD
         if(nbAssistantCards > 0){
             pointsForExcavation += AssistantCard.getKnowLedgePointsWhenCombinated( nbAssistantCards );
         }
         
-//        throw new UnsupportedOperationException("not implemented yet");
         return pointsForExcavation;
     }
          

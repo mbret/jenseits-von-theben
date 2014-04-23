@@ -313,6 +313,7 @@ public class MapPanel extends javax.swing.JPanel {
                     new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    // declancher son
                     _actionBoardExpoLabelMouseClicked(evt, idExpoCard);
                 }
             });
@@ -350,6 +351,7 @@ public class MapPanel extends javax.swing.JPanel {
                         new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        // declancher son
                         _actionBoardCardLabelMouseClicked(evt, idCard);
                     }
                 });
@@ -778,6 +780,8 @@ public class MapPanel extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez effectuer cette exposition");
         }
+        
+        // declancher son fin d'exposition
     }
 
     /**
