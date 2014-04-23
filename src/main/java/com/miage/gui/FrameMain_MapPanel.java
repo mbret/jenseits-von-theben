@@ -1,19 +1,12 @@
 
 package com.miage.gui;
 
-import com.miage.SAMPLE.SAMPLECLASS;
 import com.miage.game.Board;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.sampled.AudioInputStream;
 import org.apache.log4j.LogManager;
 
 /**
