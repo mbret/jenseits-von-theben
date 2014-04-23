@@ -42,21 +42,16 @@ public class Sound{
      * String containing the audio file path.
      */
     public final static String clic = "src/main/resources/audio/clic.wav";
+        
+    /**
+     * String containing the audio file path.
+     */
+    public final static String playerWin = "src/main/resources/audio/win.wav";
     
     /**
      * String containing the audio file path.
      */
-    public final static String changeFourCurrentCards = "src/main/resources/audio/gong.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String playerWin = "src/main/resources/audio/gong.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String playerLoose = "src/main/resources/audio/gong.wav";
+    public final static String playerLoose = "src/main/resources/audio/loose.wav";
     
     /**
      * String containing the audio file path.
@@ -80,9 +75,6 @@ public class Sound{
                         break;
                     case "clic":
                         AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.clic))));
-                        break;
-                    case "changeFourCurrentCards":
-                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.changeFourCurrentCards))));
                         break;
                     case "playerWin":
                         AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerWin))));
