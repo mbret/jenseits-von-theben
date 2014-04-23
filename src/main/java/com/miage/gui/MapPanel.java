@@ -452,7 +452,7 @@ public class MapPanel extends javax.swing.JPanel {
     }
 
     /**
-     *
+     * for now we display only ACTIVABLE and CAR
      */
     private void _updatePlayerUsingElementUI() {
         LOGGER.debug("_updatePlayerUsingElementUI:");
