@@ -71,7 +71,8 @@ public class TestPlayerToken {
 	@Test
 	public void testMove(){
 		
-		String[] moveWarsawToLondon = this.playerToken1.move("london", board, false);
+//		String[] moveWarsawToLondon = this.playerToken1.move("london", board, false);
+                String[] moveWarsawToLondon = this.playerToken1.movePlayerToken( this.board.getArea("london"), false, false);
 		
 		assertEquals(moveWarsawToLondon[0], "berlin");
 		assertEquals(this.playerToken1.getPosition().toString(), "london");
@@ -82,7 +83,7 @@ public class TestPlayerToken {
 		assertEquals(playerToken1.getCurrentWeek(), 2);
 
 		
-		String[] moveLondonToPalestine = this.playerToken1.move("palestine", board, false);
+		String[] moveLondonToPalestine = this.playerToken1.movePlayerToken( this.board.getArea("palestine"), false, false);
 		
 		assertEquals(moveLondonToPalestine[0], "paris");
 		assertEquals(moveLondonToPalestine[1], "rome");
@@ -93,9 +94,9 @@ public class TestPlayerToken {
 		/*
 		 * Test of the cost of move
 		 */
-		assertEquals(playerToken1.getCurrentWeek(), 5);
+		assertEquals(6, playerToken1.getCurrentWeek());
 		
-		String[] movePalestineToEgypt = this.playerToken1.move("egypt", board, true);
+		String[] movePalestineToEgypt = this.playerToken1.movePlayerToken( this.board.getArea("egypt"), true, false);
 		
 		assertEquals(movePalestineToEgypt.length, 0);
 		assertEquals(this.playerToken1.getPosition().toString(), "egypt");
@@ -103,7 +104,7 @@ public class TestPlayerToken {
 		/*
 		 * Test of the cost of move
 		 */
-		assertEquals(playerToken1.getCurrentWeek(), 5);
+		assertEquals(playerToken1.getCurrentWeek(), 6);
 		
 		
 		

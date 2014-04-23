@@ -115,8 +115,7 @@ public class TestMain {
             method_addExpoCardOnBoard.invoke(board, card4);
             
             board.setDeck(deckTest);
-            Utils main = new Utils();
-            
+
             for(PlayerToken pt : board.getPlayerTokensAndPlayers().keySet()){
                 switch(pt.getColor()){
                     case "#40A497":
@@ -128,12 +127,12 @@ public class TestMain {
             LogDisplay.cleanLogBackup();
             LogDisplay.displayAction(board,"move",new TouristicArea(1,"paris", "paris"));
              
-            main.saveGame(board);
+            Utils.saveGame(board);
             
             assertEquals(board.getLogDisplay(),tempDate+" maxime se déplace sur paris.");
             boolean testReussi;
             try{
-                FileReader fr = new FileReader("save.jvt");
+                FileReader fr = new FileReader("save.boobs");
                 testReussi = true;
             } catch (FileNotFoundException fnfe) {
                 testReussi = false;
@@ -151,9 +150,8 @@ public class TestMain {
             
             Set<Player> players = new HashSet<Player>();
             Board board;
-            Utils main = new Utils();
             LogDisplay.cleanLogBackup();
-            board = main.loadGame();
+            board = Utils.loadGame();
             Set<PlayerToken> playersTokens =  board.getPlayerTokensAndPlayers().keySet();
             HashMap<PlayerToken, Player> playerTokensAndPlayers = board.getPlayerTokensAndPlayers();
             for(PlayerToken pt : playersTokens){

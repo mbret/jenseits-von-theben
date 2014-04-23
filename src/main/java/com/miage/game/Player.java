@@ -167,7 +167,7 @@ public class Player implements Serializable {
 
 		boolean hasExcavationAuthorization = ! this.getSpecificCards( ExcavationAuthorizationCard.class ).isEmpty(); // check authorizations
 
-		if( (! this.hasAlreadyExcavateArea( excavationArea.getName() ) || hasExcavationAuthorization ) // authorized ro unexcavated yet
+		if( ( ! this.hasAlreadyExcavateArea( excavationArea.getName() ) || hasExcavationAuthorization ) // authorized or unexcavated yet
 				&& ( this.hasSpecificKnowledgeCardForThisExcavationArea( excavationArea.getName() )  // enough knowledge
 						|| this.hasSpecificKnowledgeTokenForThisExcavationArea( excavationArea.getName() ) // enough tokens
 						) 
@@ -561,9 +561,9 @@ public class Player implements Serializable {
                     if( element instanceof KnowledgeElement ){
 
                         if(element instanceof SpecificKnowledgeCard){
-                                if( ((SpecificKnowledgeCard)element).getExcavationAreaName().equals( areaToExcavate.getName() )){
-                                    nbSpecificKnowledgePoint += ((KnowledgeElement)element).getKnowledgePoints();
-                                }
+                            if( ((SpecificKnowledgeCard)element).getExcavationAreaName().equals( areaToExcavate.getName() )){
+                                nbSpecificKnowledgePoint += ((KnowledgeElement)element).getKnowledgePoints();
+                            }
                         }
                         else if( element instanceof GeneralKnowledgeCard){
                             nbGeneralKnowledgePoint += ((KnowledgeElement)element).getKnowledgePoints();
@@ -584,9 +584,11 @@ public class Player implements Serializable {
 
                     if( element instanceof KnowledgeElement ){
 
-                        // Get general knowledge card / token
+                        // Get ethno knowledge card / token
                         if( element instanceof EthnologicalKnowledgeCard){
-                            nbSpecificKnowledgePoint += ((KnowledgeElement)element).getKnowledgePoints();
+                            if( ((EthnologicalKnowledgeCard)element).getExcavationAreaName().equals( areaToExcavate.getName() ) ){
+                                nbSpecificKnowledgePoint += ((KnowledgeElement)element).getKnowledgePoints();
+                            }
                         }
                         else if( element instanceof AssistantCard ){
                             // We count the number of this card to count then when combinated
