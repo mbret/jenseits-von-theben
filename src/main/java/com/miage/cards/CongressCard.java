@@ -26,6 +26,14 @@ public class CongressCard extends Card{
     }
 
     
+    public int getPoints( int nbCongressCards ){
+        if( nbCongressCards < 1 ) throw new IndexOutOfBoundsException("Please provide a number >= 1");
+        if( nbCongressCards == 1 ) return 1;
+        else{
+            return nbCongressCards + this.getPoints( nbCongressCards - 1 );
+        }
+    }
+    
     @Override
     public boolean isDiscardable() {
         return false;

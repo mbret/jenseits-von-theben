@@ -18,6 +18,7 @@ import com.miage.interfaces.ActiveElement;
 import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.tokens.GeneralKnowledgeToken;
+import com.miage.tokens.PointToken;
 import com.miage.tokens.SpecificKnowledgeToken;
 import com.miage.tokens.Token;
 import java.io.Serializable;
@@ -48,7 +49,7 @@ public class Player implements Serializable {
 	 * Number of point the player has
 	 * <br/>Some of these points need to be calculated (they are not automatically added)
 	 */
-	private int points;
+//	private int points;
 
 	/**
 	 * determine one of the four action a player can do
@@ -101,7 +102,7 @@ public class Player implements Serializable {
 
 	public Player(String name, PlayerToken playerToken){
 		this.name = name;
-		this.points = 0;
+//		this.points = 0;
 		this.playerToken = playerToken;
 		this.tokens = new ArrayList();
 		this.competences = new HashMap(); 
@@ -374,101 +375,101 @@ public class Player implements Serializable {
 	 */
 	public void updateCompetencesPointsOrKnowledge(Card card, int plusOrMinus){
 
-		if(card instanceof AssistantCard){
-			this.competences.put("assistant", this.competences.get("assistant")+1*plusOrMinus);
-
-		}
-		else if(card instanceof CarCard){
-			this.competences.put("car", this.competences.get("car")+1);
-
-		}
-		else if(card instanceof CongressCard){
-			this.competences.put("congress", this.competences.get("congress")+1);
-
-			switch(this.competences.get("congress")){
-			case 1 : 
-				this.points += 1;
-				break;
-
-			case 2 : 
-				this.points += 2;
-				break;
-
-			case 3 : 
-				this.points += 3;
-				break;
-
-			case 4 : 
-				this.points += 4;
-				break;
-
-			case 5 : 
-				this.points += 5;
-				break;
-
-			case 6 : 
-				this.points += 6;
-				break;
-
-			case 7 : 
-				this.points += 7;
-				break;
-
-			default :
-				break;
-
-
-
-			}
-
-
-		}
-		else if(card instanceof EthnologicalKnowledgeCard){
-
-			/*
-			 * Add or subsract the value of cards into the ethnological knowledge color corresponding 
-			 */
-
-			EthnologicalKnowledgeCard ethnologicalKnowledgeCard = (EthnologicalKnowledgeCard) card;
-			this.playerKnowledges.addEthnologicalKnowledges(ethnologicalKnowledgeCard.getExcavationAreaName(), 
-					ethnologicalKnowledgeCard.getValue()*plusOrMinus);
-
-		}
-		else if(card instanceof ExcavationAuthorizationCard){
-
-			this.competences.put("excavationAuthorization", this.competences.get("excavationAuthorization")+1*plusOrMinus);
-
-		}
-		else if(card instanceof ExpoCard){
-
-			ExpoCard expoCard = (ExpoCard) card;
-			this.points += expoCard.getValue();
-
-
-		}
-		else if(card instanceof GeneralKnowledgeCard){
-
-			GeneralKnowledgeCard generalKnowledgeCard = (GeneralKnowledgeCard) card;
-			this.playerKnowledges.addGeneralKnowledges(generalKnowledgeCard.getValue());
-
-
-		}
-		else if(card instanceof ShovelCard){
-
-			this.competences.put("shovel", this.competences.get("shovel")+1*plusOrMinus);
-
-		}
-		else if(card instanceof SpecificKnowledgeCard){
-
-			SpecificKnowledgeCard specificKnowledgeCard = (SpecificKnowledgeCard) card;
-			this.playerKnowledges.addSpecificKnowledges(specificKnowledgeCard.getExcavationAreaName(), 
-					specificKnowledgeCard.getValue());
-
-		}
-		else{
-			this.competences.put("zeppelin", this.competences.get("zeppelin")+1*plusOrMinus);
-
-		}
+//		if(card instanceof AssistantCard){
+//			this.competences.put("assistant", this.competences.get("assistant")+1*plusOrMinus);
+//
+//		}
+//		else if(card instanceof CarCard){
+//			this.competences.put("car", this.competences.get("car")+1);
+//
+//		}
+//		else if(card instanceof CongressCard){
+//			this.competences.put("congress", this.competences.get("congress")+1);
+//
+//			switch(this.competences.get("congress")){
+//			case 1 : 
+//				this.points += 1;
+//				break;
+//
+//			case 2 : 
+//				this.points += 2;
+//				break;
+//
+//			case 3 : 
+//				this.points += 3;
+//				break;
+//
+//			case 4 : 
+//				this.points += 4;
+//				break;
+//
+//			case 5 : 
+//				this.points += 5;
+//				break;
+//
+//			case 6 : 
+//				this.points += 6;
+//				break;
+//
+//			case 7 : 
+//				this.points += 7;
+//				break;
+//
+//			default :
+//				break;
+//
+//
+//
+//			}
+//
+//
+//		}
+//		else if(card instanceof EthnologicalKnowledgeCard){
+//
+//			/*
+//			 * Add or subsract the value of cards into the ethnological knowledge color corresponding 
+//			 */
+//
+//			EthnologicalKnowledgeCard ethnologicalKnowledgeCard = (EthnologicalKnowledgeCard) card;
+//			this.playerKnowledges.addEthnologicalKnowledges(ethnologicalKnowledgeCard.getExcavationAreaName(), 
+//					ethnologicalKnowledgeCard.getValue()*plusOrMinus);
+//
+//		}
+//		else if(card instanceof ExcavationAuthorizationCard){
+//
+//			this.competences.put("excavationAuthorization", this.competences.get("excavationAuthorization")+1*plusOrMinus);
+//
+//		}
+//		else if(card instanceof ExpoCard){
+//
+//			ExpoCard expoCard = (ExpoCard) card;
+//			this.points += expoCard.getValue();
+//
+//
+//		}
+//		else if(card instanceof GeneralKnowledgeCard){
+//
+//			GeneralKnowledgeCard generalKnowledgeCard = (GeneralKnowledgeCard) card;
+//			this.playerKnowledges.addGeneralKnowledges(generalKnowledgeCard.getValue());
+//
+//
+//		}
+//		else if(card instanceof ShovelCard){
+//
+//			this.competences.put("shovel", this.competences.get("shovel")+1*plusOrMinus);
+//
+//		}
+//		else if(card instanceof SpecificKnowledgeCard){
+//
+//			SpecificKnowledgeCard specificKnowledgeCard = (SpecificKnowledgeCard) card;
+//			this.playerKnowledges.addSpecificKnowledges(specificKnowledgeCard.getExcavationAreaName(), 
+//					specificKnowledgeCard.getValue());
+//
+//		}
+//		else{
+//			this.competences.put("zeppelin", this.competences.get("zeppelin")+1*plusOrMinus);
+//
+//		}
 	}
 
 	/**
@@ -630,15 +631,25 @@ public class Player implements Serializable {
 	}
 
 	/**
-	 * Calculate and set the point of each player
+	 * get all points and calculated point of the player
 	 * <br/>Effect:
-	 * <br/>- get setted actual point
-	 * <br/>- add point from congress 
-	 * <br/>- add point from PointToken
-	 * <br/>- add point from expo
+	 * <br/>- get point from congress 
+	 * <br/>- get point from PointToken
+	 * <br/>- get point from expo
 	 */
-	public int calculatePoint(){
-		throw new UnsupportedOperationException("not implemented yet");
+	public int getCalculatedPoint(){
+            int points = 0;
+            for (CongressCard card : this.getSpecificCards( CongressCard.class )) {
+                points += card.
+            }
+            for (ExpoCard card : this.getSpecificCards( ExpoCard.class )) {
+                
+            }
+            for (Token token : this.getSpecificTokens( PointToken.class )) {
+                
+            }
+            
+            return points;
 	}
 
 
@@ -703,9 +714,9 @@ public class Player implements Serializable {
 		this.nbRoundStillPlaying = nbRoundStillPlaying;
 	}
 
-	public int getPoints() {
-		return points;
-	}
+//	public int getPoints() {
+//		return points;
+//	}
 
 
 

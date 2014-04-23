@@ -642,6 +642,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updateInfoContainerPanelUI() {
         this.currentPlayerLabel.setText(this.currentPlayer.getName());
         this.currentPlayerLabel.setForeground(this.currentPlayer.getPlayerToken().getColorUI());
+        this.currentPlayerScoreLabel.setText( this.currentPlayer. );
         this.currentPlayerLabel.updateUI();
         this.infoContainerPanel.updateUI();
     }
@@ -1003,6 +1004,8 @@ public class MapPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         knowledgePointComboBox = new javax.swing.JComboBox();
         selectedKnowledgePointLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        currentPlayerScoreLabel = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
         backgroundLabel = new javax.swing.JLabel();
 
@@ -1302,11 +1305,11 @@ public class MapPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Connaissances utilisable :");
         infoContainerPanel.add(jLabel3);
-        jLabel3.setBounds(10, 30, 170, 14);
+        jLabel3.setBounds(10, 30, 170, 15);
 
         jLabel5.setText("Joueur courant :");
         infoContainerPanel.add(jLabel5);
-        jLabel5.setBounds(10, 10, 90, 14);
+        jLabel5.setBounds(10, 10, 90, 15);
 
         knowledgePointComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1318,7 +1321,15 @@ public class MapPanel extends javax.swing.JPanel {
 
         selectedKnowledgePointLabel.setText("selectedKnowledge");
         infoContainerPanel.add(selectedKnowledgePointLabel);
-        selectedKnowledgePointLabel.setBounds(200, 50, 100, 14);
+        selectedKnowledgePointLabel.setBounds(200, 50, 100, 15);
+
+        jLabel1.setText("Score :");
+        infoContainerPanel.add(jLabel1);
+        jLabel1.setBounds(200, 10, 60, 15);
+
+        currentPlayerScoreLabel.setText("0");
+        infoContainerPanel.add(currentPlayerScoreLabel);
+        currentPlayerScoreLabel.setBounds(270, 10, 30, 15);
 
         rightPanelContainerPanel.add(infoContainerPanel);
         infoContainerPanel.setBounds(0, 20, 310, 90);
@@ -1821,6 +1832,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel creteExcavationLabel;
     private javax.swing.JLabel creteNullTokenLabel;
     private javax.swing.JLabel currentPlayerLabel;
+    private javax.swing.JLabel currentPlayerScoreLabel;
     private javax.swing.JPanel displayedCardTokenPanel;
     private javax.swing.JLabel egyptExcavationLabel;
     private javax.swing.JLabel egyptNullTokenLabel;
@@ -1830,6 +1842,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
     private javax.swing.JPanel infoContainerPanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JSeparator jSeparator1;
