@@ -29,7 +29,7 @@ public class PanelHome extends javax.swing.JPanel {
     public PanelHome() {
 
         initComponents();
-//        nbPlayers = "2";
+        nbPlayers = 2; // base nb players
 
         // Init our componants without netbeans auto generated code
         MenuPanel.setVisible(true);
@@ -70,15 +70,6 @@ public class PanelHome extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        MenuPanel = new javax.swing.JPanel();
-        playRedLabel = new javax.swing.JLabel();
-        playLabel = new javax.swing.JLabel();
-        parameterLabel = new javax.swing.JLabel();
-        quitRedLabel = new javax.swing.JLabel();
-        quitLabel = new javax.swing.JLabel();
-        rulesRedLabel = new javax.swing.JLabel();
-        rulesLabel = new javax.swing.JLabel();
-        menuLabel = new javax.swing.JLabel();
         newGamePanel = new javax.swing.JPanel();
         playGameRedLabel = new javax.swing.JLabel();
         newPlayLabel = new javax.swing.JLabel();
@@ -101,6 +92,15 @@ public class PanelHome extends javax.swing.JPanel {
         colorPlayer2ComboBox = new javax.swing.JComboBox();
         colorPlayer3ComboBox = new javax.swing.JComboBox();
         papyrusLabel = new javax.swing.JLabel();
+        MenuPanel = new javax.swing.JPanel();
+        playRedLabel = new javax.swing.JLabel();
+        playLabel = new javax.swing.JLabel();
+        parameterLabel = new javax.swing.JLabel();
+        quitRedLabel = new javax.swing.JLabel();
+        quitLabel = new javax.swing.JLabel();
+        rulesRedLabel = new javax.swing.JLabel();
+        rulesLabel = new javax.swing.JLabel();
+        menuLabel = new javax.swing.JLabel();
         playPanel = new javax.swing.JPanel();
         backRedLabel = new javax.swing.JLabel();
         backLabel = new javax.swing.JLabel();
@@ -122,102 +122,6 @@ public class PanelHome extends javax.swing.JPanel {
 
         setMaximumSize(new java.awt.Dimension(1366, 768));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        MenuPanel.setOpaque(false);
-        MenuPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        playRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        playRedLabel.setForeground(new java.awt.Color(153, 0, 0));
-        playRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        playRedLabel.setText("<html><b>JOUER</b>");
-        playRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                playRedLabelMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                playRedLabelMouseExited(evt);
-            }
-        });
-        MenuPanel.add(playRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 140, 30));
-
-        playLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        playLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        playLabel.setText("<html><b>JOUER</b>");
-        playLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                playLabelMouseEntered(evt);
-            }
-        });
-        MenuPanel.add(playLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 140, 30));
-
-        parameterLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        parameterLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        parameterLabel.setText("<html><b>OPTIONS</b>");
-        parameterLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                parameterLabelMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                parameterLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                parameterLabelMouseExited(evt);
-            }
-        });
-        MenuPanel.add(parameterLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 190, 170, 30));
-
-        quitRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        quitRedLabel.setForeground(new java.awt.Color(153, 0, 0));
-        quitRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        quitRedLabel.setText("<html><b>QUITTER</b>");
-        quitRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                quitRedLabelMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                quitRedLabelMouseExited(evt);
-            }
-        });
-        MenuPanel.add(quitRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 370, 170, 30));
-
-        quitLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        quitLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        quitLabel.setText("<html><b>QUITTER</b>");
-        quitLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                quitLabelMouseEntered(evt);
-            }
-        });
-        MenuPanel.add(quitLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 370, 170, 30));
-
-        rulesRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        rulesRedLabel.setForeground(new java.awt.Color(153, 0, 0));
-        rulesRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        rulesRedLabel.setText("<html><b>REGLES DU JEU</b>");
-        rulesRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                rulesRedLabelMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                rulesRedLabelMouseExited(evt);
-            }
-        });
-        MenuPanel.add(rulesRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 270, 290, 60));
-
-        rulesLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        rulesLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        rulesLabel.setText("<html><b>REGLES DU JEU</b>");
-        rulesLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                rulesLabelMouseEntered(evt);
-            }
-        });
-        MenuPanel.add(rulesLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 270, 290, 60));
-
-        menuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pap.png"))); // NOI18N
-        MenuPanel.add(menuLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 420, 460));
-
-        add(MenuPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 260, 490, 490));
 
         newGamePanel.setOpaque(false);
         newGamePanel.setPreferredSize(new java.awt.Dimension(450, 480));
@@ -355,6 +259,11 @@ public class PanelHome extends javax.swing.JPanel {
 
         colorPlayer1ComboBox.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
         colorPlayer1ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<html><FONT COLOR=\"blue\">Bleu</FONT>", "<html><FONT COLOR=\"green\">Vert</FONT>", "<html><FONT COLOR=\"yellow\">Jaune</FONT>", "<html><FONT COLOR=\"red\">Rouge</FONT>" }));
+        colorPlayer1ComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                colorPlayer1ComboBoxActionPerformed(evt);
+            }
+        });
         newGamePanel.add(colorPlayer1ComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 210, -1, -1));
 
         colorPlayer2ComboBox.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
@@ -369,6 +278,102 @@ public class PanelHome extends javax.swing.JPanel {
         newGamePanel.add(papyrusLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
 
         add(newGamePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 230, 490, 510));
+
+        MenuPanel.setOpaque(false);
+        MenuPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        playRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        playRedLabel.setForeground(new java.awt.Color(153, 0, 0));
+        playRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        playRedLabel.setText("<html><b>JOUER</b>");
+        playRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playRedLabelMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                playRedLabelMouseExited(evt);
+            }
+        });
+        MenuPanel.add(playRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 140, 30));
+
+        playLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        playLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        playLabel.setText("<html><b>JOUER</b>");
+        playLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                playLabelMouseEntered(evt);
+            }
+        });
+        MenuPanel.add(playLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 140, 30));
+
+        parameterLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        parameterLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        parameterLabel.setText("<html><b>OPTIONS</b>");
+        parameterLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                parameterLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                parameterLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                parameterLabelMouseExited(evt);
+            }
+        });
+        MenuPanel.add(parameterLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 190, 170, 30));
+
+        quitRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        quitRedLabel.setForeground(new java.awt.Color(153, 0, 0));
+        quitRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        quitRedLabel.setText("<html><b>QUITTER</b>");
+        quitRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                quitRedLabelMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                quitRedLabelMouseExited(evt);
+            }
+        });
+        MenuPanel.add(quitRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 370, 170, 30));
+
+        quitLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        quitLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        quitLabel.setText("<html><b>QUITTER</b>");
+        quitLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                quitLabelMouseEntered(evt);
+            }
+        });
+        MenuPanel.add(quitLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 370, 170, 30));
+
+        rulesRedLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        rulesRedLabel.setForeground(new java.awt.Color(153, 0, 0));
+        rulesRedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        rulesRedLabel.setText("<html><b>REGLES DU JEU</b>");
+        rulesRedLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rulesRedLabelMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                rulesRedLabelMouseExited(evt);
+            }
+        });
+        MenuPanel.add(rulesRedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 270, 290, 60));
+
+        rulesLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        rulesLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        rulesLabel.setText("<html><b>REGLES DU JEU</b>");
+        rulesLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                rulesLabelMouseEntered(evt);
+            }
+        });
+        MenuPanel.add(rulesLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 270, 290, 60));
+
+        menuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pap.png"))); // NOI18N
+        MenuPanel.add(menuLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 420, 460));
+
+        add(MenuPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 260, 490, 490));
 
         playPanel.setOpaque(false);
         playPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -840,6 +845,8 @@ public class PanelHome extends javax.swing.JPanel {
 
         } catch (Exception ex) {
             LOGGER.fatal( ex );
+            ex.printStackTrace();
+            System.exit( 0 );
         }
 
 
@@ -905,6 +912,10 @@ public class PanelHome extends javax.swing.JPanel {
         this.optionPanel.setVisible( false );
         this.MenuPanel.setVisible( true );
     }//GEN-LAST:event_returnLabelMouseClicked
+
+    private void colorPlayer1ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorPlayer1ComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_colorPlayer1ComboBoxActionPerformed
 
     /**
      * check color players

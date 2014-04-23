@@ -3,29 +3,19 @@ package com.miage.game;
 import com.miage.areas.*;
 import com.miage.cards.*;
 import com.miage.config.ConfigManager;
-import com.miage.interfaces.ActivableElement;
-import com.miage.interfaces.CombinableElement;
-import com.miage.interfaces.DiscardableElement;
-import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.main.Utils;
 import com.miage.tokens.*;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -197,7 +187,7 @@ public class Board implements Serializable {
      * @return Player | null
      */
     public Player getUpcomingPlayer() {
-        Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get(this.playerTokenStack.getFirst()); // pop the last player token
+        Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get( this.playerTokenStack.getFirst() ); // pop the last (in time) player token
         
         // test if this player is game over over
         if (this.playersWhoFinished.contains(playerWhoShouldPlayFirst)
