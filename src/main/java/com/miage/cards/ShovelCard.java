@@ -16,8 +16,10 @@ public class ShovelCard extends Card implements ActivableElement, CombinableElem
 
     
     private static HashMap<Integer, Integer> values = new HashMap(){{
-        this.put(2, 1); // two assistants
+    	this.put(1, 1); // one assistant
+    	this.put(2, 1); // two assistants
         this.put(3, 2); // three assistants
+        
     }};
     
     
@@ -45,7 +47,7 @@ public class ShovelCard extends Card implements ActivableElement, CombinableElem
         }
         // one or two 2 left but still have place to divide in piece of 3
         else{
-            return ShovelCard.values.get(3) + ShovelCard.getTokensPointsWhenCombinated( nb - 3);
+            return ShovelCard.values.get(1) + ShovelCard.getTokensPointsWhenCombinated( nb - 1);
         }
     }
     
