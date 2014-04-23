@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 
 public class Player implements Serializable {
 
+
 	private final static Logger LOGGER = LogManager.getLogger(Board.class.getName());
 
 	/**
