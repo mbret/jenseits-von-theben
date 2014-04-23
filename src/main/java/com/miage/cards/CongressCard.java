@@ -26,11 +26,12 @@ public class CongressCard extends Card{
     }
 
     
-    public int getPoints( int nbCongressCards ){
-        if( nbCongressCards < 1 ) throw new IndexOutOfBoundsException("Please provide a number >= 1");
-        if( nbCongressCards == 1 ) return 1;
+    public static int getPoints( int nbCongressCards ){
+        if( nbCongressCards < 0 || nbCongressCards > 7 ) throw new IndexOutOfBoundsException("Please provide a number >= 1 && <= 7");
+        else if( nbCongressCards == 0 ) return 0;
+        else if( nbCongressCards == 1 ) return 1;
         else{
-            return nbCongressCards + this.getPoints( nbCongressCards - 1 );
+            return nbCongressCards + getPoints( nbCongressCards - 1 );
         }
     }
     

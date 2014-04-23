@@ -636,21 +636,97 @@ public class Player implements Serializable {
 	 * <br/>- get point from congress 
 	 * <br/>- get point from PointToken
 	 * <br/>- get point from expo
+        * @param players
+     * @param areas
+        * @return 
 	 */
-	public int getCalculatedPoint(){
-            int points = 0;
-            for (CongressCard card : this.getSpecificCards( CongressCard.class )) {
-                points += card.
-            }
-            for (ExpoCard card : this.getSpecificCards( ExpoCard.class )) {
-                
-            }
-            for (Token token : this.getSpecificTokens( PointToken.class )) {
-                
-            }
+	public int getCalculatedPoint( List<Player> players, Collection<ExcavationArea> areas ){
             
-            return points;
+            int finalScore = 0;
+            
+            HashMap<Player, Integer> scores = new HashMap();
+                
+            // POINTS FROM CONGRESS CARDS
+            finalScore += CongressCard.getPoints( this.getSpecificCards( CongressCard.class ).size() );
+
+            // POINTS FROM EXPO CARDS
+            for (ExpoCard card : this.getSpecificCards( ExpoCard.class )) {
+                finalScore += card.getValue();
+            }
+
+            // POINTS FROM POINT TOKEN
+            for (PointToken token : this.getSpecificTokens( PointToken.class )) {
+                finalScore += token.getValue();
+            }
+
+            // POINTS FROM KNOWLEDGES
+            // for each excavation we get point from specific knowledge (3 if several has, 5 if the desired player has the best)
+            for (ExcavationArea excavationArea : areas) {
+                
+                SpecificKnowledgeCard best = this.getBestSpecificKnowledgeCardOfThisArea( excavationArea.getName() );
+                boolean oneOtherPlayerHasThisCard = false;
+                
+                if( best != null ){
+                    
+                    for (Player player : players) {
+                        if( player != this ){
+                            // one other player has a best card
+                            SpecificKnowledgeCard otherPlayerCard = player.getBestSpecificKnowledgeCardOfThisArea( excavationArea.getName() );
+                            if( otherPlayerCard != null ){
+                                if( otherPlayerCard.getValue() > best.getValue() ){
+                                    best = null;
+                                    break;
+                                }
+                                // one other has the same
+                                else if( otherPlayerCard.getValue() == best.getValue() ){
+                                    oneOtherPlayerHasThisCard = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // case of the desired player and some other has the sames card
+                    if( oneOtherPlayerHasThisCard ){
+                        finalScore += 3;
+                    }
+                    // case of the desired player has the best card
+                    else{
+                        finalScore += 5;
+                    }
+                }
+   
+            }
+
+            
+            
+            return finalScore;
 	}
+        
+        public List<KnowledgeElement> getSpecificKnowledgeForThisExcavationArea( String areaName ){
+            List<KnowledgeElement> ret = new ArrayList();
+            for (SpecificKnowledgeCard card : this.getSpecificCards( SpecificKnowledgeCard.class )) {
+                if( card.getExcavationAreaName().equals( areaName ) ){
+                    ret.add(card);
+                }
+            }
+            return ret;
+        }
+        
+        public SpecificKnowledgeCard getBestSpecificKnowledgeCardOfThisArea( String areaName ){
+            SpecificKnowledgeCard best = null;
+            for (SpecificKnowledgeCard card : this.getSpecificCards( SpecificKnowledgeCard.class )) {
+                if( card.getExcavationAreaName().equals( areaName ) ){
+                    if( best == null ){
+                        best = card;
+                    }
+                    else if( card.getValue() > best.getValue() ){
+                        best = card;
+                    }
+                }
+            }
+            return best;
+        }
 
 
 	/***********************************************************************************************

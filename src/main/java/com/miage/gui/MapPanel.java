@@ -642,7 +642,14 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updateInfoContainerPanelUI() {
         this.currentPlayerLabel.setText(this.currentPlayer.getName());
         this.currentPlayerLabel.setForeground(this.currentPlayer.getPlayerToken().getColorUI());
-        this.currentPlayerScoreLabel.setText( this.currentPlayer. );
+        this.currentPlayerScoreLabel.setText( 
+                String.valueOf(
+                        this.currentPlayer.getCalculatedPoint( 
+                                this.currentBoard.getPlayers() , 
+                                this.currentBoard.getAreas(ExcavationArea.class).values() 
+                        ) 
+                ) 
+        );
         this.currentPlayerLabel.updateUI();
         this.infoContainerPanel.updateUI();
     }
