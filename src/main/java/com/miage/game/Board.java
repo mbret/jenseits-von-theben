@@ -645,7 +645,7 @@ public class Board implements Serializable {
 
 //        player.getTokensJustPickedUp().clear(); // clear the previous round picked tokens
         for (int i = 0; i < nbTokenToPickUp; i++) {
-            Token pickedToken = areaToExcavate.getTokenList().get(0);
+            Token pickedToken = areaToExcavate.getTokenList().remove();
             LOGGER.debug("LES JETONS DANS LA CLASSE BOARD " + pickedToken.getId());
             tokensJustPickedUp.add(pickedToken); // add to the returned picked tokens
             
@@ -655,11 +655,18 @@ public class Board implements Serializable {
                 player.getTokens().add(pickedToken); // add token to player
             }
         }
+        
+        // We add all blank tokens in the area list
+        for(Token blankToken : tokensJustPickedUp)
+        	areaToExcavate.addToken(blankToken);
 
         // Bonus token for first excavation
         if (!areaToExcavate.isAlreadyExcavated()) {
             player.getTokens().add(areaToExcavate.getPointTokenFirstExcavation());
         }
+        
+        // Shuffle the token list
+        Collections.shuffle(areaToExcavate.getTokenList());
 
         // update area excavated for player
         player.addAreaAlreadyExcavate(areaToExcavate.getName());
