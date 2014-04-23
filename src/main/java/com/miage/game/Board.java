@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
@@ -272,8 +273,8 @@ public class Board implements Serializable {
         // USEFUL VARS 
         List<ShovelCard> shovelCards = new ArrayList();             // list of used shovel cards
         List<AssistantCard> assistantCards = new ArrayList();
-        List<EthnologicalKnowledgeCard> ethnologicalKnowledgeCards = new ArrayList();
-        
+        HashMap<Area, List<EthnologicalKnowledgeCard>> ethnologicalKnowledgeCards = new HashMap();
+
         // RETURNER OBJECT
         HashMap<String, Object> returnedInfo = new HashMap();
         returnedInfo.put("pickedCard", null);
@@ -304,7 +305,16 @@ public class Board implements Serializable {
                 assistantCards.add((AssistantCard) element);
             }
             if (element instanceof EthnologicalKnowledgeCard) {
-                ethnologicalKnowledgeCards.add((EthnologicalKnowledgeCard) element);
+                Area key = this.getArea(((EthnologicalKnowledgeCard)element).getAreaName());
+                List<EthnologicalKnowledgeCard> list;
+                if( ethnologicalKnowledgeCards.containsKey( key ) ){
+                    list = ethnologicalKnowledgeCards.get( key );
+                }
+                else{
+                    list = new ArrayList();
+                    ethnologicalKnowledgeCards.put( key, list );
+                }
+                list.add( (EthnologicalKnowledgeCard)element  );
             }
         }
 
@@ -369,22 +379,15 @@ public class Board implements Serializable {
             this.discardingDeck.add( shovelCards.get(0) );
             player.getCards().remove( shovelCards.get(0) ); 
         }
-        if( ethnologicalKnowledgeCards.size() == 1 ){
-            this.discardingDeck.add( ethnologicalKnowledgeCards.get(0) );
-            player.getCards().remove( ethnologicalKnowledgeCards.get(0) );
+        for (Map.Entry<Area, List<EthnologicalKnowledgeCard>> entry : ethnologicalKnowledgeCards.entrySet()) {
+            if( Player.ACTION_EXCAVATE == actionPattern 
+                    && ( entry.getKey().getName().equals( ((ExcavationArea) playerActionParams.get("areaToExcavate")).getName() ) ) ){
+                this.discardingDeck.add( entry.getValue().get(0) );
+                player.getCards().remove( entry.getValue().get(0) );
+            }
         }
         
-            
-//        // Discard all other elements
-
-//        for (AssistantCard element : assistantCards) {
-//            if (element instanceof DiscardableElement) {
-//                // Case of card
-//                if (element instanceof Card) {
-//                    this.discardingDeck.add((Card) element);
-//                }
-//            }
-//        }
+        
 
         // We increment the number of round this player is still playing
         player.setNbRoundStillPlaying(player.getNbRoundStillPlaying() + 1);
