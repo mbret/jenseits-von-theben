@@ -313,6 +313,7 @@ public class MapPanel extends javax.swing.JPanel {
                     new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    // declancher son
                     _actionBoardExpoLabelMouseClicked(evt, idExpoCard);
                 }
             });
@@ -350,6 +351,7 @@ public class MapPanel extends javax.swing.JPanel {
                         new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        // declancher son
                         _actionBoardCardLabelMouseClicked(evt, idCard);
                     }
                 });
@@ -389,8 +391,22 @@ public class MapPanel extends javax.swing.JPanel {
     }
     
     private int _displayChronotimeFrame(){
-    	String res = JOptionPane.showInputDialog("Combien de semaine(s) ?");
-        int nbWeeks = Integer.parseInt(res);
+    	
+    
+    	int nbWeeks = 0;
+    	
+    	
+        while(nbWeeks < 1 || nbWeeks > 12){
+        	String res = JOptionPane.showInputDialog("Combien de semaine(s) ?");
+        	try{
+        		nbWeeks = Integer.parseInt(res);
+        	}catch(NumberFormatException e){
+        		
+        	}
+        	
+             
+        }
+        
         return nbWeeks;
     }
 
@@ -519,6 +535,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updateExcavationSiteUI() {
         
         this.excavationSiteContainerPanel.removeAll();
+        
         for (Map.Entry<Component, ExcavationArea> entry : this.listOfExcavationSiteComponent.entrySet()) {
 
             ((JLabel) entry.getKey()).setIcon(new ImageIcon(getClass().getResource(ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.images") + "excavate-icon.png")));
@@ -545,6 +562,33 @@ public class MapPanel extends javax.swing.JPanel {
                   entry.getKey().setLocation(320, 80);
                   break;
               }
+            
+            if( ! entry.getValue().isAlreadyExcavated() ){
+                JLabel firstToken = new JLabel(
+                        new ImageIcon(getClass().getResource(
+                                ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty(
+                                        "path.tokens") + entry.getValue().getName() + "/" + entry.getValue().getPointTokenFirstExcavation().getId() + ".png"))
+                );
+                firstToken.setSize( 32, 32 );
+                switch(entry.getValue().getName()){
+                    case "greece":
+                        firstToken.setLocation(60, 0);
+                        break;
+                    case "crete":
+                        firstToken.setLocation(120, 135);
+                        break;
+                    case "egypt":
+                        firstToken.setLocation(205, 230);
+                        break;
+                    case "palestine":
+                        firstToken.setLocation(325, 215);
+                        break;
+                    case "mesopotamia":
+                        firstToken.setLocation(380, 80);
+                        break;
+                }
+                this.excavationSiteContainerPanel.add( firstToken );
+            }
             
         }
         this.excavationSiteContainerPanel.updateUI();
@@ -598,11 +642,20 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updateInfoContainerPanelUI() {
         this.currentPlayerLabel.setText(this.currentPlayer.getName());
         this.currentPlayerLabel.setForeground(this.currentPlayer.getPlayerToken().getColorUI());
+        this.currentPlayerScoreLabel.setText( 
+                String.valueOf(
+                        this.currentPlayer.getCalculatedPoint( 
+                                this.currentBoard.getPlayers() , 
+                                this.currentBoard.getAreas(ExcavationArea.class).values() 
+                        ) 
+                ) 
+        );
         this.currentPlayerLabel.updateUI();
         this.infoContainerPanel.updateUI();
     }
 
     private void _updateLeftPanelUI() {
+        
     }
 
     private void _updateRightPanelUI() {
@@ -778,6 +831,8 @@ public class MapPanel extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez effectuer cette exposition");
         }
+        
+        // declancher son fin d'exposition
     }
 
     /**
@@ -956,6 +1011,8 @@ public class MapPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         knowledgePointComboBox = new javax.swing.JComboBox();
         selectedKnowledgePointLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        currentPlayerScoreLabel = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
         backgroundLabel = new javax.swing.JLabel();
 
@@ -1255,11 +1312,11 @@ public class MapPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Connaissances utilisable :");
         infoContainerPanel.add(jLabel3);
-        jLabel3.setBounds(10, 30, 170, 14);
+        jLabel3.setBounds(10, 30, 170, 15);
 
         jLabel5.setText("Joueur courant :");
         infoContainerPanel.add(jLabel5);
-        jLabel5.setBounds(10, 10, 90, 14);
+        jLabel5.setBounds(10, 10, 90, 15);
 
         knowledgePointComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1271,7 +1328,15 @@ public class MapPanel extends javax.swing.JPanel {
 
         selectedKnowledgePointLabel.setText("selectedKnowledge");
         infoContainerPanel.add(selectedKnowledgePointLabel);
-        selectedKnowledgePointLabel.setBounds(200, 50, 100, 14);
+        selectedKnowledgePointLabel.setBounds(200, 50, 100, 15);
+
+        jLabel1.setText("Score :");
+        infoContainerPanel.add(jLabel1);
+        jLabel1.setBounds(200, 10, 60, 15);
+
+        currentPlayerScoreLabel.setText("0");
+        infoContainerPanel.add(currentPlayerScoreLabel);
+        currentPlayerScoreLabel.setBounds(270, 10, 30, 15);
 
         rightPanelContainerPanel.add(infoContainerPanel);
         infoContainerPanel.setBounds(0, 20, 310, 90);
@@ -1774,6 +1839,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel creteExcavationLabel;
     private javax.swing.JLabel creteNullTokenLabel;
     private javax.swing.JLabel currentPlayerLabel;
+    private javax.swing.JLabel currentPlayerScoreLabel;
     private javax.swing.JPanel displayedCardTokenPanel;
     private javax.swing.JLabel egyptExcavationLabel;
     private javax.swing.JLabel egyptNullTokenLabel;
@@ -1783,6 +1849,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel greeceExcavationLabel;
     private javax.swing.JLabel greeceNullTokenLabel;
     private javax.swing.JPanel infoContainerPanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JSeparator jSeparator1;

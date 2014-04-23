@@ -28,6 +28,7 @@ public class AssistantCard extends Card implements KnowledgeElement, CombinableE
      * Represent the values earned depending of how many of this card are combinated
      */
     private static final HashMap<Integer, Integer> values = new HashMap(){{
+    	this.put(1, 1);	// one assistant
         this.put(2, 1); // two assistants
         this.put(3, 2); // three assistants
     }};
@@ -75,7 +76,7 @@ public class AssistantCard extends Card implements KnowledgeElement, CombinableE
      * @return int
      */
     public static int getKnowLedgePointsWhenCombinated( int nbOfThisElementCombined ){
-        /**
+        /*
          * These calculs are based on the modulo.
          * If x % 3 give 2 then there is one pair of 2
          * if x % 3 give 1 then there are two pair of 2
@@ -95,7 +96,7 @@ public class AssistantCard extends Card implements KnowledgeElement, CombinableE
         }
         // one or two 2 left but still have place to divide in piece of 3
         else{
-            return AssistantCard.values.get(3) + AssistantCard.getKnowLedgePointsWhenCombinated( nbOfThisElementCombined - 3);
+            return AssistantCard.values.get(1) + AssistantCard.getKnowLedgePointsWhenCombinated( nbOfThisElementCombined - 1);
         }
     }
     

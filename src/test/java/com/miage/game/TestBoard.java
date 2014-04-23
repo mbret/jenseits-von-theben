@@ -162,7 +162,7 @@ public class TestBoard {
             
             // test total point token 
             // test total point token of 4 
-            Integer nbPointToken = 14; // (greece should have 15 pointTokens but one is placed on the excavation area for the first excavation)
+            Integer nbPointToken = 12; // (greece should have 15 pointTokens but one is placed on the excavation area for the first excavation)
             Integer nbPointTokenOf4InsideGreece = 1; // (greece should have 3 pointTokens of 4)
             
             LinkedList<Token> tokens = ((ExcavationArea)b.getAreas().get("greece")).getTokenList();

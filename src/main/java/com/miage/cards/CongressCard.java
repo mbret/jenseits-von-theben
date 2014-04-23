@@ -26,6 +26,15 @@ public class CongressCard extends Card{
     }
 
     
+    public static int getPoints( int nbCongressCards ){
+        if( nbCongressCards < 0 || nbCongressCards > 7 ) throw new IndexOutOfBoundsException("Please provide a number >= 1 && <= 7");
+        else if( nbCongressCards == 0 ) return 0;
+        else if( nbCongressCards == 1 ) return 1;
+        else{
+            return nbCongressCards + getPoints( nbCongressCards - 1 );
+        }
+    }
+    
     @Override
     public boolean isDiscardable() {
         return false;

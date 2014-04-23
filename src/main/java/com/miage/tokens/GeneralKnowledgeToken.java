@@ -2,17 +2,19 @@
 
 package com.miage.tokens;
 
+import com.miage.interfaces.ActiveElement;
 import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.DiscardableElement;
 import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.ActivableElement;
+
 import java.io.Serializable;
 
 /**
  *
  * @author maxime
  */
-public class GeneralKnowledgeToken extends Token implements KnowledgeElement, ActivableElement{
+public class GeneralKnowledgeToken extends Token implements KnowledgeElement, ActiveElement{
 
     private final int value;
     

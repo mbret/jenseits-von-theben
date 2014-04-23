@@ -2,6 +2,7 @@
 package com.miage.gui;
 
 import com.miage.SAMPLE.SAMPLECLASS;
+import com.miage.game.Sound;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
@@ -53,6 +54,9 @@ public class FrameMain extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        Sound.play("audioGame");
+        
+        
         /*
          * Create and display the main frame
          */
