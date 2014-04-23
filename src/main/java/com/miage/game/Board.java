@@ -642,7 +642,7 @@ public class Board implements Serializable {
         // Moving process
         player.getPlayerToken().movePlayerToken(areaToExcavate, useZeppelinCard, useCarCard);
         player.getPlayerToken().addWeeks(nbWeeks);
-        this._updatePlayerTokenStack();
+//        this._updatePlayerTokenStack();
 
         // Picking token process
         nbTokenToPickUp += ShovelCard.getTokensPointsWhenCombinated(shovelCards.size()); // get supplementary tokens thanks to the used shovels
@@ -665,10 +665,14 @@ public class Board implements Serializable {
         	areaToExcavate.addToken(blankToken);
 
         // Bonus token for first excavation
-        if (!areaToExcavate.isAlreadyExcavated()) {
+        if ( ! areaToExcavate.isAlreadyExcavated()) {
             PointToken bonusToken = areaToExcavate.getPointTokenFirstExcavation();
             player.getTokens().add( bonusToken );
             tokensJustPickedUp.add( bonusToken ); // add to the returned picked tokens
+            areaToExcavate.setAlreadyExcavated( true );
+        }
+        else{
+            
         }
         
         // Shuffle the token list

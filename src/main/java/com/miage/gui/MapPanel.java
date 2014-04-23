@@ -535,6 +535,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updateExcavationSiteUI() {
         
         this.excavationSiteContainerPanel.removeAll();
+        
         for (Map.Entry<Component, ExcavationArea> entry : this.listOfExcavationSiteComponent.entrySet()) {
 
             ((JLabel) entry.getKey()).setIcon(new ImageIcon(getClass().getResource(ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.images") + "excavate-icon.png")));
@@ -561,6 +562,33 @@ public class MapPanel extends javax.swing.JPanel {
                   entry.getKey().setLocation(320, 80);
                   break;
               }
+            
+            if( ! entry.getValue().isAlreadyExcavated() ){
+                JLabel firstToken = new JLabel(
+                        new ImageIcon(getClass().getResource(
+                                ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty(
+                                        "path.tokens") + entry.getValue().getName() + "/" + entry.getValue().getPointTokenFirstExcavation().getId() + ".png"))
+                );
+                firstToken.setSize( 32, 32 );
+                switch(entry.getValue().getName()){
+                    case "greece":
+                        firstToken.setLocation(60, 0);
+                        break;
+                    case "crete":
+                        firstToken.setLocation(120, 135);
+                        break;
+                    case "egypt":
+                        firstToken.setLocation(205, 230);
+                        break;
+                    case "palestine":
+                        firstToken.setLocation(325, 215);
+                        break;
+                    case "mesopotamia":
+                        firstToken.setLocation(380, 80);
+                        break;
+                }
+                this.excavationSiteContainerPanel.add( firstToken );
+            }
             
         }
         this.excavationSiteContainerPanel.updateUI();
@@ -619,6 +647,7 @@ public class MapPanel extends javax.swing.JPanel {
     }
 
     private void _updateLeftPanelUI() {
+        
     }
 
     private void _updateRightPanelUI() {
