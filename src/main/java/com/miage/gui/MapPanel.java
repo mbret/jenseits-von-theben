@@ -15,18 +15,25 @@ import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.main.Utils;
 import com.miage.tokens.Token;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import static java.lang.reflect.Array.set;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,6 +48,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -51,6 +59,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
+
 import org.apache.log4j.Layout;
 import org.apache.log4j.LogManager;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
@@ -561,32 +570,37 @@ public class MapPanel extends javax.swing.JPanel {
                   entry.getKey().setLocation(265, 215);
                   break;
               case "mesopotamia":
-                  entry.getKey().setLocation(320, 80);
+                  entry.getKey().setLocation(350, 80);
                   break;
               }
             
             if( ! entry.getValue().isAlreadyExcavated() ){
-                JLabel firstToken = new JLabel(
-                        new ImageIcon(getClass().getResource(
-                                ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty(
-                                        "path.tokens") + entry.getValue().getName() + "/" + entry.getValue().getPointTokenFirstExcavation().getId() + ".png"))
-                );
+                JLabel firstToken = new JLabel();
+                
+                ImageIcon tokenImage = new javax.swing.ImageIcon(getClass().getResource(
+                        ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty(
+                                "path.tokens") + entry.getValue().getName() + "/" + entry.getValue().getPointTokenFirstExcavation().getId() + ".png"));
+                Image tokenResize = scaleImage(tokenImage.getImage(), 32, 32);
+                firstToken.setIcon(new ImageIcon(tokenResize));
+                        
+               
+                
                 firstToken.setSize( 32, 32 );
                 switch(entry.getValue().getName()){
                     case "greece":
-                        firstToken.setLocation(60, 0);
+                        firstToken.setLocation(80, 25);
                         break;
                     case "crete":
-                        firstToken.setLocation(120, 135);
+                        firstToken.setLocation(135, 143);
                         break;
                     case "egypt":
-                        firstToken.setLocation(205, 230);
+                        firstToken.setLocation(220, 260);
                         break;
                     case "palestine":
-                        firstToken.setLocation(325, 215);
+                        firstToken.setLocation(345, 245);
                         break;
                     case "mesopotamia":
-                        firstToken.setLocation(380, 80);
+                        firstToken.setLocation(385, 135);
                         break;
                 }
                 this.excavationSiteContainerPanel.add( firstToken );
@@ -1426,6 +1440,17 @@ public class MapPanel extends javax.swing.JPanel {
             Logger.getLogger(MapPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    
+    public static Image scaleImage(Image source, int width, int height) {
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = (Graphics2D) img.getGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(source, 0, 0, width, height, null);
+        g.dispose();
+        return img;
+    }
 
     /**
      * Shows tokens owned by the current player
@@ -1443,6 +1468,10 @@ public class MapPanel extends javax.swing.JPanel {
                         LOGGER.debug("LES PIONS DE LA LISTE    " + t.getAreaName() + "    " + t.getId());
                         javax.swing.JLabel imageToken = new javax.swing.JLabel();
                         imageToken.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/" + t.getAreaName() + "/" + t.getId() + ".png")));
+                        
+                        
+                        
+                        
                         displayedCardTokenPanel.add(imageToken);
                     
                 }
