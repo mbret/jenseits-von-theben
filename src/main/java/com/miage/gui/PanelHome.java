@@ -1,11 +1,16 @@
 package com.miage.gui;
 
+import com.miage.config.ConfigManager;
 import com.miage.game.Board;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
+import com.miage.game.Sound;
 import com.miage.main.Utils;
 import java.awt.Image;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
@@ -26,7 +31,7 @@ public class PanelHome extends javax.swing.JPanel {
     /**
      * Creates new form PanelHome
      */
-    public PanelHome() {
+    public PanelHome() throws IOException {
 
         initComponents();
         nbPlayers = 2; // base nb players
@@ -50,6 +55,19 @@ public class PanelHome extends javax.swing.JPanel {
         warningInternalFrame.setVisible(false);
         
         // OPTION PANEL
+        String audioEnable = ConfigManager.getInstance().getOptions().get("general", "audio", String.class);
+        if(audioEnable != null){
+            if(audioEnable.compareTo("1") == 0){
+                System.out.println("TRUE");
+                this.jCheckBox1.setSelected(Boolean.TRUE);
+                Sound.enableSound = Boolean.TRUE;
+            }else{
+                System.out.println("FALSE");
+                this.jCheckBox1.setSelected(Boolean.FALSE);
+                Sound.enableSound = Boolean.FALSE;
+            }
+            Sound.play("audioGame");
+        }
         
         // COMBO BOX COLOR
         this.colorPlayer1ComboBox.addItem( new ComboBoxColorElement("blue", "Bleu"));
@@ -962,12 +980,17 @@ public class PanelHome extends javax.swing.JPanel {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         JCheckBox cb = (JCheckBox)evt.getSource();
-        if( cb.isSelected()){
-            JOptionPane.showMessageDialog( this, "Vous activez le son");
-        }
-        else{
-            JOptionPane.showMessageDialog( this, "Vous coupez le son");
-        }
+        try {
+            if( cb.isSelected()){
+                ConfigManager.getInstance().setOption("general", "audio", "1");
+                Sound.startAudioGame();
+                JOptionPane.showMessageDialog( this, "Vous activez le son");
+            }else{
+                ConfigManager.getInstance().setOption("general", "audio", "0");
+                Sound.stopAudioGame();
+                JOptionPane.showMessageDialog( this, "Vous coupez le son");
+            }
+        } catch (IOException ex) {}
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void returnLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_returnLabelMouseClicked

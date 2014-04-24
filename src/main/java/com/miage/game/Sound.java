@@ -96,6 +96,16 @@ public class Sound{
         }
     }
     
+    public static void startAudioGame(){
+        try {
+            as = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
+            AudioPlayer.player.start(as);
+            Sound.enableSound = true;
+        } catch (IOException ex) {
+            Logger.getLogger(Sound.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /**
      * Stop the preceding sound played (if it playing).
      * @author david
