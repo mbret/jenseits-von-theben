@@ -91,8 +91,9 @@ public class Player implements Serializable {
 
 	/*
 	 * Contains the name of areas already excavate
+         * Integer = the year of excavation
 	 */
-	private ArrayList<String> areasAlreadyExcavate; 
+	private HashMap<String, Integer> areasAlreadyExcavate; 
 
 	/**
 	 * Define for how many round the player is playing (because we can play again after played depending of the position)
@@ -108,7 +109,7 @@ public class Player implements Serializable {
 		this.competences = new HashMap(); 
 		this.playerKnowledges = new PlayerKnowledges();
 		this.cards = new ArrayList();
-		this.areasAlreadyExcavate = new ArrayList();
+		this.areasAlreadyExcavate = new HashMap();
 		this.nbRoundStillPlaying = 0;
 
 		/*
@@ -144,13 +145,13 @@ public class Player implements Serializable {
 	/**
 	 * @author Gael
 	 * 
-	 * Return true if the player has already excavate the area named nameOfArea, else return false
+	 * Return true if the player has already excavate the area named nameOfArea, in its current year. otherwise return false
 	 * 
 	 * @param nameOfArea
 	 * @return
 	 */
 	public boolean hasAlreadyExcavateArea(String nameOfArea){
-		return this.areasAlreadyExcavate.contains(nameOfArea);
+		return this.areasAlreadyExcavate.containsKey(nameOfArea) && this.areasAlreadyExcavate.containsValue( this.playerToken.getCurrentYear() );
 	}
 
 	/**
@@ -179,10 +180,10 @@ public class Player implements Serializable {
 
 	/**
 	 * Check if the user is authorized to excavate at least one area (any of them)
-	 * Conditions:
-	 *  - is authorized to excavate one area
-	 *  - has specific knowledge for the area selected
-	 *  - has a specific knowledge token about this area
+	 * <br/>Conditions:
+	 * <br/>- is authorized to excavate one area
+	 * <br/>- has specific knowledge for the area selected
+	 * <br/>- has a specific knowledge token about this area
 	 * @author maxime
 	 * @param excavationAreas (we need this set to avoid dependencies with any extern information)
 	 * @return 
@@ -243,7 +244,7 @@ public class Player implements Serializable {
 	 * @param nameOfArea
 	 */
 	public void addAreaAlreadyExcavate(String nameOfArea){
-		this.areasAlreadyExcavate.add(nameOfArea);
+		this.areasAlreadyExcavate.put(nameOfArea, this.playerToken.getCurrentYear() );
 	}
 
 	/**

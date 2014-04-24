@@ -8,7 +8,10 @@ package com.miage.gui;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -141,7 +144,13 @@ public class RulesPanel extends javax.swing.JPanel {
      */
     private void crossLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_crossLabelMouseClicked
         removeAll();
-        PanelHome home = new PanelHome();
+        PanelHome home = null;
+        try {
+            home = new PanelHome();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.exit(0);
+        }
         add(home, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
         updateUI();
     }//GEN-LAST:event_crossLabelMouseClicked

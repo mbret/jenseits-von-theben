@@ -118,7 +118,6 @@ public class MapPanel extends javax.swing.JPanel {
         // INIT UI
         _initUI();
         
-        
         this._updateBoardCardsUI();
 
         // Init list of expo cards component
@@ -392,23 +391,35 @@ public class MapPanel extends javax.swing.JPanel {
         return this.currentBoard.getChronotime().getNbTokensToPickUp(maxKnowledgePoint, nbWeeks);
     }
     
-    private int _displayChronotimeFrame(){
+    private Integer _displayChronotimeFrame( int nbKnowledge ){
     	Sound.play("useChronotime");
     
     	int nbWeeks = 0;
     	
-    	
-        while(nbWeeks < 1 || nbWeeks > 12){
-        	String res = JOptionPane.showInputDialog("Combien de semaine(s) ?");
-        	try{
-        		nbWeeks = Integer.parseInt(res);
-        	}catch(NumberFormatException e){
-        		
-        	}
-        	
-             
+    	StringBuffer str = new StringBuffer("<html><p>Combien de semaine(s) ?</p>")
+                .append("<br/>")
+                .append("<table border='1'>")
+                .append("<tr><td>Semaine(s)</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>")
+                .append("<tr><td>Jeton(s)</td>");
+
+        for (int i = 1; i <= 12; i++) {
+            str.append("<td>").append(this.currentBoard.getChronotime().getNbTokensToPickUp(i, nbKnowledge)).append("</td>");
         }
-        
+        str.append("</tr>");
+        str.append("</table>");
+        String res = null;
+        do{
+            res = JOptionPane.showInputDialog( str );
+            if( res != null){
+                try{
+                    nbWeeks = Integer.parseInt(res);
+                    if( nbWeeks < 1 || nbWeeks > 12 ) throw new NumberFormatException();
+                }catch(NumberFormatException e){
+                    JOptionPane.showMessageDialog( this , "Veuillez renseigner un nombre entre 1 et 12");
+                }
+            }
+        }while( res != null && (nbWeeks < 1 || nbWeeks > 12) );
+        if( res == null ) return null;
         return nbWeeks;
     }
 
@@ -463,7 +474,6 @@ public class MapPanel extends javax.swing.JPanel {
                 ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
                 this.usableElementsMenuPanel.add(entry.getValue());
             }
-
         }
         this.usableElementsMenuPanel.updateUI();
         this.rightPanelContainerPanel.updateUI();
@@ -475,7 +485,6 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updatePlayerUsingElementUI() {
         LOGGER.debug("_updatePlayerUsingElementUI:");
         this.usingElementsMenuPanel.removeAll();
-
         for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
 
             //if the card can be active
@@ -501,8 +510,8 @@ public class MapPanel extends javax.swing.JPanel {
                 
             }
         }
-
         this.usingElementsMenuPanel.updateUI();
+        this.usingElementsMenuScrollPanel.updateUI();
         this.rightPanelContainerPanel.updateUI();
 
     }
@@ -518,10 +527,10 @@ public class MapPanel extends javax.swing.JPanel {
         Point[] expoLocations = {new Point(0, 0), new Point(0, 120), new Point(180,120)};
         
         int i = 0;
-        for (Map.Entry<Component, ExpoCard> entry : this.listOfExpoCardsComponent.entrySet()) {
+        for (Map.Entry<Component, ExpoCard> entry : this.listOfExpoCardsComponent.entrySet()){
             
-            ((JLabel) entry.getKey()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + entry.getValue().getId() + ".jpg")));
-            ((JLabel) entry.getKey()).setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            ((JLabel) entry.getKey()).setIcon( new ImageIcon(getClass().getResource("/images/cards/" + entry.getValue().getId() + ".jpg")));
+            ((JLabel) entry.getKey()).setCursor( new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR) );
             ((JLabel) entry.getKey()).setSize(150, 100);
             ((JLabel) entry.getKey()).setLocation( expoLocations[i] );
 
@@ -917,32 +926,38 @@ public class MapPanel extends javax.swing.JPanel {
         // DO MAIN ACTION 
         if (!playerIsAble) {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez pas fouiller " + area.getName());
-        } else {
-            this.playerActionParams.put("areaToExcavate", area);
-            int nbWeeks = _displayChronotimeFrame();
-            this.playerActionParams.put("numberOfWeeks", nbWeeks);
-            this.playerActionParams.put("nbTokenToPickUp", this._displayChronotime(area, nbWeeks));
-
-            List<Token> tokensJustPickedUp = null;
-
-            // DO THE MAIN ACTION
-            try {
-                tokensJustPickedUp = (List<Token>) currentBoard.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams).get("tokensJustPickedUp");
-            } catch (Exception ex) {
-                LOGGER.fatal(ex.getMessage());
-                ex.printStackTrace();
-                System.exit(0);
-            }
-
-            this._animatePickingTokens(tokensJustPickedUp);
             
-//            for(Token t: tokensJustPickedUp){
-//                LOGGER.debug("Les jetons piochés " + t.getId());
-//            }
+        } else {
+            
+            Integer nbWeeks = _displayChronotimeFrame( this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements()) );
+            // Player wrote down a valid number
+            if( nbWeeks != null ){
+                this.playerActionParams.put("areaToExcavate", area);
 
-            JOptionPane.showMessageDialog(this, "Vous venez de fouiller " + area.getName());
+                this.playerActionParams.put("numberOfWeeks", nbWeeks);
+                this.playerActionParams.put("nbTokenToPickUp", this._displayChronotime(area, nbWeeks));
 
-            this.switchNewPlayer();
+                List<Token> tokensJustPickedUp = null;
+
+                // DO THE MAIN ACTION
+                try {
+                    tokensJustPickedUp = (List<Token>) currentBoard.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams).get("tokensJustPickedUp");
+                } catch (Exception ex) {
+                    LOGGER.fatal(ex.getMessage());
+                    ex.printStackTrace();
+                    System.exit(0);
+                }
+
+                this._animatePickingTokens(tokensJustPickedUp);
+
+    //            for(Token t: tokensJustPickedUp){
+    //                LOGGER.debug("Les jetons piochés " + t.getId());
+    //            }
+
+                JOptionPane.showMessageDialog(this, "Vous venez de fouiller " + area.getName());
+
+                this.switchNewPlayer();
+            }
 
         }
     }
@@ -1006,8 +1021,10 @@ public class MapPanel extends javax.swing.JPanel {
         excavationSiteContainerPanel = new javax.swing.JPanel();
         expoCardsContainerPanel = new javax.swing.JPanel();
         rightPanelContainerPanel = new javax.swing.JPanel();
-        usingElementsMenuPanel = new javax.swing.JPanel();
         usableElementsMenuPanel = new javax.swing.JPanel();
+        usableElementsMenuScrollPanel = new javax.swing.JScrollPane();
+        usingElementsMenuPanel = new javax.swing.JPanel();
+        usingElementsMenuScrollPanel = new javax.swing.JScrollPane();
         logMenu = new javax.swing.JPanel();
         logMenuScrollBar = new javax.swing.JScrollBar();
         jSeparator1 = new javax.swing.JSeparator();
@@ -1291,13 +1308,22 @@ public class MapPanel extends javax.swing.JPanel {
         rightPanelContainerPanel.setOpaque(false);
         rightPanelContainerPanel.setLayout(null);
 
-        usingElementsMenuPanel.setOpaque(false);
-        rightPanelContainerPanel.add(usingElementsMenuPanel);
-        usingElementsMenuPanel.setBounds(0, 560, 310, 200);
-
         usableElementsMenuPanel.setOpaque(false);
         rightPanelContainerPanel.add(usableElementsMenuPanel);
         usableElementsMenuPanel.setBounds(0, 210, 310, 340);
+
+        usableElementsMenuScrollPanel.setHorizontalScrollBar(null);
+        rightPanelContainerPanel.add(usableElementsMenuScrollPanel);
+        usableElementsMenuScrollPanel.setBounds(0, 210, 310, 340);
+
+        usingElementsMenuPanel.setOpaque(false);
+        rightPanelContainerPanel.add(usingElementsMenuPanel);
+        usingElementsMenuPanel.setBounds(0, 560, 310, 190);
+
+        usingElementsMenuScrollPanel.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        usingElementsMenuScrollPanel.setOpaque(false);
+        rightPanelContainerPanel.add(usingElementsMenuScrollPanel);
+        usingElementsMenuScrollPanel.setBounds(0, 560, 310, 190);
 
         logMenu.setOpaque(false);
         logMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1320,11 +1346,11 @@ public class MapPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Connaissances utilisable :");
         infoContainerPanel.add(jLabel3);
-        jLabel3.setBounds(10, 30, 170, 14);
+        jLabel3.setBounds(10, 30, 170, 15);
 
         jLabel5.setText("Joueur courant :");
         infoContainerPanel.add(jLabel5);
-        jLabel5.setBounds(10, 10, 90, 14);
+        jLabel5.setBounds(10, 10, 90, 15);
 
         knowledgePointComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1336,15 +1362,15 @@ public class MapPanel extends javax.swing.JPanel {
 
         selectedKnowledgePointLabel.setText("selectedKnowledge");
         infoContainerPanel.add(selectedKnowledgePointLabel);
-        selectedKnowledgePointLabel.setBounds(200, 50, 30, 14);
+        selectedKnowledgePointLabel.setBounds(200, 50, 30, 15);
 
         jLabel1.setText("Score :");
         infoContainerPanel.add(jLabel1);
-        jLabel1.setBounds(200, 10, 60, 14);
+        jLabel1.setBounds(200, 10, 60, 15);
 
         currentPlayerScoreLabel.setText("0");
         infoContainerPanel.add(currentPlayerScoreLabel);
-        currentPlayerScoreLabel.setBounds(270, 10, 30, 14);
+        currentPlayerScoreLabel.setBounds(270, 10, 30, 15);
 
         saveGameJButton.setText("Save");
         saveGameJButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1830,7 +1856,7 @@ public class MapPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
     private void chronotimeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chronotimeButtonActionPerformed
-        this._displayChronotime((ExcavationArea) this.currentBoard.getArea("egypt"), _displayChronotimeFrame());
+        this._displayChronotime((ExcavationArea) this.currentBoard.getArea("egypt"), _displayChronotimeFrame( 1 ));
     }//GEN-LAST:event_chronotimeButtonActionPerformed
 
     private void knowledgePointComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_knowledgePointComboBoxActionPerformed
@@ -1905,7 +1931,9 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JPanel timeTokenContainerPanel;
     private javax.swing.JPanel tokenContainerPanel;
     private javax.swing.JPanel usableElementsMenuPanel;
+    private javax.swing.JScrollPane usableElementsMenuScrollPanel;
     private javax.swing.JPanel usingElementsMenuPanel;
+    private javax.swing.JScrollPane usingElementsMenuScrollPanel;
     // End of variables declaration//GEN-END:variables
 
     public class ComboBoxAreaItem {
