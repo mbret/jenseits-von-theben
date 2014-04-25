@@ -464,7 +464,7 @@ public class TestBoard {
             playerActionParams.put("areaToExcavate", board.getArea("egypt")); 
             int knowledgePoint = maxime.getTotalAskedKnowledgePoint( board.getArea("egypt"), new ArrayList()); // no special used knowledge except the unique specific added previously
             playerActionParams.put("nbTokenToPickUp", board.getChronotime().getNbTokensToPickUp( knowledgePoint, 1));
-            playerActionParams.put("numberOfWeeks", 1);
+            playerActionParams.put("nbWeeksToExcavate", 1);
             board.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams);
 
             // Here maxime should has egypt excavated

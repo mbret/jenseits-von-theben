@@ -90,7 +90,7 @@ public class FrameMain_MapPanel extends javax.swing.JFrame {
         players.add( new Player("anneso", new PlayerToken("green")));
         players.add( new Player("gael", new PlayerToken("yellow")));
         Board board = new Board(4, players);
-        PanelContainer.add( MapPanel.create(board), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        PanelContainer.add( new MapPanel(board, PanelContainer), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
         PanelContainer.updateUI();
     }
 

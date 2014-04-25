@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import org.apache.log4j.LogManager;
 
 /**
@@ -25,16 +26,19 @@ public class PanelHome extends javax.swing.JPanel {
     // number of players
     private int nbPlayers;
 
+    private JPanel panelContainer;
+    
     private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(PanelHome.class.getName());
     
     /**
      * Creates new form PanelHome
      */
-    public PanelHome() throws IOException {
+    public PanelHome( JPanel panelContainer ) throws IOException {
 
         initComponents();
         nbPlayers = 2; // base nb players
 
+        this.panelContainer = panelContainer;
         // Init our componants without netbeans auto generated code
         MenuPanel.setVisible(true);
         playRedLabel.setVisible(false);
@@ -91,8 +95,8 @@ public class PanelHome extends javax.swing.JPanel {
     public void launchGame( Board board ){
         // remove actual GUI content and add de MapPanel
         this.removeAll();
-        MapPanel map = MapPanel.create(board);
-        add(map, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        MapPanel map = new MapPanel(board, this.panelContainer);
+        add( map, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
         this.updateUI();
     }
     
@@ -906,7 +910,7 @@ public class PanelHome extends javax.swing.JPanel {
                 * We create the new game internally
                 */
                Board board = new Board(nbPlayers, players);
-               this.launchGame(board);
+               this.launchGame( board );
                 
             } else {
                 //fenêtre interne pour avertir qu'il faut donner des noms aux joueurs et une seule couleur par joueur
@@ -934,7 +938,7 @@ public class PanelHome extends javax.swing.JPanel {
 
     private void rulesRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rulesRedLabelMouseClicked
         removeAll();
-        RulesPanel rules = new RulesPanel();
+        RulesPanel rules = new RulesPanel( this.panelContainer );
         add(rules, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
         updateUI();
     }//GEN-LAST:event_rulesRedLabelMouseClicked

@@ -19,6 +19,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,8 @@ public class MapPanel extends javax.swing.JPanel {
     private HashMap<Component, ExcavationArea> listOfExcavationSiteComponent;
     private static MapPanel instance = null;
 
+    private JPanel panelContainer;
+    
     /**
      * Factory constructor
      *
@@ -71,21 +74,21 @@ public class MapPanel extends javax.swing.JPanel {
      * @return
      * @throws Exception
      */
-    public static MapPanel create(Board board) {
-        if (MapPanel.instance == null) {
-            MapPanel.instance = new MapPanel(board);
-            
-            instance.runGame();
-        }
-        return instance;
-    }
+//    public static MapPanel create(Board board, JPanel panelContainer) {
+//        if (MapPanel.instance == null) {
+//            MapPanel.instance = new MapPanel(board, panelContainer);
+//            
+//            instance.runGame();
+//        }
+//        return instance;
+//    }
 
     /**
      * Creates new form MapPanel
      *
      * @param board Board initialize in the menu panel
      */
-    private MapPanel(Board board) {
+    public MapPanel(Board board, JPanel panelContainer) {
 
         initComponents();
 
@@ -95,6 +98,7 @@ public class MapPanel extends javax.swing.JPanel {
 //        catch(Exception e ){
 //            LOGGER.fatal("error", e);
 //        }
+        this.panelContainer = panelContainer;
         
         this.currentBoard = board; // active board
         this.currentPlayer = this.currentBoard.getUpcomingPlayer(); // IMPORTANT (needed for some init (like UI) in this class)
@@ -140,6 +144,8 @@ public class MapPanel extends javax.swing.JPanel {
         // INIT UI
         
         _initUI();
+        
+        this.runGame();
     }
 
     
@@ -158,7 +164,33 @@ public class MapPanel extends javax.swing.JPanel {
     }
     
     public void runEndGame(){
-        JOptionPane.showMessageDialog( this, "fin du jeu HEYYYY SAALLUUUUUUU");
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><h1>Jeu terminé</h1>");
+        sb.append("<br/><table><tr><td>Joueur</td>");
+        for (Player player : this.currentBoard.getPlayers()) {
+            sb.append("<td>").append(player.getName()).append("</td>");
+        }
+        sb.append("</tr><tr><td>Score</td>");
+        for (Player player : this.currentBoard.getPlayers()) {
+            sb.append("<td>").append(
+                    player.getCalculatedPoint( 
+                        this.currentBoard.getPlayers(), 
+                        this.currentBoard.getAreas(ExcavationArea.class).values() )
+            ).append("</td>");
+        }
+        sb.append("</tr></table>");
+        JOptionPane.showMessageDialog( this, sb);
+        
+        
+        try {
+            this.panelContainer.removeAll();
+            this.panelContainer.add( new PanelHome(this.panelContainer), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1) );
+            this.panelContainer.updateUI();
+        } catch (IOException ex) {
+            LOGGER.fatal(instance, ex);
+            System.exit(0);
+        }
+        
     }
     
     public void runNextRound(){
@@ -169,24 +201,6 @@ public class MapPanel extends javax.swing.JPanel {
             this.runEndGame();
         }
     }
-            
-    /**
-	 * Method to resize an image
-	 * @param source
-	 * @param width
-	 * @param height
-	 * @return
-	 */
-    public static Image scaleImage(Image source, int width, int height) {
-            BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = (Graphics2D) img.getGraphics();
-            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g.drawImage(source, 0, 0, width, height, null);
-            g.dispose();
-            return img;
-    }
-    
-    
     
     /**
      * Get the new upcoming player and init everything about him.
@@ -256,6 +270,22 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+	 * Method to resize an image
+	 * @param source
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+    public static Image scaleImage(Image source, int width, int height) {
+            BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = (Graphics2D) img.getGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(source, 0, 0, width, height, null);
+            g.dispose();
+            return img;
+    }
+    
     /**
      * Update the list of component through the current using player's elements
      *
