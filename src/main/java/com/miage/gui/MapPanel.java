@@ -1,36 +1,24 @@
-/**
- * To change this template, choose Tools | Templates and open the template in
- * the editor.
- */
 package com.miage.gui;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
 import com.miage.utils.ConfigManager;
 import com.miage.game.*;
+import com.miage.gui.Sound;
+import com.miage.gui.TokensPosition;
 import com.miage.interfaces.ActivableElement;
 import com.miage.interfaces.ActiveElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.utils.Utils;
 import com.miage.tokens.Token;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
-
-import static java.lang.reflect.Array.set;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,16 +28,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.OverlayLayout;
-
-import org.apache.log4j.Layout;
 import org.apache.log4j.LogManager;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
