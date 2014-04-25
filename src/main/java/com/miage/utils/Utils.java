@@ -1,4 +1,4 @@
-package com.miage.main;
+package com.miage.utils;
 
 import com.miage.game.Board;
 import com.miage.game.LogDisplay;
@@ -41,7 +41,6 @@ public class Utils {
         * Save the game (the board into a file).
         * @author david
         * @param boardToSave board to be save
-        * @param fileToSave file where the board will be saved
         */
        public static void saveGame(Board boardToSave){
            try {
@@ -54,7 +53,7 @@ public class Utils {
                if(!directory.exists())
                    if(!new File(saveDirectory).mkdir())
                        throw new IOException();
-               FileOutputStream backupFile = new FileOutputStream(saveDirectory+"/save.boobs");
+               FileOutputStream backupFile = new FileOutputStream(saveDirectory+"/save.jvt");
                ObjectOutputStream oos = new ObjectOutputStream(backupFile);
                boardToSave.setLogDisplay(LogDisplay.getLogBackup());
                oos.writeObject(boardToSave);
@@ -71,13 +70,12 @@ public class Utils {
        /**
         * Load the game (the board into a file).
         * @author david
-        * @param fileToLoad file where the board will be loaded
         * @return boardToSave board to be save
         */
        public static Board loadGame(){
            Board boardLoaded = null;
            try {
-                FileInputStream fis = new FileInputStream(javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory().getPath()+"\\JenseitsVonTheben\\save.boobs");
+                FileInputStream fis = new FileInputStream(javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory().getPath()+"\\JenseitsVonTheben\\save.jvt");
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 boardLoaded = (Board) ois.readObject();
                 LogDisplay.setLogBackup(boardLoaded.getLogDisplay());

@@ -2,9 +2,9 @@ package com.miage.game;
 
 import com.miage.areas.*;
 import com.miage.cards.*;
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import com.miage.interfaces.UsableElement;
-import com.miage.main.Utils;
+import com.miage.utils.Utils;
 import com.miage.tokens.*;
 import java.io.IOException;
 import java.io.Serializable;
@@ -77,7 +77,8 @@ public class Board implements Serializable {
     private String logDisplay;
     private List<ExpoCard> expoCards;
     private Chronotime chronotime;
-    List<Player> playersWhoFinished = new ArrayList();
+    
+//    List<Player> playersWhoFinished = new ArrayList();
 
     public Board(int nbPlayers, List<Player> players) throws IOException {
         this.nbPlayers = nbPlayers;
@@ -187,15 +188,11 @@ public class Board implements Serializable {
      * @return Player | null
      */
     public Player getUpcomingPlayer() {
-        Player playerWhoShouldPlayFirst = this.playerTokensAndPlayers.get( this.playerTokenStack.getFirst() ); // pop the last (in time) player token
-        
-        // test if this player is game over over
-        if (this.playersWhoFinished.contains(playerWhoShouldPlayFirst)
-                || this.isPlayerOnTheEndGamePosition(playerWhoShouldPlayFirst)) {
-            return null;
+        Player player = this.playerTokensAndPlayers.get( this.playerTokenStack.getFirst() );
+        if( !player.isGameOver() && !this.isPlayerOnTheEndGamePosition(player) ){
+            return player;
         } else {
-            
-            return playerWhoShouldPlayFirst;
+            return null;
         }
     }
 
@@ -208,18 +205,6 @@ public class Board implements Serializable {
      */
     public boolean isPlayerOnTheEndGamePosition(Player player) {
         return player.getPlayerToken().getTimeState().equals(this.endGameDatePosition);
-    }
-
-    /**
-     * Check if there are still some players which are able to play (not end
-     * game)
-     * <br/>Effect:
-     * <br/>- check if the last player still have some movements possible
-     *
-     * @return
-     */
-    public boolean hasUpcomingPlayer() {
-        throw new UnsupportedOperationException("not implemented yet");
     }
 
     /**
@@ -368,8 +353,6 @@ public class Board implements Serializable {
                 player.getCards().remove( entry.getValue() );
             }
         }
-        
-        
 
         // We increment the number of round this player is still playing
         player.setNbRoundStillPlaying(player.getNbRoundStillPlaying() + 1);
@@ -425,7 +408,14 @@ public class Board implements Serializable {
                 if (!playerActionParams.containsKey("areaToExcavate") || !(playerActionParams.get("areaToExcavate") instanceof ExcavationArea)) {
                     throw new Exception("No areaToExcavate provided, please see the parameters details");
                 }
-                return this._actionPlayerAbleToExcavateArea(player, ((ExcavationArea) playerActionParams.get("areaToExcavate")), usedElements );
+                if (!playerActionParams.containsKey("nbWeeksToExcavate") || !(playerActionParams.get("nbWeeksToExcavate") instanceof Integer)) {
+                    throw new Exception("No nbWeeksToExcavate provided, please see the parameters details");
+                }
+                return this._actionPlayerAbleToExcavateArea(
+                        player, 
+                        ((ExcavationArea) playerActionParams.get("areaToExcavate")), 
+                        usedElements,
+                        ((Integer) playerActionParams.get("nbWeeksToExcavate")) );
 
             case Player.ACTION_ORGANIZE_EXPO:
                 // Check expoCardToDo parameter
@@ -444,6 +434,50 @@ public class Board implements Serializable {
         throw new UnsupportedOperationException("Please provide an existing action pattern");
     }
 
+    public boolean isPlayerAbleToMakeAtLeastOneRoundAction( Player player, List<UsableElement> usedElements ) throws Exception{
+        
+        ArrayList<Boolean> actionsPossible = new ArrayList<>();
+        
+        // TEST CHANGE FOUR CARDS
+        actionsPossible.add(
+            this._actionPlayerAbleToChangeFourCards(player, usedElements)
+        );
+        
+        // TEST ACTION EXCAVATE
+        for ( ExcavationArea area : this.getAreas( ExcavationArea.class ).values() ) {
+            actionsPossible.add(
+                    this._actionPlayerAbleToExcavateArea(
+                            player, 
+                            ((ExcavationArea) area), 
+                            usedElements, 
+                            1 // the minimum possible excavate week is 1
+                    )
+            );
+        }
+        
+        // TEST ACTION ORGANIZE EXPO
+        for (ExpoCard card : this.getExpoCards()) {
+            actionsPossible.add(
+                    this._actionPlayerAbleToOrganizeExpo(player, ((ExpoCard) card), usedElements )
+            );
+        }
+
+        // TEST ACTION PICK CARD
+        for (int i = 0; i < this.getFourCurrentCards().size(); i++) {
+            if( this.getFourCurrentCards().get(i) == null ){
+                actionsPossible.add( false );
+            }
+            else{
+                actionsPossible.add( this._actionPlayerAbleToPickCard(player, i, usedElements) );
+            }
+        }
+
+        for (Boolean b : actionsPossible) {
+            if( b ) return true;
+        }
+        return false;
+    }
+    
     /**
      * Check if the playerToken has enough time to go in the asked place before
      * the end of game
@@ -464,7 +498,22 @@ public class Board implements Serializable {
                     this.endGameDatePosition, 
                     usedElement);
     }
-
+    
+    public boolean hasEnoughTimeToDoAnAction( PlayerToken playerToken, int weekCost ){
+        return Board.hasEnoughTimeBeforeEndGame(
+                    playerToken.getTimeState(), 
+                    weekCost, 
+                    this.endGameDatePosition, 
+                    new ArrayList<UsableElement>());
+    }
+    
+    public boolean hasEnoughTimeToDoAnAction( PlayerToken playerToken, int weekCost, List<UsableElement> usedElement ){
+        return Board.hasEnoughTimeBeforeEndGame(
+                    playerToken.getTimeState(), 
+                    weekCost, 
+                    this.endGameDatePosition, 
+                    usedElement);
+    }
     
     
     
@@ -473,6 +522,7 @@ public class Board implements Serializable {
      *                                  Private Methods
      *
      **********************************************************************************************/
+    
     /**
      * Check if the player is able now to move in Warschau and change all four
      * current cards Conditions : - must have enough time to go there (move +
@@ -506,22 +556,19 @@ public class Board implements Serializable {
      * @param playerToken
      * @return
      */
-    private boolean _actionPlayerAbleToExcavateArea(Player player, ExcavationArea areaToExcavate, List<UsableElement> usedElement ) {
-        
+    private boolean _actionPlayerAbleToExcavateArea(Player player, ExcavationArea areaToExcavate, List<UsableElement> usedElement, int nbExcavateWeeks){
         if ( player.isAuthorizedToExcavateArea(areaToExcavate) ){
-            
             if( this.hasEnoughTimeToGoInThisArea(areaToExcavate, player.getPlayerToken(), usedElement ) ){
-                
                 if( player.hasSpecificKnowledgeCardForThisExcavationArea(areaToExcavate.getName()) || player.hasSpecificKnowledgeTokenForThisExcavationArea(areaToExcavate.getName()) ) {
-                    return true;
+                    if( this.hasEnoughTimeToDoAnAction( player.getPlayerToken(), nbExcavateWeeks) ){
+                        return true;
+                    }
                 }
             }
-            
         }
-        
         return false;
     }
-
+    
     /**
      * Check if the player is able to organize an exposition Conditions : - must
      * have enough time to go there (mve + weekcost of card) - must have the
@@ -600,6 +647,7 @@ public class Board implements Serializable {
             }
         }
         player.getPlayerToken().movePlayerToken(this.areas.get("warsaw"), useZeppelinCard, useCarCard);
+        player.getPlayerToken().addWeeks( player.getNbRoundStillPlaying() );
         this._updatePlayerTokenStack();
         this.changeFourCurrentCards();
     }
@@ -1204,10 +1252,6 @@ public class Board implements Serializable {
 
     public LocalDate getStartGameDatePosition() {
         return startGameDatePosition;
-    }
-
-    public List<Player> getPlayersWhoFinished() {
-        return playersWhoFinished;
     }
 
     public String getLogDisplay() {

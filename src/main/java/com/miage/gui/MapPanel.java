@@ -6,52 +6,29 @@ package com.miage.gui;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import com.miage.game.*;
 import com.miage.interfaces.ActivableElement;
 import com.miage.interfaces.ActiveElement;
-import com.miage.interfaces.CombinableElement;
-import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
-import com.miage.main.Utils;
+import com.miage.utils.Utils;
 import com.miage.tokens.Token;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
-import java.io.IOException;
-import static java.lang.reflect.Array.set;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.OverlayLayout;
-import org.apache.log4j.Layout;
 import org.apache.log4j.LogManager;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -91,8 +68,8 @@ public class MapPanel extends javax.swing.JPanel {
     public static MapPanel create(Board board) {
         if (MapPanel.instance == null) {
             MapPanel.instance = new MapPanel(board);
-            // first init of player
-            instance.switchNewPlayer();
+            
+            instance.runGame();
         }
         return instance;
     }
@@ -106,6 +83,13 @@ public class MapPanel extends javax.swing.JPanel {
 
         initComponents();
 
+//        try{
+//            Integer.parseInt("sdsd");
+//        }
+//        catch(Exception e ){
+//            LOGGER.fatal("error", e);
+//        }
+        
         this.currentBoard = board; // active board
         this.currentPlayer = this.currentBoard.getUpcomingPlayer(); // IMPORTANT (needed for some init (like UI) in this class)
         this.listOfBoardCardsComponent = new LinkedHashMap();
@@ -161,59 +145,81 @@ public class MapPanel extends javax.swing.JPanel {
      * 
      ***********************************************************************************************/
     
+    public void runGame(){
+        // run round
+        this.runNextRound();
+        // ...
+    }
+    
+    public void runEndGame(){
+        JOptionPane.showMessageDialog( this, "fin du jeu HEYYYY SAALLUUUUUUU");
+    }
+    
+    public void runNextRound(){
+        if( this.currentBoard.getUpcomingPlayer() != null ){
+            this.runPlayer();
+        }
+        else{
+            this.runEndGame();
+        }
+    }
+            
     /**
      * Get the new upcoming player and init everything about him.
      * <br/>
      * <br/>- update actions listeners
      * <br/>- Update all UI
      */
-    private void switchNewPlayer() {
+    private void runPlayer() {
 
         this._updatePlayerTokenPositionUI();
 
         try {
 
             this.currentPlayer = this.currentBoard.getUpcomingPlayer();
-            if (this.currentPlayer == null) {
-                JOptionPane.showMessageDialog(this, "Plus aucun joueur ne peut jouer");
-            } else {
-
-                /**
-                 * For each round - reset or update useful intern vars - reset
-                 * params of action method - update component to match the
-                 * actual player - update UI to match the actual player
-                 */
-                // Update intern vars
+            
+            /**
+             * For each round - reset or update useful intern vars - reset
+             * params of action method - update component to match the
+             * actual player - update UI to match the actual player
+             */
+            // Update intern vars
 //                this.currentPlayerLeftPanel = this.currentPlayer; // active left panel player
-                this.currentPlayerUsingElements = new ArrayList(); //Init the displayed list and hashmap of usable Card
-                this.currentPlayerUsingElements.addAll( this.currentPlayer.getAllActiveElements() ); // get all already picked active elements
+            this.currentPlayerUsingElements = new ArrayList(); //Init the displayed list and hashmap of usable Card
+            this.currentPlayerUsingElements.addAll( this.currentPlayer.getAllActiveElements() ); // get all already picked active elements
 
-                // Init the params of the player's action
-                this.playerActionParams = new HashMap();
-                this.playerActionParams.put("player", currentPlayer); // wet set the current player
-                this.playerActionParams.put("usedElements", this.currentPlayerUsingElements);
-                this.playerActionParams.put("areaToExcavate", null); // put here one of the board excavationArea the player want to excavate
-                this.playerActionParams.put("cardToPickUp", null); // put here one of the fourCurrentCard the player chose to pick up
-                this.playerActionParams.put("expoCardToDo", null); // put here one of the board expoCard the player chose to do
-                this.playerActionParams.put("nbTokenToPickUp", null); // number of tokens the player is allowed to pick up inside area
+            // Init the params of the player's action
+            this.playerActionParams = new HashMap();
+            this.playerActionParams.put("player", currentPlayer); // wet set the current player
+            this.playerActionParams.put("usedElements", this.currentPlayerUsingElements);
+            this.playerActionParams.put("areaToExcavate", null); // put here one of the board excavationArea the player want to excavate
+            this.playerActionParams.put("cardToPickUp", null); // put here one of the fourCurrentCard the player chose to pick up
+            this.playerActionParams.put("expoCardToDo", null); // put here one of the board expoCard the player chose to do
+            this.playerActionParams.put("nbTokenToPickUp", null); // number of tokens the player is allowed to pick up inside area
 
-                // Update player's component
-                this._updateActivableElementComponent(this.currentPlayer.getAllActivableElements() );
-                this._updateUsingElementComponent( this.currentPlayerUsingElements );
-                this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
-                this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
+            // Update player's component
+            this._updateActivableElementComponent(this.currentPlayer.getAllActivableElements() );
+            this._updateUsingElementComponent( this.currentPlayerUsingElements );
+            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+            this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
 
-                // Update UI
-                this._updateRightPanelUI();
-                this._updateBoardPanelUI();
+            // Update UI
+            this._updateRightPanelUI();
+            this._updateBoardPanelUI();
 
-
-
-//                JOptionPane.showMessageDialog( this, "Joueur " + this.currentPlayer.getName() + ", c'est à vous de jouer !");
+            // TEST ALL ACTION
+            boolean hasOneActionPossible = this.currentBoard.isPlayerAbleToMakeAtLeastOneRoundAction( this.currentPlayer, this.currentPlayer.getAllUsableElements() );
+            if( ! hasOneActionPossible ){
+                LOGGER.debug("runPlayer: The player="+this.currentPlayer.getName()+" does not have any more action to do");
+                this.currentPlayer.setGameOver( true );
+                // player is game over go to next round (player)
+                this.runNextRound();
             }
+            
+            // ... display GUI and let user play
+
         } catch (Exception ex) {
-            LOGGER.fatal(ex);
-            ex.printStackTrace();
+            LOGGER.fatal(instance, ex);
             System.exit(0);
         }
     }
@@ -338,16 +344,9 @@ public class MapPanel extends javax.swing.JPanel {
     }
 
     private int _displayChronotime(ExcavationArea area, int nbWeeks) {
-
-     
         int nbKnowledgePoint = 0;
         int maxKnowledgePoint = 0;
-
         maxKnowledgePoint = this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements());
-        LOGGER.debug("_displayChronotime: the maximum knowledge point got is =" + maxKnowledgePoint);
-
-     
-
         return this.currentBoard.getChronotime().getNbTokensToPickUp(maxKnowledgePoint, nbWeeks);
     }
     
@@ -361,7 +360,7 @@ public class MapPanel extends javax.swing.JPanel {
                 .append("<table border='1'>")
                 .append("<tr><td>Semaine(s)</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>")
                 .append("<tr><td>Jeton(s)</td>");
-
+        LOGGER.debug("_displayChronotimeFrame: nbKnowledge="+nbKnowledge);
         for (int i = 1; i <= 12; i++) {
             str.append("<td>").append(this.currentBoard.getChronotime().getNbTokensToPickUp(i, nbKnowledge)).append("</td>");
         }
@@ -649,7 +648,6 @@ public class MapPanel extends javax.swing.JPanel {
         this._updateExcavationSiteUI();
         this._updatePlayerTokenPositionUI();
     }
-
     
     /**
      * Run all UI init. The init method usually do all things that don't need to be redo (optimization)
@@ -772,7 +770,7 @@ public class MapPanel extends javax.swing.JPanel {
             // Animate the action of picking
             this._animatePickingCard(pickedCard, idCard);
 
-            this.switchNewPlayer();
+            this.runNextRound();
         } else {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez pas piocher ");
         }
@@ -813,7 +811,7 @@ public class MapPanel extends javax.swing.JPanel {
                 System.exit(0);
             }
 
-            this.switchNewPlayer();
+            this.runNextRound();
 
         } else {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez effectuer cette exposition");
@@ -874,7 +872,7 @@ public class MapPanel extends javax.swing.JPanel {
                 System.exit(0);
             }
 
-            this.switchNewPlayer();
+            this.runNextRound();
         }
     }
 
@@ -885,53 +883,57 @@ public class MapPanel extends javax.swing.JPanel {
 
         // TEST ACTION_EXCAVATE
         playerActionParams.put("areaToExcavate", area);
+        playerActionParams.put("nbWeeksToExcavate", 1); // 1 is the minimum allowed
         try {
+            
             if (!this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_EXCAVATE, playerActionParams)) {
                 playerIsAble = false;
             }
-        } catch (Exception ex) {
-            LOGGER.fatal(ex);
-            ex.printStackTrace();
-            System.exit(0);
-        }
 
+            // DO MAIN ACTION 
+            if (!playerIsAble) {
+                JOptionPane.showMessageDialog(this, "Vous ne pouvez pas fouiller " + area.getName());
 
-        // DO MAIN ACTION 
-        if (!playerIsAble) {
-            JOptionPane.showMessageDialog(this, "Vous ne pouvez pas fouiller " + area.getName());
-            
-        } else {
-            
-            Integer nbWeeks = _displayChronotimeFrame( this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements()) );
-            // Player wrote down a valid number
-            if( nbWeeks != null ){
-                this.playerActionParams.put("areaToExcavate", area);
+            } else {
 
-                this.playerActionParams.put("numberOfWeeks", nbWeeks);
-                this.playerActionParams.put("nbTokenToPickUp", this._displayChronotime(area, nbWeeks));
+                Integer nbWeeks = _displayChronotimeFrame( this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements()) );
+                playerActionParams.put("nbWeeksToExcavate", nbWeeks);
+                
+                if( nbWeeks != null ){
+                    
+                    if ( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_EXCAVATE, playerActionParams)) {
+                        JOptionPane.showMessageDialog(this, "Vous ne pouvez pas fouiller " + area.getName() + " avec un si grand nombre de semaine");
+                    }
+                    else{
+                    
+                        // Player wrote down a valid number
+                        this.playerActionParams.put("areaToExcavate", area);
+                        this.playerActionParams.put("nbWeeksToExcavate", nbWeeks);
+                        this.playerActionParams.put("nbTokenToPickUp", this._displayChronotime(area, nbWeeks));
 
-                List<Token> tokensJustPickedUp = null;
+                        List<Token> tokensJustPickedUp = null;
 
-                // DO THE MAIN ACTION
-                try {
-                    tokensJustPickedUp = (List<Token>) currentBoard.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams).get("tokensJustPickedUp");
-                } catch (Exception ex) {
-                    LOGGER.fatal(ex.getMessage());
-                    ex.printStackTrace();
-                    System.exit(0);
+                        // DO THE MAIN ACTION
+                        try {
+                            tokensJustPickedUp = (List<Token>) currentBoard.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams).get("tokensJustPickedUp");
+                        } catch (Exception ex) {
+                            LOGGER.fatal(ex.getMessage());
+                            ex.printStackTrace();
+                            System.exit(0);
+                        }
+
+                        this._animatePickingTokens(tokensJustPickedUp);
+
+                        JOptionPane.showMessageDialog(this, "Vous venez de fouiller " + area.getName());
+
+                        this.runNextRound();
+                    }
+                    
                 }
-
-                this._animatePickingTokens(tokensJustPickedUp);
-
-    //            for(Token t: tokensJustPickedUp){
-    //                LOGGER.debug("Les jetons piochés " + t.getId());
-    //            }
-
-                JOptionPane.showMessageDialog(this, "Vous venez de fouiller " + area.getName());
-
-                this.switchNewPlayer();
             }
-
+        } catch (Exception ex) {
+            LOGGER.fatal(instance, ex);
+            System.exit(0);
         }
     }
 
@@ -990,7 +992,6 @@ public class MapPanel extends javax.swing.JPanel {
         boardCardsContainerPanel = new javax.swing.JPanel();
         tokenContainerPanel = new javax.swing.JPanel();
         excavationContainerPanel = new javax.swing.JPanel();
-        chronotimeButton = new javax.swing.JButton();
         excavationSiteContainerPanel = new javax.swing.JPanel();
         expoCardsContainerPanel = new javax.swing.JPanel();
         rightPanelContainerPanel = new javax.swing.JPanel();
@@ -1253,15 +1254,6 @@ public class MapPanel extends javax.swing.JPanel {
 
         excavationContainerPanel.setOpaque(false);
         excavationContainerPanel.setLayout(null);
-
-        chronotimeButton.setText("Chrono");
-        chronotimeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chronotimeButtonActionPerformed(evt);
-            }
-        });
-        excavationContainerPanel.add(chronotimeButton);
-        chronotimeButton.setBounds(440, 270, 70, 50);
 
         excavationSiteContainerPanel.setOpaque(false);
         excavationSiteContainerPanel.setLayout(null);
@@ -1828,10 +1820,6 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
-    private void chronotimeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chronotimeButtonActionPerformed
-        this._displayChronotime((ExcavationArea) this.currentBoard.getArea("egypt"), _displayChronotimeFrame( 1 ));
-    }//GEN-LAST:event_chronotimeButtonActionPerformed
-
     private void knowledgePointComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_knowledgePointComboBoxActionPerformed
         String area = ((ComboBoxAreaItem) ((JComboBox) evt.getSource()).getSelectedItem()).id;
         int nbMaxKnowledge = this.currentPlayer.getTotalAskedKnowledgePoint(this.currentBoard.getArea(area), this.currentPlayer.getAllActivableElements());
@@ -1861,7 +1849,6 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel berlinSmallExpoLabel;
     private javax.swing.JPanel boardCardsContainerPanel;
     private javax.swing.JButton changeFourCardsjButton;
-    private javax.swing.JButton chronotimeButton;
     private javax.swing.JLabel creteExcavationLabel;
     private javax.swing.JLabel creteNullTokenLabel;
     private javax.swing.JLabel currentPlayerLabel;

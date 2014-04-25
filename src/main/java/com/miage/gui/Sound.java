@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miage.game;
+package com.miage.gui;
 
 import java.io.*;
 import java.net.URL;

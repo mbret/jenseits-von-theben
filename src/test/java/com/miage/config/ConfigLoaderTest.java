@@ -1,6 +1,7 @@
 
 package com.miage.config;
 
+import com.miage.utils.ConfigManager;
 import java.io.IOException;
 import java.util.Properties;
 import org.ini4j.Ini;
