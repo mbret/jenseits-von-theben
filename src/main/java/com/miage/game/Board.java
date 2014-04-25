@@ -439,44 +439,89 @@ public class Board implements Serializable {
         throw new UnsupportedOperationException("Please provide an existing action pattern");
     }
 
-    public boolean isPlayerAbleToMakeAtLeastOneRoundAction( Player player, List<UsableElement> usedElements ) throws Exception{
+    public boolean isPlayerAbleToMakeAtLeastOneRoundAction( final Player player, final List<UsableElement> usedElements ) throws Exception{
         
-        ArrayList<Boolean> actionsPossible = new ArrayList<>();
+        final ArrayList<Boolean> actionsPossible = new ArrayList<>();
+        LinkedList<Thread> actionsThreaded = new LinkedList<>();
         
         // TEST CHANGE FOUR CARDS
-        actionsPossible.add(
-            this._actionPlayerAbleToChangeFourCards(player, usedElements)
+        actionsThreaded.add(
+                new Thread(){
+                    @Override
+                    public void run() {
+                        actionsPossible.add(
+                            _actionPlayerAbleToChangeFourCards(player, usedElements)
+                        );
+                    }
+                }
         );
+        actionsThreaded.getLast().start();
         
         // TEST ACTION EXCAVATE
-        for ( ExcavationArea area : this.getAreas( ExcavationArea.class ).values() ) {
-            actionsPossible.add(
-                    this._actionPlayerAbleToExcavateArea(
-                            player, 
-                            ((ExcavationArea) area), 
-                            usedElements, 
-                            1 // the minimum possible excavate week is 1
-                    )
-            );
-        }
-        
+        actionsThreaded.add(
+                new Thread(){
+                    @Override
+                    public void run() {
+                        for ( ExcavationArea area : getAreas( ExcavationArea.class ).values() ) {
+                            actionsPossible.add(
+                                    _actionPlayerAbleToExcavateArea(
+                                            player, 
+                                            ((ExcavationArea) area), 
+                                            usedElements, 
+                                            1 // the minimum possible excavate week is 1
+                                    )
+                            );
+                        }
+                    }
+                }
+        );
+        actionsThreaded.getLast().start();
+
         // TEST ACTION ORGANIZE EXPO
-        for (ExpoCard card : this.getExpoCards()) {
-            actionsPossible.add(
-                    this._actionPlayerAbleToOrganizeExpo(player, ((ExpoCard) card), usedElements )
-            );
-        }
+        actionsThreaded.add(
+                new Thread(){
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < expoCards.size(); i++) {
+                            ExpoCard card = expoCards.get(i);
+                            if( card == null ){
+                                actionsPossible.add( false );
+                            }
+                            else{
+                                actionsPossible.add(
+                                        _actionPlayerAbleToOrganizeExpo(player, ((ExpoCard) card), usedElements )
+                                );
+                            }
+                        }
+                    }
+                }
+        );
+        actionsThreaded.getLast().start();
 
         // TEST ACTION PICK CARD
-        for (int i = 0; i < this.getFourCurrentCards().size(); i++) {
-            if( this.getFourCurrentCards().get(i) == null ){
-                actionsPossible.add( false );
-            }
-            else{
-                actionsPossible.add( this._actionPlayerAbleToPickCard(player, i, usedElements) );
-            }
-        }
+        actionsThreaded.add(
+                new Thread(){
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < fourCurrentCards.size(); i++) {
+                            if( getFourCurrentCards().get(i) == null ){
+                                actionsPossible.add( false );
+                            }
+                            else{
+                                actionsPossible.add( _actionPlayerAbleToPickCard(player, i, usedElements) );
+                            }
+                        }
+                    }
+                }
+        );
+        actionsThreaded.getLast().start();
 
+                
+        // Join all thread to the main thread
+        for (Thread thread : actionsThreaded) {
+            thread.join();
+        }
+        
         for (Boolean b : actionsPossible) {
             if( b ) return true;
         }

@@ -198,6 +198,9 @@ public class MapPanel extends javax.swing.JPanel {
             this.runPlayer();
         }
         else{
+            this._updateBoardPanelUI();
+            this._updateLeftPanelUI();
+            this._updateRightPanelUI();
             this.runEndGame();
         }
     }
