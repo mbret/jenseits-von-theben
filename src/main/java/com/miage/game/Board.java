@@ -465,13 +465,14 @@ public class Board implements Serializable {
                     usedElement);
     }
 
-    /**
-     * *********************************************************************************************
+    
+    
+    
+    /**********************************************************************************************
      *
-     * Private Methods
+     *                                  Private Methods
      *
-     **********************************************************************************************
-     */
+     **********************************************************************************************/
     /**
      * Check if the player is able now to move in Warschau and change all four
      * current cards Conditions : - must have enough time to go there (move +
@@ -484,12 +485,15 @@ public class Board implements Serializable {
     private boolean _actionPlayerAbleToChangeFourCards(Player player, List<UsableElement> usedElement) {
         
         int costOfOperation = player.getNbRoundStillPlaying(); // the cost of this operation is depending of how long time the player is still playing (only him)
-        LOGGER.debug("_actionPlayerAbleToChangeFourCards: player still playing for "+player.getNbRoundStillPlaying()+" round(s)");
+        LOGGER.debug("_actionPlayerAbleToChangeFourCards: player still playing for " + player.getNbRoundStillPlaying() + " round(s)");
+        
+        if( ! this._isAbleToPickCardFromDeck() ) return false;
+        
         return Board.hasEnoughTimeBeforeEndGame(
-                    player.getPlayerToken().getTimeState(), 
-                    player.getPlayerToken().getPosition().getDistanceWeekCostTo("warsaw") + costOfOperation, 
-                    endGameDatePosition,
-                    usedElement);
+            player.getPlayerToken().getTimeState(), 
+            player.getPlayerToken().getPosition().getDistanceWeekCostTo("warsaw") + costOfOperation, 
+            endGameDatePosition,
+            usedElement);
     }
 
     /**
@@ -795,6 +799,15 @@ public class Board implements Serializable {
         return cardToReturn;
     }
 
+    /**
+     * Check if there are still cards available to pick in the deck. 
+     * Useful to check if it's possible to place a card from the deck to the board
+     * @return true if there are at least one card in any deck | false otherwise
+     */
+    private boolean _isAbleToPickCardFromDeck(){
+        return !this.sideDeck.isEmpty() || !this.deck.isEmpty() || !this.discardingDeck.isEmpty();
+    }
+    
     /**
      * @author Gael
      *
