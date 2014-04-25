@@ -119,6 +119,7 @@ public class MapPanel extends javax.swing.JPanel {
 
         initComponents();
         this.usableElementsMenuPanel.setLayout(new GridLayout(1, 3));
+        this.usingElementsMenuPanel.setLayout(new GridLayout(1, 3));
         this.currentBoard = board; // active board
         this.currentPlayer = this.currentBoard.getUpcomingPlayer(); // IMPORTANT (needed for some init (like UI) in this class)
         this.listOfBoardCardsComponent = new LinkedHashMap();
@@ -515,6 +516,12 @@ public class MapPanel extends javax.swing.JPanel {
         LOGGER.debug("_updatePlayerUsingElementUI:");
         this.usingElementsMenuPanel.removeAll();
 
+        int sizeUsingElements = currentPlayer.getAllUsableElements().size();
+        Double sizeActivableElementsDouble = new Double(sizeUsingElements);
+        Double division = new Double(sizeActivableElementsDouble/3.0);
+        Double ceilOfDivision = Math.ceil(division);
+        int numberOfLine = ceilOfDivision.intValue();
+        this.usingElementsMenuPanel.setLayout(new GridLayout(numberOfLine, 3));
         for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
 
 
