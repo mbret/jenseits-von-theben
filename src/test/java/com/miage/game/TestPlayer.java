@@ -3,6 +3,8 @@ package com.miage.game;
 import com.miage.areas.Area;
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
+import com.miage.interfaces.KnowledgeElement;
+import com.miage.tokens.SpecificKnowledgeToken;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,8 +40,8 @@ public class TestPlayer {
 
             this.board = new Board(2);
 
-            this.player = new Player("player");
-
+            this.player = new Player("player", new PlayerToken(null, null, LocalDate.now(), null));
+            
             this.deck = new Deck();
             this.deck.add(new SpecificKnowledgeCard(0,"specificKnowledge", "paris", 2, 3, "greece"));
             this.deck.add(new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 3));
@@ -83,11 +85,6 @@ public class TestPlayer {
 
             board.setPlayerTokensAndPlayers(playerTokensAndPlayers);
             board.setCurrentPlayerToken(playerToken1);
-
-
-
-
-
 
     }
 
@@ -193,124 +190,22 @@ public class TestPlayer {
 //        assertFalse(this.player.isAuthorizedToExcavateArea( new ExcavationArea(0, "greece", null, null) ));
     }
 
-    /**
-     * @author Gael
-     * 
-     * Test of the method which add competences in function of a card
-     * 
-     */
+  
     @Test
-    public void testUpdateCompetencePoints(){
-
-            // scan all the deck & add points with each card
-            for(Card firstCardOfTheDeck : this.deck){
-
-                    this.player.addCompetencesPointsOrKnowledge(firstCardOfTheDeck);
-            }
-
-
-
-            assertEquals(this.player.getCompetences().get("assistant"), new Integer(3));
-            assertEquals(this.player.getCompetences().get("car"), new Integer(1));
-            assertEquals(this.player.getCompetences().get("zeppelin"), new Integer(1));
-            assertEquals(this.player.getCompetences().get("congress"), new Integer(3));
-            assertEquals(this.player.getCompetences().get("excavationAuthorization"), new Integer(1));
-            assertEquals(this.player.getCompetences().get("shovel"), new Integer(2));
-
-            assertEquals(this.player.getPlayerKnowledges().getGeneralKnowledge(), 12);
-            assertEquals(this.player.getPlayerKnowledges().getSpecificKnowledges().get("greece"), new Integer(3));
-            assertEquals(this.player.getPlayerKnowledges().getEthnologicalKnowledges().get("greece"), new Integer(3));
-
-            assertEquals(this.player.getPoints(), 15);
-
-
-            for(Card firstCardOfTheDeck : this.deck){
-
-                    this.player.removeCompetencesPointsOrKnowledge(firstCardOfTheDeck);
-            }
-
-
-            assertEquals(this.player.getCompetences().get("assistant"), new Integer(0));
-
-            assertEquals(this.player.getCompetences().get("zeppelin"), new Integer(0));
-
-            assertEquals(this.player.getCompetences().get("excavationAuthorization"), new Integer(0));
-            assertEquals(this.player.getCompetences().get("shovel"), new Integer(0));
-
-            assertEquals(this.player.getPlayerKnowledges().getEthnologicalKnowledges().get("greece"), new Integer(0));
-
-
-
-
-
+    public void getTotalAskedKnowledgePoint() throws IOException{
+        
+        // player has nothing yet
+        assertEquals( 0, this.player.getTotalAskedKnowledgePoint( this.board.getArea( "egypt" ), new ArrayList()));
+                
+        this.player.getCards().add( new SpecificKnowledgeCard(0, null, "paris", 0, 1, "egypt"));
+        this.player.getTokens().add( new SpecificKnowledgeToken("", "egypt", "orange", 1));
+        assertEquals( 2, this.player.getTotalAskedKnowledgePoint( this.board.getArea( "egypt" ), new ArrayList()));
+        
 
     }
 
-    /**
-     * Test of the method for discarding cards
-     * 
-     * @author Gael
-     */
-    @Test
-    public void testDiscardCard(){
-
-//        this.deck = new Deck();
-//        this.deck.add(new AssistantCard(0,"assistant", "london", 2));
-//        this.deck.add(new CarCard(0,"car", "berlin", 2));
-//        this.deck.add(new AssistantCard(0,"assistant", "rome", 2));
-//        this.deck.add(new AssistantCard(0,"assistant", "vienna", 2));
-//        this.deck.add(new ZeppelinCard(0,"zeppelin", "paris", 2));
-//
-//        this.board.setDeck(this.deck);
-//
-//        // player retrieve first card or fourCurrentCard
-//        player.getCards().add( board.pickCardOnBoard( board.getFourCurrentCards().get(0) ) );
-//
-//        assertEquals(player.getCards().size(), 5);
-//        assertEquals(player.getCards().get(0).getDisplayName(), "assistant");
-//        assertEquals(player.getCards().get(0).getAreaName(), "berlin");
-//
-//        assertEquals(board.getSideDeck().size(), 0);
-//
-//        player.useCard(player.getCards().get(0), board.getSideDeck());
-//
-//        assertEquals(player.getCards().size(), 4);
-//        assertEquals(player.getCards().get(0).getDisplayName(), "assistant");
-//        assertEquals(player.getCards().get(0).getAreaName(), "london");
-//
-//        assertEquals(board.getSideDeck().get(0).getDisplayName(), "assistant");
-//        assertEquals(board.getSideDeck().get(0).getAreaName(), "berlin");
-//
-//        assertEquals(board.getSideDeck().size(), 1);
-//
-//        player.useCard(player.getCards().get(0), board.getSideDeck());
-//        player.useCard(player.getCards().get(0), board.getSideDeck());
-//
-//        assertEquals(player.getCards().size(), 3);
-//        assertEquals(board.getSideDeck().size(), 2);
-
-    }
-
-    /**
-     * Test of the method which calcul the total of knowledge points
-     */
-    @Test
-    public void testTotalPointsOfKnowledge(){
-
-//            for(int i=0;i < 8;i++)
-////            this.player.pickCard(board, 3);
-//            this.player.getCards().add( this.board.pickCardOnBoard( board.getFourCurrentCards().get(3) ) );
-//            assertEquals(this.player.totalKnowledgePoints(board.getArea("greece"), true), 6);
-//            assertEquals(this.player.totalKnowledgePoints(board.getArea("greece"), false), 6);
-//
-//            for(int i=0;i < 8;i++)
-//                this.player.getCards().add( this.board.pickCardOnBoard( board.getFourCurrentCards().get(3) ) );
-////                    this.player.pickCard(board, 3);
-//
-//            assertEquals(this.player.totalKnowledgePoints(board.getArea("greece"), true), 12);
-//            assertEquals(this.player.totalKnowledgePoints(board.getArea("greece"), false), 6);
-
-    }
+ 
+    
 
     /**
      * Test of addAreaAlreadyExcavate method, of class Player.

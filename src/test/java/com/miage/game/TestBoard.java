@@ -8,6 +8,8 @@ import com.miage.cards.ExpoCard;
 import com.miage.cards.GeneralKnowledgeCard;
 import com.miage.cards.ShovelCard;
 import com.miage.cards.SpecificKnowledgeCard;
+import com.miage.interfaces.ActivableElement;
+import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.tokens.BlankToken;
 import com.miage.tokens.PointToken;
@@ -92,11 +94,10 @@ public class TestBoard {
             
             // As board._actionPlayerDoPickCard is private we need to set as accessible
              //Player player, Card cardToPickUp, boolean useZeppelinCard, boolean useCarCard
-            cArg = new Class[4];
+            cArg = new Class[3];
             cArg[0] = Player.class;
             cArg[1] = Card.class;
-            cArg[2] = boolean.class;
-            cArg[3] = boolean.class;
+            cArg[2] = List.class;
             method_actionPlayerDoPickCard = c.getDeclaredMethod("_actionPlayerDoPickCard", cArg);
             method_actionPlayerDoPickCard.setAccessible(true);
 	}
@@ -161,13 +162,33 @@ public class TestBoard {
             
             // test total point token 
             // test total point token of 4 
-            Integer nbPointToken = 14; // (greece should have 15 pointTokens but one is placed on the excavation area for the first excavation)
+            Integer nbPointToken = 12; // (greece should have 15 pointTokens but one is placed on the excavation area for the first excavation)
             Integer nbPointTokenOf4InsideGreece = 1; // (greece should have 3 pointTokens of 4)
+            
             LinkedList<Token> tokens = ((ExcavationArea)b.getAreas().get("greece")).getTokenList();
+            
             Integer countedPointToken = 0;
             int expectedNbEmptyTokens = 16;
             int nbEmptyTokens = 0;
             Integer countedNbPointTokenOf4InsideCrete = 0;
+            
+            // TEST ID TOKENS
+            for( ExcavationArea area : this.board.getAreas(ExcavationArea.class).values() ){
+                for (Token token : area.getTokenList()) {
+                    if( token.getId().isEmpty() || token.getId().equals("") ){
+                        fail("One of the whole tokens has no ID");
+                    }
+                }
+            }
+            
+            // CHECK ID OF ONE TOKEN (area.greece.pointTokens = p1a,1:1 )
+            boolean found = false;
+            for (Token token : ((ExcavationArea)this.board.getArea("greece")).getTokenList() ) {
+                if( token.getId().equals("p1a")) found = true;
+            }
+            assertTrue("The token does not has the correct id", found);
+            
+            // loop over tokens inside egypt
             for (Token token : tokens){
                 if(token instanceof PointToken){
                     countedPointToken ++;
@@ -268,8 +289,8 @@ public class TestBoard {
         @Test
         public void testHasEnoughTimeBeforeEndGame(){
             LocalDate startDate = LocalDate.of(1900, 1, 1);
-            assertTrue( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(10))); // time for 10 supplementary weeks
-            assertFalse( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(9))); // time for 10 supplementary weeks
+            assertTrue( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(10), new ArrayList<UsableElement>()) ); // time for 10 supplementary weeks
+            assertFalse( Board.hasEnoughTimeBeforeEndGame(startDate, 10, startDate.plusWeeks(9), new ArrayList<UsableElement>()) ); // time for 10 supplementary weeks
         }
         
         /**
@@ -286,7 +307,8 @@ public class TestBoard {
             
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", player); // wet set the current player
-            
+            playerActionParams.put( "usedElements", new ArrayList<UsableElement>() );
+                    
             // test all 4 actions
             assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams));
             for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
@@ -439,8 +461,9 @@ public class TestBoard {
             HashMap<String, Object> playerActionParams = new HashMap();
             playerActionParams.put("player", maxime); 
             playerActionParams.put("areaToExcavate", board.getArea("egypt")); 
-            int knowledgePoint = maxime.getTotalAskedKnowledgePoint( board.getArea("egypt"), null); // no special used knowledge except the unique specific added previously
+            int knowledgePoint = maxime.getTotalAskedKnowledgePoint( board.getArea("egypt"), new ArrayList()); // no special used knowledge except the unique specific added previously
             playerActionParams.put("nbTokenToPickUp", board.getChronotime().getNbTokensToPickUp( knowledgePoint, 1));
+            playerActionParams.put("numberOfWeeks", 1);
             board.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams);
 
             // Here maxime should has egypt excavated

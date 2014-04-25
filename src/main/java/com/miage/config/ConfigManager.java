@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.logging.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.ini4j.Ini;
@@ -81,10 +82,14 @@ public class ConfigManager {
      * @return Properties file
      * @throws java.io.IOException
      */
-    public Properties getConfig( String configName ) throws IOException{
-//        LOGGER.debug("getConfig: "+configName);
+    public Properties getConfig( String configName ){
         if( ! this.configs.containsKey( configName )){
-            this._loadConfigFile( configName );
+            try {
+                this._loadConfigFile( configName );
+            } catch (IOException ex) {
+                LOGGER.fatal( ex );
+                System.exit( 0 );
+            }
         }
         return this.configs.get( configName );
     }

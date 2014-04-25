@@ -1,10 +1,12 @@
 package com.miage.game;
 
-import java.time.LocalDate;
-
 import com.miage.areas.Area;
 import com.miage.cards.Card;
+import com.miage.gui.TokensPosition;
+import java.awt.Color;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.time.LocalDate;
 
 /**
  * 
@@ -14,6 +16,8 @@ public class PlayerToken implements Comparable, Serializable{
 	
     private String color;
 
+    private Color colorUI;
+    
     /**
      * Define the actual position of the player token ( an area )
      */
@@ -29,7 +33,7 @@ public class PlayerToken implements Comparable, Serializable{
      * @param color 
      */
     public PlayerToken(String color){
-        this(color, null, null);
+        this(color, null, null, null);
     }
 
     /**
@@ -37,11 +41,19 @@ public class PlayerToken implements Comparable, Serializable{
      * @param color
      * @param position
      * @param timeState 
+     * @param temporalPosition
      */
-    public PlayerToken(String color, Area position, LocalDate timeState) {
+    public PlayerToken(String color, Area position, LocalDate timeState, TokensPosition temporalPosition) {
         this.color = color;
         this.position = position;
         this.timeState = timeState;
+        
+        try {
+            Field field = Class.forName("java.awt.Color").getField( color );
+            colorUI = (Color)field.get(null);
+        } catch (Exception e) {
+            color = null; // Not defined
+        }
     }
         
     
@@ -65,10 +77,11 @@ public class PlayerToken implements Comparable, Serializable{
      * @param o Object to compare
      * @return int
      */
+    @Override
     public int compareTo(Object o) {
         int result;
         PlayerToken p = (PlayerToken) o;
-        if(this.getTimeState().isAfter(p.getTimeState()))
+        if(this.getTimeState().isAfter( p.getTimeState() ))
             result = 1;
         else if(this.getTimeState().equals( p.getTimeState() )){
             result = 0;
@@ -84,15 +97,7 @@ public class PlayerToken implements Comparable, Serializable{
      * @param nb number of weeks to add
      */
     public void addWeeks(int nb){
-        this.setTimeState(this.timeState.plusDays(nb*7));
-    }
-	
-    /**
-    * add weeks at the playerToken depending on the card picked
-    * @param card 
-    */
-    public void addWeeks(Card card){
-        this.addWeeks(card.getWeekCost());
+        this.setTimeState(this.timeState.plusWeeks(nb));
     }
     
     /**
@@ -113,6 +118,9 @@ public class PlayerToken implements Comparable, Serializable{
         return this.timeState.getYear();
     }
 
+    public void applyCardCost( Card card ){
+        this.addWeeks( card.getWeekCost() );
+    }
 
     /**
      * @author Gael
@@ -214,7 +222,12 @@ public class PlayerToken implements Comparable, Serializable{
     public void setTimeState(LocalDate timeState) {
         this.timeState = timeState;
     }
+
+    public Color getColorUI() {
+        return colorUI;
+    }
 	
-	
+    
+    
 
 }

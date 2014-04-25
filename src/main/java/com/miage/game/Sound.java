@@ -5,6 +5,7 @@
 package com.miage.game;
 
 import java.io.*;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sun.audio.*;
@@ -24,41 +25,9 @@ public class Sound{
      */
     private static AudioStream as;
     
-    /**
-     * String containing the audio file path.
-     */
-    public final static String newGame = "src/main/resources/audio/newGame.wav";
     
-    /**
-     * String containing the audio file path.
-     */
-    public final static String startGame = "src/main/resources/audio/startGame.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String newYear = "src/main/resources/audio/newYear.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String pickCard = "src/main/resources/audio/gong.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String makeExpo = "src/main/resources/audio/gong.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String Excavate = "src/main/resources/audio/gong.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String pickTokenEmpty = "src/main/resources/audio/gong.wav";
-    
+    public static boolean enableSound = true;
+
     /**
      * String containing the audio file path.
      */
@@ -67,37 +36,27 @@ public class Sound{
     /**
      * String containing the audio file path.
      */
-    public final static String useCar = "src/main/resources/audio/gong.wav";
+    public final static String useChronotime = "src/main/resources/audio/chrono.wav";
     
     /**
      * String containing the audio file path.
      */
-    public final static String useZepplin = "src/main/resources/audio/gong.wav";
+    public final static String clic = "src/main/resources/audio/clic.wav";
+        
+    /**
+     * String containing the audio file path.
+     */
+    public final static String playerWin = "src/main/resources/audio/win.wav";
     
     /**
      * String containing the audio file path.
      */
-    public final static String useChronotime = "src/main/resources/audio/gong.wav";
+    public final static String playerLoose = "src/main/resources/audio/loose.wav";
     
     /**
      * String containing the audio file path.
      */
-    public final static String move = "src/main/resources/audio/gong.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String changeFourCurrentCards = "src/main/resources/audio/gong.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String playerWin = "src/main/resources/audio/gong.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String playerLoose = "src/main/resources/audio/gong.wav";
+    public final static String audioGame = "src/main/resources/audio/musich.wav";
     
     /**
      * Play the sound corresponding of the action.
@@ -106,52 +65,28 @@ public class Sound{
      */
     public static void play(String action){
         try {
-            switch(action){
-                case "newGame":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.newGame))));
-                    break;
-                case "startGame":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.startGame))));
-                    break;
-                case "newYear":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.newYear))));
-                    break;
-                case "pickCard":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.pickCard))));
-                    break;
-                case "makeExpo":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.makeExpo))));
-                    break;
-                case "Excavate":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.Excavate))));
-                    break;
-                case "pickTokenEmpty":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.pickTokenEmpty))));
-                    break;
-                case "pickTokenPoint":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.pickTokenPoint))));
-                    break;
-                case "useCar":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.useCar))));
-                    break;
-                case "useZepplin":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.useZepplin))));
-                    break;
-                case "useChronotime":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.useChronotime))));
-                    break;
-                case "move":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.move))));
-                    break;
-                case "changeFourCurrentCards":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.changeFourCurrentCards))));
-                    break;
-                case "playerWin":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerWin))));
-                    break;
-                case "playerLoose":
-                    AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerLoose))));
-                    break;
+            if(Sound.enableSound){
+                switch(action){
+                    case "pickTokenPoint":
+                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.pickTokenPoint))));
+                        break;
+                    case "useChronotime":
+                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.useChronotime))));
+                        break;
+                    case "clic":
+                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.clic))));
+                        break;
+                    case "playerWin":
+                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerWin))));
+                        break;
+                    case "playerLoose":
+                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerLoose))));
+                        break;
+                    case "audioGame":
+                        as = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
+                          AudioPlayer.player.start(as);
+                        break;
+                }
             }
         } catch (IOException ex) {
             /*
@@ -161,23 +96,23 @@ public class Sound{
         }
     }
     
+    public static void startAudioGame(){
+        try {
+            as = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
+            AudioPlayer.player.start(as);
+            Sound.enableSound = true;
+        } catch (IOException ex) {
+            Logger.getLogger(Sound.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /**
      * Stop the preceding sound played (if it playing).
      * @author david
      * @param action 
      */
-    public static void stop(){
+    public static void stopAudioGame(){
         AudioPlayer.player.stop(as);
+        Sound.enableSound = false;
     }
-    
-    /*public static void main(String[] args){
-        Sound.play("newGame");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Sound.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Sound.stop();
-        Sound.play("startGame");
-    }*/
 }

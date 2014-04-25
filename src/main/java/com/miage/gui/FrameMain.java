@@ -1,14 +1,9 @@
 
 package com.miage.gui;
 
-import com.miage.SAMPLE.SAMPLECLASS;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.io.File;
+import com.miage.config.ConfigManager;
+import com.miage.game.Sound;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.sampled.AudioInputStream;
 import org.apache.log4j.LogManager;
 
 /**
@@ -53,6 +48,17 @@ public class FrameMain extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        
+        // We try to load all required config files
+        try{
+            ConfigManager.getInstance().loadAll();
+        }
+        catch( IOException e ){
+            LOGGER.fatal("Unable to load config files");
+            e.printStackTrace();
+            System.exit( 0 );
+        }
+        
         /*
          * Create and display the main frame
          */
@@ -66,6 +72,7 @@ public class FrameMain extends javax.swing.JFrame {
                     frameMain.setVisible(true);
                 } catch ( Exception ex) {
                     LOGGER.fatal(ex);
+                    ex.printStackTrace();
                     System.exit(0);
                 }
             }
@@ -76,17 +83,11 @@ public class FrameMain extends javax.swing.JFrame {
      * Creates new form FrameMain
      */
     public FrameMain() throws IOException, InterruptedException{
-        
         //full screen
 //        setUndecorated(true);
         initComponents();
-//        GraphicsDevice device;
-//        device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-//        if (device.isFullScreenSupported()) {
-//            device.setFullScreenWindow(this);
-//        } else {
-//            System.err.println("Le mode plein écran n'est pas disponible");
-//        }
+        
+        this.setSize(1366, 800);
         
         // add home panel to main frame
         PanelContainer.add(new PanelHome(), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -112,11 +113,15 @@ public class FrameMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(825, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(316, Short.MAX_VALUE))
         );
 
         pack();

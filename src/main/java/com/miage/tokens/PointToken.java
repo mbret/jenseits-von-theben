@@ -22,14 +22,11 @@ public class PointToken extends Token implements Serializable{
     public Integer getValue() {
         return value;
     }
-    
-    
-    public String toString(){
-    	return super.toString()+","+value;
-    }
 
-    public boolean isBlank(){
-        return this.value == 0;
+    @Override
+    public String toString() {
+        return "PointToken{" + super.toString() + "value=" + value + '}';
     }
+    
     
 }
