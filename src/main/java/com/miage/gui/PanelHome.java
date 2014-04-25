@@ -59,11 +59,11 @@ public class PanelHome extends javax.swing.JPanel {
         if(audioEnable != null){
             if(audioEnable.compareTo("1") == 0){
                 System.out.println("TRUE");
-                this.jCheckBox1.setSelected(Boolean.TRUE);
+                this.audioMuteCheckBox.setSelected(Boolean.TRUE);
                 Sound.enableSound = Boolean.TRUE;
             }else{
                 System.out.println("FALSE");
-                this.jCheckBox1.setSelected(Boolean.FALSE);
+                this.audioMuteCheckBox.setSelected(Boolean.FALSE);
                 Sound.enableSound = Boolean.FALSE;
             }
             Sound.play("audioGame");
@@ -988,9 +988,8 @@ public class PanelHome extends javax.swing.JPanel {
         this.MenuPanel.setVisible( false );
     }//GEN-LAST:event_parameterLabelMouseClicked
 
-    private void audioMuteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioMuteCheckBoxActionPerformed
+    private void audioMuteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         JCheckBox cb = (JCheckBox)evt.getSource();
-<<<<<<< HEAD
         try {
             if( cb.isSelected()){
                 ConfigManager.getInstance().setOption("general", "audio", "1");
@@ -1002,10 +1001,7 @@ public class PanelHome extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog( this, "Vous coupez le son");
             }
         } catch (IOException ex) {}
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-=======
-    }//GEN-LAST:event_audioMuteCheckBoxActionPerformed
->>>>>>> c01df29583d474e2b89b1336912191ecca0e9838
+    }                                                 
 
     private void returnLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_returnLabelMouseClicked
         this.optionPanel.setVisible( false );
