@@ -4,6 +4,7 @@
  */
 package com.miage.gui;
 
+import com.miage.areas.Area;
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
 import com.miage.config.ConfigManager;
@@ -61,6 +62,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Layout;
 import org.apache.log4j.LogManager;
@@ -172,6 +175,33 @@ public class MapPanel extends javax.swing.JPanel {
      *                                  Various methods
      * 
      ***********************************************************************************************/
+    
+    /**
+     * Return the player corresponding to the tab clicked in the tabbed pane
+     *
+     * @param tp the player Tabbed Pane
+     * @return The Player corresponding to the tab selected
+     */
+    public Player getPlayerTab(javax.swing.JTabbedPane tp) {
+        Player player = null;
+        switch (tp.getSelectedIndex()) {
+            case 0:
+                player = currentBoard.getPlayers().get(0);
+                break;
+            case 1:
+                player = currentBoard.getPlayers().get(1);
+                break;
+            case 2:
+                player = currentBoard.getPlayers().get(2);
+                break;
+            case 3:
+                player = currentBoard.getPlayers().get(3);
+                break;
+        }
+        LOGGER.debug("getPlayerTab : Joueur selected = "+player.getName());
+        return player;
+    }
+    
     
     /**
 	 * Method to resize an image
@@ -531,6 +561,36 @@ public class MapPanel extends javax.swing.JPanel {
 		this.rightPanelContainerPanel.updateUI();
 
 	}
+	
+	
+	
+	public void updateExcavationAuthorizationUI(Player player) {
+        for (Area area : currentBoard.getAreas().values()) {
+            if (!(player.isAuthorizedToExcavateArea(area))) {
+                switch (area.getId()) {
+                    case 8:
+                        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area.getDisplayName() + "NoExcavation.jpg")));
+                        LOGGER.debug("UpdateExcavationAuthorizationUI passe grece");
+                        break;
+                    case 12:
+                        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area.getDisplayName() + "NoExcavation.jpg")));
+                        break;
+                    case 11:
+                        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area.getDisplayName() + "NoExcavation.jpg")));
+                        break;
+                    case 10:
+                        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area.getDisplayName() + "NoExcavation.jpg")));
+                        break;
+                    case 9:
+                        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area.getDisplayName() + "NoExcavation.jpg")));
+                        break;
+                }
+                this.playerLeftPanel.updateUI();
+               
+
+            }
+        }
+    }
     
 
     /**
@@ -1083,6 +1143,20 @@ public class MapPanel extends javax.swing.JPanel {
         backgroundLabel = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        
+        
+        menuCardsPlayerTab.addChangeListener(new ChangeListener(){
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				
+				Player p = getPlayerTab(menuCardsPlayerTab);	
+				updateExcavationAuthorizationUI(p);
+
+				
+			}
+		});
+        
 
         arrowMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/menuArrow.png"))); // NOI18N
         arrowMenuLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1520,30 +1594,7 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
 
-    /**
-     * Return the player corresponding to the tab clicked in the tabbed pane
-     *
-     * @param tp the player Tabbed Pane
-     * @return The Player corresponding to the tab selected
-     */
-    private Player getPlayerTab(javax.swing.JTabbedPane tp) throws Exception {
-        Player player = null;
-        switch (tp.getSelectedIndex()) {
-            case 0:
-                player = currentBoard.getPlayers().get(0);
-                break;
-            case 1:
-                player = currentBoard.getPlayers().get(1);
-                break;
-            case 2:
-                player = currentBoard.getPlayers().get(2);
-                break;
-            case 3:
-                player = currentBoard.getPlayers().get(3);
-                break;
-        }
-        return player;
-    }
+    
 
     /**
      * Clear the cards panel owned by a player
