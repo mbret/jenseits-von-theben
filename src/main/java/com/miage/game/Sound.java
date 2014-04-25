@@ -54,7 +54,7 @@ public class Sound{
     /**
      * String containing the audio file path.
      */
-    public final static String audioGame = "src/main/resources/audio/musich2.wav";
+    public final static String audioGame = "src/main/resources/audio/musich.wav";
     
     /**
      * Play the sound corresponding of the action.
