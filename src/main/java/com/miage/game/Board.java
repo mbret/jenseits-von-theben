@@ -249,6 +249,8 @@ public class Board implements Serializable {
         List<ShovelCard> shovelCards = new ArrayList();             // list of used shovel cards
         List<AssistantCard> assistantCards = new ArrayList();
         HashMap<Area, EthnologicalKnowledgeCard> ethnologicalKnowledgeCards = new HashMap();
+        List<ExcavationAuthorizationCard> excaCards = new ArrayList(); 
+        
 
         // RETURNER OBJECT
         HashMap<String, Object> returnedInfo = new HashMap();
@@ -267,6 +269,9 @@ public class Board implements Serializable {
 //        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         
         // CHECK USEDELEMENTS PARAMETER (We check and iterate over all used elements to get some informations and make more precise list)
+        
+        boolean alreadyExcavate = false;
+        
         List<UsableElement> usedElements;
         try {
             usedElements = (List<UsableElement>) playerActionParams.get("usedElements"); // we verify that the list is ok
@@ -286,6 +291,9 @@ public class Board implements Serializable {
                 Area key = this.getArea( ((EthnologicalKnowledgeCard)element).getExcavationAreaName());
                 ethnologicalKnowledgeCards.put( key, (EthnologicalKnowledgeCard)element );
             }
+            if(element instanceof ExcavationAuthorizationCard){
+            	excaCards.add((ExcavationAuthorizationCard)element);
+            }
         }
 
         // DO THE MAIN ACTION
@@ -304,6 +312,12 @@ public class Board implements Serializable {
                 if (!playerActionParams.containsKey("nbTokenToPickUp") || !(playerActionParams.get("nbTokenToPickUp") instanceof Integer)) {
                     throw new Exception("No nbTokenToPickUp provided, please see the parameters details");
                 }
+                
+                
+                if(player.hasAlreadyExcavateArea(((ExcavationArea) playerActionParams.get("areaToExcavate")).getName())){
+                	alreadyExcavate = true;
+                }
+                
                 List<Token> tokensJustPickedUp = this._actionPlayerDoExcavateArea(
                                                     player,
                                                     ((ExcavationArea) playerActionParams.get("areaToExcavate")),
@@ -360,6 +374,13 @@ public class Board implements Serializable {
                     player.getCards().remove( card );
                 }
             }
+            
+            if(alreadyExcavate){
+            	this.discardingDeck.add(excaCards.get(0));
+            	player.getCards().remove(excaCards.get(0));
+            }
+            
+            
         }
         
         return returnedInfo;
