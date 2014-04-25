@@ -4,7 +4,7 @@ import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.DiscardableElement;
 import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.ActivableElement;
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -52,7 +52,7 @@ public class EthnologicalKnowledgeCard extends Card implements KnowledgeElement,
 
     @Override
     public String toString(){
-    	return super.toString()+","+value+","+excavationAreaName;
+    	return "EthnologicalKnowledgeCard" + super.toString()+","+value+","+excavationAreaName;
     }
     
     

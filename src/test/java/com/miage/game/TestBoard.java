@@ -313,6 +313,7 @@ public class TestBoard {
             assertTrue(board.isPlayerAbleToMakeRoundAction( Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams));
             for (ExcavationArea area : board.getAreas( ExcavationArea.class ).values()) {
                 playerActionParams.put("areaToExcavate", area);
+                playerActionParams.put("nbWeeksToExcavate", 1);
                 assertFalse( board.isPlayerAbleToMakeRoundAction( Player.ACTION_EXCAVATE, playerActionParams) );
             }
             for (ExpoCard card : board.getExpoCards()) {

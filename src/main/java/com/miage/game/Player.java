@@ -83,12 +83,11 @@ public class Player implements Serializable {
 	 */
 	private Map<String, Integer> competences;
 
-	/**
-	 * @deprecated 
-	 */
-	private PlayerKnowledges playerKnowledges;
-
-
+        /**
+         * GameOver define when a player is not able to do anymore
+         */
+        private boolean gameOver = false;
+        
 	/*
 	 * Contains the name of areas already excavate
          * Integer = the year of excavation
@@ -99,7 +98,7 @@ public class Player implements Serializable {
 	 * Define for how many round the player is playing (because we can play again after played depending of the position)
 	 * <br/>Must count the current round as well
 	 */
-	private int nbRoundStillPlaying;
+	private int nbRoundStillPlaying = 0;
 
 	public Player(String name, PlayerToken playerToken){
 		this.name = name;
@@ -107,10 +106,9 @@ public class Player implements Serializable {
 		this.playerToken = playerToken;
 		this.tokens = new ArrayList();
 		this.competences = new HashMap(); 
-		this.playerKnowledges = new PlayerKnowledges();
+//		this.playerKnowledges = new PlayerKnowledges();
 		this.cards = new ArrayList();
 		this.areasAlreadyExcavate = new HashMap();
-		this.nbRoundStillPlaying = 0;
 
 		/*
 		 * Initialization of competences
@@ -524,18 +522,18 @@ public class Player implements Serializable {
 	public int totalAvailableKnowledgePoints(Area area, boolean ethnologicalKnowledge){
 
 		int numberOfPoints = 0;
-
-		int numberOfGeneralKnowledgePoints = this.playerKnowledges.getGeneralKnowledge();
-		int numberOfSpecificKnowledgePoints = this.playerKnowledges.getSpecificKnowledges().get(area.getName());
-
-		if(ethnologicalKnowledge){
-			numberOfSpecificKnowledgePoints += this.playerKnowledges.getEthnologicalKnowledges().get(area.getName());
-		}
-
-		if(numberOfGeneralKnowledgePoints > numberOfSpecificKnowledgePoints)
-			numberOfPoints = numberOfSpecificKnowledgePoints*2;
-		else
-			numberOfPoints = numberOfGeneralKnowledgePoints + numberOfSpecificKnowledgePoints;
+//
+//		int numberOfGeneralKnowledgePoints = this.playerKnowledges.getGeneralKnowledge();
+//		int numberOfSpecificKnowledgePoints = this.playerKnowledges.getSpecificKnowledges().get(area.getName());
+//
+//		if(ethnologicalKnowledge){
+//			numberOfSpecificKnowledgePoints += this.playerKnowledges.getEthnologicalKnowledges().get(area.getName());
+//		}
+//
+//		if(numberOfGeneralKnowledgePoints > numberOfSpecificKnowledgePoints)
+//			numberOfPoints = numberOfSpecificKnowledgePoints*2;
+//		else
+//			numberOfPoints = numberOfGeneralKnowledgePoints + numberOfSpecificKnowledgePoints;
 
 		return numberOfPoints;
 	}
@@ -731,6 +729,8 @@ public class Player implements Serializable {
             return best;
         }
 
+        
+        
 
 	/***********************************************************************************************
 	 *
@@ -769,9 +769,9 @@ public class Player implements Serializable {
 		return competences;
 	}
 
-	public PlayerKnowledges getPlayerKnowledges() {
-		return playerKnowledges;
-	}
+//	public PlayerKnowledges getPlayerKnowledges() {
+//		return playerKnowledges;
+//	}
 
 	public ArrayList<Token> getTokens() {
 		return tokens;
@@ -793,10 +793,15 @@ public class Player implements Serializable {
 		this.nbRoundStillPlaying = nbRoundStillPlaying;
 	}
 
-//	public int getPoints() {
-//		return points;
-//	}
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+    
+    
 
 
 

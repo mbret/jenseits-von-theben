@@ -1,7 +1,7 @@
 
 package com.miage.game;
 
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class Chronotime implements Serializable{
         for( String key : ConfigManager.getInstance().getConfigEntriesWithKeysBeginningBy( ConfigManager.GENERAL_CONFIG_NAME, "chronotime.knowledge").keySet()){
             
             HashMap<Integer, Integer> subValues = new HashMap();
-
+            
             Integer numberOfKnowledge = Integer.parseInt(key.substring( "chronotime.knowledge.".length() ));
             
             // We get all the weeks with their associated number of token allowed to pick up

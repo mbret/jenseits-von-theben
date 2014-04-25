@@ -4,6 +4,7 @@
  */
 package com.miage.main;
 
+import com.miage.utils.Utils;
 import com.miage.areas.TouristicArea;
 import com.miage.cards.Card;
 import com.miage.cards.EthnologicalKnowledgeCard;
