@@ -1,11 +1,10 @@
 package com.miage.gui;
 
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import com.miage.game.Board;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
-import com.miage.game.Sound;
-import com.miage.main.Utils;
+import com.miage.utils.Utils;
 import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import org.apache.log4j.LogManager;
 
 /**
@@ -26,16 +26,19 @@ public class PanelHome extends javax.swing.JPanel {
     // number of players
     private int nbPlayers;
 
+    private JPanel panelContainer;
+    
     private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(PanelHome.class.getName());
     
     /**
      * Creates new form PanelHome
      */
-    public PanelHome() throws IOException {
+    public PanelHome( JPanel panelContainer ) throws IOException {
 
         initComponents();
         nbPlayers = 2; // base nb players
 
+        this.panelContainer = panelContainer;
         // Init our componants without netbeans auto generated code
         MenuPanel.setVisible(true);
         playRedLabel.setVisible(false);
@@ -58,11 +61,9 @@ public class PanelHome extends javax.swing.JPanel {
         String audioEnable = ConfigManager.getInstance().getOptions().get("general", "audio", String.class);
         if(audioEnable != null){
             if(audioEnable.compareTo("1") == 0){
-                System.out.println("TRUE");
                 this.audioMuteCheckBox.setSelected(Boolean.TRUE);
                 Sound.enableSound = Boolean.TRUE;
             }else{
-                System.out.println("FALSE");
                 this.audioMuteCheckBox.setSelected(Boolean.FALSE);
                 Sound.enableSound = Boolean.FALSE;
             }
@@ -89,15 +90,13 @@ public class PanelHome extends javax.swing.JPanel {
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("red", "Rouge"));
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("yellow", "Jaune"));
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("green", "Vert"));
-        
-        
     }
 
     public void launchGame( Board board ){
         // remove actual GUI content and add de MapPanel
         this.removeAll();
-        MapPanel map = MapPanel.create(board);
-        add(map, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        MapPanel map = new MapPanel(board, this.panelContainer);
+        add( map, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
         this.updateUI();
     }
     
@@ -596,7 +595,7 @@ public class PanelHome extends javax.swing.JPanel {
         add(crossLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 10, 40, 30));
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ThebesHome.jpg"))); // NOI18N
-        add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1370, 770));
+        add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1370, 770));
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -911,7 +910,7 @@ public class PanelHome extends javax.swing.JPanel {
                 * We create the new game internally
                 */
                Board board = new Board(nbPlayers, players);
-               this.launchGame(board);
+               this.launchGame( board );
                 
             } else {
                 //fenêtre interne pour avertir qu'il faut donner des noms aux joueurs et une seule couleur par joueur
@@ -933,17 +932,13 @@ public class PanelHome extends javax.swing.JPanel {
 
     }//GEN-LAST:event_playGameRedLabelMouseClicked
 
-    
     private void warningInternalFrameInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_warningInternalFrameInternalFrameClosed
-        this.backRedNewGamePanelLabel.setEnabled(true);
-        this.backNewGamePanelLabel.setEnabled(true);
-        this.playGameRedLabel.setEnabled(true);
-        this.newPlayLabel.setEnabled(true);
+        newGamePanel.setEnabled(true);
     }//GEN-LAST:event_warningInternalFrameInternalFrameClosed
 
     private void rulesRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rulesRedLabelMouseClicked
         removeAll();
-        RulesPanel rules = new RulesPanel();
+        RulesPanel rules = new RulesPanel( this.panelContainer );
         add(rules, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
         updateUI();
     }//GEN-LAST:event_rulesRedLabelMouseClicked
@@ -989,11 +984,9 @@ public class PanelHome extends javax.swing.JPanel {
             if( cb.isSelected()){
                 ConfigManager.getInstance().setOption("general", "audio", "1");
                 Sound.startAudioGame();
-                JOptionPane.showMessageDialog( this, "Vous activez le son");
             }else{
                 ConfigManager.getInstance().setOption("general", "audio", "0");
                 Sound.stopAudioGame();
-                JOptionPane.showMessageDialog( this, "Vous coupez le son");
             }
         } catch (IOException ex) {}
     }                                                 

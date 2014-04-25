@@ -1,57 +1,40 @@
-/**
- * To change this template, choose Tools | Templates and open the template in
- * the editor.
- */
 package com.miage.gui;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import com.miage.game.*;
+import com.miage.gui.Sound;
+import com.miage.gui.TokensPosition;
 import com.miage.interfaces.ActivableElement;
 import com.miage.interfaces.ActiveElement;
-import com.miage.interfaces.CombinableElement;
-import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
-import com.miage.main.Utils;
+import com.miage.utils.Utils;
 import com.miage.tokens.Token;
-import java.awt.Color;
+
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.GridLayout;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
-import static java.lang.reflect.Array.set;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.OverlayLayout;
-import org.apache.log4j.Layout;
 import org.apache.log4j.LogManager;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -62,6 +45,7 @@ import org.netbeans.lib.awtextra.AbsoluteLayout;
  * @author Richard
  */
 public class MapPanel extends javax.swing.JPanel {
+
 
     private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(MapPanel.class.getName());
     
@@ -74,13 +58,15 @@ public class MapPanel extends javax.swing.JPanel {
     // variables relating to the UI
     // Used to work through list (set/update event, update UI)
     // The order is very important
-    private HashMap<ActivableElement, Component> listOfUsableElementsComponent;    // component instanciated once
+    private HashMap<ActivableElement, Component> listOfActivableElementsComponent;    // component instanciated once
     private HashMap<UsableElement, Component> listOfUsingElementsComponent;            // contain all active element a player is using (object because of CarCard)
     private LinkedHashMap<Component, ExpoCard> listOfExpoCardsComponent;  // component instanciated once, only change linked expoCard (all should be always ordened)
     private LinkedHashMap<Component, Card> listOfBoardCardsComponent;     // components instanciated once, only cards are changed (all should be always ordened)
     private HashMap<Component, ExcavationArea> listOfExcavationSiteComponent;
     private static MapPanel instance = null;
 
+    private JPanel panelContainer;
+    
     /**
      * Factory constructor
      *
@@ -88,29 +74,37 @@ public class MapPanel extends javax.swing.JPanel {
      * @return
      * @throws Exception
      */
-    public static MapPanel create(Board board) {
-        if (MapPanel.instance == null) {
-            MapPanel.instance = new MapPanel(board);
-            // first init of player
-            instance.switchNewPlayer();
-        }
-        return instance;
-    }
+//    public static MapPanel create(Board board, JPanel panelContainer) {
+//        if (MapPanel.instance == null) {
+//            MapPanel.instance = new MapPanel(board, panelContainer);
+//            
+//            instance.runGame();
+//        }
+//        return instance;
+//    }
 
     /**
      * Creates new form MapPanel
      *
      * @param board Board initialize in the menu panel
      */
-    private MapPanel(Board board) {
+    public MapPanel(Board board, JPanel panelContainer) {
 
         initComponents();
 
+//        try{
+//            Integer.parseInt("sdsd");
+//        }
+//        catch(Exception e ){
+//            LOGGER.fatal("error", e);
+//        }
+        this.panelContainer = panelContainer;
+        
         this.currentBoard = board; // active board
         this.currentPlayer = this.currentBoard.getUpcomingPlayer(); // IMPORTANT (needed for some init (like UI) in this class)
         this.listOfBoardCardsComponent = new LinkedHashMap();
         this.listOfExpoCardsComponent = new LinkedHashMap();
-        this.listOfUsableElementsComponent = new HashMap();
+        this.listOfActivableElementsComponent = new HashMap();
         this.listOfUsingElementsComponent = new HashMap();
         this.listOfExcavationSiteComponent = new HashMap();
         
@@ -150,6 +144,8 @@ public class MapPanel extends javax.swing.JPanel {
         // INIT UI
         
         _initUI();
+        
+        this.runGame();
     }
 
     
@@ -161,63 +157,135 @@ public class MapPanel extends javax.swing.JPanel {
      * 
      ***********************************************************************************************/
     
+    public void runGame(){
+        // run round
+        this.runNextRound();
+        // ...
+    }
+    
+    public void runEndGame(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><h1>Jeu terminé</h1>");
+        sb.append("<br/><table><tr><td>Joueur</td>");
+        for (Player player : this.currentBoard.getPlayers()) {
+            sb.append("<td>").append(player.getName()).append("</td>");
+        }
+        sb.append("</tr><tr><td>Score</td>");
+        for (Player player : this.currentBoard.getPlayers()) {
+            sb.append("<td>").append(
+                    player.getCalculatedPoint( 
+                        this.currentBoard.getPlayers(), 
+                        this.currentBoard.getAreas(ExcavationArea.class).values() )
+            ).append("</td>");
+        }
+        sb.append("</tr></table>");
+        JOptionPane.showMessageDialog( this, sb);
+        
+        
+        try {
+            this.panelContainer.removeAll();
+            this.panelContainer.add( new PanelHome(this.panelContainer), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1) );
+            this.panelContainer.updateUI();
+        } catch (IOException ex) {
+            LOGGER.fatal(instance, ex);
+            System.exit(0);
+        }
+        
+    }
+    
+    public void runNextRound(){
+        if( this.currentBoard.getUpcomingPlayer() != null ){
+            this.runPlayer();
+        }
+        else{
+            this.runEndGame();
+        }
+    }
+    
     /**
      * Get the new upcoming player and init everything about him.
      * <br/>
      * <br/>- update actions listeners
      * <br/>- Update all UI
      */
-    private void switchNewPlayer() {
+    private void runPlayer() {
 
         this._updatePlayerTokenPositionUI();
 
         try {
 
             this.currentPlayer = this.currentBoard.getUpcomingPlayer();
-            if (this.currentPlayer == null) {
-                JOptionPane.showMessageDialog(this, "Plus aucun joueur ne peut jouer");
-            } else {
-
-                /**
-                 * For each round - reset or update useful intern vars - reset
-                 * params of action method - update component to match the
-                 * actual player - update UI to match the actual player
-                 */
-                // Update intern vars
-//                this.currentPlayerLeftPanel = this.currentPlayer; // active left panel player
-                this.currentPlayerUsingElements = new ArrayList(); //Init the displayed list and hashmap of usable Card
-                this.currentPlayerUsingElements.addAll( this.currentPlayer.getAllActiveElements() ); // get all already picked active elements
-
-                // Init the params of the player's action
-                this.playerActionParams = new HashMap();
-                this.playerActionParams.put("player", currentPlayer); // wet set the current player
-                this.playerActionParams.put("usedElements", this.currentPlayerUsingElements);
-                this.playerActionParams.put("areaToExcavate", null); // put here one of the board excavationArea the player want to excavate
-                this.playerActionParams.put("cardToPickUp", null); // put here one of the fourCurrentCard the player chose to pick up
-                this.playerActionParams.put("expoCardToDo", null); // put here one of the board expoCard the player chose to do
-                this.playerActionParams.put("nbTokenToPickUp", null); // number of tokens the player is allowed to pick up inside area
-
-                // Update player's component
-                this._updateActivableElementComponent(this.currentPlayer.getAllActivableElements() );
-                this._updateUsingElementComponent( this.currentPlayerUsingElements );
-                this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
-                this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
-
-                // Update UI
-                this._updateRightPanelUI();
-                this._updateBoardPanelUI();
-
-
-
-//                JOptionPane.showMessageDialog( this, "Joueur " + this.currentPlayer.getName() + ", c'est à vous de jouer !");
+            // Set nbRound for the current player
+            this.currentPlayer.setNbRoundStillPlaying( this.currentPlayer.getNbRoundStillPlaying() + 1 ); // We increment the number of round this player is still playing
+            // reset nbRoundStillPlaying
+            for (Player p : this.currentBoard.getPlayers()){
+                if( ! p.equals( this.currentPlayer ) ){
+                    p.setNbRoundStillPlaying(0);
+                }
             }
+        
+            /**
+             * For each round - reset or update useful intern vars - reset
+             * params of action method - update component to match the
+             * actual player - update UI to match the actual player
+             */
+            // Update intern vars
+//                this.currentPlayerLeftPanel = this.currentPlayer; // active left panel player
+            this.currentPlayerUsingElements = new ArrayList(); //Init the displayed list and hashmap of usable Card
+            this.currentPlayerUsingElements.addAll( this.currentPlayer.getAllActiveElements() ); // get all already picked active elements
+
+            // Init the params of the player's action
+            this.playerActionParams = new HashMap();
+            this.playerActionParams.put("player", currentPlayer); // wet set the current player
+            this.playerActionParams.put("usedElements", this.currentPlayerUsingElements);
+            this.playerActionParams.put("areaToExcavate", null); // put here one of the board excavationArea the player want to excavate
+            this.playerActionParams.put("cardToPickUp", null); // put here one of the fourCurrentCard the player chose to pick up
+            this.playerActionParams.put("expoCardToDo", null); // put here one of the board expoCard the player chose to do
+            this.playerActionParams.put("nbTokenToPickUp", null); // number of tokens the player is allowed to pick up inside area
+
+            // Update player's component
+            this._updateActivableElementComponent(this.currentPlayer.getAllActivableElements() );
+            this._updateUsingElementComponent( this.currentPlayerUsingElements );
+            this._updatExpoCardsComponent( this.currentBoard.getExpoCards() );
+            this._updateBoardCardsComponent( this.currentBoard.getFourCurrentCards() );
+
+            // Update UI
+            this._updateRightPanelUI();
+            this._updateBoardPanelUI();
+
+            // TEST ALL ACTION
+            boolean hasOneActionPossible = this.currentBoard.isPlayerAbleToMakeAtLeastOneRoundAction( this.currentPlayer, this.currentPlayer.getAllUsableElements() );
+            if( ! hasOneActionPossible ){
+                LOGGER.debug("runPlayer: The player="+this.currentPlayer.getName()+" does not have any more action to do");
+                this.currentPlayer.setGameOver( true );
+                // player is game over go to next round (player)
+                this.runNextRound();
+            }
+            
+            // ... display GUI and let user play
+
         } catch (Exception ex) {
-            LOGGER.fatal(ex);
-            ex.printStackTrace();
+            LOGGER.fatal(instance, ex);
             System.exit(0);
         }
     }
 
+    /**
+	 * Method to resize an image
+	 * @param source
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+    public static Image scaleImage(Image source, int width, int height) {
+            BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = (Graphics2D) img.getGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(source, 0, 0, width, height, null);
+            g.dispose();
+            return img;
+    }
+    
     /**
      * Update the list of component through the current using player's elements
      *
@@ -237,7 +305,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updateActivableElementComponent(List<ActivableElement> elements) {
         LOGGER.debug("_updateUsableElementComponent");
 
-        this.listOfUsableElementsComponent.clear();
+        this.listOfActivableElementsComponent.clear();
 
         for (final ActivableElement element : elements) {
 
@@ -253,7 +321,7 @@ public class MapPanel extends javax.swing.JPanel {
                 }
             });
 
-            this.listOfUsableElementsComponent.put(element, elementLabel);
+            this.listOfActivableElementsComponent.put(element, elementLabel);
         }
     }
 
@@ -338,16 +406,9 @@ public class MapPanel extends javax.swing.JPanel {
     }
 
     private int _displayChronotime(ExcavationArea area, int nbWeeks) {
-
-     
         int nbKnowledgePoint = 0;
         int maxKnowledgePoint = 0;
-
         maxKnowledgePoint = this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements());
-        LOGGER.debug("_displayChronotime: the maximum knowledge point got is =" + maxKnowledgePoint);
-
-     
-
         return this.currentBoard.getChronotime().getNbTokensToPickUp(maxKnowledgePoint, nbWeeks);
     }
     
@@ -361,7 +422,7 @@ public class MapPanel extends javax.swing.JPanel {
                 .append("<table border='1'>")
                 .append("<tr><td>Semaine(s)</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>")
                 .append("<tr><td>Jeton(s)</td>");
-
+        LOGGER.debug("_displayChronotimeFrame: nbKnowledge="+nbKnowledge);
         for (int i = 1; i <= 12; i++) {
             str.append("<td>").append(this.currentBoard.getChronotime().getNbTokensToPickUp(i, nbKnowledge)).append("</td>");
         }
@@ -379,6 +440,9 @@ public class MapPanel extends javax.swing.JPanel {
                 }
             }
         }while( res != null && (nbWeeks < 1 || nbWeeks > 12) );
+        
+        Sound.stopAudioChrono();
+        
         if( res == null ) return null;
         return nbWeeks;
     }
@@ -414,66 +478,91 @@ public class MapPanel extends javax.swing.JPanel {
         this.mapContainerPanel.updateUI();
     }
 
+    private void _updatePlayerActivableElementUI() {
+		LOGGER.debug("_updatePlayerUsableElementUI: refresh of usable element panel");
+
+		this.usableElementsMenuPanel.removeAll();
+		for (Map.Entry<ActivableElement, Component> entry : this.listOfActivableElementsComponent.entrySet()) {
+
+			
+			ImageIcon cardIcon = new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg"));
+			
+			
+
+
+			this.usableElementsMenuPanel.add( entry.getValue() );
+
+			if(this.listOfUsingElementsComponent.containsKey(entry.getKey())){
+				
+				// if the card is being used
+				
+				// draw the selected image on the card image
+				
+				Image cardImage = cardIcon.getImage();
+				BufferedImage cardBuffered = new BufferedImage(cardImage.getWidth(null), cardImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+				
+				Graphics2D gCard = cardBuffered.createGraphics();
+				gCard.drawImage(cardImage, 0, 0, null);
+				gCard.dispose();
+				
+				
+				ImageIcon selectedIcon = new ImageIcon(getClass().getResource("/images/cards/selected.png"));
+				Image selectedImage = selectedIcon.getImage();
+				BufferedImage selectedBuffered = new BufferedImage(selectedImage.getWidth(null), selectedImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+				
+				
+				Graphics2D gSelected = selectedBuffered.createGraphics();
+				gSelected.drawImage(selectedImage, 0, 0, null);
+				gSelected.dispose();
+				
+				
+				Graphics2D gSelectedCard = cardBuffered.createGraphics();
+				gSelectedCard.drawImage(selectedBuffered, 0, 0, null);
+				gSelectedCard.dispose();
+
+				// and set the label with it
+
+				((JLabel) entry.getValue()).setIcon(new ImageIcon(cardBuffered));
+
+
+			}else{
+			
+			((JLabel) entry.getValue()).setIcon(cardIcon);
+			}
+
+
+
+		}
+		this.usableElementsMenuPanel.updateUI();
+		this.rightPanelContainerPanel.updateUI();
+	}
+    
     /**
-     *
-     *
-     */
-    private void _updatePlayerUsableElementUI() {
-        LOGGER.debug("_updatePlayerUsableElementUI: refresh of usable element panel");
-
-        this.usableElementsMenuPanel.removeAll();
-        for (Map.Entry<ActivableElement, Component> entry : this.listOfUsableElementsComponent.entrySet()) {
-
-            // card
-            if (entry.getKey() instanceof Card) {
-                ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
-                this.usableElementsMenuPanel.add( entry.getValue() );
-            } // token
-            else {
-                ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
-                this.usableElementsMenuPanel.add(entry.getValue());
-            }
-        }
-        this.usableElementsMenuPanel.updateUI();
-        this.rightPanelContainerPanel.updateUI();
-    }
-
-    /**
-     * for now we display only ACTIVABLE and CAR
-     */
+	 * for now we display only ACTIVABLE and CAR
+	 */
     private void _updatePlayerUsingElementUI() {
-        LOGGER.debug("_updatePlayerUsingElementUI:");
-        this.usingElementsMenuPanel.removeAll();
-        for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
+		LOGGER.debug("_updatePlayerUsingElementUI:");
+		this.usingElementsMenuPanel.removeAll();
 
-            //if the card can be active
-            if (entry.getKey() instanceof ActivableElement) {
-                
-                // card
-                if (entry.getKey() instanceof Card) {
-                    ((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
-                    this.usingElementsMenuPanel.add( entry.getValue() );
-                } // token
-                else if( entry.getKey() instanceof Token ) {
-                    ((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
-                    this.usingElementsMenuPanel.add( entry.getValue() );
-                }
+		for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
 
-            }
-            else if( entry.getKey() instanceof ActiveElement ){
-                
-                if( entry.getKey() instanceof CarCard ){
-                    ((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
-                    this.usingElementsMenuPanel.add( entry.getValue() );
-                }
-                
-            }
-        }
-        this.usingElementsMenuPanel.updateUI();
-        this.usingElementsMenuScrollPanel.updateUI();
-        this.rightPanelContainerPanel.updateUI();
+			
+			if( entry.getKey() instanceof ActiveElement ){
 
-    }
+				if( entry.getKey() instanceof CarCard || entry.getKey() instanceof ExcavationAuthorizationCard){
+					((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
+					this.usingElementsMenuPanel.add( entry.getValue() );
+				}
+				
+				
+
+			}
+		}
+
+		this.usingElementsMenuPanel.updateUI();
+		this.rightPanelContainerPanel.updateUI();
+
+	}
 
     /**
      *
@@ -501,69 +590,74 @@ public class MapPanel extends javax.swing.JPanel {
         this.expoCardsContainerPanel.updateUI();
         this.mapContainerPanel.updateUI();
     }
-
+    
     private void _updateExcavationSiteUI() {
-        
-        this.excavationSiteContainerPanel.removeAll();
-        
-        for (Map.Entry<Component, ExcavationArea> entry : this.listOfExcavationSiteComponent.entrySet()) {
 
-            ((JLabel) entry.getKey()).setIcon(new ImageIcon(getClass().getResource(ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.images") + "excavate-icon.png")));
-            ((JLabel) entry.getKey()).setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-            ((JLabel) entry.getKey()).setSize(50, 50);
-            
-            this.excavationContainerPanel.add(entry.getKey());
-            
-            switch(entry.getValue().getName()){
+		this.excavationSiteContainerPanel.removeAll();
 
-              case "greece":
-                  entry.getKey().setLocation(0, 0);
-                  break;
-              case "crete":
-                  entry.getKey().setLocation(60, 135);
-                  break;
-              case "egypt":
-                  entry.getKey().setLocation(145, 230);
-                  break;
-              case "palestine":
-                  entry.getKey().setLocation(265, 215);
-                  break;
-              case "mesopotamia":
-                  entry.getKey().setLocation(320, 80);
-                  break;
-              }
-            
-            if( ! entry.getValue().isAlreadyExcavated() ){
-                JLabel firstToken = new JLabel(
-                        new ImageIcon(getClass().getResource(
-                                ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty(
-                                        "path.tokens") + entry.getValue().getName() + "/" + entry.getValue().getPointTokenFirstExcavation().getId() + ".png"))
-                );
-                firstToken.setSize( 32, 32 );
-                switch(entry.getValue().getName()){
-                    case "greece":
-                        firstToken.setLocation(60, 0);
-                        break;
-                    case "crete":
-                        firstToken.setLocation(120, 135);
-                        break;
-                    case "egypt":
-                        firstToken.setLocation(205, 230);
-                        break;
-                    case "palestine":
-                        firstToken.setLocation(325, 215);
-                        break;
-                    case "mesopotamia":
-                        firstToken.setLocation(380, 80);
-                        break;
-                }
-                this.excavationSiteContainerPanel.add( firstToken );
-            }
-            
-        }
-        this.excavationSiteContainerPanel.updateUI();
-        this.mapContainerPanel.updateUI();
-    }
+		for (Map.Entry<Component, ExcavationArea> entry : this.listOfExcavationSiteComponent.entrySet()) {
+
+			((JLabel) entry.getKey()).setIcon(new ImageIcon(getClass().getResource(ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.images") + "excavate-icon.png")));
+			((JLabel) entry.getKey()).setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+			((JLabel) entry.getKey()).setSize(50, 50);
+
+			this.excavationContainerPanel.add(entry.getKey());
+
+			switch(entry.getValue().getName()){
+
+			case "greece":
+				entry.getKey().setLocation(0, 0);
+				break;
+			case "crete":
+				entry.getKey().setLocation(60, 135);
+				break;
+			case "egypt":
+				entry.getKey().setLocation(145, 230);
+				break;
+			case "palestine":
+				entry.getKey().setLocation(265, 215);
+				break;
+			case "mesopotamia":
+				entry.getKey().setLocation(375, 80);
+				break;
+			}
+
+			if( ! entry.getValue().isAlreadyExcavated() ){
+				JLabel firstToken = new JLabel();
+
+				ImageIcon tokenImage = new javax.swing.ImageIcon(getClass().getResource(
+						ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty(
+								"path.tokens") + entry.getValue().getName() + "/" + entry.getValue().getPointTokenFirstExcavation().getId() + ".png"));
+				Image tokenResize = scaleImage(tokenImage.getImage(), 32, 32);
+				firstToken.setIcon(new ImageIcon(tokenResize));
+
+
+
+				firstToken.setSize( 32, 32 );
+				switch(entry.getValue().getName()){
+				case "greece":
+					firstToken.setLocation(80, 25);
+					break;
+				case "crete":
+					firstToken.setLocation(135, 143);
+					break;
+				case "egypt":
+					firstToken.setLocation(220, 260);
+					break;
+				case "palestine":
+					firstToken.setLocation(345, 245);
+					break;
+				case "mesopotamia":
+					firstToken.setLocation(385, 135);
+					break;
+				}
+				this.excavationSiteContainerPanel.add( firstToken );
+			}
+
+		}
+		this.excavationSiteContainerPanel.updateUI();
+		this.mapContainerPanel.updateUI();
+	}
 
     private void _updatePlayerTokenPositionUI() {
         LOGGER.debug(this.currentBoard.getPlayerTokenStack());
@@ -635,7 +729,7 @@ public class MapPanel extends javax.swing.JPanel {
      * Update all UI contained inside right panel
      */
     private void _updateRightPanelUI() {
-        this._updatePlayerUsableElementUI();
+        this._updatePlayerActivableElementUI();
         this._updatePlayerUsingElementUI();
         this._updateInfoContainerPanelUI();
     }
@@ -649,7 +743,6 @@ public class MapPanel extends javax.swing.JPanel {
         this._updateExcavationSiteUI();
         this._updatePlayerTokenPositionUI();
     }
-
     
     /**
      * Run all UI init. The init method usually do all things that don't need to be redo (optimization)
@@ -772,7 +865,7 @@ public class MapPanel extends javax.swing.JPanel {
             // Animate the action of picking
             this._animatePickingCard(pickedCard, idCard);
 
-            this.switchNewPlayer();
+            this.runNextRound();
         } else {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez pas piocher ");
         }
@@ -813,14 +906,50 @@ public class MapPanel extends javax.swing.JPanel {
                 System.exit(0);
             }
 
-            this.switchNewPlayer();
+            this.runNextRound();
 
         } else {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez effectuer cette exposition");
         }
+        this.tokenContainerPanel.updateUI();
+
+        // Update the position of time token
+        this.timeTokenContainerPanel.removeAll();
+        JLabel timeTokenLabel = new JLabel();
+        timeTokenLabel.setIcon(
+                new ImageIcon(
+                getClass().getResource(
+                ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.playerToken") + "timeToken.png")));
+        timeTokenLabel.setSize(32, 32);
+        timeTokenLabel.setLocation(TokensPosition.positionDependingOnYear(this.currentBoard.getUpcomingPlayer().getPlayerToken().getCurrentYear()));
+        this.timeTokenContainerPanel.add(timeTokenLabel);
+        this.timeTokenContainerPanel.updateUI();
+
+        this.mapContainerPanel.updateUI();
+    }
+
+   /* private void _updateInfoContainerPanelUI() {
+        this.currentPlayerLabel.setText(this.currentPlayer.getName());
+        this.currentPlayerLabel.setForeground(this.currentPlayer.getPlayerToken().getColorUI());
+        this.currentPlayerScoreLabel.setText( 
+                String.valueOf(
+                        this.currentPlayer.getCalculatedPoint( 
+                                this.currentBoard.getPlayers() , 
+                                this.currentBoard.getAreas(ExcavationArea.class).values() 
+                        ) 
+                ) 
+        );
+        this.currentPlayerLabel.updateUI();
+        this.infoContainerPanel.updateUI();
+    }
+
+    /**
+     * Update all UI contained inside left panel
+     *
+    private void _updateLeftPanelUI() {
         
         // declancher son fin d'exposition
-    }
+    }*/
 
     /**
      * When the player click on the activabe element on the panel right
@@ -874,7 +1003,7 @@ public class MapPanel extends javax.swing.JPanel {
                 System.exit(0);
             }
 
-            this.switchNewPlayer();
+            this.runNextRound();
         }
     }
 
@@ -885,53 +1014,57 @@ public class MapPanel extends javax.swing.JPanel {
 
         // TEST ACTION_EXCAVATE
         playerActionParams.put("areaToExcavate", area);
+        playerActionParams.put("nbWeeksToExcavate", 1); // 1 is the minimum allowed
         try {
-            if (!this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_EXCAVATE, playerActionParams)) {
+            
+            if ( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_EXCAVATE, playerActionParams )) {
                 playerIsAble = false;
             }
-        } catch (Exception ex) {
-            LOGGER.fatal(ex);
-            ex.printStackTrace();
-            System.exit(0);
-        }
 
+            // DO MAIN ACTION 
+            if (!playerIsAble) {
+                JOptionPane.showMessageDialog(this, "Vous ne pouvez pas fouiller " + area.getName());
 
-        // DO MAIN ACTION 
-        if (!playerIsAble) {
-            JOptionPane.showMessageDialog(this, "Vous ne pouvez pas fouiller " + area.getName());
-            
-        } else {
-            
-            Integer nbWeeks = _displayChronotimeFrame( this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements()) );
-            // Player wrote down a valid number
-            if( nbWeeks != null ){
-                this.playerActionParams.put("areaToExcavate", area);
+            } else {
 
-                this.playerActionParams.put("numberOfWeeks", nbWeeks);
-                this.playerActionParams.put("nbTokenToPickUp", this._displayChronotime(area, nbWeeks));
+                Integer nbWeeks = _displayChronotimeFrame( this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements()) );
+                playerActionParams.put("nbWeeksToExcavate", nbWeeks);
+                
+                if( nbWeeks != null ){
+                    
+                    if ( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_EXCAVATE, playerActionParams)) {
+                        JOptionPane.showMessageDialog(this, "Vous ne pouvez pas fouiller " + area.getName() + " avec un si grand nombre de semaine");
+                    }
+                    else{
+                    
+                        // Player wrote down a valid number
+                        this.playerActionParams.put("areaToExcavate", area);
+                        this.playerActionParams.put("nbWeeksToExcavate", nbWeeks);
+                        this.playerActionParams.put("nbTokenToPickUp", this._displayChronotime(area, nbWeeks));
 
-                List<Token> tokensJustPickedUp = null;
+                        List<Token> tokensJustPickedUp = null;
 
-                // DO THE MAIN ACTION
-                try {
-                    tokensJustPickedUp = (List<Token>) currentBoard.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams).get("tokensJustPickedUp");
-                } catch (Exception ex) {
-                    LOGGER.fatal(ex.getMessage());
-                    ex.printStackTrace();
-                    System.exit(0);
+                        // DO THE MAIN ACTION
+                        try {
+                            tokensJustPickedUp = (List<Token>) currentBoard.doPlayerRoundAction(Player.ACTION_EXCAVATE, playerActionParams).get("tokensJustPickedUp");
+                        } catch (Exception ex) {
+                            LOGGER.fatal(ex.getMessage());
+                            ex.printStackTrace();
+                            System.exit(0);
+                        }
+
+                        this._animatePickingTokens(tokensJustPickedUp);
+
+                        JOptionPane.showMessageDialog(this, "Vous venez de fouiller " + area.getName());
+
+                        this.runNextRound();
+                    }
+                    
                 }
-
-                this._animatePickingTokens(tokensJustPickedUp);
-
-    //            for(Token t: tokensJustPickedUp){
-    //                LOGGER.debug("Les jetons piochés " + t.getId());
-    //            }
-
-                JOptionPane.showMessageDialog(this, "Vous venez de fouiller " + area.getName());
-
-                this.switchNewPlayer();
             }
-
+        } catch (Exception ex) {
+            LOGGER.fatal(instance, ex);
+            System.exit(0);
         }
     }
 
@@ -990,7 +1123,6 @@ public class MapPanel extends javax.swing.JPanel {
         boardCardsContainerPanel = new javax.swing.JPanel();
         tokenContainerPanel = new javax.swing.JPanel();
         excavationContainerPanel = new javax.swing.JPanel();
-        chronotimeButton = new javax.swing.JButton();
         excavationSiteContainerPanel = new javax.swing.JPanel();
         expoCardsContainerPanel = new javax.swing.JPanel();
         rightPanelContainerPanel = new javax.swing.JPanel();
@@ -1253,15 +1385,6 @@ public class MapPanel extends javax.swing.JPanel {
 
         excavationContainerPanel.setOpaque(false);
         excavationContainerPanel.setLayout(null);
-
-        chronotimeButton.setText("Chrono");
-        chronotimeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chronotimeButtonActionPerformed(evt);
-            }
-        });
-        excavationContainerPanel.add(chronotimeButton);
-        chronotimeButton.setBounds(440, 270, 70, 50);
 
         excavationSiteContainerPanel.setOpaque(false);
         excavationSiteContainerPanel.setLayout(null);
@@ -1828,10 +1951,6 @@ public class MapPanel extends javax.swing.JPanel {
         this.clearDiplayedCardPlayer();
     }//GEN-LAST:event_egyptNullTokenLabelMouseExited
 
-    private void chronotimeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chronotimeButtonActionPerformed
-        this._displayChronotime((ExcavationArea) this.currentBoard.getArea("egypt"), _displayChronotimeFrame( 1 ));
-    }//GEN-LAST:event_chronotimeButtonActionPerformed
-
     private void knowledgePointComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_knowledgePointComboBoxActionPerformed
         String area = ((ComboBoxAreaItem) ((JComboBox) evt.getSource()).getSelectedItem()).id;
         int nbMaxKnowledge = this.currentPlayer.getTotalAskedKnowledgePoint(this.currentBoard.getArea(area), this.currentPlayer.getAllActivableElements());
@@ -1861,7 +1980,6 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JLabel berlinSmallExpoLabel;
     private javax.swing.JPanel boardCardsContainerPanel;
     private javax.swing.JButton changeFourCardsjButton;
-    private javax.swing.JButton chronotimeButton;
     private javax.swing.JLabel creteExcavationLabel;
     private javax.swing.JLabel creteNullTokenLabel;
     private javax.swing.JLabel currentPlayerLabel;
@@ -1924,4 +2042,5 @@ public class MapPanel extends javax.swing.JPanel {
             return this.display;
         }
     }
+
 }

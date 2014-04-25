@@ -1,8 +1,7 @@
 
 package com.miage.gui;
 
-import com.miage.config.ConfigManager;
-import com.miage.game.Sound;
+import com.miage.utils.ConfigManager;
 import java.io.IOException;
 import org.apache.log4j.LogManager;
 
@@ -54,8 +53,7 @@ public class FrameMain extends javax.swing.JFrame {
             ConfigManager.getInstance().loadAll();
         }
         catch( IOException e ){
-            LOGGER.fatal("Unable to load config files");
-            e.printStackTrace();
+            LOGGER.fatal("Unable to load config files", e);
             System.exit( 0 );
         }
         
@@ -90,7 +88,7 @@ public class FrameMain extends javax.swing.JFrame {
         this.setSize(1366, 800);
         
         // add home panel to main frame
-        PanelContainer.add(new PanelHome(), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        PanelContainer.add(new PanelHome( PanelContainer ), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
         PanelContainer.updateUI();
     }
 
@@ -113,15 +111,11 @@ public class FrameMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(825, Short.MAX_VALUE))
+            .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(316, Short.MAX_VALUE))
+            .addComponent(PanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();

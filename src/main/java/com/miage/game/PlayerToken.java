@@ -174,8 +174,13 @@ public class PlayerToken implements Comparable, Serializable{
 
         String[] steps = this.getPosition().getDistanceAreasSteps( destinationArea.getName() );
 
-        this.setPosition( destinationArea );
+        if(this.getPosition().equals(destinationArea)){
+        	return steps;
+        }
+        
+       
 
+        
         if(!useZeppelin){
             if(steps.length+1 >= 3){
                 if( useCardCard )
@@ -186,6 +191,9 @@ public class PlayerToken implements Comparable, Serializable{
             else
                 this.addWeeks(steps.length+1);
         }
+        
+        this.setPosition( destinationArea );
+        
         return steps;
     }
     

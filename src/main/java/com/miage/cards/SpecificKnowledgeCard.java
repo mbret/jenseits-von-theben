@@ -1,6 +1,6 @@
 package com.miage.cards;
 
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import com.miage.interfaces.ActiveElement;
 import com.miage.interfaces.KnowledgeElement;
 import java.io.IOException;

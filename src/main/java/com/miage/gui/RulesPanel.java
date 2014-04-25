@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JPanel;
 
 /**
  *
@@ -29,13 +30,14 @@ public class RulesPanel extends javax.swing.JPanel {
      */
     private int counterPages;
 
+    private JPanel panelContainer;
     
     /**
      * Creates new form RulesPanel
      */
-    public RulesPanel() {
+    public RulesPanel( JPanel panelContainer ) {
         
-
+        this.panelContainer = panelContainer;
         rulesTable = new HashMap<Integer, String>();
         rulesTable.put(1, "/reglesP1.png");
         rulesTable.put(2, "/reglesP2.png");
@@ -146,7 +148,7 @@ public class RulesPanel extends javax.swing.JPanel {
         removeAll();
         PanelHome home = null;
         try {
-            home = new PanelHome();
+            home = new PanelHome( this.panelContainer );
         } catch (IOException ex) {
             ex.printStackTrace();
             System.exit(0);
