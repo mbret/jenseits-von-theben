@@ -4,7 +4,6 @@ import com.miage.config.ConfigManager;
 import com.miage.game.Board;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
-import com.miage.game.Sound;
 import com.miage.main.Utils;
 import java.awt.Image;
 import java.io.IOException;
@@ -58,11 +57,9 @@ public class PanelHome extends javax.swing.JPanel {
         String audioEnable = ConfigManager.getInstance().getOptions().get("general", "audio", String.class);
         if(audioEnable != null){
             if(audioEnable.compareTo("1") == 0){
-                System.out.println("TRUE");
                 this.audioMuteCheckBox.setSelected(Boolean.TRUE);
                 Sound.enableSound = Boolean.TRUE;
             }else{
-                System.out.println("FALSE");
                 this.audioMuteCheckBox.setSelected(Boolean.FALSE);
                 Sound.enableSound = Boolean.FALSE;
             }
@@ -89,8 +86,6 @@ public class PanelHome extends javax.swing.JPanel {
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("red", "Rouge"));
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("yellow", "Jaune"));
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("green", "Vert"));
-        
-        
     }
 
     public void launchGame( Board board ){
@@ -985,11 +980,9 @@ public class PanelHome extends javax.swing.JPanel {
             if( cb.isSelected()){
                 ConfigManager.getInstance().setOption("general", "audio", "1");
                 Sound.startAudioGame();
-                JOptionPane.showMessageDialog( this, "Vous activez le son");
             }else{
                 ConfigManager.getInstance().setOption("general", "audio", "0");
                 Sound.stopAudioGame();
-                JOptionPane.showMessageDialog( this, "Vous coupez le son");
             }
         } catch (IOException ex) {}
     }                                                 
