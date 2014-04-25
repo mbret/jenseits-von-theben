@@ -91,6 +91,7 @@ public class MapPanel extends javax.swing.JPanel {
     public static MapPanel create(Board board) {
         if (MapPanel.instance == null) {
             MapPanel.instance = new MapPanel(board);
+            // first init of player
             instance.switchNewPlayer();
         }
         return instance;
@@ -103,93 +104,52 @@ public class MapPanel extends javax.swing.JPanel {
      */
     private MapPanel(Board board) {
 
-        // Init graphical components
         initComponents();
 
-        // Init the board and the tabbed pane with name's players
         this.currentBoard = board; // active board
         this.currentPlayer = this.currentBoard.getUpcomingPlayer(); // IMPORTANT (needed for some init (like UI) in this class)
-        
-        // INIT COMPONENT
-        // Init list of board cards component (the four cards)
         this.listOfBoardCardsComponent = new LinkedHashMap();
-        this._updateBoardCardsComponent(this.currentBoard.getFourCurrentCards());
-        
-        // INIT UI
-        _initUI();
-        
-        this._updateBoardCardsUI();
-
-        // Init list of expo cards component
         this.listOfExpoCardsComponent = new LinkedHashMap();
-        this._updatExpoCardsComponent(this.currentBoard.getExpoCards());
-        this._updateExpoCardsUI();
-
-        // Init list of usable element component
         this.listOfUsableElementsComponent = new HashMap();
-        // ... rest will be updated inside (switchplayer) function
-
-        // Init list of using element component
         this.listOfUsingElementsComponent = new HashMap();
-        // ... rest will be updated inside (switchplayer) function
-
-        // Init list of excavation component
         this.listOfExcavationSiteComponent = new HashMap();
-        this._updateExcavationSiteComponent(new ArrayList(this.currentBoard.getAreas(ExcavationArea.class).values()));
-        this._updateExcavationSiteUI();
-
-        // Init player tokens
-        this.mapContainerPanel.setLayout(null);
-
+        
+        
+        // INIT FOUR CARDS (component) + BUTTON
+        this._updateBoardCardsComponent(this.currentBoard.getFourCurrentCards());
         // Add event on click (change four cards)
-        changeFourCardsjButton.addActionListener(
-                new java.awt.event.ActionListener() {
+        changeFourCardsjButton.addActionListener( new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 _actionChangeFourcardsButtonActionPerformed(evt);
             }
         });
 
+        // Init list of expo cards component
+        this._updatExpoCardsComponent(this.currentBoard.getExpoCards());
 
-        /*
-         Update the left panel
-         */
+        // INIT EXCAVATION (component)
+        this._updateExcavationSiteComponent(new ArrayList(this.currentBoard.getAreas(ExcavationArea.class).values()));
+
+        // INIT LEFT PANEL
         this.leftPanelContainerPanel.setVisible(false);
-//        this.playerLeftPanel.setVisible(false); // hide player panel
-//        this.menuCardsPlayerTab.setVisible(false); // hide left panel
-//        displayedCardTokenPanel.setVisible(false);
-        // add and set dynamicaly player tab on left panel
-
         for (Player player : this.currentBoard.getPlayers()) {
-
             JPanel playerLeftPanel = new javax.swing.JPanel();
             playerLeftPanel.setLayout(new AbsoluteLayout());
             playerLeftPanel.setBorder(BorderFactory.createEmptyBorder());
-
             this.menuCardsPlayerTab.addTab(player.getName(), playerLeftPanel);
-//              this.menuCardsPlayerTab.addTab( player.getName(), this.playerLeftPanel);
         }
-//        this.menuCardsPlayerTab.setSelectedIndex(0); // Select the first player in the tabbed pane and update the current player with the first one
-        try {
-//            leftPanelViewingPlayer = this.currentBoard.getUpcomingPlayer(); // set the viewing player on the left panel
-//            this.getPlayerTab( menuCardsPlayerTab );
-        } catch (Exception ex) {
-            Logger.getLogger(MapPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-
         
-        
-        
+        // INIT MAIN FRAME
         this.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 backgroundLabelMouseClicked(evt);
             }
         });
         
-
-
-
+        // INIT UI
+        
+        _initUI();
     }
 
     
@@ -423,7 +383,6 @@ public class MapPanel extends javax.swing.JPanel {
         return nbWeeks;
     }
 
-    
     
     
     /***********************************************************************************************
@@ -665,27 +624,41 @@ public class MapPanel extends javax.swing.JPanel {
         this.infoContainerPanel.updateUI();
     }
 
+    /**
+     * Update all UI contained inside left panel
+     */
     private void _updateLeftPanelUI() {
         
     }
 
+    /**
+     * Update all UI contained inside right panel
+     */
     private void _updateRightPanelUI() {
         this._updatePlayerUsableElementUI();
         this._updatePlayerUsingElementUI();
         this._updateInfoContainerPanelUI();
     }
 
+    /**
+     * Update all UI contained inside boardPanel
+     */
     private void _updateBoardPanelUI() {
         this._updateBoardCardsUI();
         this._updateExpoCardsUI();
         this._updateExcavationSiteUI();
         this._updatePlayerTokenPositionUI();
     }
+
     
     /**
      * Run all UI init. The init method usually do all things that don't need to be redo (optimization)
      */
     private void _initUI(){
+        
+        this._updateBoardPanelUI();
+        this._updateRightPanelUI();
+        this._updateLeftPanelUI();
         
         // INIT InfoContainerPanelUI
         this.currentPlayerLabel.setVisible(true);
