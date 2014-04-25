@@ -53,8 +53,7 @@ public class FrameMain extends javax.swing.JFrame {
             ConfigManager.getInstance().loadAll();
         }
         catch( IOException e ){
-            LOGGER.fatal("Unable to load config files");
-            e.printStackTrace();
+            LOGGER.fatal("Unable to load config files", e);
             System.exit( 0 );
         }
         
@@ -89,7 +88,7 @@ public class FrameMain extends javax.swing.JFrame {
         this.setSize(1366, 800);
         
         // add home panel to main frame
-        PanelContainer.add(new PanelHome(), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        PanelContainer.add(new PanelHome( PanelContainer ), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
         PanelContainer.updateUI();
     }
 
