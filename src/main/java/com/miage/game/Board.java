@@ -260,7 +260,9 @@ public class Board implements Serializable {
             throw new Exception("No player provided, please see the parameters details");
         }
         Player player = (Player) playerActionParams.get("player");
+
      // We increment the number of round this player is still playing
+
         
 //        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         
@@ -281,7 +283,7 @@ public class Board implements Serializable {
                 assistantCards.add((AssistantCard) element);
             }
             if (element instanceof EthnologicalKnowledgeCard) {
-                Area key = this.getArea( ((EthnologicalKnowledgeCard)element).getAreaName() );
+                Area key = this.getArea( ((EthnologicalKnowledgeCard)element).getExcavationAreaName());
                 ethnologicalKnowledgeCards.put( key, (EthnologicalKnowledgeCard)element );
             }
         }
@@ -347,7 +349,9 @@ public class Board implements Serializable {
             this.discardingDeck.add( shovelCards.get(0) );
             player.getCards().remove( shovelCards.get(0) ); 
         }
+
      // loop over all ethno
+
         if( Player.ACTION_EXCAVATE == actionPattern ){
             for (EthnologicalKnowledgeCard card : ethnologicalKnowledgeCards.values()) {
                 // discard only when excavate and only ethno about the area selected
@@ -510,10 +514,10 @@ public class Board implements Serializable {
     
     public boolean hasEnoughTimeToDoAnAction( PlayerToken playerToken, int weekCost, List<UsableElement> usedElement ){
         return Board.hasEnoughTimeBeforeEndGame(
-                    playerToken.getTimeState(), 
-                    weekCost, 
-                    this.endGameDatePosition, 
-                    usedElement);
+            playerToken.getTimeState(), 
+            weekCost, 
+            this.endGameDatePosition, 
+            usedElement);
     }
     
     
@@ -558,14 +562,19 @@ public class Board implements Serializable {
      * @return
      */
     private boolean _actionPlayerAbleToExcavateArea(Player player, ExcavationArea areaToExcavate, List<UsableElement> usedElement, int nbExcavateWeeks){
+        
+        int weekCost = player.getPlayerToken().getPosition().getDistanceWeekCostTo( areaToExcavate.getName() ); // weekcost from current place to area
+        weekCost += nbExcavateWeeks; // week cost due to the weeks for excavation
+        
         if ( player.isAuthorizedToExcavateArea(areaToExcavate) ){
-            if( this.hasEnoughTimeToGoInThisArea(areaToExcavate, player.getPlayerToken(), usedElement ) ){
-                if( player.hasSpecificKnowledgeCardForThisExcavationArea(areaToExcavate.getName()) || player.hasSpecificKnowledgeTokenForThisExcavationArea(areaToExcavate.getName()) ) {
-                    if( this.hasEnoughTimeToDoAnAction( player.getPlayerToken(), nbExcavateWeeks) ){
-                        return true;
-                    }
+            
+            if( player.hasSpecificKnowledgeCardForThisExcavationArea(areaToExcavate.getName()) || player.hasSpecificKnowledgeTokenForThisExcavationArea(areaToExcavate.getName()) ) {
+
+                if( this.hasEnoughTimeToDoAnAction( player.getPlayerToken(), weekCost) ){
+                    return true;
                 }
             }
+  
         }
         return false;
     }
