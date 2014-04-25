@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miage.gui;
+package com.miage.game;
 
 import java.io.*;
 import java.net.URL;
@@ -15,25 +15,17 @@ import sun.audio.*;
  * @author David
  */
 public class Sound{
+    /**
+     * Input stream for read the soundfile.
+     */
+    private static InputStream in;
     
     /**
      * Audio stream for play the soundfile.
      */
-    private static AudioStream asMusicGame;
+    private static AudioStream as;
     
-    /**
-     * Audio stream for play the soundfile.
-     */
-    private static AudioStream asChrono;
     
-    /**
-     * Audio stream for play the soundfile.
-     */
-    private static AudioStream asFinishGame;
-    
-    /**
-     * Boolean to enable or disable all sounds.
-     */
     public static boolean enableSound = true;
 
     /**
@@ -54,7 +46,12 @@ public class Sound{
     /**
      * String containing the audio file path.
      */
-    public final static String finishGame = "src/main/resources/audio/finishGame.wav";
+    public final static String playerWin = "src/main/resources/audio/win.wav";
+    
+    /**
+     * String containing the audio file path.
+     */
+    public final static String playerLoose = "src/main/resources/audio/loose.wav";
     
     /**
      * String containing the audio file path.
@@ -74,19 +71,20 @@ public class Sound{
                         AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.pickTokenPoint))));
                         break;
                     case "useChronotime":
-                       asChrono = new AudioStream(new FileInputStream(new File(Sound.useChronotime)));
-                          AudioPlayer.player.start(asChrono);
+                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.useChronotime))));
                         break;
                     case "clic":
                         AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.clic))));
                         break;
-                    case "finishGame":
-                        asFinishGame = new AudioStream(new FileInputStream(new File(Sound.finishGame)));
-                        AudioPlayer.player.start(asFinishGame);
+                    case "playerWin":
+                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerWin))));
+                        break;
+                    case "playerLoose":
+                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerLoose))));
                         break;
                     case "audioGame":
-                        asMusicGame = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
-                        AudioPlayer.player.start(asMusicGame);
+                        as = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
+                          AudioPlayer.player.start(as);
                         break;
                 }
             }
@@ -100,8 +98,8 @@ public class Sound{
     
     public static void startAudioGame(){
         try {
-            asMusicGame = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
-            AudioPlayer.player.start(asMusicGame);
+            as = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
+            AudioPlayer.player.start(as);
             Sound.enableSound = true;
         } catch (IOException ex) {
             Logger.getLogger(Sound.class.getName()).log(Level.SEVERE, null, ex);
@@ -109,39 +107,12 @@ public class Sound{
     }
     
     /**
-     * Stop the music sound played (if it playing).
+     * Stop the preceding sound played (if it playing).
      * @author david
      * @param action 
      */
     public static void stopAudioGame(){
-        AudioPlayer.player.stop(asMusicGame);
+        AudioPlayer.player.stop(as);
         Sound.enableSound = false;
-    }
-    
-    /**
-     * Stop the music sound played (if it playing).
-     * @author david
-     * @param action 
-     */
-    public static void stopAudioGameEnd(){
-        AudioPlayer.player.stop(asMusicGame);
-    }
-    
-    /**
-     * Stop the chrono sound played (if it playing).
-     * @author david
-     * @param action 
-     */
-    public static void stopAudioChrono(){
-        AudioPlayer.player.stop(asChrono);
-    }
-    
-    /**
-     * Stop the chrono sound played (if it playing).
-     * @author david
-     * @param action 
-     */
-    public static void stopFinishAudioGame(){
-        AudioPlayer.player.stop(asFinishGame);
     }
 }
