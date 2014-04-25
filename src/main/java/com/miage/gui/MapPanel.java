@@ -145,6 +145,8 @@ public class MapPanel extends javax.swing.JPanel {
     }
     
     public void runEndGame(){
+        Sound.stopAudioGameEnd();
+        Sound.play("finishGame");
         StringBuilder sb = new StringBuilder();
         sb.append("<html><h1>Jeu terminé</h1>");
         sb.append("<br/><table><tr><td>Joueur</td>");
@@ -160,7 +162,10 @@ public class MapPanel extends javax.swing.JPanel {
             ).append("</td>");
         }
         sb.append("</tr></table>");
+        
         JOptionPane.showMessageDialog( this, sb);
+        Sound.stopFinishAudioGame();
+        
         
         
         try {
