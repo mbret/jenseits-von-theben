@@ -19,7 +19,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -34,6 +33,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import org.apache.log4j.LogManager;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -127,7 +129,7 @@ public class MapPanel extends javax.swing.JPanel {
             JPanel playerLeftPanel = new javax.swing.JPanel();
             playerLeftPanel.setLayout(new AbsoluteLayout());
             playerLeftPanel.setBorder(BorderFactory.createEmptyBorder());
-            this.menuCardsPlayerTab.addTab(player.getName(), playerLeftPanel);
+            this.menuCardsPlayerTab.addTab("<html><font color='"+player.getPlayerToken().getColor()+"'>"+player.getName()+"</font>", playerLeftPanel);
         }
         
         // INIT MAIN FRAME
@@ -177,14 +179,14 @@ public class MapPanel extends javax.swing.JPanel {
 	 * @param height
 	 * @return
 	 */
-	public static Image scaleImage(Image source, int width, int height) {
-		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = (Graphics2D) img.getGraphics();
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(source, 0, 0, width, height, null);
-		g.dispose();
-		return img;
-	}
+    public static Image scaleImage(Image source, int width, int height) {
+            BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = (Graphics2D) img.getGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(source, 0, 0, width, height, null);
+            g.dispose();
+            return img;
+    }
     
     
     
@@ -201,7 +203,17 @@ public class MapPanel extends javax.swing.JPanel {
         try {
 
             this.currentPlayer = this.currentBoard.getUpcomingPlayer();
-            
+
+            // Set nbRound for the current player
+            this.currentPlayer.setNbRoundStillPlaying( this.currentPlayer.getNbRoundStillPlaying() + 1 ); // We increment the number of round this player is still playing
+            // reset nbRoundStillPlaying
+            for (Player p : this.currentBoard.getPlayers()){
+                if( ! p.equals( this.currentPlayer ) ){
+                    p.setNbRoundStillPlaying(0);
+                }
+            }
+        
+
             /**
              * For each round - reset or update useful intern vars - reset
              * params of action method - update component to match the
@@ -386,7 +398,8 @@ public class MapPanel extends javax.swing.JPanel {
                 .append("<tr><td>Jeton(s)</td>");
         LOGGER.debug("_displayChronotimeFrame: nbKnowledge="+nbKnowledge);
         for (int i = 1; i <= 12; i++) {
-            str.append("<td>").append(this.currentBoard.getChronotime().getNbTokensToPickUp(i, nbKnowledge)).append("</td>");
+        	LOGGER.debug("_displayChronotimeFrame: nbTokenToPickUp="+this.currentBoard.getChronotime().getNbTokensToPickUp(i, nbKnowledge));
+        	str.append("<td>").append(this.currentBoard.getChronotime().getNbTokensToPickUp(i, nbKnowledge)).append("</td>");
         }
         str.append("</tr>");
         str.append("</table>");
@@ -402,8 +415,12 @@ public class MapPanel extends javax.swing.JPanel {
                 }
             }
         }while( res != null && (nbWeeks < 1 || nbWeeks > 12) );
-        if( res == null ) return null;
+
+        
         Sound.stopAudioChrono();
+        
+        if( res == null ) return null;
+
         return nbWeeks;
     }
 
@@ -496,13 +513,11 @@ public class MapPanel extends javax.swing.JPanel {
 		this.usableElementsMenuPanel.updateUI();
 		this.rightPanelContainerPanel.updateUI();
 	}
-
-    
     
     /**
 	 * for now we display only ACTIVABLE and CAR
 	 */
-	private void _updatePlayerUsingElementUI() {
+    private void _updatePlayerUsingElementUI() {
 		LOGGER.debug("_updatePlayerUsingElementUI:");
 		this.usingElementsMenuPanel.removeAll();
 
@@ -525,7 +540,6 @@ public class MapPanel extends javax.swing.JPanel {
 		this.rightPanelContainerPanel.updateUI();
 
 	}
-    
 
     /**
      *
@@ -553,8 +567,6 @@ public class MapPanel extends javax.swing.JPanel {
         this.expoCardsContainerPanel.updateUI();
         this.mapContainerPanel.updateUI();
     }
-
-   
     
     private void _updateExcavationSiteUI() {
 
@@ -623,9 +635,6 @@ public class MapPanel extends javax.swing.JPanel {
 		this.excavationSiteContainerPanel.updateUI();
 		this.mapContainerPanel.updateUI();
 	}
-    
-    
-    
 
     private void _updatePlayerTokenPositionUI() {
         LOGGER.debug(this.currentBoard.getPlayerTokenStack());
@@ -949,7 +958,7 @@ public class MapPanel extends javax.swing.JPanel {
         playerActionParams.put("nbWeeksToExcavate", 1); // 1 is the minimum allowed
         try {
             
-            if (!this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_EXCAVATE, playerActionParams)) {
+            if ( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_EXCAVATE, playerActionParams )) {
                 playerIsAble = false;
             }
 
@@ -1079,6 +1088,51 @@ public class MapPanel extends javax.swing.JPanel {
         backgroundLabel = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        
+        menuCardsPlayerTab.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+			Player p = getPlayerTab(menuCardsPlayerTab);
+			for (String area : currentBoard.getAreas().keySet()) {
+            switch (area) {
+                case "greece":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "mesopotamia":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "palestine":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "egypt":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "crete":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+            }
+        }
+    }
+});
 
         arrowMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/menuArrow.png"))); // NOI18N
         arrowMenuLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1513,7 +1567,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param tp the player Tabbed Pane
      * @return The Player corresponding to the tab selected
      */
-    private Player getPlayerTab(javax.swing.JTabbedPane tp) throws Exception {
+    private Player getPlayerTab(javax.swing.JTabbedPane tp) {
         Player player = null;
         switch (tp.getSelectedIndex()) {
             case 0:

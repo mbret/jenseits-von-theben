@@ -73,7 +73,7 @@ public abstract class Area implements Serializable {
      * 
      * @author Gael
      * 
-     * return the table of steps between two areas
+     * return the table of steps between two areas (only steps, not the source and destination)
      * 
      * @param nameOfDestinationArea
      * @return String[]
