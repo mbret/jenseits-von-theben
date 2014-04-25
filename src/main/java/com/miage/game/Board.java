@@ -260,6 +260,13 @@ public class Board implements Serializable {
             throw new Exception("No player provided, please see the parameters details");
         }
         Player player = (Player) playerActionParams.get("player");
+        // reset nbRoundStillPlaying
+        for (Player p : this.players) {
+            if( ! p.equals( player ) ){
+                p.setNbRoundStillPlaying(0);
+            }
+        }
+        player.setNbRoundStillPlaying( player.getNbRoundStillPlaying() + 1 ); // We increment the number of round this player is still playing
         
 //        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         
@@ -353,9 +360,6 @@ public class Board implements Serializable {
                 player.getCards().remove( entry.getValue() );
             }
         }
-
-        // We increment the number of round this player is still playing
-        player.setNbRoundStillPlaying(player.getNbRoundStillPlaying() + 1);
         
         return returnedInfo;
     }
@@ -638,7 +642,7 @@ public class Board implements Serializable {
      */
     private void _actionPlayerDoChangeFourCards(Player player, List<UsableElement> usedElement) {
         boolean useZeppelinCard = false, useCarCard = false;
-        for (UsableElement usableElement : usedElement) {
+        for (UsableElement usableElement : usedElement){
             if( usableElement instanceof CarCard){
                 useCarCard = true;
             }
@@ -646,7 +650,7 @@ public class Board implements Serializable {
                 useZeppelinCard = true;
             }
         }
-        player.getPlayerToken().movePlayerToken(this.areas.get("warsaw"), useZeppelinCard, useCarCard);
+        player.getPlayerToken().movePlayerToken( this.areas.get("warsaw"), useZeppelinCard, useCarCard );
         player.getPlayerToken().addWeeks( player.getNbRoundStillPlaying() );
         this._updatePlayerTokenStack();
         this.changeFourCurrentCards();
@@ -1152,10 +1156,12 @@ public class Board implements Serializable {
      */
     private void _updatePlayerTokenStack(){
         PlayerToken oldFirstPlayer = this.playerTokenStack.getFirst();
+        
         Collections.sort( this.playerTokenStack ); // sort and reorganise the stack
-        if( ! oldFirstPlayer.equals(this.playerTokenStack.getFirst()) ){
-            this.playerTokensAndPlayers.get( oldFirstPlayer ).setNbRoundStillPlaying( 0 );
-        }
+//        if( ! oldFirstPlayer.equals( this.playerTokenStack.getFirst() ) ){
+//            
+//            this.playerTokensAndPlayers.get( oldFirstPlayer ).setNbRoundStillPlaying( 0 );
+//        }
     }
     
     

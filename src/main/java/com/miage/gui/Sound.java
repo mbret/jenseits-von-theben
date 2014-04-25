@@ -15,17 +15,20 @@ import sun.audio.*;
  * @author David
  */
 public class Sound{
-    /**
-     * Input stream for read the soundfile.
-     */
-    private static InputStream in;
     
     /**
      * Audio stream for play the soundfile.
      */
-    private static AudioStream as;
+    private static AudioStream asMusicGame;
     
+    /**
+     * Audio stream for play the soundfile.
+     */
+    private static AudioStream asChrono;
     
+    /**
+     * Boolean to enable or disable all sounds.
+     */
     public static boolean enableSound = true;
 
     /**
@@ -46,12 +49,7 @@ public class Sound{
     /**
      * String containing the audio file path.
      */
-    public final static String playerWin = "src/main/resources/audio/win.wav";
-    
-    /**
-     * String containing the audio file path.
-     */
-    public final static String playerLoose = "src/main/resources/audio/loose.wav";
+    public final static String finishGame = "src/main/resources/audio/finishGame.wav";
     
     /**
      * String containing the audio file path.
@@ -71,20 +69,18 @@ public class Sound{
                         AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.pickTokenPoint))));
                         break;
                     case "useChronotime":
-                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.useChronotime))));
+                       asChrono = new AudioStream(new FileInputStream(new File(Sound.useChronotime)));
+                          AudioPlayer.player.start(asChrono);
                         break;
                     case "clic":
                         AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.clic))));
                         break;
-                    case "playerWin":
-                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerWin))));
-                        break;
-                    case "playerLoose":
-                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.playerLoose))));
+                    case "finishGame":
+                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.finishGame))));
                         break;
                     case "audioGame":
-                        as = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
-                          AudioPlayer.player.start(as);
+                        asMusicGame = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
+                        AudioPlayer.player.start(asMusicGame);
                         break;
                 }
             }
@@ -98,8 +94,8 @@ public class Sound{
     
     public static void startAudioGame(){
         try {
-            as = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
-            AudioPlayer.player.start(as);
+            asMusicGame = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
+            AudioPlayer.player.start(asMusicGame);
             Sound.enableSound = true;
         } catch (IOException ex) {
             Logger.getLogger(Sound.class.getName()).log(Level.SEVERE, null, ex);
@@ -107,12 +103,21 @@ public class Sound{
     }
     
     /**
-     * Stop the preceding sound played (if it playing).
+     * Stop the music sound played (if it playing).
      * @author david
      * @param action 
      */
     public static void stopAudioGame(){
-        AudioPlayer.player.stop(as);
+        AudioPlayer.player.stop(asMusicGame);
         Sound.enableSound = false;
+    }
+    
+    /**
+     * Stop the chrono sound played (if it playing).
+     * @author david
+     * @param action 
+     */
+    public static void stopAudioChrono(){
+        AudioPlayer.player.stop(asChrono);
     }
 }

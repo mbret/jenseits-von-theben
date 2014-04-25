@@ -98,7 +98,7 @@ public class Player implements Serializable {
 	 * Define for how many round the player is playing (because we can play again after played depending of the position)
 	 * <br/>Must count the current round as well
 	 */
-	private int nbRoundStillPlaying;
+	private int nbRoundStillPlaying = 0;
 
 	public Player(String name, PlayerToken playerToken){
 		this.name = name;
@@ -109,7 +109,6 @@ public class Player implements Serializable {
 //		this.playerKnowledges = new PlayerKnowledges();
 		this.cards = new ArrayList();
 		this.areasAlreadyExcavate = new HashMap();
-		this.nbRoundStillPlaying = 0;
 
 		/*
 		 * Initialization of competences
