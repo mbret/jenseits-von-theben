@@ -410,6 +410,7 @@ public class MapPanel extends javax.swing.JPanel {
             }
         }while( res != null && (nbWeeks < 1 || nbWeeks > 12) );
         if( res == null ) return null;
+        Sound.stopAudioChrono();
         return nbWeeks;
     }
 
@@ -971,6 +972,7 @@ public class MapPanel extends javax.swing.JPanel {
         } else {
             
             Integer nbWeeks = _displayChronotimeFrame( this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements()) );
+            Sound.stopAudioChrono();
             // Player wrote down a valid number
             if( nbWeeks != null ){
                 this.playerActionParams.put("areaToExcavate", area);

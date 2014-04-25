@@ -982,11 +982,9 @@ public class PanelHome extends javax.swing.JPanel {
             if( cb.isSelected()){
                 ConfigManager.getInstance().setOption("general", "audio", "1");
                 Sound.startAudioGame();
-                JOptionPane.showMessageDialog( this, "Vous activez le son");
             }else{
                 ConfigManager.getInstance().setOption("general", "audio", "0");
                 Sound.stopAudioGame();
-                JOptionPane.showMessageDialog( this, "Vous coupez le son");
             }
         } catch (IOException ex) {}
     }                                                 
