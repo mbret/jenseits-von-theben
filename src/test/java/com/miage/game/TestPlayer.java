@@ -40,8 +40,8 @@ public class TestPlayer {
 
             this.board = new Board(2);
 
-            this.player = new Player("player");
-
+            this.player = new Player("player", new PlayerToken(null, null, LocalDate.now(), null));
+            
             this.deck = new Deck();
             this.deck.add(new SpecificKnowledgeCard(0,"specificKnowledge", "paris", 2, 3, "greece"));
             this.deck.add(new GeneralKnowledgeCard(0,"generalKnowledge", "vienna", 2, 3));

@@ -53,12 +53,6 @@ public class ConfigLoaderTest {
 //    }
 
     
-    @Test
-    public void testGetOption() throws Exception{
-        String expResult = "tata";
-        Ini options = ConfigManager.getInstance().getOptions();
-        assertEquals(expResult, options.get("test", "testGet") );
-    }
     
     @Test
     public void testSetOption() throws Exception{
@@ -67,6 +61,12 @@ public class ConfigLoaderTest {
         ConfigManager.getInstance().setOption("test", "testSet", expResult.toString());
         assertEquals(expResult,  ConfigManager.getInstance().getOptions().get( "test", "testSet", double.class));
         ConfigManager.getInstance().setOption("test", "testSet", oldValue); // we put old value (no conflict with futur git merge)
+    }
+    
+    @Test
+    public void testGetOption() throws Exception{
+        Ini options = ConfigManager.getInstance().getOptions();
+        assertTrue( Boolean.valueOf( options.get("general", "audio") ) instanceof Boolean );
     }
     
     public void testInitArrea() throws Exception{

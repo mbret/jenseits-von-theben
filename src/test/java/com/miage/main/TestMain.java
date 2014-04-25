@@ -132,7 +132,7 @@ public class TestMain {
             assertEquals(board.getLogDisplay(),tempDate+" maxime se déplace sur paris.");
             boolean testReussi;
             try{
-                FileReader fr = new FileReader("save.boobs");
+                FileReader fr = new FileReader("save.jvt");
                 testReussi = true;
             } catch (FileNotFoundException fnfe) {
                 testReussi = false;

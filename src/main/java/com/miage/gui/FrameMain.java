@@ -48,7 +48,6 @@ public class FrameMain extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-//        Sound.play("audioGame");
         
         // We try to load all required config files
         try{

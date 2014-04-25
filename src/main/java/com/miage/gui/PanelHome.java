@@ -1,11 +1,16 @@
 package com.miage.gui;
 
+import com.miage.config.ConfigManager;
 import com.miage.game.Board;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
+import com.miage.game.Sound;
 import com.miage.main.Utils;
 import java.awt.Image;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
@@ -26,7 +31,7 @@ public class PanelHome extends javax.swing.JPanel {
     /**
      * Creates new form PanelHome
      */
-    public PanelHome() {
+    public PanelHome() throws IOException {
 
         initComponents();
         nbPlayers = 2; // base nb players
@@ -50,6 +55,19 @@ public class PanelHome extends javax.swing.JPanel {
         warningInternalFrame.setVisible(false);
         
         // OPTION PANEL
+        String audioEnable = ConfigManager.getInstance().getOptions().get("general", "audio", String.class);
+        if(audioEnable != null){
+            if(audioEnable.compareTo("1") == 0){
+                System.out.println("TRUE");
+                this.audioMuteCheckBox.setSelected(Boolean.TRUE);
+                Sound.enableSound = Boolean.TRUE;
+            }else{
+                System.out.println("FALSE");
+                this.audioMuteCheckBox.setSelected(Boolean.FALSE);
+                Sound.enableSound = Boolean.FALSE;
+            }
+            Sound.play("audioGame");
+        }
         
         // COMBO BOX COLOR
         this.colorPlayer1ComboBox.addItem( new ComboBoxColorElement("blue", "Bleu"));
@@ -71,6 +89,7 @@ public class PanelHome extends javax.swing.JPanel {
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("red", "Rouge"));
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("yellow", "Jaune"));
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("green", "Vert"));
+        
         
     }
 
@@ -173,7 +192,7 @@ public class PanelHome extends javax.swing.JPanel {
         newGameLabel = new javax.swing.JLabel();
         menuLabel1 = new javax.swing.JLabel();
         optionPanel = new javax.swing.JPanel();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        audioMuteCheckBox = new javax.swing.JCheckBox();
         returnLabel = new javax.swing.JLabel();
         optionPanelBackgroundLabel = new javax.swing.JLabel();
         crossLabel = new javax.swing.JLabel();
@@ -543,15 +562,15 @@ public class PanelHome extends javax.swing.JPanel {
         optionPanel.setOpaque(false);
         optionPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jCheckBox1.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
-        jCheckBox1.setText("Son");
-        jCheckBox1.setOpaque(false);
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        audioMuteCheckBox.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        audioMuteCheckBox.setText("Son");
+        audioMuteCheckBox.setOpaque(false);
+        audioMuteCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                audioMuteCheckBoxActionPerformed(evt);
             }
         });
-        optionPanel.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, 110, 60));
+        optionPanel.add(audioMuteCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, 110, 60));
 
         returnLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
         returnLabel.setText("Retour");
@@ -960,15 +979,20 @@ public class PanelHome extends javax.swing.JPanel {
         this.MenuPanel.setVisible( false );
     }//GEN-LAST:event_parameterLabelMouseClicked
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void audioMuteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         JCheckBox cb = (JCheckBox)evt.getSource();
-        if( cb.isSelected()){
-            JOptionPane.showMessageDialog( this, "Vous activez le son");
-        }
-        else{
-            JOptionPane.showMessageDialog( this, "Vous coupez le son");
-        }
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+        try {
+            if( cb.isSelected()){
+                ConfigManager.getInstance().setOption("general", "audio", "1");
+                Sound.startAudioGame();
+                JOptionPane.showMessageDialog( this, "Vous activez le son");
+            }else{
+                ConfigManager.getInstance().setOption("general", "audio", "0");
+                Sound.stopAudioGame();
+                JOptionPane.showMessageDialog( this, "Vous coupez le son");
+            }
+        } catch (IOException ex) {}
+    }                                                 
 
     private void returnLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_returnLabelMouseClicked
         this.optionPanel.setVisible( false );
@@ -1018,6 +1042,7 @@ public class PanelHome extends javax.swing.JPanel {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MenuPanel;
+    private javax.swing.JCheckBox audioMuteCheckBox;
     private javax.swing.JLabel backLabel;
     private javax.swing.JLabel backNewGamePanelLabel;
     private javax.swing.JLabel backRedLabel;
@@ -1030,7 +1055,6 @@ public class PanelHome extends javax.swing.JPanel {
     private javax.swing.JComboBox colorPlayer4ComboBox;
     private javax.swing.JLabel couleurLabel;
     private javax.swing.JLabel crossLabel;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox jComboBoxChooseNbPlayers;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel loadGameJLabel;
