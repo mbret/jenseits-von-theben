@@ -4,7 +4,6 @@ import com.miage.config.ConfigManager;
 import com.miage.game.Board;
 import com.miage.game.Player;
 import com.miage.game.PlayerToken;
-import com.miage.game.Sound;
 import com.miage.main.Utils;
 import java.awt.Image;
 import java.io.IOException;
