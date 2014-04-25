@@ -79,9 +79,9 @@ public abstract class Area implements Serializable {
      * @return String[]
      */
     public String[] getDistanceAreasSteps(String nameOfDestinationArea){
-        LOGGER.debug("getDistanceAreasSteps: from " + this.name + " to " + nameOfDestinationArea);
+//        LOGGER.debug("getDistanceAreasSteps: from " + this.name + " to " + nameOfDestinationArea);
         String[] steps = this.distances.get(nameOfDestinationArea);
-        LOGGER.debug("getDistanceAreasSteps: nbSteps = " + steps.length);
+//        LOGGER.debug("getDistanceAreasSteps: nbSteps = " + steps.length);
     	return steps;
     }
     
@@ -92,7 +92,7 @@ public abstract class Area implements Serializable {
      * @return int
      */
     public int getDistanceWeekCostTo( String destinationAreaName ){
-        LOGGER.debug("getDistanceWeekCostTo: from " + this.name + " to " + destinationAreaName);
+//        LOGGER.debug("getDistanceWeekCostTo: from " + this.name + " to " + destinationAreaName);
         int value;
         if(destinationAreaName.equals(this.name)){
             value = 0;
@@ -100,7 +100,7 @@ public abstract class Area implements Serializable {
         else{
             value = this.distances.get( destinationAreaName ).length + 1; // lengh of steps + the last (destinationAreaName)
         }
-        LOGGER.debug("getDistanceWeekCostTo: cost = " + value);
+//        LOGGER.debug("getDistanceWeekCostTo: cost = " + value);
         return value;
     }
     
