@@ -249,7 +249,8 @@ public class Board implements Serializable {
         List<ShovelCard> shovelCards = new ArrayList();             // list of used shovel cards
         List<AssistantCard> assistantCards = new ArrayList();
         HashMap<Area, EthnologicalKnowledgeCard> ethnologicalKnowledgeCards = new HashMap();
-
+        List<ExcavationAuthorizationCard> excaCards = new ArrayList(); 
+        
         // RETURNER OBJECT
         HashMap<String, Object> returnedInfo = new HashMap();
         returnedInfo.put("pickedCard", null);
@@ -260,13 +261,14 @@ public class Board implements Serializable {
             throw new Exception("No player provided, please see the parameters details");
         }
         Player player = (Player) playerActionParams.get("player");
-
      // We increment the number of round this player is still playing
-
         
 //        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         
         // CHECK USEDELEMENTS PARAMETER (We check and iterate over all used elements to get some informations and make more precise list)
+        
+        boolean alreadyExcavate = false;
+        
         List<UsableElement> usedElements;
         try {
             usedElements = (List<UsableElement>) playerActionParams.get("usedElements"); // we verify that the list is ok
@@ -274,7 +276,6 @@ public class Board implements Serializable {
                 usedElements = new ArrayList();
             }
         } catch (ClassCastException e) { throw new Exception("No usedElements provided or wrong structure, please see the parameters details"); }
-
         for(UsableElement element : usedElements) {
             if (element instanceof ShovelCard) {
                 shovelCards.add((ShovelCard) element);
@@ -286,15 +287,15 @@ public class Board implements Serializable {
                 Area key = this.getArea( ((EthnologicalKnowledgeCard)element).getExcavationAreaName());
                 ethnologicalKnowledgeCards.put( key, (EthnologicalKnowledgeCard)element );
             }
+            if(element instanceof ExcavationAuthorizationCard){
+            	excaCards.add((ExcavationAuthorizationCard)element);
+            }
         }
-
         // DO THE MAIN ACTION
         switch (actionPattern) {
-
             case Player.ACTION_CHANGE_FOUR_CARDS:
                 this._actionPlayerDoChangeFourCards(player, usedElements);
                 break;
-
             case Player.ACTION_EXCAVATE:
                 // Check area to excavate parameter
                 if (!playerActionParams.containsKey("areaToExcavate") || !(playerActionParams.get("areaToExcavate") instanceof ExcavationArea)) {
@@ -304,6 +305,12 @@ public class Board implements Serializable {
                 if (!playerActionParams.containsKey("nbTokenToPickUp") || !(playerActionParams.get("nbTokenToPickUp") instanceof Integer)) {
                     throw new Exception("No nbTokenToPickUp provided, please see the parameters details");
                 }
+                
+                
+                if(player.hasAlreadyExcavateArea(((ExcavationArea) playerActionParams.get("areaToExcavate")).getName())){
+                	alreadyExcavate = true;
+                }
+                
                 List<Token> tokensJustPickedUp = this._actionPlayerDoExcavateArea(
                                                     player,
                                                     ((ExcavationArea) playerActionParams.get("areaToExcavate")),
@@ -313,7 +320,6 @@ public class Board implements Serializable {
                                                     (int)playerActionParams.get("nbWeeksToExcavate"));
                 returnedInfo.put("tokensJustPickedUp", tokensJustPickedUp);
                 break;
-
             case Player.ACTION_ORGANIZE_EXPO:
                 // Check expoCardToDo parameter
                 if (!playerActionParams.containsKey("expoCardToDo") || !(playerActionParams.get("expoCardToDo") instanceof ExpoCard)) {
@@ -324,7 +330,6 @@ public class Board implements Serializable {
                         ((ExpoCard) playerActionParams.get("expoCardToDo")),
                         usedElements);
                 break;
-
             case Player.ACTION_PICK_CARD:
                 // Check cardToPickUp parameter
                 if (!playerActionParams.containsKey("cardToPickUp") || !(playerActionParams.get("cardToPickUp") instanceof Card)) {
@@ -337,7 +342,6 @@ public class Board implements Serializable {
                 returnedInfo.put("pickedCard", pickedCard);
                 break;
         }
-
         
         // case one assistant, we discard it
         if (assistantCards.size() == 1) {
@@ -349,9 +353,7 @@ public class Board implements Serializable {
             this.discardingDeck.add( shovelCards.get(0) );
             player.getCards().remove( shovelCards.get(0) ); 
         }
-
      // loop over all ethno
-
         if( Player.ACTION_EXCAVATE == actionPattern ){
             for (EthnologicalKnowledgeCard card : ethnologicalKnowledgeCards.values()) {
                 // discard only when excavate and only ethno about the area selected
@@ -360,6 +362,13 @@ public class Board implements Serializable {
                     player.getCards().remove( card );
                 }
             }
+            
+            if(alreadyExcavate){
+            	this.discardingDeck.add(excaCards.get(0));
+            	player.getCards().remove(excaCards.get(0));
+            }
+            
+            
         }
         
         return returnedInfo;

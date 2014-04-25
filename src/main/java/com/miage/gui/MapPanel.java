@@ -33,6 +33,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.apache.log4j.LogManager;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -1133,6 +1135,51 @@ public class MapPanel extends javax.swing.JPanel {
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+		menuCardsPlayerTab.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+			Player p = getPlayerTab(menuCardsPlayerTab);
+			for (String area : currentBoard.getAreas().keySet()) {
+            switch (area) {
+                case "greece":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "mesopotamia":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "palestine":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "egypt":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "crete":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+            }
+        }
+    }
+});
+		
         arrowMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/menuArrow.png"))); // NOI18N
         arrowMenuLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -1567,7 +1614,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param tp the player Tabbed Pane
      * @return The Player corresponding to the tab selected
      */
-    private Player getPlayerTab(javax.swing.JTabbedPane tp) throws Exception {
+    private Player getPlayerTab(javax.swing.JTabbedPane tp)  {
         Player player = null;
         switch (tp.getSelectedIndex()) {
             case 0:
