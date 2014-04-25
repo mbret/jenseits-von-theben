@@ -119,6 +119,15 @@ public class Sound{
     }
     
     /**
+     * Stop the music sound played (if it playing).
+     * @author david
+     * @param action 
+     */
+    public static void stopAudioGameEnd(){
+        AudioPlayer.player.stop(asMusicGame);
+    }
+    
+    /**
      * Stop the chrono sound played (if it playing).
      * @author david
      * @param action 
@@ -133,6 +142,6 @@ public class Sound{
      * @param action 
      */
     public static void stopFinishAudioGame(){
-        AudioPlayer.player.stop(asChrono);
+        AudioPlayer.player.stop(asFinishGame);
     }
 }
