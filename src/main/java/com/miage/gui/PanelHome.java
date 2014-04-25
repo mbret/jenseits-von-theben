@@ -58,11 +58,9 @@ public class PanelHome extends javax.swing.JPanel {
         String audioEnable = ConfigManager.getInstance().getOptions().get("general", "audio", String.class);
         if(audioEnable != null){
             if(audioEnable.compareTo("1") == 0){
-                System.out.println("TRUE");
                 this.audioMuteCheckBox.setSelected(Boolean.TRUE);
                 Sound.enableSound = Boolean.TRUE;
             }else{
-                System.out.println("FALSE");
                 this.audioMuteCheckBox.setSelected(Boolean.FALSE);
                 Sound.enableSound = Boolean.FALSE;
             }
