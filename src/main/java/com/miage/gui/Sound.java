@@ -27,6 +27,11 @@ public class Sound{
     private static AudioStream asChrono;
     
     /**
+     * Audio stream for play the soundfile.
+     */
+    private static AudioStream asFinishGame;
+    
+    /**
      * Boolean to enable or disable all sounds.
      */
     public static boolean enableSound = true;
@@ -76,7 +81,8 @@ public class Sound{
                         AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.clic))));
                         break;
                     case "finishGame":
-                        AudioPlayer.player.start(new AudioStream(new FileInputStream(new File(Sound.finishGame))));
+                        asFinishGame = new AudioStream(new FileInputStream(new File(Sound.finishGame)));
+                        AudioPlayer.player.start(asFinishGame);
                         break;
                     case "audioGame":
                         asMusicGame = new AudioStream(new FileInputStream(new File(Sound.audioGame)));
@@ -118,6 +124,15 @@ public class Sound{
      * @param action 
      */
     public static void stopAudioChrono(){
+        AudioPlayer.player.stop(asChrono);
+    }
+    
+    /**
+     * Stop the chrono sound played (if it playing).
+     * @author david
+     * @param action 
+     */
+    public static void stopFinishAudioGame(){
         AudioPlayer.player.stop(asChrono);
     }
 }

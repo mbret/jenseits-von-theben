@@ -2,25 +2,24 @@ package com.miage.gui;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
-import com.miage.utils.ConfigManager;
 import com.miage.game.*;
 import com.miage.gui.Sound;
 import com.miage.gui.TokensPosition;
 import com.miage.interfaces.ActivableElement;
 import com.miage.interfaces.ActiveElement;
 import com.miage.interfaces.UsableElement;
-import com.miage.utils.Utils;
 import com.miage.tokens.Token;
-
+import com.miage.utils.ConfigManager;
+import com.miage.utils.Utils;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -91,6 +89,8 @@ public class MapPanel extends javax.swing.JPanel {
     public MapPanel(Board board, JPanel panelContainer) {
 
         initComponents();
+        this.usableElementsMenuPanel.setLayout(new GridLayout(1, 3));
+        this.usingElementsMenuPanel.setLayout(new GridLayout(1, 3));
 
 //        try{
 //            Integer.parseInt("sdsd");
@@ -164,6 +164,8 @@ public class MapPanel extends javax.swing.JPanel {
     }
     
     public void runEndGame(){
+        Sound.stopAudioGameEnd();
+        Sound.play("finishGame");
         StringBuilder sb = new StringBuilder();
         sb.append("<html><h1>Jeu terminé</h1>");
         sb.append("<br/><table><tr><td>Joueur</td>");
@@ -179,7 +181,11 @@ public class MapPanel extends javax.swing.JPanel {
             ).append("</td>");
         }
         sb.append("</tr></table>");
+        
         JOptionPane.showMessageDialog( this, sb);
+        Sound.stopFinishAudioGame();
+        
+        
         
         
         try {
@@ -460,6 +466,14 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updateBoardCardsUI() {
         LOGGER.debug("_updateBoardCardsUI");
         this.boardCardsContainerPanel.removeAll();
+        
+        int sizeActivableElements = currentPlayer.getAllActivableElements().size();
+        Double sizeActivableElementsDouble = new Double(sizeActivableElements);
+        Double division = new Double(sizeActivableElementsDouble / 3.0);
+        Double ceilOfDivision = Math.ceil(division);
+        int numberOfLine = ceilOfDivision.intValue();
+        this.usableElementsMenuPanel.setLayout(new GridLayout(numberOfLine, 3));
+        
         for (Map.Entry<Component, Card> entry : this.listOfBoardCardsComponent.entrySet()) {
 
             this.boardCardsContainerPanel.add(entry.getKey());
@@ -543,6 +557,13 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updatePlayerUsingElementUI() {
 		LOGGER.debug("_updatePlayerUsingElementUI:");
 		this.usingElementsMenuPanel.removeAll();
+                
+                int sizeUsingElements = currentPlayer.getAllUsableElements().size();
+        Double sizeActivableElementsDouble = new Double(sizeUsingElements);
+        Double division = new Double(sizeActivableElementsDouble / 3.0);
+        Double ceilOfDivision = Math.ceil(division);
+        int numberOfLine = ceilOfDivision.intValue();
+        this.usingElementsMenuPanel.setLayout(new GridLayout(numberOfLine, 3));
 
 		for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
 
@@ -911,45 +932,9 @@ public class MapPanel extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez effectuer cette exposition");
         }
-        this.tokenContainerPanel.updateUI();
-
-        // Update the position of time token
-        this.timeTokenContainerPanel.removeAll();
-        JLabel timeTokenLabel = new JLabel();
-        timeTokenLabel.setIcon(
-                new ImageIcon(
-                getClass().getResource(
-                ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.playerToken") + "timeToken.png")));
-        timeTokenLabel.setSize(32, 32);
-        timeTokenLabel.setLocation(TokensPosition.positionDependingOnYear(this.currentBoard.getUpcomingPlayer().getPlayerToken().getCurrentYear()));
-        this.timeTokenContainerPanel.add(timeTokenLabel);
-        this.timeTokenContainerPanel.updateUI();
-
-        this.mapContainerPanel.updateUI();
-    }
-
-   /* private void _updateInfoContainerPanelUI() {
-        this.currentPlayerLabel.setText(this.currentPlayer.getName());
-        this.currentPlayerLabel.setForeground(this.currentPlayer.getPlayerToken().getColorUI());
-        this.currentPlayerScoreLabel.setText( 
-                String.valueOf(
-                        this.currentPlayer.getCalculatedPoint( 
-                                this.currentBoard.getPlayers() , 
-                                this.currentBoard.getAreas(ExcavationArea.class).values() 
-                        ) 
-                ) 
-        );
-        this.currentPlayerLabel.updateUI();
-        this.infoContainerPanel.updateUI();
-    }
-
-    /**
-     * Update all UI contained inside left panel
-     *
-    private void _updateLeftPanelUI() {
         
         // declancher son fin d'exposition
-    }*/
+    }
 
     /**
      * When the player click on the activabe element on the panel right
@@ -1126,13 +1111,12 @@ public class MapPanel extends javax.swing.JPanel {
         excavationSiteContainerPanel = new javax.swing.JPanel();
         expoCardsContainerPanel = new javax.swing.JPanel();
         rightPanelContainerPanel = new javax.swing.JPanel();
-        usableElementsMenuPanel = new javax.swing.JPanel();
         usableElementsMenuScrollPanel = new javax.swing.JScrollPane();
-        usingElementsMenuPanel = new javax.swing.JPanel();
+        usableElementsMenuPanel = new javax.swing.JPanel();
         usingElementsMenuScrollPanel = new javax.swing.JScrollPane();
+        usingElementsMenuPanel = new javax.swing.JPanel();
         logMenu = new javax.swing.JPanel();
         logMenuScrollBar = new javax.swing.JScrollBar();
-        jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         infoContainerPanel = new javax.swing.JPanel();
         currentPlayerLabel = new javax.swing.JLabel();
@@ -1145,6 +1129,7 @@ public class MapPanel extends javax.swing.JPanel {
         saveGameJButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         backgroundLabel = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -1404,20 +1389,22 @@ public class MapPanel extends javax.swing.JPanel {
         rightPanelContainerPanel.setOpaque(false);
         rightPanelContainerPanel.setLayout(null);
 
-        usableElementsMenuPanel.setOpaque(false);
-        rightPanelContainerPanel.add(usableElementsMenuPanel);
-        usableElementsMenuPanel.setBounds(0, 210, 310, 340);
-
         usableElementsMenuScrollPanel.setHorizontalScrollBar(null);
+
+        usableElementsMenuPanel.setOpaque(false);
+        usableElementsMenuPanel.setLayout(new java.awt.GridLayout(1, 0));
+        usableElementsMenuScrollPanel.setViewportView(usableElementsMenuPanel);
+
         rightPanelContainerPanel.add(usableElementsMenuScrollPanel);
         usableElementsMenuScrollPanel.setBounds(0, 210, 310, 340);
 
-        usingElementsMenuPanel.setOpaque(false);
-        rightPanelContainerPanel.add(usingElementsMenuPanel);
-        usingElementsMenuPanel.setBounds(0, 560, 310, 190);
-
         usingElementsMenuScrollPanel.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         usingElementsMenuScrollPanel.setOpaque(false);
+
+        usingElementsMenuPanel.setOpaque(false);
+        usingElementsMenuPanel.setLayout(new java.awt.GridLayout());
+        usingElementsMenuScrollPanel.setViewportView(usingElementsMenuPanel);
+
         rightPanelContainerPanel.add(usingElementsMenuScrollPanel);
         usingElementsMenuScrollPanel.setBounds(0, 560, 310, 190);
 
@@ -1427,8 +1414,6 @@ public class MapPanel extends javax.swing.JPanel {
 
         rightPanelContainerPanel.add(logMenu);
         logMenu.setBounds(0, 120, 310, 80);
-        rightPanelContainerPanel.add(jSeparator1);
-        jSeparator1.setBounds(0, 200, 310, 20);
         rightPanelContainerPanel.add(jSeparator2);
         jSeparator2.setBounds(0, 550, 310, 20);
 
@@ -1442,11 +1427,11 @@ public class MapPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Connaissances utilisable :");
         infoContainerPanel.add(jLabel3);
-        jLabel3.setBounds(10, 30, 170, 15);
+        jLabel3.setBounds(10, 30, 170, 14);
 
         jLabel5.setText("Joueur courant :");
         infoContainerPanel.add(jLabel5);
-        jLabel5.setBounds(10, 10, 90, 15);
+        jLabel5.setBounds(10, 10, 90, 14);
 
         knowledgePointComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1458,15 +1443,15 @@ public class MapPanel extends javax.swing.JPanel {
 
         selectedKnowledgePointLabel.setText("selectedKnowledge");
         infoContainerPanel.add(selectedKnowledgePointLabel);
-        selectedKnowledgePointLabel.setBounds(200, 50, 30, 15);
+        selectedKnowledgePointLabel.setBounds(200, 50, 30, 14);
 
         jLabel1.setText("Score :");
         infoContainerPanel.add(jLabel1);
-        jLabel1.setBounds(200, 10, 60, 15);
+        jLabel1.setBounds(200, 10, 60, 14);
 
         currentPlayerScoreLabel.setText("0");
         infoContainerPanel.add(currentPlayerScoreLabel);
-        currentPlayerScoreLabel.setBounds(270, 10, 30, 15);
+        currentPlayerScoreLabel.setBounds(270, 10, 30, 14);
 
         saveGameJButton.setText("Save");
         saveGameJButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1486,6 +1471,7 @@ public class MapPanel extends javax.swing.JPanel {
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/map.jpg"))); // NOI18N
         add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     /**

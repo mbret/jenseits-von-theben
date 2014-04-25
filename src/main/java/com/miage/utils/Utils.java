@@ -85,10 +85,7 @@ public class Utils {
                 return null;
             }
             catch (IOException e) {
-                /*
-                 * Changer l'action de l'exception
-                 */
-                e.printStackTrace();
+                return null;
             }catch (ClassNotFoundException e) {
                 /*
                  * Changer l'action de l'exception
