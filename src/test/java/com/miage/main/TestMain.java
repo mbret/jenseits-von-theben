@@ -132,7 +132,7 @@ public class TestMain {
             assertEquals(board.getLogDisplay(),tempDate+" maxime se déplace sur paris.");
             boolean testReussi;
             try{
-                FileReader fr = new FileReader("save.jvt");
+                FileReader fr = new FileReader(javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory().getPath()+"\\JenseitsVonTheben\\"+"save.jvt");
                 testReussi = true;
             } catch (FileNotFoundException fnfe) {
                 testReussi = false;
