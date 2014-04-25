@@ -17,7 +17,6 @@ import com.miage.interfaces.UsableElement;
 import com.miage.main.Utils;
 import com.miage.tokens.Token;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -152,6 +151,7 @@ public class MapPanel extends javax.swing.JPanel {
             playerLeftPanel.setLayout(new AbsoluteLayout());
             playerLeftPanel.setBorder(BorderFactory.createEmptyBorder());
             this.menuCardsPlayerTab.addTab(player.getName(), playerLeftPanel);
+            menuCardsPlayerTab.setBackgroundAt(menuCardsPlayerTab.getTabCount()-1, player.getPlayerToken().getColorUI());
         }
 
         // INIT MAIN FRAME
@@ -409,8 +409,10 @@ public class MapPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Veuillez renseigner un nombre entre 1 et 12");
                 }
             }
-        }while( res != null && (nbWeeks < 1 || nbWeeks > 12) );
-        if( res == null ) return null;
+        } while (res != null && (nbWeeks < 1 || nbWeeks > 12));
+        if (res == null) {
+            return null;
+        }
         Sound.stopAudioChrono();
         return nbWeeks;
     }
@@ -452,7 +454,7 @@ public class MapPanel extends javax.swing.JPanel {
         this.usableElementsMenuPanel.removeAll();
         int sizeActivableElements = currentPlayer.getAllActivableElements().size();
         Double sizeActivableElementsDouble = new Double(sizeActivableElements);
-        Double division = new Double(sizeActivableElementsDouble/3.0);
+        Double division = new Double(sizeActivableElementsDouble / 3.0);
         Double ceilOfDivision = Math.ceil(division);
         int numberOfLine = ceilOfDivision.intValue();
         this.usableElementsMenuPanel.setLayout(new GridLayout(numberOfLine, 3));
@@ -460,7 +462,7 @@ public class MapPanel extends javax.swing.JPanel {
 
 
             ImageIcon cardIcon = new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg"));
-            
+
 
             this.usableElementsMenuPanel.add(entry.getValue());
 
@@ -518,7 +520,7 @@ public class MapPanel extends javax.swing.JPanel {
 
         int sizeUsingElements = currentPlayer.getAllUsableElements().size();
         Double sizeActivableElementsDouble = new Double(sizeUsingElements);
-        Double division = new Double(sizeActivableElementsDouble/3.0);
+        Double division = new Double(sizeActivableElementsDouble / 3.0);
         Double ceilOfDivision = Math.ceil(division);
         int numberOfLine = ceilOfDivision.intValue();
         this.usingElementsMenuPanel.setLayout(new GridLayout(numberOfLine, 3));
@@ -966,8 +968,8 @@ public class MapPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez pas fouiller " + area.getName());
 
         } else {
-            
-            Integer nbWeeks = _displayChronotimeFrame( this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements()) );
+
+            Integer nbWeeks = _displayChronotimeFrame(this.currentPlayer.getTotalAskedKnowledgePoint(area, this.currentPlayer.getAllActivableElements()));
             Sound.stopAudioChrono();
             // Player wrote down a valid number
             if (nbWeeks != null) {
