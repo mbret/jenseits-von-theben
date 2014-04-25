@@ -15,18 +15,26 @@ import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.UsableElement;
 import com.miage.main.Utils;
 import com.miage.tokens.Token;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
+
 import static java.lang.reflect.Array.set;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,6 +49,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -51,6 +61,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
+
 import org.apache.log4j.Layout;
 import org.apache.log4j.LogManager;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
@@ -63,6 +74,7 @@ import org.netbeans.lib.awtextra.AbsoluteLayout;
  */
 public class MapPanel extends javax.swing.JPanel {
 
+
     private final static org.apache.log4j.Logger LOGGER = LogManager.getLogger(MapPanel.class.getName());
     
     // Variables relating to the game
@@ -74,7 +86,7 @@ public class MapPanel extends javax.swing.JPanel {
     // variables relating to the UI
     // Used to work through list (set/update event, update UI)
     // The order is very important
-    private HashMap<ActivableElement, Component> listOfUsableElementsComponent;    // component instanciated once
+    private HashMap<ActivableElement, Component> listOfActivableElementsComponent;    // component instanciated once
     private HashMap<UsableElement, Component> listOfUsingElementsComponent;            // contain all active element a player is using (object because of CarCard)
     private LinkedHashMap<Component, ExpoCard> listOfExpoCardsComponent;  // component instanciated once, only change linked expoCard (all should be always ordened)
     private LinkedHashMap<Component, Card> listOfBoardCardsComponent;     // components instanciated once, only cards are changed (all should be always ordened)
@@ -91,6 +103,7 @@ public class MapPanel extends javax.swing.JPanel {
     public static MapPanel create(Board board) {
         if (MapPanel.instance == null) {
             MapPanel.instance = new MapPanel(board);
+            // first init of player
             instance.switchNewPlayer();
         }
         return instance;
@@ -103,93 +116,52 @@ public class MapPanel extends javax.swing.JPanel {
      */
     private MapPanel(Board board) {
 
-        // Init graphical components
         initComponents();
 
-        // Init the board and the tabbed pane with name's players
         this.currentBoard = board; // active board
         this.currentPlayer = this.currentBoard.getUpcomingPlayer(); // IMPORTANT (needed for some init (like UI) in this class)
-        
-        // INIT COMPONENT
-        // Init list of board cards component (the four cards)
         this.listOfBoardCardsComponent = new LinkedHashMap();
-        this._updateBoardCardsComponent(this.currentBoard.getFourCurrentCards());
-        
-        // INIT UI
-        _initUI();
-        
-        this._updateBoardCardsUI();
-
-        // Init list of expo cards component
         this.listOfExpoCardsComponent = new LinkedHashMap();
-        this._updatExpoCardsComponent(this.currentBoard.getExpoCards());
-        this._updateExpoCardsUI();
-
-        // Init list of usable element component
-        this.listOfUsableElementsComponent = new HashMap();
-        // ... rest will be updated inside (switchplayer) function
-
-        // Init list of using element component
+        this.listOfActivableElementsComponent = new HashMap();
         this.listOfUsingElementsComponent = new HashMap();
-        // ... rest will be updated inside (switchplayer) function
-
-        // Init list of excavation component
         this.listOfExcavationSiteComponent = new HashMap();
-        this._updateExcavationSiteComponent(new ArrayList(this.currentBoard.getAreas(ExcavationArea.class).values()));
-        this._updateExcavationSiteUI();
-
-        // Init player tokens
-        this.mapContainerPanel.setLayout(null);
-
+        
+        
+        // INIT FOUR CARDS (component) + BUTTON
+        this._updateBoardCardsComponent(this.currentBoard.getFourCurrentCards());
         // Add event on click (change four cards)
-        changeFourCardsjButton.addActionListener(
-                new java.awt.event.ActionListener() {
+        changeFourCardsjButton.addActionListener( new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 _actionChangeFourcardsButtonActionPerformed(evt);
             }
         });
 
+        // Init list of expo cards component
+        this._updatExpoCardsComponent(this.currentBoard.getExpoCards());
 
-        /*
-         Update the left panel
-         */
+        // INIT EXCAVATION (component)
+        this._updateExcavationSiteComponent(new ArrayList(this.currentBoard.getAreas(ExcavationArea.class).values()));
+
+        // INIT LEFT PANEL
         this.leftPanelContainerPanel.setVisible(false);
-//        this.playerLeftPanel.setVisible(false); // hide player panel
-//        this.menuCardsPlayerTab.setVisible(false); // hide left panel
-//        displayedCardTokenPanel.setVisible(false);
-        // add and set dynamicaly player tab on left panel
-
         for (Player player : this.currentBoard.getPlayers()) {
-
             JPanel playerLeftPanel = new javax.swing.JPanel();
             playerLeftPanel.setLayout(new AbsoluteLayout());
             playerLeftPanel.setBorder(BorderFactory.createEmptyBorder());
-
             this.menuCardsPlayerTab.addTab(player.getName(), playerLeftPanel);
-//              this.menuCardsPlayerTab.addTab( player.getName(), this.playerLeftPanel);
         }
-//        this.menuCardsPlayerTab.setSelectedIndex(0); // Select the first player in the tabbed pane and update the current player with the first one
-        try {
-//            leftPanelViewingPlayer = this.currentBoard.getUpcomingPlayer(); // set the viewing player on the left panel
-//            this.getPlayerTab( menuCardsPlayerTab );
-        } catch (Exception ex) {
-            Logger.getLogger(MapPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-
         
-        
-        
+        // INIT MAIN FRAME
         this.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 backgroundLabelMouseClicked(evt);
             }
         });
         
-
-
-
+        // INIT UI
+        
+        _initUI();
     }
 
     
@@ -200,6 +172,24 @@ public class MapPanel extends javax.swing.JPanel {
      *                                  Various methods
      * 
      ***********************************************************************************************/
+    
+    /**
+	 * Method to resize an image
+	 * @param source
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+	public static Image scaleImage(Image source, int width, int height) {
+		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) img.getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(source, 0, 0, width, height, null);
+		g.dispose();
+		return img;
+	}
+    
+    
     
     /**
      * Get the new upcoming player and init everything about him.
@@ -277,7 +267,7 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updateActivableElementComponent(List<ActivableElement> elements) {
         LOGGER.debug("_updateUsableElementComponent");
 
-        this.listOfUsableElementsComponent.clear();
+        this.listOfActivableElementsComponent.clear();
 
         for (final ActivableElement element : elements) {
 
@@ -293,7 +283,7 @@ public class MapPanel extends javax.swing.JPanel {
                 }
             });
 
-            this.listOfUsableElementsComponent.put(element, elementLabel);
+            this.listOfActivableElementsComponent.put(element, elementLabel);
         }
     }
 
@@ -425,7 +415,6 @@ public class MapPanel extends javax.swing.JPanel {
 
     
     
-    
     /***********************************************************************************************
      *
      *                                          Update UI
@@ -455,66 +444,94 @@ public class MapPanel extends javax.swing.JPanel {
         this.mapContainerPanel.updateUI();
     }
 
+    private void _updatePlayerActivableElementUI() {
+		LOGGER.debug("_updatePlayerUsableElementUI: refresh of usable element panel");
+
+		this.usableElementsMenuPanel.removeAll();
+		for (Map.Entry<ActivableElement, Component> entry : this.listOfActivableElementsComponent.entrySet()) {
+
+			
+			ImageIcon cardIcon = new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg"));
+			
+			
+
+
+			this.usableElementsMenuPanel.add( entry.getValue() );
+
+			if(this.listOfUsingElementsComponent.containsKey(entry.getKey())){
+				
+				// if the card is being used
+				
+				// draw the selected image on the card image
+				
+				Image cardImage = cardIcon.getImage();
+				BufferedImage cardBuffered = new BufferedImage(cardImage.getWidth(null), cardImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+				
+				Graphics2D gCard = cardBuffered.createGraphics();
+				gCard.drawImage(cardImage, 0, 0, null);
+				gCard.dispose();
+				
+				
+				ImageIcon selectedIcon = new ImageIcon(getClass().getResource("/images/cards/selected.png"));
+				Image selectedImage = selectedIcon.getImage();
+				BufferedImage selectedBuffered = new BufferedImage(selectedImage.getWidth(null), selectedImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+				
+				
+				Graphics2D gSelected = selectedBuffered.createGraphics();
+				gSelected.drawImage(selectedImage, 0, 0, null);
+				gSelected.dispose();
+				
+				
+				Graphics2D gSelectedCard = cardBuffered.createGraphics();
+				gSelectedCard.drawImage(selectedBuffered, 0, 0, null);
+				gSelectedCard.dispose();
+
+				// and set the label with it
+
+				((JLabel) entry.getValue()).setIcon(new ImageIcon(cardBuffered));
+
+
+			}else{
+			
+			((JLabel) entry.getValue()).setIcon(cardIcon);
+			}
+
+
+
+		}
+		this.usableElementsMenuPanel.updateUI();
+		this.rightPanelContainerPanel.updateUI();
+	}
+
+    
+    
     /**
-     *
-     *
-     */
-    private void _updatePlayerUsableElementUI() {
-        LOGGER.debug("_updatePlayerUsableElementUI: refresh of usable element panel");
+	 * for now we display only ACTIVABLE and CAR
+	 */
+	private void _updatePlayerUsingElementUI() {
+		LOGGER.debug("_updatePlayerUsingElementUI:");
+		this.usingElementsMenuPanel.removeAll();
 
-        this.usableElementsMenuPanel.removeAll();
-        for (Map.Entry<ActivableElement, Component> entry : this.listOfUsableElementsComponent.entrySet()) {
+		for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
 
-            // card
-            if (entry.getKey() instanceof Card) {
-                ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
-                this.usableElementsMenuPanel.add( entry.getValue() );
-            } // token
-            else {
-                ((JLabel) entry.getValue()).setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
-                this.usableElementsMenuPanel.add(entry.getValue());
-            }
-        }
-        this.usableElementsMenuPanel.updateUI();
-        this.rightPanelContainerPanel.updateUI();
-    }
+			
+			if( entry.getKey() instanceof ActiveElement ){
 
-    /**
-     * for now we display only ACTIVABLE and CAR
-     */
-    private void _updatePlayerUsingElementUI() {
-        LOGGER.debug("_updatePlayerUsingElementUI:");
-        this.usingElementsMenuPanel.removeAll();
-        for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
+				if( entry.getKey() instanceof CarCard || entry.getKey() instanceof ExcavationAuthorizationCard){
+					((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
+					this.usingElementsMenuPanel.add( entry.getValue() );
+				}
+				
+				
 
-            //if the card can be active
-            if (entry.getKey() instanceof ActivableElement) {
-                
-                // card
-                if (entry.getKey() instanceof Card) {
-                    ((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
-                    this.usingElementsMenuPanel.add( entry.getValue() );
-                } // token
-                else if( entry.getKey() instanceof Token ) {
-                    ((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/token/" + ((Token) entry.getKey()).getId() + ".jpg")));
-                    this.usingElementsMenuPanel.add( entry.getValue() );
-                }
+			}
+		}
 
-            }
-            else if( entry.getKey() instanceof ActiveElement ){
-                
-                if( entry.getKey() instanceof CarCard ){
-                    ((JLabel) entry.getValue()).setIcon(new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg")));
-                    this.usingElementsMenuPanel.add( entry.getValue() );
-                }
-                
-            }
-        }
-        this.usingElementsMenuPanel.updateUI();
-        this.usingElementsMenuScrollPanel.updateUI();
-        this.rightPanelContainerPanel.updateUI();
+		this.usingElementsMenuPanel.updateUI();
+		this.rightPanelContainerPanel.updateUI();
 
-    }
+	}
+    
 
     /**
      *
@@ -543,68 +560,78 @@ public class MapPanel extends javax.swing.JPanel {
         this.mapContainerPanel.updateUI();
     }
 
+   
+    
     private void _updateExcavationSiteUI() {
-        
-        this.excavationSiteContainerPanel.removeAll();
-        
-        for (Map.Entry<Component, ExcavationArea> entry : this.listOfExcavationSiteComponent.entrySet()) {
 
-            ((JLabel) entry.getKey()).setIcon(new ImageIcon(getClass().getResource(ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.images") + "excavate-icon.png")));
-            ((JLabel) entry.getKey()).setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-            ((JLabel) entry.getKey()).setSize(50, 50);
-            
-            this.excavationContainerPanel.add(entry.getKey());
-            
-            switch(entry.getValue().getName()){
+		this.excavationSiteContainerPanel.removeAll();
 
-              case "greece":
-                  entry.getKey().setLocation(0, 0);
-                  break;
-              case "crete":
-                  entry.getKey().setLocation(60, 135);
-                  break;
-              case "egypt":
-                  entry.getKey().setLocation(145, 230);
-                  break;
-              case "palestine":
-                  entry.getKey().setLocation(265, 215);
-                  break;
-              case "mesopotamia":
-                  entry.getKey().setLocation(320, 80);
-                  break;
-              }
-            
-            if( ! entry.getValue().isAlreadyExcavated() ){
-                JLabel firstToken = new JLabel(
-                        new ImageIcon(getClass().getResource(
-                                ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty(
-                                        "path.tokens") + entry.getValue().getName() + "/" + entry.getValue().getPointTokenFirstExcavation().getId() + ".png"))
-                );
-                firstToken.setSize( 32, 32 );
-                switch(entry.getValue().getName()){
-                    case "greece":
-                        firstToken.setLocation(60, 0);
-                        break;
-                    case "crete":
-                        firstToken.setLocation(120, 135);
-                        break;
-                    case "egypt":
-                        firstToken.setLocation(205, 230);
-                        break;
-                    case "palestine":
-                        firstToken.setLocation(325, 215);
-                        break;
-                    case "mesopotamia":
-                        firstToken.setLocation(380, 80);
-                        break;
-                }
-                this.excavationSiteContainerPanel.add( firstToken );
-            }
-            
-        }
-        this.excavationSiteContainerPanel.updateUI();
-        this.mapContainerPanel.updateUI();
-    }
+		for (Map.Entry<Component, ExcavationArea> entry : this.listOfExcavationSiteComponent.entrySet()) {
+
+			((JLabel) entry.getKey()).setIcon(new ImageIcon(getClass().getResource(ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.images") + "excavate-icon.png")));
+			((JLabel) entry.getKey()).setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+			((JLabel) entry.getKey()).setSize(50, 50);
+
+			this.excavationContainerPanel.add(entry.getKey());
+
+			switch(entry.getValue().getName()){
+
+			case "greece":
+				entry.getKey().setLocation(0, 0);
+				break;
+			case "crete":
+				entry.getKey().setLocation(60, 135);
+				break;
+			case "egypt":
+				entry.getKey().setLocation(145, 230);
+				break;
+			case "palestine":
+				entry.getKey().setLocation(265, 215);
+				break;
+			case "mesopotamia":
+				entry.getKey().setLocation(375, 80);
+				break;
+			}
+
+			if( ! entry.getValue().isAlreadyExcavated() ){
+				JLabel firstToken = new JLabel();
+
+				ImageIcon tokenImage = new javax.swing.ImageIcon(getClass().getResource(
+						ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty(
+								"path.tokens") + entry.getValue().getName() + "/" + entry.getValue().getPointTokenFirstExcavation().getId() + ".png"));
+				Image tokenResize = scaleImage(tokenImage.getImage(), 32, 32);
+				firstToken.setIcon(new ImageIcon(tokenResize));
+
+
+
+				firstToken.setSize( 32, 32 );
+				switch(entry.getValue().getName()){
+				case "greece":
+					firstToken.setLocation(80, 25);
+					break;
+				case "crete":
+					firstToken.setLocation(135, 143);
+					break;
+				case "egypt":
+					firstToken.setLocation(220, 260);
+					break;
+				case "palestine":
+					firstToken.setLocation(345, 245);
+					break;
+				case "mesopotamia":
+					firstToken.setLocation(385, 135);
+					break;
+				}
+				this.excavationSiteContainerPanel.add( firstToken );
+			}
+
+		}
+		this.excavationSiteContainerPanel.updateUI();
+		this.mapContainerPanel.updateUI();
+	}
+    
+    
+    
 
     private void _updatePlayerTokenPositionUI() {
         LOGGER.debug(this.currentBoard.getPlayerTokenStack());
@@ -665,27 +692,41 @@ public class MapPanel extends javax.swing.JPanel {
         this.infoContainerPanel.updateUI();
     }
 
+    /**
+     * Update all UI contained inside left panel
+     */
     private void _updateLeftPanelUI() {
         
     }
 
+    /**
+     * Update all UI contained inside right panel
+     */
     private void _updateRightPanelUI() {
-        this._updatePlayerUsableElementUI();
+        this._updatePlayerActivableElementUI();
         this._updatePlayerUsingElementUI();
         this._updateInfoContainerPanelUI();
     }
 
+    /**
+     * Update all UI contained inside boardPanel
+     */
     private void _updateBoardPanelUI() {
         this._updateBoardCardsUI();
         this._updateExpoCardsUI();
         this._updateExcavationSiteUI();
         this._updatePlayerTokenPositionUI();
     }
+
     
     /**
      * Run all UI init. The init method usually do all things that don't need to be redo (optimization)
      */
     private void _initUI(){
+        
+        this._updateBoardPanelUI();
+        this._updateRightPanelUI();
+        this._updateLeftPanelUI();
         
         // INIT InfoContainerPanelUI
         this.currentPlayerLabel.setVisible(true);
@@ -1399,7 +1440,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param evt the mouse event that serves for launching the method
      */
     private void arrowMenuLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arrowMenuLabelMouseEntered
-
+        this.menuCardsPlayerTab.setSelectedIndex(currentBoard.getPlayers().indexOf(currentPlayer));
         this.arrowMenuLabel.setVisible(false);
         this.leftPanelContainerPanel.setVisible(true);
         backgroundLabel.setEnabled(false);
@@ -1951,4 +1992,5 @@ public class MapPanel extends javax.swing.JPanel {
             return this.display;
         }
     }
+
 }

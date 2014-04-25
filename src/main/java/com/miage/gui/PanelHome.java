@@ -87,9 +87,7 @@ public class PanelHome extends javax.swing.JPanel {
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("red", "Rouge"));
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("yellow", "Jaune"));
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("green", "Vert"));
-        
-        // INIT SOUND OPTIONS
-        
+         
     }
 
     public void launchGame( Board board ){
