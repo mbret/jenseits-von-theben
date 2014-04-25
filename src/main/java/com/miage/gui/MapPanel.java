@@ -2,25 +2,24 @@ package com.miage.gui;
 
 import com.miage.areas.ExcavationArea;
 import com.miage.cards.*;
-import com.miage.utils.ConfigManager;
 import com.miage.game.*;
 import com.miage.gui.Sound;
 import com.miage.gui.TokensPosition;
 import com.miage.interfaces.ActivableElement;
 import com.miage.interfaces.ActiveElement;
 import com.miage.interfaces.UsableElement;
-import com.miage.utils.Utils;
 import com.miage.tokens.Token;
-
+import com.miage.utils.ConfigManager;
+import com.miage.utils.Utils;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,13 +27,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.apache.log4j.LogManager;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -67,21 +67,6 @@ public class MapPanel extends javax.swing.JPanel {
 
     private JPanel panelContainer;
     
-    /**
-     * Factory constructor
-     *
-     * @param board
-     * @return
-     * @throws Exception
-     */
-//    public static MapPanel create(Board board, JPanel panelContainer) {
-//        if (MapPanel.instance == null) {
-//            MapPanel.instance = new MapPanel(board, panelContainer);
-//            
-//            instance.runGame();
-//        }
-//        return instance;
-//    }
 
     /**
      * Creates new form MapPanel
@@ -91,13 +76,9 @@ public class MapPanel extends javax.swing.JPanel {
     public MapPanel(Board board, JPanel panelContainer) {
 
         initComponents();
-
-//        try{
-//            Integer.parseInt("sdsd");
-//        }
-//        catch(Exception e ){
-//            LOGGER.fatal("error", e);
-//        }
+		this.usableElementsMenuPanel.setLayout(new GridLayout(1, 3));
+        this.usingElementsMenuPanel.setLayout(new GridLayout(1, 3));
+		
         this.panelContainer = panelContainer;
         
         this.currentBoard = board; // active board
@@ -192,7 +173,7 @@ public class MapPanel extends javax.swing.JPanel {
             this.panelContainer.add( new PanelHome(this.panelContainer), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1) );
             this.panelContainer.updateUI();
         } catch (IOException ex) {
-            LOGGER.fatal(instance, ex);
+            LOGGER.fatal(this, ex);
             System.exit(0);
         }
         
@@ -203,6 +184,8 @@ public class MapPanel extends javax.swing.JPanel {
             this.runPlayer();
         }
         else{
+			// Here we do not have loaded player (current player) so be careful with what you need and update ...
+            this._updatePlayerTokenPositionUI();
             this.runEndGame();
         }
     }
@@ -270,7 +253,7 @@ public class MapPanel extends javax.swing.JPanel {
             // ... display GUI and let user play
 
         } catch (Exception ex) {
-            LOGGER.fatal(instance, ex);
+            LOGGER.fatal(this, ex);
             System.exit(0);
         }
     }
@@ -358,6 +341,15 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
     /**
      * Not optimized
      * <br/>Remove all component
@@ -429,7 +421,9 @@ public class MapPanel extends javax.swing.JPanel {
                 .append("<tr><td>Jeton(s)</td>");
         LOGGER.debug("_displayChronotimeFrame: nbKnowledge="+nbKnowledge);
         for (int i = 1; i <= 12; i++) {
+
             str.append("<td>").append(this.currentBoard.getChronotime().getNbTokensToPickUp(nbKnowledge, i)).append("</td>");
+
         }
         str.append("</tr>");
         str.append("</table>");
@@ -465,6 +459,13 @@ public class MapPanel extends javax.swing.JPanel {
     private void _updateBoardCardsUI() {
         LOGGER.debug("_updateBoardCardsUI");
         this.boardCardsContainerPanel.removeAll();
+        int sizeActivableElements = currentPlayer.getAllActivableElements().size();
+        Double sizeActivableElementsDouble = new Double(sizeActivableElements);
+        Double division = new Double(sizeActivableElementsDouble / 3.0);
+        Double ceilOfDivision = Math.ceil(division);
+        int numberOfLine = ceilOfDivision.intValue();
+        this.usableElementsMenuPanel.setLayout(new GridLayout(numberOfLine, 3));
+        
         for (Map.Entry<Component, Card> entry : this.listOfBoardCardsComponent.entrySet()) {
 
             this.boardCardsContainerPanel.add(entry.getKey());
@@ -542,12 +543,20 @@ public class MapPanel extends javax.swing.JPanel {
 		this.rightPanelContainerPanel.updateUI();
 	}
     
+	
     /**
 	 * for now we display only ACTIVABLE and CAR
 	 */
     private void _updatePlayerUsingElementUI() {
 		LOGGER.debug("_updatePlayerUsingElementUI:");
 		this.usingElementsMenuPanel.removeAll();
+                
+                int sizeUsingElements = currentPlayer.getAllUsableElements().size();
+        Double sizeActivableElementsDouble = new Double(sizeUsingElements);
+        Double division = new Double(sizeActivableElementsDouble / 3.0);
+        Double ceilOfDivision = Math.ceil(division);
+        int numberOfLine = ceilOfDivision.intValue();
+        this.usingElementsMenuPanel.setLayout(new GridLayout(numberOfLine, 3));
 
 		for (Map.Entry<UsableElement, Component> entry : this.listOfUsingElementsComponent.entrySet()) {
 
@@ -701,7 +710,7 @@ public class MapPanel extends javax.swing.JPanel {
                 getClass().getResource(
                 ConfigManager.getInstance().getConfig(ConfigManager.GENERAL_CONFIG_NAME).getProperty("path.playerToken") + "timeToken.png")));
         timeTokenLabel.setSize(32, 32);
-        timeTokenLabel.setLocation(TokensPosition.positionDependingOnYear(this.currentBoard.getUpcomingPlayer().getPlayerToken().getCurrentYear()));
+        timeTokenLabel.setLocation(TokensPosition.positionDependingOnYear( this.currentBoard.getPlayerTokenStack().getFirst().getCurrentYear()) );
         this.timeTokenContainerPanel.add(timeTokenLabel);
         this.timeTokenContainerPanel.updateUI();
 
@@ -952,23 +961,22 @@ public class MapPanel extends javax.swing.JPanel {
                 playerIsAble = false;
             }
         } catch (Exception ex) {
-            LOGGER.fatal(ex);
-            ex.printStackTrace();
+            LOGGER.fatal(this, ex);
             System.exit(0);
         }
 
         // DO ACTION
         if (!playerIsAble) {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez pas changer les quatres cartes ");
-        } else {
+        } 
+		else {
             playerActionParams.put("usedElements", this.currentPlayerUsingElements);
 
             // DO THE MAIN ACTION
             try {
                 currentBoard.doPlayerRoundAction(Player.ACTION_CHANGE_FOUR_CARDS, playerActionParams);
             } catch (Exception ex) {
-                LOGGER.fatal(ex.getMessage());
-                ex.printStackTrace();
+                LOGGER.fatal(this, ex);
                 System.exit(0);
             }
 
@@ -1032,7 +1040,7 @@ public class MapPanel extends javax.swing.JPanel {
                 }
             }
         } catch (Exception ex) {
-            LOGGER.fatal(instance, ex);
+            LOGGER.fatal(this, ex);
             System.exit(0);
         }
     }
@@ -1057,7 +1065,7 @@ public class MapPanel extends javax.swing.JPanel {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                        
     private void initComponents() {
 
         arrowMenuLabel = new javax.swing.JLabel();
@@ -1095,13 +1103,12 @@ public class MapPanel extends javax.swing.JPanel {
         excavationSiteContainerPanel = new javax.swing.JPanel();
         expoCardsContainerPanel = new javax.swing.JPanel();
         rightPanelContainerPanel = new javax.swing.JPanel();
-        usableElementsMenuPanel = new javax.swing.JPanel();
         usableElementsMenuScrollPanel = new javax.swing.JScrollPane();
-        usingElementsMenuPanel = new javax.swing.JPanel();
+        usableElementsMenuPanel = new javax.swing.JPanel();
         usingElementsMenuScrollPanel = new javax.swing.JScrollPane();
+        usingElementsMenuPanel = new javax.swing.JPanel();
         logMenu = new javax.swing.JPanel();
         logMenuScrollBar = new javax.swing.JScrollBar();
-        jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         infoContainerPanel = new javax.swing.JPanel();
         currentPlayerLabel = new javax.swing.JLabel();
@@ -1114,9 +1121,55 @@ public class MapPanel extends javax.swing.JPanel {
         saveGameJButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         backgroundLabel = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+		menuCardsPlayerTab.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+			Player p = getPlayerTab(menuCardsPlayerTab);
+			for (String area : currentBoard.getAreas().keySet()) {
+            switch (area) {
+                case "greece":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "mesopotamia":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "palestine":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "egypt":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+                case "crete":
+                    if (p.hasAlreadyExcavateArea(area)) {
+                        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
+                    } else {
+                        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
+                    }
+                    break;
+            }
+        }
+    }
+});
+		
         arrowMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/menuArrow.png"))); // NOI18N
         arrowMenuLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -1182,6 +1235,7 @@ public class MapPanel extends javax.swing.JPanel {
 
         londonExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cards/1.jpg"))); // NOI18N
         londonExcavationLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 londonExcavationLabelMouseEntered(evt);
             }
@@ -1373,20 +1427,22 @@ public class MapPanel extends javax.swing.JPanel {
         rightPanelContainerPanel.setOpaque(false);
         rightPanelContainerPanel.setLayout(null);
 
-        usableElementsMenuPanel.setOpaque(false);
-        rightPanelContainerPanel.add(usableElementsMenuPanel);
-        usableElementsMenuPanel.setBounds(0, 210, 310, 340);
-
         usableElementsMenuScrollPanel.setHorizontalScrollBar(null);
+
+        usableElementsMenuPanel.setOpaque(false);
+        usableElementsMenuPanel.setLayout(new java.awt.GridLayout(1, 0));
+        usableElementsMenuScrollPanel.setViewportView(usableElementsMenuPanel);
+
         rightPanelContainerPanel.add(usableElementsMenuScrollPanel);
         usableElementsMenuScrollPanel.setBounds(0, 210, 310, 340);
 
-        usingElementsMenuPanel.setOpaque(false);
-        rightPanelContainerPanel.add(usingElementsMenuPanel);
-        usingElementsMenuPanel.setBounds(0, 560, 310, 190);
-
         usingElementsMenuScrollPanel.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         usingElementsMenuScrollPanel.setOpaque(false);
+
+        usingElementsMenuPanel.setOpaque(false);
+        usingElementsMenuPanel.setLayout(new java.awt.GridLayout());
+        usingElementsMenuScrollPanel.setViewportView(usingElementsMenuPanel);
+
         rightPanelContainerPanel.add(usingElementsMenuScrollPanel);
         usingElementsMenuScrollPanel.setBounds(0, 560, 310, 190);
 
@@ -1396,8 +1452,6 @@ public class MapPanel extends javax.swing.JPanel {
 
         rightPanelContainerPanel.add(logMenu);
         logMenu.setBounds(0, 120, 310, 80);
-        rightPanelContainerPanel.add(jSeparator1);
-        jSeparator1.setBounds(0, 200, 310, 20);
         rightPanelContainerPanel.add(jSeparator2);
         jSeparator2.setBounds(0, 550, 310, 20);
 
@@ -1411,11 +1465,11 @@ public class MapPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Connaissances utilisable :");
         infoContainerPanel.add(jLabel3);
-        jLabel3.setBounds(10, 30, 170, 15);
+        jLabel3.setBounds(10, 30, 170, 14);
 
         jLabel5.setText("Joueur courant :");
         infoContainerPanel.add(jLabel5);
-        jLabel5.setBounds(10, 10, 90, 15);
+        jLabel5.setBounds(10, 10, 90, 14);
 
         knowledgePointComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1427,15 +1481,15 @@ public class MapPanel extends javax.swing.JPanel {
 
         selectedKnowledgePointLabel.setText("selectedKnowledge");
         infoContainerPanel.add(selectedKnowledgePointLabel);
-        selectedKnowledgePointLabel.setBounds(200, 50, 30, 15);
+        selectedKnowledgePointLabel.setBounds(200, 50, 30, 14);
 
         jLabel1.setText("Score :");
         infoContainerPanel.add(jLabel1);
-        jLabel1.setBounds(200, 10, 60, 15);
+        jLabel1.setBounds(200, 10, 60, 14);
 
         currentPlayerScoreLabel.setText("0");
         infoContainerPanel.add(currentPlayerScoreLabel);
-        currentPlayerScoreLabel.setBounds(270, 10, 30, 15);
+        currentPlayerScoreLabel.setBounds(270, 10, 30, 14);
 
         saveGameJButton.setText("Save");
         saveGameJButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1455,7 +1509,8 @@ public class MapPanel extends javax.swing.JPanel {
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/map.jpg"))); // NOI18N
         add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-    }// </editor-fold>//GEN-END:initComponents
+        add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+    }// </editor-fold>                        
 
     /**
      * When you put your mouse in the left of the screen, it shows the player
@@ -1463,7 +1518,7 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt the mouse event that serves for launching the method
      */
-    private void arrowMenuLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arrowMenuLabelMouseEntered
+    private void arrowMenuLabelMouseEntered(java.awt.event.MouseEvent evt) {                                            
         this.menuCardsPlayerTab.setSelectedIndex(currentBoard.getPlayers().indexOf(currentPlayer));
         this.arrowMenuLabel.setVisible(false);
         this.leftPanelContainerPanel.setVisible(true);
@@ -1474,7 +1529,7 @@ public class MapPanel extends javax.swing.JPanel {
         for (Component rightPanelComponents : rightPanelContainerPanel.getComponents()) {
             hideComponents(rightPanelComponents);
         }
-    }//GEN-LAST:event_arrowMenuLabelMouseEntered
+    }                                           
 
     public void hideComponents(Component component) {
         if (component instanceof JPanel) {
@@ -1550,7 +1605,7 @@ public class MapPanel extends javax.swing.JPanel {
      * @param tp the player Tabbed Pane
      * @return The Player corresponding to the tab selected
      */
-    private Player getPlayerTab(javax.swing.JTabbedPane tp) throws Exception {
+    private Player getPlayerTab(javax.swing.JTabbedPane tp)  {
         Player player = null;
         switch (tp.getSelectedIndex()) {
             case 0:
@@ -1583,9 +1638,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void moscowCarLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarLabelMouseEntered
+    private void moscowCarLabelMouseEntered(java.awt.event.MouseEvent evt) {                                            
         this.displayPlayerCard(CarCard.class);
-    }//GEN-LAST:event_moscowCarLabelMouseEntered
+    }                                           
 
     /**
      * When you put the mouse out of the moscow car of the player menu, it hides
@@ -1593,9 +1648,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void moscowCarLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowCarLabelMouseExited
+    private void moscowCarLabelMouseExited(java.awt.event.MouseEvent evt) {                                           
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_moscowCarLabelMouseExited
+    }                                          
 
     /**
      * When you put the mouse in the roma zeppelin of the player menu, it shows
@@ -1603,9 +1658,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void romaZeppelinLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_romaZeppelinLabelMouseEntered
+    private void romaZeppelinLabelMouseEntered(java.awt.event.MouseEvent evt) {                                               
         this.displayPlayerCard(ZeppelinCard.class);
-    }//GEN-LAST:event_romaZeppelinLabelMouseEntered
+    }                                              
 
     /**
      * When you put the mouse out of the roma Zeppelin of the player menu, it
@@ -1613,9 +1668,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void romaZeppelinLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_romaZeppelinLabelMouseExited
+    private void romaZeppelinLabelMouseExited(java.awt.event.MouseEvent evt) {                                              
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_romaZeppelinLabelMouseExited
+    }                                             
 
     /**
      * When you put the mouse in the london excavation of the player menu, it
@@ -1623,9 +1678,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void londonExcavationLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonExcavationLabelMouseEntered
+    private void londonExcavationLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                   
         this.displayPlayerCard(ExcavationAuthorizationCard.class);
-    }//GEN-LAST:event_londonExcavationLabelMouseEntered
+    }                                                  
 
     /**
      * When you put the mouse out of the london excavation of the player menu,
@@ -1633,9 +1688,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void londonExcavationLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonExcavationLabelMouseExited
+    private void londonExcavationLabelMouseExited(java.awt.event.MouseEvent evt) {                                                  
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_londonExcavationLabelMouseExited
+    }                                                 
 
     /**
      * When you put the mouse in the berlin congress of the player menu, it
@@ -1643,9 +1698,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinCongressPLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressPLabelMouseEntered
+    private void berlinCongressPLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                  
         this.displayPlayerCard(CongressCard.class);
-    }//GEN-LAST:event_berlinCongressPLabelMouseEntered
+    }                                                 
 
     /**
      * When you put the mouse out of the berlin congress of the player menu, it
@@ -1653,9 +1708,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinCongressPLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinCongressPLabelMouseExited
+    private void berlinCongressPLabelMouseExited(java.awt.event.MouseEvent evt) {                                                 
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_berlinCongressPLabelMouseExited
+    }                                                
 
     /**
      * When you put the mouse in the berlin general knowledge of the player
@@ -1663,9 +1718,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinGenKnowledgeLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinGenKnowledgeLabelMouseEntered
+    private void berlinGenKnowledgeLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                     
         this.displayPlayerCard(GeneralKnowledgeCard.class);
-    }//GEN-LAST:event_berlinGenKnowledgeLabelMouseEntered
+    }                                                    
 
     /**
      * When you put the mouse out of the berlin General knowledge of the player
@@ -1673,9 +1728,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinGenKnowledgeLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinGenKnowledgeLabelMouseExited
+    private void berlinGenKnowledgeLabelMouseExited(java.awt.event.MouseEvent evt) {                                                    
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_berlinGenKnowledgeLabelMouseExited
+    }                                                   
 
     /**
      * When you put the mouse in the berlin assistant of the player menu, it
@@ -1683,9 +1738,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinAssistantLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinAssistantLabelMouseEntered
+    private void berlinAssistantLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                  
         this.displayPlayerCard(AssistantCard.class);
-    }//GEN-LAST:event_berlinAssistantLabelMouseEntered
+    }                                                 
 
     /**
      * When you put the mouse out of the berlin assistant of the player menu, it
@@ -1693,9 +1748,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinAssistantLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinAssistantLabelMouseExited
+    private void berlinAssistantLabelMouseExited(java.awt.event.MouseEvent evt) {                                                 
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_berlinAssistantLabelMouseExited
+    }                                                
 
     /**
      * When you put the mouse in the berlin ethnological knowledge of the player
@@ -1703,9 +1758,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinEtnoLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinEtnoLabelMouseEntered
+    private void berlinEtnoLabelMouseEntered(java.awt.event.MouseEvent evt) {                                             
         this.displayPlayerCard(EthnologicalKnowledgeCard.class);
-    }//GEN-LAST:event_berlinEtnoLabelMouseEntered
+    }                                            
 
     /**
      * When you put the mouse out of the berlin Ethnological of the player menu,
@@ -1713,9 +1768,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinEtnoLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinEtnoLabelMouseExited
+    private void berlinEtnoLabelMouseExited(java.awt.event.MouseEvent evt) {                                            
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_berlinEtnoLabelMouseExited
+    }                                           
 
     /**
      * When you put the mouse in the moscow scientific knowledge of the player
@@ -1723,9 +1778,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void moscowScienKnowledgeLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowScienKnowledgeLabelMouseEntered
+    private void moscowScienKnowledgeLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                       
         this.displayPlayerCard(SpecificKnowledgeCard.class);
-    }//GEN-LAST:event_moscowScienKnowledgeLabelMouseEntered
+    }                                                      
 
     /**
      * When you put the mouse out of the moscow scientific knowledge of the
@@ -1733,9 +1788,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void moscowScienKnowledgeLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_moscowScienKnowledgeLabelMouseExited
+    private void moscowScienKnowledgeLabelMouseExited(java.awt.event.MouseEvent evt) {                                                      
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_moscowScienKnowledgeLabelMouseExited
+    }                                                     
 
     /**
      * When you put the mouse in the london shovel of the player menu, it shows
@@ -1743,9 +1798,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void londonShovelLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonShovelLabelMouseEntered
+    private void londonShovelLabelMouseEntered(java.awt.event.MouseEvent evt) {                                               
         this.displayPlayerCard(ShovelCard.class);
-    }//GEN-LAST:event_londonShovelLabelMouseEntered
+    }                                              
 
     /**
      * When you put the mouse out of the london shovel of the player menu, it
@@ -1753,9 +1808,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void londonShovelLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_londonShovelLabelMouseExited
+    private void londonShovelLabelMouseExited(java.awt.event.MouseEvent evt) {                                              
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_londonShovelLabelMouseExited
+    }                                             
 
     /**
      * When you put the mouse in the berlin small exposition of the player menu,
@@ -1763,9 +1818,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinSmallExpoLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinSmallExpoLabelMouseEntered
+    private void berlinSmallExpoLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                  
         this.displayPlayerCard(ExpoCard.class);
-    }//GEN-LAST:event_berlinSmallExpoLabelMouseEntered
+    }                                                 
 
     /**
      * When you put the mouse out of the berlin small exposition of the player
@@ -1773,9 +1828,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void berlinSmallExpoLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_berlinSmallExpoLabelMouseExited
+    private void berlinSmallExpoLabelMouseExited(java.awt.event.MouseEvent evt) {                                                 
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_berlinSmallExpoLabelMouseExited
+    }                                                
 
     /**
      * When you put the mouse out of the player menu, it hides and shows some
@@ -1783,7 +1838,7 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void playerLeftPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playerLeftPanelMouseExited
+    private void playerLeftPanelMouseExited(java.awt.event.MouseEvent evt) {                                            
         if ((evt.getXOnScreen() > playerLeftPanel.getWidth()) || (evt.getYOnScreen() > playerLeftPanel.getHeight())) {
 
             this.leftPanelContainerPanel.setVisible(false);
@@ -1799,7 +1854,7 @@ public class MapPanel extends javax.swing.JPanel {
                 showComponents(rightPanelComponents);
             }
         }
-    }//GEN-LAST:event_playerLeftPanelMouseExited
+    }                                           
 
     /**
      * Method which show components in a recursive way
@@ -1826,9 +1881,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void creteNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_creteNullTokenLabelMouseEntered
+    private void creteNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                 
         displayPlayerAreaToken("crete");
-    }//GEN-LAST:event_creteNullTokenLabelMouseEntered
+    }                                                
 
     /**
      * When you put the mouse out of the crete null token of the player menu, it
@@ -1836,9 +1891,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void creteNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_creteNullTokenLabelMouseExited
+    private void creteNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {                                                
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_creteNullTokenLabelMouseExited
+    }                                               
 
     /**
      * When you put the mouse in the palestine null token of the player menu, it
@@ -1846,9 +1901,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void palestineNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_palestineNullTokenLabelMouseEntered
+    private void palestineNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                     
         displayPlayerAreaToken("palestine");
-    }//GEN-LAST:event_palestineNullTokenLabelMouseEntered
+    }                                                    
 
     /**
      * When you put the mouse out of the palestine null token of the player
@@ -1856,9 +1911,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void palestineNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_palestineNullTokenLabelMouseExited
+    private void palestineNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {                                                    
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_palestineNullTokenLabelMouseExited
+    }                                                   
 
     /**
      * When you put the mouse in the mesopotamia null token of the player menu,
@@ -1866,9 +1921,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void mesopotamiaNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mesopotamiaNullTokenLabelMouseEntered
+    private void mesopotamiaNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                       
         displayPlayerAreaToken("mesopotamia");
-    }//GEN-LAST:event_mesopotamiaNullTokenLabelMouseEntered
+    }                                                      
 
     /**
      * When you put the mouse out of the mesopotamia null token of the player
@@ -1876,9 +1931,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void mesopotamiaNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mesopotamiaNullTokenLabelMouseExited
+    private void mesopotamiaNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {                                                      
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_mesopotamiaNullTokenLabelMouseExited
+    }                                                     
 
     /**
      * When you put the mouse in the greece null token of the player menu, it
@@ -1886,9 +1941,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void greeceNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_greeceNullTokenLabelMouseEntered
+    private void greeceNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                  
         displayPlayerAreaToken("greece");
-    }//GEN-LAST:event_greeceNullTokenLabelMouseEntered
+    }                                                 
 
     /**
      * When you put the mouse out of the greece null token of the player menu,
@@ -1896,9 +1951,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void greeceNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_greeceNullTokenLabelMouseExited
+    private void greeceNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {                                                 
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_greeceNullTokenLabelMouseExited
+    }                                                
 
     /**
      * When you put the mouse in the egypt null token of the player menu, it
@@ -1906,9 +1961,9 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void egyptNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_egyptNullTokenLabelMouseEntered
+    private void egyptNullTokenLabelMouseEntered(java.awt.event.MouseEvent evt) {                                                 
         displayPlayerAreaToken("egypt");
-    }//GEN-LAST:event_egyptNullTokenLabelMouseEntered
+    }                                                
 
     /**
      * When you put the mouse out of the egypt null token of the player menu, it
@@ -1916,11 +1971,11 @@ public class MapPanel extends javax.swing.JPanel {
      *
      * @param evt The mouse event that serves for launching the method
      */
-    private void egyptNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_egyptNullTokenLabelMouseExited
+    private void egyptNullTokenLabelMouseExited(java.awt.event.MouseEvent evt) {                                                
         this.clearDiplayedCardPlayer();
-    }//GEN-LAST:event_egyptNullTokenLabelMouseExited
+    }                                               
 
-    private void knowledgePointComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_knowledgePointComboBoxActionPerformed
+    private void knowledgePointComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         String area = ((ComboBoxAreaItem) ((JComboBox) evt.getSource()).getSelectedItem()).id;
         int nbMaxKnowledge = this.currentPlayer.getTotalAskedKnowledgePoint(this.currentBoard.getArea(area), this.currentPlayer.getAllActivableElements());
         this.selectedKnowledgePointLabel.setText(String.valueOf(nbMaxKnowledge));
@@ -1928,18 +1983,18 @@ public class MapPanel extends javax.swing.JPanel {
         LOGGER.debug("knowledgePointComboBoxActionPerformed: area selected="+this.currentBoard.getArea(area).getName()+", nbMaxKnowledgeAvailable="+nbMaxKnowledge );
 
 
-    }//GEN-LAST:event_knowledgePointComboBoxActionPerformed
+    }                                                      
 
     /**
      * Save game JButton
      * @param evt 
      */
-    private void saveGameJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveGameJButtonActionPerformed
+    private void saveGameJButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         Utils.saveGame( this.currentBoard );
         JOptionPane.showMessageDialog( this, "Vous avez sauvegardé correctement votre jeux !");
-    }//GEN-LAST:event_saveGameJButtonActionPerformed
+    }                                               
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JLabel arrowMenuLabel;
     private javax.swing.JLabel backgroundLabel;
     private javax.swing.JLabel berlinAssistantLabel;
@@ -1994,7 +2049,7 @@ public class MapPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane usableElementsMenuScrollPanel;
     private javax.swing.JPanel usingElementsMenuPanel;
     private javax.swing.JScrollPane usingElementsMenuScrollPanel;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 
     public class ComboBoxAreaItem {
 
