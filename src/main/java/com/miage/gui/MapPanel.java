@@ -429,7 +429,7 @@ public class MapPanel extends javax.swing.JPanel {
                 .append("<tr><td>Jeton(s)</td>");
         LOGGER.debug("_displayChronotimeFrame: nbKnowledge="+nbKnowledge);
         for (int i = 1; i <= 12; i++) {
-            str.append("<td>").append(this.currentBoard.getChronotime().getNbTokensToPickUp(i, nbKnowledge)).append("</td>");
+            str.append("<td>").append(this.currentBoard.getChronotime().getNbTokensToPickUp(nbKnowledge, i)).append("</td>");
         }
         str.append("</tr>");
         str.append("</table>");
