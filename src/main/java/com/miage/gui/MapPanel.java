@@ -180,6 +180,7 @@ public class MapPanel extends javax.swing.JPanel {
         }
         sb.append("</tr></table>");
         JOptionPane.showMessageDialog( this, sb);
+        Sound.play("finishGame");
         
         
         try {
