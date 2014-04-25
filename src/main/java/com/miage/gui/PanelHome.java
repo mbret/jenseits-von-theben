@@ -90,15 +90,7 @@ public class PanelHome extends javax.swing.JPanel {
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("yellow", "Jaune"));
         this.colorPlayer4ComboBox.addItem( new ComboBoxColorElement("green", "Vert"));
         
-        // INIT SOUND OPTIONJ
-        boolean audioMute = ConfigManager.getInstance().getOptions().get("general", "audioMute", Boolean.class );
-        if( audioMute ){
-            this.audioMuteCheckBox.setSelected( false );
-        }
-        else{
-            this.audioMuteCheckBox.setSelected( true );
-        }
-        
+        // INIT SOUND OPTIONS
         
     }
 
