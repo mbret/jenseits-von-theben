@@ -24,6 +24,7 @@ import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
@@ -117,7 +118,7 @@ public class MapPanel extends javax.swing.JPanel {
     private MapPanel(Board board) {
 
         initComponents();
-
+        this.usableElementsMenuPanel.setLayout(new GridLayout(1, 3));
         this.currentBoard = board; // active board
         this.currentPlayer = this.currentBoard.getUpcomingPlayer(); // IMPORTANT (needed for some init (like UI) in this class)
         this.listOfBoardCardsComponent = new LinkedHashMap();
@@ -448,13 +449,17 @@ public class MapPanel extends javax.swing.JPanel {
         LOGGER.debug("_updatePlayerUsableElementUI: refresh of usable element panel");
 
         this.usableElementsMenuPanel.removeAll();
+        int sizeActivableElements = currentPlayer.getAllActivableElements().size();
+        Double sizeActivableElementsDouble = new Double(sizeActivableElements);
+        Double division = new Double(sizeActivableElementsDouble/3.0);
+        Double ceilOfDivision = Math.ceil(division);
+        int numberOfLine = ceilOfDivision.intValue();
+        this.usableElementsMenuPanel.setLayout(new GridLayout(numberOfLine, 3));
         for (Map.Entry<ActivableElement, Component> entry : this.listOfActivableElementsComponent.entrySet()) {
 
 
             ImageIcon cardIcon = new ImageIcon(getClass().getResource("/images/cards/" + ((Card) entry.getKey()).getId() + ".jpg"));
-
-
-
+            
 
             this.usableElementsMenuPanel.add(entry.getValue());
 
@@ -1047,10 +1052,10 @@ public class MapPanel extends javax.swing.JPanel {
         excavationSiteContainerPanel = new javax.swing.JPanel();
         expoCardsContainerPanel = new javax.swing.JPanel();
         rightPanelContainerPanel = new javax.swing.JPanel();
-        usableElementsMenuPanel = new javax.swing.JPanel();
         usableElementsMenuScrollPanel = new javax.swing.JScrollPane();
-        usingElementsMenuPanel = new javax.swing.JPanel();
+        usableElementsMenuPanel = new javax.swing.JPanel();
         usingElementsMenuScrollPanel = new javax.swing.JScrollPane();
+        usingElementsMenuPanel = new javax.swing.JPanel();
         logMenu = new javax.swing.JPanel();
         logMenuScrollBar = new javax.swing.JScrollBar();
         jSeparator1 = new javax.swing.JSeparator();
@@ -1069,51 +1074,6 @@ public class MapPanel extends javax.swing.JPanel {
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-		menuCardsPlayerTab.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-			Player p = getPlayerTab(menuCardsPlayerTab);
-			for (String area : currentBoard.getAreas().keySet()) {
-            switch (area) {
-                case "greece":
-                    if (p.hasAlreadyExcavateArea(area)) {
-                        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
-                    } else {
-                        greeceExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
-                    }
-                    break;
-                case "mesopotamia":
-                    if (p.hasAlreadyExcavateArea(area)) {
-                        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
-                    } else {
-                        mesopotamiaExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
-                    }
-                    break;
-                case "palestine":
-                    if (p.hasAlreadyExcavateArea(area)) {
-                        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
-                    } else {
-                        palestineExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
-                    }
-                    break;
-                case "egypt":
-                    if (p.hasAlreadyExcavateArea(area)) {
-                        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
-                    } else {
-                        egyptExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
-                    }
-                    break;
-                case "crete":
-                    if (p.hasAlreadyExcavateArea(area)) {
-                        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/verso/" + area + "NoExcavation.jpg")));
-                    } else {
-                        creteExcavationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tokens/excavations/recto/" + area + "Excavation.jpg")));
-                    }
-                    break;
-            }
-        }
-    }
-});
-		
         arrowMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/menuArrow.png"))); // NOI18N
         arrowMenuLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -1379,20 +1339,21 @@ public class MapPanel extends javax.swing.JPanel {
         rightPanelContainerPanel.setOpaque(false);
         rightPanelContainerPanel.setLayout(null);
 
-        usableElementsMenuPanel.setOpaque(false);
-        rightPanelContainerPanel.add(usableElementsMenuPanel);
-        usableElementsMenuPanel.setBounds(0, 210, 310, 340);
-
         usableElementsMenuScrollPanel.setHorizontalScrollBar(null);
+
+        usableElementsMenuPanel.setOpaque(false);
+        usableElementsMenuPanel.setLayout(new java.awt.GridLayout());
+        usableElementsMenuScrollPanel.setViewportView(usableElementsMenuPanel);
+
         rightPanelContainerPanel.add(usableElementsMenuScrollPanel);
         usableElementsMenuScrollPanel.setBounds(0, 210, 310, 340);
 
-        usingElementsMenuPanel.setOpaque(false);
-        rightPanelContainerPanel.add(usingElementsMenuPanel);
-        usingElementsMenuPanel.setBounds(0, 560, 310, 190);
-
         usingElementsMenuScrollPanel.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         usingElementsMenuScrollPanel.setOpaque(false);
+
+        usingElementsMenuPanel.setOpaque(false);
+        usingElementsMenuScrollPanel.setViewportView(usingElementsMenuPanel);
+
         rightPanelContainerPanel.add(usingElementsMenuScrollPanel);
         usingElementsMenuScrollPanel.setBounds(0, 560, 310, 190);
 
@@ -1417,11 +1378,11 @@ public class MapPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Connaissances utilisable :");
         infoContainerPanel.add(jLabel3);
-        jLabel3.setBounds(10, 30, 170, 15);
+        jLabel3.setBounds(10, 30, 170, 14);
 
         jLabel5.setText("Joueur courant :");
         infoContainerPanel.add(jLabel5);
-        jLabel5.setBounds(10, 10, 90, 15);
+        jLabel5.setBounds(10, 10, 90, 14);
 
         knowledgePointComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1433,15 +1394,15 @@ public class MapPanel extends javax.swing.JPanel {
 
         selectedKnowledgePointLabel.setText("selectedKnowledge");
         infoContainerPanel.add(selectedKnowledgePointLabel);
-        selectedKnowledgePointLabel.setBounds(200, 50, 30, 15);
+        selectedKnowledgePointLabel.setBounds(200, 50, 30, 14);
 
         jLabel1.setText("Score :");
         infoContainerPanel.add(jLabel1);
-        jLabel1.setBounds(200, 10, 60, 15);
+        jLabel1.setBounds(200, 10, 60, 14);
 
         currentPlayerScoreLabel.setText("0");
         infoContainerPanel.add(currentPlayerScoreLabel);
-        currentPlayerScoreLabel.setBounds(270, 10, 30, 15);
+        currentPlayerScoreLabel.setBounds(270, 10, 30, 14);
 
         saveGameJButton.setText("Save");
         saveGameJButton.addActionListener(new java.awt.event.ActionListener() {
