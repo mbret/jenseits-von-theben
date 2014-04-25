@@ -76,6 +76,7 @@ public class FrameMain extends javax.swing.JFrame {
      * Creates new form FrameMain
      */
     public FrameMain() throws IOException, InterruptedException{
+        
         //full screen
 //        setUndecorated(true);
         initComponents();

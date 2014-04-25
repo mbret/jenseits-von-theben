@@ -66,6 +66,11 @@ public class PanelHome extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        warningInternalFrame = new javax.swing.JInternalFrame();
+        jPanel1 = new javax.swing.JPanel();
+        writingLabel = new javax.swing.JLabel();
+        warningLabel = new javax.swing.JLabel();
+        backgroundInternalFrameLabel = new javax.swing.JLabel();
         newGamePanel = new javax.swing.JPanel();
         playGameRedLabel = new javax.swing.JLabel();
         newPlayLabel = new javax.swing.JLabel();
@@ -98,11 +103,6 @@ public class PanelHome extends javax.swing.JPanel {
         rulesRedLabel = new javax.swing.JLabel();
         rulesLabel = new javax.swing.JLabel();
         menuLabel = new javax.swing.JLabel();
-        warningInternalFrame = new javax.swing.JInternalFrame();
-        jPanel1 = new javax.swing.JPanel();
-        writingLabel = new javax.swing.JLabel();
-        warningLabel = new javax.swing.JLabel();
-        backgroundInternalFrameLabel = new javax.swing.JLabel();
         playPanel = new javax.swing.JPanel();
         backRedLabel = new javax.swing.JLabel();
         backLabel = new javax.swing.JLabel();
@@ -116,6 +116,44 @@ public class PanelHome extends javax.swing.JPanel {
 
         setMaximumSize(new java.awt.Dimension(1366, 768));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        warningInternalFrame.setClosable(true);
+        warningInternalFrame.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        warningInternalFrame.setVisible(true);
+        warningInternalFrame.addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+                warningInternalFrameInternalFrameClosed(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
+        warningInternalFrame.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        writingLabel.setFont(new java.awt.Font("Tempus Sans ITC", 1, 18)); // NOI18N
+        writingLabel.setText("<html>Veuillez renseigner les pseudonymes des joueurs !<br>Les couleurs ne doivent être sélectionnées qu'une seule fois !");
+        jPanel1.add(writingLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 290, 120));
+
+        warningLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logo-warning.png"))); // NOI18N
+        jPanel1.add(warningLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 80, 80));
+
+        backgroundInternalFrameLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/backgroundWarning.jpg"))); // NOI18N
+        jPanel1.add(backgroundInternalFrameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 290));
+
+        warningInternalFrame.getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        add(warningInternalFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 200, 580, 320));
 
         newGamePanel.setOpaque(false);
         newGamePanel.setPreferredSize(new java.awt.Dimension(450, 480));
@@ -369,44 +407,6 @@ public class PanelHome extends javax.swing.JPanel {
 
         add(MenuPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 260, 490, 490));
 
-        warningInternalFrame.setClosable(true);
-        warningInternalFrame.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        warningInternalFrame.setVisible(true);
-        warningInternalFrame.addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-                warningInternalFrameInternalFrameClosed(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-            }
-        });
-        warningInternalFrame.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        writingLabel.setFont(new java.awt.Font("Tempus Sans ITC", 1, 18)); // NOI18N
-        writingLabel.setText("<html>Veuillez renseigner les pseudonymes des joueurs !<br>Les couleurs ne doivent être sélectionnées qu'une seule fois !");
-        jPanel1.add(writingLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 290, 120));
-
-        warningLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logo-warning.png"))); // NOI18N
-        jPanel1.add(warningLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 80, 80));
-
-        backgroundInternalFrameLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/backgroundWarning.jpg"))); // NOI18N
-        jPanel1.add(backgroundInternalFrameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 290));
-
-        warningInternalFrame.getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-
-        add(warningInternalFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 200, 580, 320));
-
         playPanel.setOpaque(false);
         playPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -494,7 +494,7 @@ public class PanelHome extends javax.swing.JPanel {
         add(crossLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 10, 40, 30));
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ThebesHome.jpg"))); // NOI18N
-        add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1370, 770));
+        add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1370, 770));
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -822,13 +822,7 @@ public class PanelHome extends javax.swing.JPanel {
                         players.add(new Player(loginPlayer4, new PlayerToken(colorPlayer4)));
                         break;
                 }
-            } else {
-                //fenêtre interne pour avertir qu'il faut donner des noms aux joueurs et une seule couleur par joueur
-                warningInternalFrame.setVisible(true);
-                newGamePanel.setEnabled(false);
-            }
-
-            /**
+                /**
              * We create the new game internally
              */
             Board board = new Board(nbPlayers, players);
@@ -837,6 +831,18 @@ public class PanelHome extends javax.swing.JPanel {
             MapPanel map = new MapPanel(board);
             add(map, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
             this.updateUI();
+            
+            } else {
+                //fenêtre interne pour avertir qu'il faut donner des noms aux joueurs et une seule couleur par joueur
+                warningInternalFrame.setVisible(true);
+                newGamePanel.setEnabled(false);
+                this.backRedNewGamePanelLabel.setEnabled(false);
+                this.backNewGamePanelLabel.setEnabled(false);
+                this.playGameRedLabel.setEnabled(false);
+                this.newPlayLabel.setEnabled(false);
+            }
+
+            
 
         } catch (IOException ex) {
             LOGGER.fatal( ex );
@@ -845,8 +851,12 @@ public class PanelHome extends javax.swing.JPanel {
 
     }//GEN-LAST:event_playGameRedLabelMouseClicked
 
+    
     private void warningInternalFrameInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_warningInternalFrameInternalFrameClosed
-        newGamePanel.setEnabled(true);
+        this.backRedNewGamePanelLabel.setEnabled(true);
+        this.backNewGamePanelLabel.setEnabled(true);
+        this.playGameRedLabel.setEnabled(true);
+        this.newPlayLabel.setEnabled(true);
     }//GEN-LAST:event_warningInternalFrameInternalFrameClosed
 
     private void rulesRedLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rulesRedLabelMouseClicked
