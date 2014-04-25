@@ -179,8 +179,12 @@ public class MapPanel extends javax.swing.JPanel {
             ).append("</td>");
         }
         sb.append("</tr></table>");
-        JOptionPane.showMessageDialog( this, sb);
+        Sound.stopAudioGame();
         Sound.play("finishGame");
+        JOptionPane.showMessageDialog( this, sb);
+        Sound.stopFinishAudioGame();
+        Sound.startAudioGame();
+        
         
         
         try {
