@@ -54,7 +54,7 @@ public class Utils {
                if(!directory.exists())
                    if(!new File(saveDirectory).mkdir())
                        throw new IOException();
-               FileOutputStream backupFile = new FileOutputStream(saveDirectory+"/save.boobs");
+               FileOutputStream backupFile = new FileOutputStream(saveDirectory+"/save.jvt");
                ObjectOutputStream oos = new ObjectOutputStream(backupFile);
                boardToSave.setLogDisplay(LogDisplay.getLogBackup());
                oos.writeObject(boardToSave);
@@ -77,7 +77,7 @@ public class Utils {
        public static Board loadGame(){
            Board boardLoaded = null;
            try {
-                FileInputStream fis = new FileInputStream(javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory().getPath()+"\\JenseitsVonTheben\\save.boobs");
+                FileInputStream fis = new FileInputStream(javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory().getPath()+"\\JenseitsVonTheben\\save.jvt");
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 boardLoaded = (Board) ois.readObject();
                 LogDisplay.setLogBackup(boardLoaded.getLogDisplay());
