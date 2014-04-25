@@ -52,7 +52,7 @@ public class EthnologicalKnowledgeCard extends Card implements KnowledgeElement,
 
     @Override
     public String toString(){
-    	return super.toString()+","+value+","+excavationAreaName;
+    	return "EthnologicalKnowledgeCard" + super.toString()+","+value+","+excavationAreaName;
     }
     
     

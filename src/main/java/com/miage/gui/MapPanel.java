@@ -127,7 +127,7 @@ public class MapPanel extends javax.swing.JPanel {
             JPanel playerLeftPanel = new javax.swing.JPanel();
             playerLeftPanel.setLayout(new AbsoluteLayout());
             playerLeftPanel.setBorder(BorderFactory.createEmptyBorder());
-            this.menuCardsPlayerTab.addTab(player.getName(), playerLeftPanel);
+            this.menuCardsPlayerTab.addTab("<html><font color='"+player.getPlayerToken().getColor()+"'>"+player.getName()+"</font>", playerLeftPanel);
         }
         
         // INIT MAIN FRAME
@@ -177,14 +177,14 @@ public class MapPanel extends javax.swing.JPanel {
 	 * @param height
 	 * @return
 	 */
-	public static Image scaleImage(Image source, int width, int height) {
-		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = (Graphics2D) img.getGraphics();
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(source, 0, 0, width, height, null);
-		g.dispose();
-		return img;
-	}
+    public static Image scaleImage(Image source, int width, int height) {
+            BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = (Graphics2D) img.getGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(source, 0, 0, width, height, null);
+            g.dispose();
+            return img;
+    }
     
     
     
@@ -201,7 +201,15 @@ public class MapPanel extends javax.swing.JPanel {
         try {
 
             this.currentPlayer = this.currentBoard.getUpcomingPlayer();
-            
+            // Set nbRound for the current player
+            this.currentPlayer.setNbRoundStillPlaying( this.currentPlayer.getNbRoundStillPlaying() + 1 ); // We increment the number of round this player is still playing
+            // reset nbRoundStillPlaying
+            for (Player p : this.currentBoard.getPlayers()){
+                if( ! p.equals( this.currentPlayer ) ){
+                    p.setNbRoundStillPlaying(0);
+                }
+            }
+        
             /**
              * For each round - reset or update useful intern vars - reset
              * params of action method - update component to match the
@@ -402,8 +410,10 @@ public class MapPanel extends javax.swing.JPanel {
                 }
             }
         }while( res != null && (nbWeeks < 1 || nbWeeks > 12) );
-        if( res == null ) return null;
+        
         Sound.stopAudioChrono();
+        
+        if( res == null ) return null;
         return nbWeeks;
     }
 
@@ -496,13 +506,11 @@ public class MapPanel extends javax.swing.JPanel {
 		this.usableElementsMenuPanel.updateUI();
 		this.rightPanelContainerPanel.updateUI();
 	}
-
-    
     
     /**
 	 * for now we display only ACTIVABLE and CAR
 	 */
-	private void _updatePlayerUsingElementUI() {
+    private void _updatePlayerUsingElementUI() {
 		LOGGER.debug("_updatePlayerUsingElementUI:");
 		this.usingElementsMenuPanel.removeAll();
 
@@ -525,7 +533,6 @@ public class MapPanel extends javax.swing.JPanel {
 		this.rightPanelContainerPanel.updateUI();
 
 	}
-    
 
     /**
      *
@@ -553,8 +560,6 @@ public class MapPanel extends javax.swing.JPanel {
         this.expoCardsContainerPanel.updateUI();
         this.mapContainerPanel.updateUI();
     }
-
-   
     
     private void _updateExcavationSiteUI() {
 
@@ -623,9 +628,6 @@ public class MapPanel extends javax.swing.JPanel {
 		this.excavationSiteContainerPanel.updateUI();
 		this.mapContainerPanel.updateUI();
 	}
-    
-    
-    
 
     private void _updatePlayerTokenPositionUI() {
         LOGGER.debug(this.currentBoard.getPlayerTokenStack());
@@ -949,7 +951,7 @@ public class MapPanel extends javax.swing.JPanel {
         playerActionParams.put("nbWeeksToExcavate", 1); // 1 is the minimum allowed
         try {
             
-            if (!this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_EXCAVATE, playerActionParams)) {
+            if ( ! this.currentBoard.isPlayerAbleToMakeRoundAction(Player.ACTION_EXCAVATE, playerActionParams )) {
                 playerIsAble = false;
             }
 
