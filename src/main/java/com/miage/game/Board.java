@@ -260,7 +260,9 @@ public class Board implements Serializable {
             throw new Exception("No player provided, please see the parameters details");
         }
         Player player = (Player) playerActionParams.get("player");
-        
+
+     // We increment the number of round this player is still playing
+
         
 //        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         
@@ -347,7 +349,9 @@ public class Board implements Serializable {
             this.discardingDeck.add( shovelCards.get(0) );
             player.getCards().remove( shovelCards.get(0) ); 
         }
-        // loop over all ethno
+
+     // loop over all ethno
+
         if( Player.ACTION_EXCAVATE == actionPattern ){
             for (EthnologicalKnowledgeCard card : ethnologicalKnowledgeCards.values()) {
                 // discard only when excavate and only ethno about the area selected
