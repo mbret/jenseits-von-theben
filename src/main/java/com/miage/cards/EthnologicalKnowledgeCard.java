@@ -4,7 +4,7 @@ import com.miage.interfaces.CombinableElement;
 import com.miage.interfaces.DiscardableElement;
 import com.miage.interfaces.KnowledgeElement;
 import com.miage.interfaces.ActivableElement;
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import java.io.IOException;
 import java.io.Serializable;
 

@@ -1,7 +1,7 @@
 
 package com.miage.game;
 
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;

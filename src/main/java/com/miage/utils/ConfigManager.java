@@ -1,4 +1,4 @@
-package com.miage.config;
+package com.miage.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;

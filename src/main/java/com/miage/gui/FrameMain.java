@@ -1,7 +1,7 @@
 
 package com.miage.gui;
 
-import com.miage.config.ConfigManager;
+import com.miage.utils.ConfigManager;
 import java.io.IOException;
 import org.apache.log4j.LogManager;
 

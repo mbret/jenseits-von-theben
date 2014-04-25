@@ -1,4 +1,4 @@
-package com.miage.main;
+package com.miage.utils;
 
 import com.miage.game.Board;
 import com.miage.game.LogDisplay;
@@ -41,7 +41,6 @@ public class Utils {
         * Save the game (the board into a file).
         * @author david
         * @param boardToSave board to be save
-        * @param fileToSave file where the board will be saved
         */
        public static void saveGame(Board boardToSave){
            try {
@@ -71,7 +70,6 @@ public class Utils {
        /**
         * Load the game (the board into a file).
         * @author david
-        * @param fileToLoad file where the board will be loaded
         * @return boardToSave board to be save
         */
        public static Board loadGame(){
