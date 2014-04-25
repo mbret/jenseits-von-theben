@@ -260,13 +260,7 @@ public class Board implements Serializable {
             throw new Exception("No player provided, please see the parameters details");
         }
         Player player = (Player) playerActionParams.get("player");
-        // reset nbRoundStillPlaying
-        for (Player p : this.players) {
-            if( ! p.equals( player ) ){
-                p.setNbRoundStillPlaying(0);
-            }
-        }
-        player.setNbRoundStillPlaying( player.getNbRoundStillPlaying() + 1 ); // We increment the number of round this player is still playing
+     // We increment the number of round this player is still playing
         
 //        List<KnowledgeElement> knowledgeElements = new ArrayList(); // list of used Knowledge elements
         
@@ -314,7 +308,7 @@ public class Board implements Serializable {
                                                     shovelCards,
                                                     ((Integer) playerActionParams.get("nbTokenToPickUp")),
                                                     usedElements,
-                                                    (int)playerActionParams.get("numberOfWeeks"));
+                                                    (int)playerActionParams.get("nbWeeksToExcavate"));
                 returnedInfo.put("tokensJustPickedUp", tokensJustPickedUp);
                 break;
 
@@ -353,11 +347,14 @@ public class Board implements Serializable {
             this.discardingDeck.add( shovelCards.get(0) );
             player.getCards().remove( shovelCards.get(0) ); 
         }
-        for (Map.Entry<Area, EthnologicalKnowledgeCard> entry : ethnologicalKnowledgeCards.entrySet()) {
-            if( Player.ACTION_EXCAVATE == actionPattern 
-                    && ( entry.getKey().getName().equals( ((ExcavationArea) playerActionParams.get("areaToExcavate")).getName() ) ) ){
-                this.discardingDeck.add( entry.getValue() );
-                player.getCards().remove( entry.getValue() );
+     // loop over all ethno
+        if( Player.ACTION_EXCAVATE == actionPattern ){
+            for (EthnologicalKnowledgeCard card : ethnologicalKnowledgeCards.values()) {
+                // discard only when excavate and only ethno about the area selected
+                if( card.getExcavationAreaName().equals( ((ExcavationArea) playerActionParams.get("areaToExcavate")).getName() )){
+                    this.discardingDeck.add( card );
+                    player.getCards().remove( card );
+                }
             }
         }
         
