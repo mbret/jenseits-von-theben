@@ -32,8 +32,8 @@ public class TokensPosition {
             this.put("greece", new Point(500,420));
             this.put("crete", new Point(500,540));
             this.put("egypt", new Point(600,655));
-            this.put("palestine", new Point(700,645));
-            this.put("mesopotamia", new Point(800,530));
+            this.put("palestine", new Point(740,645));
+            this.put("mesopotamia", new Point(860,530));
         }};
         
         private static final Map<Integer, Point> timeTokenPosition = new HashMap(){{
